@@ -10,12 +10,7 @@ function Movie () {
       const fetchData = async () => {
         try{
           const requestOptions = {
-            method: 'POST',
-            headers: {
-              'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
-              "Access-Control-Allow-Origin": "*",
-              'Access-Control-Allow-Methods': 'POST,OPTIONS'
-          }
+            method: 'POST'
         };
         fetch('https://uwmvm4vk6a.execute-api.eu-north-1.amazonaws.com/Dev/movies/'+guid, requestOptions)
             .then(response => response.json())
