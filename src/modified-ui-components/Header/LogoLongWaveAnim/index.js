@@ -1,0 +1,1 @@
+export { LogoLongWaveAnim } from "./LogoLongWaveAnim";

@@ -1,0 +1,17 @@
+type Movie @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  name_eng: String
+  type: String
+  genre: String
+  description: String
+  description_eng: String
+  screen_language: String
+  captions_language: String
+  origin_country: String
+  length: Int
+  created_year: String
+  uploaded_at: String
+  guid: ID
+}
+ 
