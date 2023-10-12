@@ -22,6 +22,9 @@
     "react-router-dom": "^6.16.0",
     "react-scripts": "5.0.0",
     "styled-components": "^5.3.11",
+    "video.js": "^7.15.4",
+    "videojs-contrib-quality-levels": "^2.1.0",
+    "videojs-hls-quality-selector": "^1.1.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

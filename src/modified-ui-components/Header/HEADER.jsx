@@ -5,7 +5,7 @@ import { MeklT } from "./MeklT";
 import "./style.css";
 import { useNavigate } from "react-router-dom";
 
-export const Navbar = ({ property1, className }) => {
+export const Navbar = ({ property1, className, signOut }) => {
   const navigate = useNavigate();
 
   return (
@@ -55,6 +55,7 @@ export const Navbar = ({ property1, className }) => {
           <img className="group" alt="Group" src="group-10.png" />
         </>
       )}
+      <div><button onClick={signOut}>Sign out</button></div>
     </div>
   );
 };

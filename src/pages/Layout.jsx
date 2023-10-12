@@ -10,21 +10,21 @@ const Layout = () => {
 
   return (
     <>
-    {/* <Navbar meklTGroup="group-16-2.png" property1="variant-4" />; */}
-    <div><Authenticator>
-      {({ signOut, user }) => (
-        <div>
+      <div><Authenticator>
+        {({ signOut, user }) => (
           <div>
-            <Navbar property1="variant-2" />;
-          </div>
-    <button onClick={signOut}>Sign out</button>
-          <div></div>
+            <div>
+              <Navbar property1="variant-2" signOut={signOut}/>;
+              {/* <Navbar meklTGroup="group-16-2.png" property1="variant-4" />; */}
+            </div>
+              
+           
 
-            <div><Outlet /></div>
+              <div><Outlet /></div>
 
-          <div><FOOTER /></div>
-      </div>
-    )}
+            <div><FOOTER /></div>
+        </div>
+      )}
     </Authenticator></div>
     </>
   )
