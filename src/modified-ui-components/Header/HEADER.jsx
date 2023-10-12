@@ -20,7 +20,7 @@ export const Navbar = ({ property1, className }) => {
         <div className="katalogs">
           {property1 === "variant-4" && <>Katalogs</>}
 
-          {["default", "variant-2", "variant-3"].includes(property1) && <>Sākums</>}
+          {["default", "variant-2", "variant-3"].includes(property1) && <div className="sakums" onClick={() => navigate('/')}>Sākums</div>}
         </div>
         {["default", "variant-2", "variant-3"].includes(property1) && <div className="div">Meklēt</div>}
       </div>

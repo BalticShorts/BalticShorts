@@ -1,9 +1,7 @@
 import React from "react";
-import { Button, ButtonHomepage, FilmaInLists, Footer, Navbar } from "../ui-components";
-// import "../style.css";
+import "./style.css";
 import '../App.css';
 import { Amplify, API, graphqlOperation, Storage  } from 'aws-amplify';
-import { Authenticator, TextField } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import { listMovies, getMovie } from '../graphql/queries.js'
 import { updateMovie } from '../graphql/mutations.js'
@@ -13,27 +11,22 @@ import AddIcon from '@mui/icons-material/Add';
 import Paper from '@mui/material/Paper';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-import ReactHlsPlayer from "@ducanh2912/react-hls-player";
 import { MovieCreateForm } from '../ui-components';
 import { StorageManager } from '@aws-amplify/ui-react-storage';
 import moment from "moment";
 import awsExports from '../aws-exports';
 import { useNavigate } from "react-router-dom";
+// https://mui.com/material-ui/material-icons/
 
 
 const Home = () => {
     Amplify.configure(awsExports);
     const navigate = useNavigate();
 
-
-// https://mui.com/material-ui/material-icons/
-
-
   const [movies, setMovies] = useState([]);
   const [moviePlaying, setMoviePlaying] = useState('');
   const [movieURL, setMovieURL] = useState('');
   const [showAddMovie, setShowAddMovie] = useState(false);
-  const [files, setFiles] = useState({});
   const moviePrefix = 'https://d2tilt02qfznkt.cloudfront.net/';
   
 
@@ -118,14 +111,9 @@ const Home = () => {
 
 
   return (
-    
-    <Authenticator>
-      {({ signOut, user }) => (
-
         <main>
           {/* <h1>Hello {user.username}</h1>
           <h1>Baltic Shorts is under costruction!</h1> */}
-          <button onClick={signOut}>Sign out</button>
 
           <div className='movieList'>
             { movies.map( (movie, idx) => {
@@ -154,17 +142,6 @@ const Home = () => {
                 )
             })}
           </div>
-          <div>
-            {/* <ReactPlayer url={movieURL} /> */}
-            {/* 'https://deuudnain4nbt.cloudfront.net/public/Destination/TestName1/pexels-videos-1390942.m3u8' */}
-            <ReactHlsPlayer
-              src={"https://d2tilt02qfznkt.cloudfront.net/3269890a-66b6-40ac-9733-aed7652d8dcd/hls/istockphoto-1248937440-640_adpp_is2_Ott_Hls_Ts_Avc_Aac_16x9_1280x720p_6.0Mbps_qvbr.m3u8"}
-              autoPlay={false}
-              controls={true}
-              width="100%"
-              height="auto"
-            />
-          </div>
           {
             showAddMovie ? (
               <AddMovie />
@@ -173,8 +150,7 @@ const Home = () => {
 
 
         </main>
-      )}
-    </Authenticator>
+
   );
 }
 
