@@ -56,16 +56,16 @@ function Movie() {
   return (
     <>
     <div className="FilmasSkats w-full h-200 relative bg-stone-50 rounded-3xl">
-      <div onClick={() => removeText()}>
+      <div onClick={() => removeText()} className='max-h-[90vh]'>
         <VideoPlayer movieURL={movieURL} />
       </div>
       <div id='textOnMovie'>
         <div className="Rectangle3 w-full h-60 left-0 top-[0] absolute mix-blend-multiply bg-gradient-to-b from-slate-500 to-zinc-300" />
         <div className="ViUSaucaHaossBRzi w-full left-[0] top-[10%] absolute text-center text-stone-50 text-4xl font-bold font-['SchoolBook'] uppercase leading-10">{movieData.name}</div>
         <div className="HeWasCalledChaosBRzi w-full left-0 top-[15%] absolute text-center text-stone-50 text-base font-normal font-['SchoolBook'] uppercase tracking-wider">{movieData.name_eng}</div>
-        <div className='w-full top-[92%] absolute'>
+        <div className='w-full top-[80vh] absolute py-4'>
           <div className="Rectangle4 w-full h-50 left-[100%] top-[80%] absolute origin-top-left -rotate-180 mix-blend-multiply bg-gradient-to-b from-slate-400 to-zinc-300" />
-          <div className="w-80 left-[43%] -top-20 relative text-center"><span className="text-stone-50 text-xl font-normal font-['SchoolBook'] uppercase">Režisors  </span><span className="text-stone-50 text-xl font-bold font-['SchoolBook']">Test Name<br/></span><span className="text-stone-50 text-xl font-normal font-['SchoolBook']">{movieData.origin_country}  |  {movieData.created_year}  |  {movieData.length}’  |  18+<br/></span><span className="text-stone-50 text-opacity-70 text-xl font-normal font-['SchoolBook']">{movieData.genre}</span></div>
+          <div className="w-80 left-[43%] top-20 relative text-center"><span className="text-stone-50 text-xl font-normal font-['SchoolBook'] uppercase">Režisors  </span><span className="text-stone-50 text-xl font-bold font-['SchoolBook']">Test Name<br/></span><span className="text-stone-50 text-xl font-normal font-['SchoolBook']">{movieData.origin_country}  |  {movieData.created_year}  |  {movieData.length}’  |  18+<br/></span><span className="text-stone-50 text-opacity-70 text-xl font-normal font-['SchoolBook']">{movieData.genre}</span></div>
         </div>
       </div>
       {/* <div className="AnotCija w-full h-5 left-[519px] top-[1030px] absolute text-center text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">ANOTĀCIJA</div>
@@ -76,8 +76,10 @@ function Movie() {
       <div className="LvEn left-[305px] top-[919px] absolute text-stone-50 text-opacity-70 text-base font-normal font-['SchoolBook']">[ ] lv  |  [ ] en</div>
       <div className="PlayButton w-24 h-24 left-[805px] top-[442px] absolute" />
       <div className="Arrow w-9 h-3.5 left-[838px] top-[960px] absolute" /> */}
-      <div className="w-full h-45 left-[15%] top-20 py-2 relative text-justify text-black text-xl font-normal font-['SchoolBook']">Description: {movieData.description}</div>
-      <div className="w-full h-45 left-[15%] top-20 py-2 relative text-justify text-black text-xl font-normal font-['SchoolBook']">Description in english: {movieData.description_eng}  </div>
+      <div className='w-[75%] pt-10'>
+        <div className="w-full h-45 left-[15%] top-20 py-2 relative text-justify text-black text-xl font-normal font-['SchoolBook']">Description: {movieData.description}</div>
+        <div className="w-full h-45 left-[15%] top-20 py-2 relative text-justify text-black text-xl font-normal font-['SchoolBook']">Description in english: {movieData.description_eng}  </div>
+      </div>
     </div>
     </>
   );
