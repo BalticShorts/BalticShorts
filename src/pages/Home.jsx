@@ -111,10 +111,6 @@ const Home = () => {
 
 
   return (
-        <main>
-          {/* <h1>Hello {user.username}</h1>
-          <h1>Baltic Shorts is under costruction!</h1> */}
-
           <div className='movieList'>
             { movies.map( (movie, idx) => {
                 return (
@@ -141,16 +137,12 @@ const Home = () => {
                     // }
                 )
             })}
-          </div>
-          {
+                      {/* {
             showAddMovie ? (
               <AddMovie />
             ) : <IconButton onClick={() => setShowAddMovie(true)}><AddIcon/></IconButton>
-          }
-
-
-        </main>
-
+          } */}
+          </div>
   );
 }
 

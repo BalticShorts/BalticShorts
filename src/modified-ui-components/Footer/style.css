@@ -1,0 +1,175 @@
+.FOOTER {
+  height: 200px;
+  position: fixed;
+  width: 100%;
+  bottom: 0px;
+  min-width: 600px;
+}
+
+.FOOTER .group {
+  height: 50%;
+  position: absolute;
+  width: 100%;
+}
+
+.FOOTER .text-wrapper {
+  font-family: "SchoolBook-Regular", Helvetica;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: normal;
+  position: absolute;
+  width: 100%;
+}
+
+.FOOTER .frame {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+.FOOTER .div {
+  font-family: "SchoolBook-Regular", Helvetica;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1px;
+  position: relative;
+  width: 100%;
+}
+
+.FOOTER .text-wrapper-2 {
+  font-family: "SchoolBook-Regular", Helvetica;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  width: 100%;
+}
+
+.FOOTER .text-wrapper-3 {
+  font-family: "SchoolBook-Regular", Helvetica;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  width: 100%;
+}
+
+.FOOTER .frame-2 {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+.FOOTER .text-wrapper-4 {
+  font-family: "SchoolBook-Regular", Helvetica;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: normal;
+  margin-top: -1px;
+  position: relative;
+  width: 350px;
+}
+
+.FOOTER .text-wrapper-5 {
+  font-family: "SchoolBook-Regular", Helvetica;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: normal;
+  position: relative;
+  width: 100%;
+}
+
+.FOOTER.default {
+  background-image: url(./static/img/rectangle-1.svg);
+  background-size: auto auto;
+}
+
+.FOOTER.variant-2 {
+  background-color: #000000;
+  border-color: #000000;
+  border-top-style: solid;
+  border-top-width: 1px;
+}
+
+.FOOTER.default .group, .FOOTER.variant-2 .group {
+  left: 12.5%;
+  top: 15%;
+}
+
+.FOOTER.default .text-wrapper {
+  color: #000000;
+  left: 12.5%;
+  top: 70%;
+}
+
+.FOOTER.variant-2 .text-wrapper {
+  color: var(--beige);
+  left: 12.5%;
+  top: 70%;
+}
+
+.FOOTER.default .div,
+.FOOTER.default .text-wrapper-2,
+.FOOTER.default .text-wrapper-3,
+.FOOTER.default .text-wrapper-4,
+.FOOTER.default .text-wrapper-5,
+.FOOTER.default .link-text{
+  color: #000000;
+  text-decoration: none;
+}
+
+.FOOTER.variant-2 .div,
+.FOOTER.variant-2 .text-wrapper-2, 
+.FOOTER.variant-2 .text-wrapper-3, 
+.FOOTER.variant-2 .text-wrapper-4, 
+.FOOTER.variant-2 .text-wrapper-5,
+.FOOTER.variant-2 .link-text {
+    color: var(--beige);
+    text-decoration: none;
+}
+
+#footer-logo{
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
+  object-fit: cover;
+}
+
+.FOOTER.default .frame.info , .FOOTER.variant-2 .frame.info{
+  align-content: center;
+  padding-left: 10%;
+  margin-left: 30%;
+  top: 20%;
+
+}
+
+.FOOTER.default .frame.info .div,.FOOTER.default .frame.info .text-wrapper-2, .FOOTER.default .frame.info .text-wrapper-3{
+  align-content: center;
+  padding: 7px;
+}
+
+.FOOTER.default .frame-2.socials , .FOOTER.variant-2 .frame-2.socials{
+  align-content: center;
+  padding-left: 5%;
+  margin-left: 55%;
+  top: 20%;
+
+}
+
+.FOOTER.default .frame-2.socials .text-wrapper-4, .FOOTER.default .frame-2.socials .text-wrapper-5{
+  align-content: center;
+  padding: 7px;
+}
