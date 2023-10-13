@@ -43,8 +43,8 @@ const Home = () => {
     const movieFilePath = movies[idx].file_path;
     try {
         const fileAccessUrl = await Storage.get(movieFilePath, {expires: 60})
-        console.log(moviePrefix + movieFilePath)
-        console.log('url',fileAccessUrl);
+        // console.log(moviePrefix + movieFilePath)
+        // console.log('url',fileAccessUrl);
         setMoviePlaying(idx);
         setMovieURL(moviePrefix + movieFilePath);
         return;
@@ -59,8 +59,8 @@ const Home = () => {
     try {
         const movieData = await API.graphql(graphqlOperation(listMovies));
         const movieList = movieData.data.listMovies.items;
-        console.log('movies', movieData);
-        console.log('moviesssss', movieList);
+        // console.log('movies', movieData);
+        // console.log('moviesssss', movieList);
         setMovies(movieList);
     }catch (error) {
       console.log('Error on fetchnig movies', error);
@@ -98,8 +98,8 @@ const Home = () => {
 
   const goMovie = async (idx) => {
     try{
-        const guid = movies[idx].guid
-        navigate("/movie/" + guid)
+        const id = movies[idx].id
+        navigate("/movie/" + id)
     } catch (error) {
         console.log('Error on goMovie', error);
     }
@@ -116,16 +116,16 @@ const Home = () => {
                 return (
                   <Paper variant="outlined" elevation={2} key={`movie${idx}`} onClick={() => goMovie(idx)}>
                       <div className='movieCard'>
-                        <IconButton aria-label="play" onClick={() => toggleMovie(idx)}>
+                        {/* <IconButton aria-label="play" onClick={() => toggleMovie(idx)}>
                           { moviePlaying  === idx ? <PauseIcon /> :<PlayArrowIcon />}
-                        </IconButton>
+                        </IconButton> */}
                         <div>
                           <div className='movieTitle'>{movie.name}</div>
                           <div className='movieOwner'>{movie.created_year}</div>
                         </div>
                         <div>
-                          <div className='movieDescription'>{movie.description}</div>
-                          <div className='movieLength' onClick={() => testFunction(idx)}>{movie.length}</div>
+                          {/* <div className='movieDescription'>{movie.description}</div> */}
+                          <div className='movieLength' onClick={() => testFunction(idx)}>Filmas garums: {movie.length} min</div>
                         </div>
                       </div>
                   </Paper>

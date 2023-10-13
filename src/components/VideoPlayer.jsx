@@ -32,8 +32,8 @@ const VideoPlayer = ({ movieURL }) => {
     
 
       player.current = videojs(videoNode.current, videoJsOptions, function onPlayerReady() {
-        console.log('Player is ready');
-        console.log(videoNode.current)
+        // console.log('Player is ready');
+        // console.log(videoNode.current)
         this.qualityLevels();
         this.hlsQualitySelector({ displayCurrentQuality: true });
       });
@@ -47,10 +47,12 @@ const VideoPlayer = ({ movieURL }) => {
   }, [movieURL]);
 
   return (
-    <div >
-      <video id='video-player' ref={videoNode} className="video-js vjs-default-skin" />
+    <div className='top-10'>
+      <video id='video-player' ref={videoNode} className="video-js vjs-default-skin w-full h-screen object-fill" />
     </div>
   );
 };
+
+export const isVideoPlaying = video => !!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2);
 
 export default VideoPlayer;

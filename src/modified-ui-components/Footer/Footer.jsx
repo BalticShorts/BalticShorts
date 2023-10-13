@@ -1,45 +1,28 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Container, Row, Col } from 'react-bootstrap';
-import './style.css'; // Import the CSS file
 
-export const Footer = ({
-  property1,
-  className,
-  groupClassName,
-  divClassName,
-  frameClassName,
-  frameClassNameOverride,
-}) => {
+export const Footer = () => {
   const filePath = "./static/img/"
-  return (
-    <Container fluid className={`FOOTER ${property1} ${className}`}>
-      <Row>
-        <Col xs={6} className={`group ${groupClassName}`}>
+  return(
+    <div className="w-[100%] h-[4vh] absolute top-[196vh] bottom-0 bg-amber-50">
+      <div className="Rectangle1 w-full h-48 left-0 top-0 absolute bg-amber-50 border-t border-black" />
+      <div className="Group45 w-44 h-24 left-[12.5%] top-[35px] absolute">
+        <div className="Group w-40 h-20 left-[0] top-[8.53px] absolute">
           <img id='footer-logo'
             alt="Group"
-            src={property1 === "variant-2" ? require(filePath+"group-45-1.png") : require(filePath+"group-45.png")}
+            src= {require(filePath+"group-45.png")}
           />
-        </Col>
-        <Col xs={6} className={`text-wrapper ${divClassName}`}>
-          ©️ 2023
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={6} className={`frame ${frameClassName}`}>
-          <div className="div"><a className="link-text" href='/Info'>Par projektu</a></div>
-          <div className="text-wrapper-2"><a className="link-text" href='/Catalogue'>Katalogs</a></div>
-          <div className="text-wrapper-3"><a className="link-text" href='/Contact'>Kontakti</a></div>
-        </Col>
-        <Col xs={6} className={`frame-2 ${frameClassNameOverride}`}>
-          <div className="text-wrapper-4"><a className="link-text" href='/Instagram'>Instagram</a></div>
-          <div className="text-wrapper-5"><a className="link-text" href='/Facebook'>Facebook</a></div>
-        </Col>
-      </Row>
-    </Container>
-  );
-};
-
-Footer.propTypes = {
-  property1: PropTypes.oneOf(["variant-2", "default"]),
-};
+        </div>
+      </div>
+      <div className="2023 w-80 left-[12.5%] top-[147px] absolute text-black text-xl font-normal font-['SchoolBook']">©️ 2023</div>
+      <div className="Frame18 w-80 h-16 left-[35%] top-[44px] absolute flex-col justify-start items-start inline-flex">
+        <div className="ParProjektu py-1 w-80 text-black text-xl font-normal font-['SchoolBook']">Par projektu</div>
+        <div className="Katalogs py-1 w-80 text-black text-xl font-normal font-['SchoolBook']">Katalogs</div>
+        <div className="Kontakti py-1 w-80 text-black text-xl font-normal font-['SchoolBook']">Kontakti</div>
+      </div>
+      <div className="Frame19 w-80 h-16 left-[65%] top-[44px] absolute flex-col justify-start items-start inline-flex">
+        <div className="Instagram py-2 w-80 text-black text-xl font-normal font-['SchoolBook']">Instagram</div>
+        <div className="Facebook py-2 w-80 text-black text-xl font-normal font-['SchoolBook']">Facebook</div>
+      </div>
+    </div>
+  )
+}

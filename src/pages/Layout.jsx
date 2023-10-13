@@ -13,15 +13,21 @@ const Layout = () => {
     <>
       <div><Authenticator>
         {({ signOut, user }) => (
-          <div>
-            <div>
+          <div className="min-h-[200vh]">
+            <div className=" bg-amber-50"  >
               <Navbar signOut={signOut}/>;
               {/* <Navbar meklTGroup="group-16-2.png" property1="variant-4" />; */}
             </div>
             
-            <div className="MainContainer"><Outlet /></div>
+            <div className="MainContainer mb-auto h-10 flex-grow">
+              <Outlet />
 
-            <div><Footer className="property-default" property1="default" frameClassName="info" frameClassNameOverride="socials"/></div>
+            </div>
+            <div >
+                <Footer />
+            </div>
+
+            
         </div>
       )}
     </Authenticator></div>

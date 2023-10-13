@@ -5,8 +5,8 @@ import React from "react";
 
 export const Navbar = ({signOut }) => {
   return (
-    <div className="w-[100%] h-[40px] relative">
-      <div className="w-[100%] h-[60px] left-0 top-0 absolute bg-stone-50 border-b border-black" />
+    <div className="w-[100%] h-[4vh] relative bg-amber-50">
+      <div className="w-[100%] h-[60px] left-0 top-0 absolute bg-stone-50 border-b border-black bg-inherit" />
       <div className="w-[20%] h-[19px] left-[14%] top-[40%] absolute text-black text-lg font-normal font-['SchoolBook'] tracking-tight"><a href="/">Sākums</a></div>
       <div className="w-[20%] h-[19px] left-[28%] top-[40%] absolute text-black text-lg font-normal font-['SchoolBook'] tracking-tight"><a href="/search">Meklēt</a></div>
       <div className="left-[42%] top-[12px] absolute text-black text-2xl font-bold font-['SchoolBook'] uppercase tracking-[9px]">Baltic Shorts</div>
