@@ -15,7 +15,7 @@ const Layout = () => {
         {({ signOut, user }) => (
           <div>
             <div>
-              <Navbar property1="variant-2" signOut={signOut}/>;
+              <Navbar signOut={signOut}/>;
               {/* <Navbar meklTGroup="group-16-2.png" property1="variant-4" />; */}
             </div>
             
