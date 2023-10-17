@@ -1,6 +1,90 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createMoviePlaylist = /* GraphQL */ `
+  mutation CreateMoviePlaylist(
+    $input: CreateMoviePlaylistInput!
+    $condition: ModelMoviePlaylistConditionInput
+  ) {
+    createMoviePlaylist(input: $input, condition: $condition) {
+      id
+      Creator
+      movies {
+        items {
+          id
+          moviePlaylistId
+          movieId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      Title
+      is_public
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateMoviePlaylist = /* GraphQL */ `
+  mutation UpdateMoviePlaylist(
+    $input: UpdateMoviePlaylistInput!
+    $condition: ModelMoviePlaylistConditionInput
+  ) {
+    updateMoviePlaylist(input: $input, condition: $condition) {
+      id
+      Creator
+      movies {
+        items {
+          id
+          moviePlaylistId
+          movieId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      Title
+      is_public
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteMoviePlaylist = /* GraphQL */ `
+  mutation DeleteMoviePlaylist(
+    $input: DeleteMoviePlaylistInput!
+    $condition: ModelMoviePlaylistConditionInput
+  ) {
+    deleteMoviePlaylist(input: $input, condition: $condition) {
+      id
+      Creator
+      movies {
+        items {
+          id
+          moviePlaylistId
+          movieId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      Title
+      is_public
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createMovieTeam = /* GraphQL */ `
   mutation CreateMovieTeam(
     $input: CreateMovieTeamInput!
@@ -102,6 +186,18 @@ export const createMovie = /* GraphQL */ `
         updatedAt
         __typename
       }
+      MovieInPlaylists {
+        items {
+          id
+          moviePlaylistId
+          movieId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       movieMovieTeamId
@@ -142,6 +238,18 @@ export const updateMovie = /* GraphQL */ `
         producer
         createdAt
         updatedAt
+        __typename
+      }
+      MovieInPlaylists {
+        items {
+          id
+          moviePlaylistId
+          movieId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       createdAt
@@ -186,9 +294,222 @@ export const deleteMovie = /* GraphQL */ `
         updatedAt
         __typename
       }
+      MovieInPlaylists {
+        items {
+          id
+          moviePlaylistId
+          movieId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       movieMovieTeamId
+      __typename
+    }
+  }
+`;
+export const createMovieMoviePlaylist = /* GraphQL */ `
+  mutation CreateMovieMoviePlaylist(
+    $input: CreateMovieMoviePlaylistInput!
+    $condition: ModelMovieMoviePlaylistConditionInput
+  ) {
+    createMovieMoviePlaylist(input: $input, condition: $condition) {
+      id
+      moviePlaylistId
+      movieId
+      moviePlaylist {
+        id
+        Creator
+        movies {
+          nextToken
+          __typename
+        }
+        Title
+        is_public
+        createdAt
+        updatedAt
+        __typename
+      }
+      movie {
+        id
+        name
+        name_eng
+        type
+        genre
+        description
+        description_eng
+        screen_language
+        captions_language
+        origin_country
+        length
+        created_year
+        uploaded_at
+        guid
+        MovieTeam {
+          id
+          director
+          operator
+          scenario
+          editor
+          actors
+          costumes
+          makeup
+          executive_producer
+          producer
+          createdAt
+          updatedAt
+          __typename
+        }
+        MovieInPlaylists {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        movieMovieTeamId
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateMovieMoviePlaylist = /* GraphQL */ `
+  mutation UpdateMovieMoviePlaylist(
+    $input: UpdateMovieMoviePlaylistInput!
+    $condition: ModelMovieMoviePlaylistConditionInput
+  ) {
+    updateMovieMoviePlaylist(input: $input, condition: $condition) {
+      id
+      moviePlaylistId
+      movieId
+      moviePlaylist {
+        id
+        Creator
+        movies {
+          nextToken
+          __typename
+        }
+        Title
+        is_public
+        createdAt
+        updatedAt
+        __typename
+      }
+      movie {
+        id
+        name
+        name_eng
+        type
+        genre
+        description
+        description_eng
+        screen_language
+        captions_language
+        origin_country
+        length
+        created_year
+        uploaded_at
+        guid
+        MovieTeam {
+          id
+          director
+          operator
+          scenario
+          editor
+          actors
+          costumes
+          makeup
+          executive_producer
+          producer
+          createdAt
+          updatedAt
+          __typename
+        }
+        MovieInPlaylists {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        movieMovieTeamId
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteMovieMoviePlaylist = /* GraphQL */ `
+  mutation DeleteMovieMoviePlaylist(
+    $input: DeleteMovieMoviePlaylistInput!
+    $condition: ModelMovieMoviePlaylistConditionInput
+  ) {
+    deleteMovieMoviePlaylist(input: $input, condition: $condition) {
+      id
+      moviePlaylistId
+      movieId
+      moviePlaylist {
+        id
+        Creator
+        movies {
+          nextToken
+          __typename
+        }
+        Title
+        is_public
+        createdAt
+        updatedAt
+        __typename
+      }
+      movie {
+        id
+        name
+        name_eng
+        type
+        genre
+        description
+        description_eng
+        screen_language
+        captions_language
+        origin_country
+        length
+        created_year
+        uploaded_at
+        guid
+        MovieTeam {
+          id
+          director
+          operator
+          scenario
+          editor
+          actors
+          costumes
+          makeup
+          executive_producer
+          producer
+          createdAt
+          updatedAt
+          __typename
+        }
+        MovieInPlaylists {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        movieMovieTeamId
+        __typename
+      }
+      createdAt
+      updatedAt
       __typename
     }
   }

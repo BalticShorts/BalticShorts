@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import VideoPlayer from '../components/VideoPlayer';
-import { getMovie, getMovieTeam } from '../graphql/queries.js'
+import { getMovie, movieMoviePlaylistsByMovieId } from '../graphql/queries.js'
 import { Amplify, API, graphqlOperation  } from 'aws-amplify';
 import awsExports from '../aws-exports';
 import { isVideoPlaying } from '../components/VideoPlayer';
+import { useNavigate } from "react-router-dom";
 
 Amplify.configure(awsExports);
 
@@ -14,32 +15,63 @@ const fetchMovie = async id => {
       return movie;
 }
 
+const fetchVideo = async guid => {
+  const requestOptions = {
+    method: 'POST',
+  };
+  const data = await fetch(
+    'https://uwmvm4vk6a.execute-api.eu-north-1.amazonaws.com/Dev/movies/' + guid,
+    requestOptions
+  ).then((response) => response.json());
+  return data;
+}
+
+const fetchPlaylists = async id => {
+  const movieData = await API.graphql(graphqlOperation(movieMoviePlaylistsByMovieId, {movieId:id}));
+  const playlistInfo = movieData.data.movieMoviePlaylistsByMovieId.items;
+  const playlistsList = [];
+  let row = [];
+  playlistInfo.map( (item) => {
+    if(item.moviePlaylist.is_public){
+      if(row.length < 3)
+        row.push(item.moviePlaylist);
+      else {
+        playlistsList.push(row);
+        row = [];
+        row.push(item.moviePlaylist)
+      }
+    }
+    return item;
+  })
+  if(row.length !== 0)
+    playlistsList.push(row);
+  return playlistsList
+}
 
 
 function Movie() {
+  const navigate = useNavigate();
+
   const { id } = useParams();
   const [movieURL, setMovieURL] = useState('');
   const [movieData, setMovieData] = useState({});
   const [movieTeamData, setMovieTeamData] = useState({});
   const [textOnMovie, setTextOnMovie] = useState(true);
+  const [playlists, setPlaylists] = useState([]);
+  const [playlistRows, setPlaylistRows] = useState(1);
 
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   useEffect(() => {
     const get = async () => {
       const movie = await fetchMovie(id);
-      try {
-        const requestOptions = {
-          method: 'POST',
-        };
-        const data = await fetch(
-          'https://uwmvm4vk6a.execute-api.eu-north-1.amazonaws.com/Dev/movies/' + movie.guid,
-          requestOptions
-        ).then((response) => response.json());
+      const data = await fetchVideo(movie.guid);
+      const playlists = await fetchPlaylists(id);
+      try {     
         setMovieURL(data.Item.hlsUrl.S);
         setMovieData(movie);
         setMovieTeamData(movie.MovieTeam);
-        console.log(movie.MovieTeam)
+        setPlaylists(playlists);
       } catch (error) {
         console.log('Error on fetching: ', error);
       }
@@ -56,6 +88,19 @@ function Movie() {
     setTextOnMovie(!textOnMovie)
   }
 
+  function showMorePlaylists(){
+    setPlaylistRows(playlistRows + 1);
+  }
+
+  function goPlaylist(row,item){
+    try{
+        const id = playlists[row][item].id
+        navigate("/playlist/" + id)
+    } catch (error) {
+        console.log('Error on goMovie', error);
+    }
+  }
+
   return (
     <>
     <div className="FilmasSkats w-full h-200 relative bg-stone-50 rounded-3xl">
@@ -63,11 +108,11 @@ function Movie() {
         <div onClick={() => removeText()} className='MovieContainer max-h-[80vh]' >
           <VideoPlayer movieURL={movieURL} />
         </div>
-        <div id='textOnMovie'>
-          <div>
+        <div id='textOnMovie' className='max-h-[80vh] h-full'>
+          <div className='w-full h-full top-0 absolute py-4'>
             <div className="Rectangle3 w-full h-52 left-0 top-[0]  absolute mix-blend-multiply bg-gradient-to-b from-slate-500 to-zinc-300" />
-            <div className="w-full m-auto top-[8%] absolute text-center text-stone-50 text-4xl font-bold font-['SchoolBook'] uppercase leading-10">{movieData.name}</div>
-            <div className="w-full m-auto top-[12%] absolute text-center text-stone-50 text-base font-normal font-['SchoolBook'] uppercase tracking-wider">{movieData.name_eng}</div>
+            <div className="w-full m-auto top-[3%] absolute text-center text-stone-50 text-4xl font-bold font-['SchoolBook'] uppercase leading-10">{movieData.name}</div>
+            <div className="w-full m-auto top-[6%] absolute text-center text-stone-50 text-base font-normal font-['SchoolBook'] uppercase tracking-wider">{movieData.name_eng}</div>
           </div>
           <div className='w-full h-full top-[60vh] absolute py-4'>
             <div className="Rectangle4 w-full h-[19vh] left-[0] top-0 relative -rotate-180 mix-blend-multiply bg-gradient-to-b from-slate-600 to-zinc-300" />
@@ -88,7 +133,6 @@ function Movie() {
       </div>
       {/* <div className="FilmasKadri w-full h-5 left-[305px] top-[1531px] absolute text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">FILMAS KADRI</div>
       <div className="SarakstiKurosFilmaIrIekAuta w-full h-5 left-[305px] top-[2288px] absolute text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">Saraksti, kuros filma ir iekļauta</div>
-      <div className="SaistTiDarbi w-full h-5 left-[305px] top-[2579px] absolute text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">SAISTĪTI DARBI</div>
       <div className="LvEn left-[305px] top-[919px] absolute text-stone-50 text-opacity-70 text-base font-normal font-['SchoolBook']">[ ] lv  |  [ ] en</div>
       <div className="PlayButton w-24 h-24 left-[805px] top-[442px] absolute" />
       <div className="Arrow w-9 h-3.5 left-[838px] top-[960px] absolute" /> */}
@@ -101,7 +145,7 @@ function Movie() {
         <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">KOMANDA</div>
           <div className="relative justify-center pt-8 gap-6 inline-flex flex-row items-center left-[15%] max-w-full min-w-fit">
 
-            <div className="w-40 mr-auto">
+            <div className="w-40 m-auto">
               <span className="text-black text-sm font-normal font-['SchoolBook']">REŽISORS<br/></span>
               <span className="text-black text-base font-bold font-['SchoolBook']">{movieTeamData.director}<br/><br/></span>
               <span className="text-black text-sm font-normal font-['SchoolBook']">OPERATORS<br/></span>
@@ -126,7 +170,7 @@ function Movie() {
               }) }
             </div>
 
-            <div className="w-40 mr-auto">
+            <div className="w-40 m-auto">
               <span className="text-black text-sm font-normal font-['SchoolBook']">LOMĀS<br/></span>
               { movieTeamData.actors?.map( (person) => {
                 return(
@@ -150,7 +194,7 @@ function Movie() {
               
             </div>
 
-            <div className="w-40 mr-auto">
+            <div className="w-40 m-auto">
               <span className="text-black text-sm font-normal font-['SchoolBook']">IZPILDPRODUCENTS<br/></span>
               { movieTeamData.executive_producer?.map( (person) => {
                 return(
@@ -170,6 +214,46 @@ function Movie() {
           </div>
 
           
+      </div>
+      <div className='w-full h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
+        <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative text-center">Saraksti, kuros filma ir iekļauta</div>
+        {playlists?.slice(0, playlists?.length >= playlistRows ? playlistRows : playlists.length).map((row, rowIdx) => {
+          return(
+          <>
+            <div className="w-full h-44 gap-6 mt-10 flex flex-row items-center relative justify-center">
+
+              {row.map( (item, itemIdx) => {
+                return(
+                  <div className="SarakstsInLists m-auto w-80 h-48 relative" onClick={ () => goPlaylist(rowIdx, itemIdx)}>
+                    <img className="Thumb w-80 h-24 left-0 top-0 relative" src="https://via.placeholder.com/350x100" />
+                    <div className="w-80 h-48 left-0 top-0 absolute bg-white bg-opacity-0 border border-black" />
+                    <div className="w-80 h-10 relative mt-1 ml-4 items-center justify-center">
+                      <div>
+                        <span className="text-black text-base font-bold font-['SchoolBook']">{item?.Title}<br/></span>
+                        <span className="text-black text-sm font-normal font-['SchoolBook']">by {item?.Creator}</span>
+                      </div>
+                    </div>
+                    <div className="w-80 h-2.5 left-[15.09px] top-[172.45px] absolute text-black text-xs font-normal font-['Arial'] tracking-wide">FILMAS  {playlists?.length}  |  SEKOTĀJI  10</div>
+                  </div>
+                )
+              })}
+            </div>
+          </>
+          )}) 
+        }
+      </div>
+      {playlists?.length > playlistRows ? (
+        <div className="w-full h-24 relative flex -top-8 mb-4">
+          <div className='w-full h-20 relative flex opacity-60'>
+            <div className="w-full h-16 relative bg-gradient-to-b from-stone-50 to-zinc-300" />
+          </div>
+            <div className="w-full h-2.5 m-auto mt-12 absolute flex items-center justify-center">
+              <div className="w-full h-2 top-[1px] relative text-black text-xs font-normal font-['Arial'] tracking-wide text-center" onClick={() => showMorePlaylists()}>Vairāk</div>
+            </div>
+          </div>
+        ) : (<></>)}
+      <div className='MoreWorks w-[75%] pt-8 flex flex-col'>
+        <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">SAISTĪTI DARBI</div>
       </div>
     </div>
     </>

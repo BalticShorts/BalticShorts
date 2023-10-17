@@ -1,3 +1,11 @@
+type MoviePlaylist @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  Creator: String!
+  movies: [Movie] @manyToMany(relationName: "MovieMoviePlaylist")
+  Title: String!
+  is_public: Boolean!
+}
+
 type MovieTeam @model @auth(rules: [{allow: public}]) {
   id: ID!
   director: String
@@ -27,5 +35,6 @@ type Movie @model @auth(rules: [{allow: public}]) {
   uploaded_at: String
   guid: ID
   MovieTeam: MovieTeam @hasOne
+  MovieInPlaylists: [MoviePlaylist] @manyToMany(relationName: "MovieMoviePlaylist")
 }
  

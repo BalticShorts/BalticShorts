@@ -13,6 +13,8 @@ export { default as FOOTER } from "./FOOTER";
 export { default as Katalogatipsbar } from "./Katalogatipsbar";
 export { default as Katalogatipsbartitle } from "./Katalogatipsbartitle";
 export { default as MovieCreateForm } from "./MovieCreateForm";
+export { default as MoviePlaylistCreateForm } from "./MoviePlaylistCreateForm";
+export { default as MoviePlaylistUpdateForm } from "./MoviePlaylistUpdateForm";
 export { default as MovieTeamCreateForm } from "./MovieTeamCreateForm";
 export { default as MovieTeamUpdateForm } from "./MovieTeamUpdateForm";
 export { default as MovieUpdateForm } from "./MovieUpdateForm";

@@ -1,6 +1,87 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onCreateMoviePlaylist = /* GraphQL */ `
+  subscription OnCreateMoviePlaylist(
+    $filter: ModelSubscriptionMoviePlaylistFilterInput
+  ) {
+    onCreateMoviePlaylist(filter: $filter) {
+      id
+      Creator
+      movies {
+        items {
+          id
+          moviePlaylistId
+          movieId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      Title
+      is_public
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateMoviePlaylist = /* GraphQL */ `
+  subscription OnUpdateMoviePlaylist(
+    $filter: ModelSubscriptionMoviePlaylistFilterInput
+  ) {
+    onUpdateMoviePlaylist(filter: $filter) {
+      id
+      Creator
+      movies {
+        items {
+          id
+          moviePlaylistId
+          movieId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      Title
+      is_public
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteMoviePlaylist = /* GraphQL */ `
+  subscription OnDeleteMoviePlaylist(
+    $filter: ModelSubscriptionMoviePlaylistFilterInput
+  ) {
+    onDeleteMoviePlaylist(filter: $filter) {
+      id
+      Creator
+      movies {
+        items {
+          id
+          moviePlaylistId
+          movieId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      Title
+      is_public
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateMovieTeam = /* GraphQL */ `
   subscription OnCreateMovieTeam(
     $filter: ModelSubscriptionMovieTeamFilterInput
@@ -96,6 +177,18 @@ export const onCreateMovie = /* GraphQL */ `
         updatedAt
         __typename
       }
+      MovieInPlaylists {
+        items {
+          id
+          moviePlaylistId
+          movieId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       movieMovieTeamId
@@ -133,6 +226,18 @@ export const onUpdateMovie = /* GraphQL */ `
         producer
         createdAt
         updatedAt
+        __typename
+      }
+      MovieInPlaylists {
+        items {
+          id
+          moviePlaylistId
+          movieId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
         __typename
       }
       createdAt
@@ -174,9 +279,219 @@ export const onDeleteMovie = /* GraphQL */ `
         updatedAt
         __typename
       }
+      MovieInPlaylists {
+        items {
+          id
+          moviePlaylistId
+          movieId
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       movieMovieTeamId
+      __typename
+    }
+  }
+`;
+export const onCreateMovieMoviePlaylist = /* GraphQL */ `
+  subscription OnCreateMovieMoviePlaylist(
+    $filter: ModelSubscriptionMovieMoviePlaylistFilterInput
+  ) {
+    onCreateMovieMoviePlaylist(filter: $filter) {
+      id
+      moviePlaylistId
+      movieId
+      moviePlaylist {
+        id
+        Creator
+        movies {
+          nextToken
+          __typename
+        }
+        Title
+        is_public
+        createdAt
+        updatedAt
+        __typename
+      }
+      movie {
+        id
+        name
+        name_eng
+        type
+        genre
+        description
+        description_eng
+        screen_language
+        captions_language
+        origin_country
+        length
+        created_year
+        uploaded_at
+        guid
+        MovieTeam {
+          id
+          director
+          operator
+          scenario
+          editor
+          actors
+          costumes
+          makeup
+          executive_producer
+          producer
+          createdAt
+          updatedAt
+          __typename
+        }
+        MovieInPlaylists {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        movieMovieTeamId
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateMovieMoviePlaylist = /* GraphQL */ `
+  subscription OnUpdateMovieMoviePlaylist(
+    $filter: ModelSubscriptionMovieMoviePlaylistFilterInput
+  ) {
+    onUpdateMovieMoviePlaylist(filter: $filter) {
+      id
+      moviePlaylistId
+      movieId
+      moviePlaylist {
+        id
+        Creator
+        movies {
+          nextToken
+          __typename
+        }
+        Title
+        is_public
+        createdAt
+        updatedAt
+        __typename
+      }
+      movie {
+        id
+        name
+        name_eng
+        type
+        genre
+        description
+        description_eng
+        screen_language
+        captions_language
+        origin_country
+        length
+        created_year
+        uploaded_at
+        guid
+        MovieTeam {
+          id
+          director
+          operator
+          scenario
+          editor
+          actors
+          costumes
+          makeup
+          executive_producer
+          producer
+          createdAt
+          updatedAt
+          __typename
+        }
+        MovieInPlaylists {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        movieMovieTeamId
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteMovieMoviePlaylist = /* GraphQL */ `
+  subscription OnDeleteMovieMoviePlaylist(
+    $filter: ModelSubscriptionMovieMoviePlaylistFilterInput
+  ) {
+    onDeleteMovieMoviePlaylist(filter: $filter) {
+      id
+      moviePlaylistId
+      movieId
+      moviePlaylist {
+        id
+        Creator
+        movies {
+          nextToken
+          __typename
+        }
+        Title
+        is_public
+        createdAt
+        updatedAt
+        __typename
+      }
+      movie {
+        id
+        name
+        name_eng
+        type
+        genre
+        description
+        description_eng
+        screen_language
+        captions_language
+        origin_country
+        length
+        created_year
+        uploaded_at
+        guid
+        MovieTeam {
+          id
+          director
+          operator
+          scenario
+          editor
+          actors
+          costumes
+          makeup
+          executive_producer
+          producer
+          createdAt
+          updatedAt
+          __typename
+        }
+        MovieInPlaylists {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        movieMovieTeamId
+        __typename
+      }
+      createdAt
+      updatedAt
       __typename
     }
   }

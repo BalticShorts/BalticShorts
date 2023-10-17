@@ -23,8 +23,8 @@ import {
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { fetchByPath, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { listMovieTeams } from "../graphql/queries";
-import { createMovie } from "../graphql/mutations";
+import { listMoviePlaylists, listMovieTeams } from "../graphql/queries";
+import { createMovie, createMovieMoviePlaylist } from "../graphql/mutations";
 function ArrayField({
   items = [],
   onChange,
@@ -206,6 +206,7 @@ export default function UploadMovie(props) {
     uploaded_at: "",
     guid: "",
     MovieTeam: undefined,
+    MovieInPlaylists: [],
   };
   const [name, setName] = React.useState(initialValues.name);
   const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
@@ -237,6 +238,14 @@ export default function UploadMovie(props) {
   const [MovieTeam, setMovieTeam] = React.useState(initialValues.MovieTeam);
   const [MovieTeamLoading, setMovieTeamLoading] = React.useState(false);
   const [MovieTeamRecords, setMovieTeamRecords] = React.useState([]);
+  const [MovieInPlaylists, setMovieInPlaylists] = React.useState(
+    initialValues.MovieInPlaylists
+  );
+  const [MovieInPlaylistsLoading, setMovieInPlaylistsLoading] =
+    React.useState(false);
+  const [MovieInPlaylistsRecords, setMovieInPlaylistsRecords] = React.useState(
+    []
+  );
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -256,6 +265,9 @@ export default function UploadMovie(props) {
     setMovieTeam(initialValues.MovieTeam);
     setCurrentMovieTeamValue(undefined);
     setCurrentMovieTeamDisplayValue("");
+    setMovieInPlaylists(initialValues.MovieInPlaylists);
+    setCurrentMovieInPlaylistsValue(undefined);
+    setCurrentMovieInPlaylistsDisplayValue("");
     setErrors({});
   };
   const [currentMovieTeamDisplayValue, setCurrentMovieTeamDisplayValue] =
@@ -263,16 +275,30 @@ export default function UploadMovie(props) {
   const [currentMovieTeamValue, setCurrentMovieTeamValue] =
     React.useState(undefined);
   const MovieTeamRef = React.createRef();
+  const [
+    currentMovieInPlaylistsDisplayValue,
+    setCurrentMovieInPlaylistsDisplayValue,
+  ] = React.useState("");
+  const [currentMovieInPlaylistsValue, setCurrentMovieInPlaylistsValue] =
+    React.useState(undefined);
+  const MovieInPlaylistsRef = React.createRef();
   const getIDValue = {
     MovieTeam: (r) => JSON.stringify({ id: r?.id }),
+    MovieInPlaylists: (r) => JSON.stringify({ id: r?.id }),
   };
   const MovieTeamIdSet = new Set(
     Array.isArray(MovieTeam)
       ? MovieTeam.map((r) => getIDValue.MovieTeam?.(r))
       : getIDValue.MovieTeam?.(MovieTeam)
   );
+  const MovieInPlaylistsIdSet = new Set(
+    Array.isArray(MovieInPlaylists)
+      ? MovieInPlaylists.map((r) => getIDValue.MovieInPlaylists?.(r))
+      : getIDValue.MovieInPlaylists?.(MovieInPlaylists)
+  );
   const getDisplayValue = {
     MovieTeam: (r) => `${r?.director ? r?.director + " - " : ""}${r?.id}`,
+    MovieInPlaylists: (r) => `${r?.Creator ? r?.Creator + " - " : ""}${r?.id}`,
   };
   const validations = {
     name: [],
@@ -289,6 +315,7 @@ export default function UploadMovie(props) {
     uploaded_at: [],
     guid: [],
     MovieTeam: [],
+    MovieInPlaylists: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -336,8 +363,39 @@ export default function UploadMovie(props) {
     setMovieTeamRecords(newOptions.slice(0, autocompleteLength));
     setMovieTeamLoading(false);
   };
+  const fetchMovieInPlaylistsRecords = async (value) => {
+    setMovieInPlaylistsLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: {
+          or: [{ Creator: { contains: value } }, { id: { contains: value } }],
+        },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await API.graphql({
+          query: listMoviePlaylists.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listMoviePlaylists?.items;
+      var loaded = result.filter(
+        (item) =>
+          !MovieInPlaylistsIdSet.has(getIDValue.MovieInPlaylists?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setMovieInPlaylistsRecords(newOptions.slice(0, autocompleteLength));
+    setMovieInPlaylistsLoading(false);
+  };
   React.useEffect(() => {
     fetchMovieTeamRecords("");
+    fetchMovieInPlaylistsRecords("");
   }, []);
   return (
     <Grid
@@ -362,6 +420,7 @@ export default function UploadMovie(props) {
           uploaded_at,
           guid,
           MovieTeam,
+          MovieInPlaylists,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -415,14 +474,34 @@ export default function UploadMovie(props) {
             guid: modelFields.guid,
             movieMovieTeamId: modelFields?.MovieTeam?.id,
           };
-          await API.graphql({
-            query: createMovie.replaceAll("__typename", ""),
-            variables: {
-              input: {
-                ...modelFieldsToSave,
+          const movie = (
+            await API.graphql({
+              query: createMovie.replaceAll("__typename", ""),
+              variables: {
+                input: {
+                  ...modelFieldsToSave,
+                },
               },
-            },
-          });
+            })
+          )?.data?.createMovie;
+          const promises = [];
+          promises.push(
+            ...MovieInPlaylists.reduce((promises, moviePlaylist) => {
+              promises.push(
+                API.graphql({
+                  query: createMovieMoviePlaylist.replaceAll("__typename", ""),
+                  variables: {
+                    input: {
+                      movieId: movie.id,
+                      moviePlaylistId: MoviePlaylist.id,
+                    },
+                  },
+                })
+              );
+              return promises;
+            }, [])
+          );
+          await Promise.all(promises);
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -462,6 +541,7 @@ export default function UploadMovie(props) {
               uploaded_at,
               guid,
               MovieTeam,
+              MovieInPlaylists,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -499,6 +579,7 @@ export default function UploadMovie(props) {
               uploaded_at,
               guid,
               MovieTeam,
+              MovieInPlaylists,
             };
             const result = onChange(modelFields);
             value = result?.name_eng ?? value;
@@ -536,6 +617,7 @@ export default function UploadMovie(props) {
               uploaded_at,
               guid,
               MovieTeam,
+              MovieInPlaylists,
             };
             const result = onChange(modelFields);
             value = result?.type ?? value;
@@ -573,6 +655,7 @@ export default function UploadMovie(props) {
               uploaded_at,
               guid,
               MovieTeam,
+              MovieInPlaylists,
             };
             const result = onChange(modelFields);
             value = result?.genre ?? value;
@@ -610,6 +693,7 @@ export default function UploadMovie(props) {
               uploaded_at,
               guid,
               MovieTeam,
+              MovieInPlaylists,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -647,6 +731,7 @@ export default function UploadMovie(props) {
               uploaded_at,
               guid,
               MovieTeam,
+              MovieInPlaylists,
             };
             const result = onChange(modelFields);
             value = result?.description_eng ?? value;
@@ -684,6 +769,7 @@ export default function UploadMovie(props) {
               uploaded_at,
               guid,
               MovieTeam,
+              MovieInPlaylists,
             };
             const result = onChange(modelFields);
             value = result?.screen_language ?? value;
@@ -721,6 +807,7 @@ export default function UploadMovie(props) {
               uploaded_at,
               guid,
               MovieTeam,
+              MovieInPlaylists,
             };
             const result = onChange(modelFields);
             value = result?.captions_language ?? value;
@@ -760,6 +847,7 @@ export default function UploadMovie(props) {
               uploaded_at,
               guid,
               MovieTeam,
+              MovieInPlaylists,
             };
             const result = onChange(modelFields);
             value = result?.origin_country ?? value;
@@ -801,6 +889,7 @@ export default function UploadMovie(props) {
               uploaded_at,
               guid,
               MovieTeam,
+              MovieInPlaylists,
             };
             const result = onChange(modelFields);
             value = result?.length ?? value;
@@ -838,6 +927,7 @@ export default function UploadMovie(props) {
               uploaded_at,
               guid,
               MovieTeam,
+              MovieInPlaylists,
             };
             const result = onChange(modelFields);
             value = result?.created_year ?? value;
@@ -875,6 +965,7 @@ export default function UploadMovie(props) {
               uploaded_at: value,
               guid,
               MovieTeam,
+              MovieInPlaylists,
             };
             const result = onChange(modelFields);
             value = result?.uploaded_at ?? value;
@@ -912,6 +1003,7 @@ export default function UploadMovie(props) {
               uploaded_at,
               guid: value,
               MovieTeam,
+              MovieInPlaylists,
             };
             const result = onChange(modelFields);
             value = result?.guid ?? value;
@@ -946,6 +1038,7 @@ export default function UploadMovie(props) {
               uploaded_at,
               guid,
               MovieTeam: value,
+              MovieInPlaylists,
             };
             const result = onChange(modelFields);
             value = result?.MovieTeam ?? value;
@@ -1016,6 +1109,102 @@ export default function UploadMovie(props) {
           ref={MovieTeamRef}
           labelHidden={true}
           {...getOverrideProps(overrides, "MovieTeam")}
+        ></Autocomplete>
+      </ArrayField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              type,
+              genre,
+              description,
+              description_eng,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              uploaded_at,
+              guid,
+              MovieTeam,
+              MovieInPlaylists: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.MovieInPlaylists ?? values;
+          }
+          setMovieInPlaylists(values);
+          setCurrentMovieInPlaylistsValue(undefined);
+          setCurrentMovieInPlaylistsDisplayValue("");
+        }}
+        currentFieldValue={currentMovieInPlaylistsValue}
+        label={"Movie in playlists"}
+        items={MovieInPlaylists}
+        hasError={errors?.MovieInPlaylists?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks(
+            "MovieInPlaylists",
+            currentMovieInPlaylistsValue
+          )
+        }
+        errorMessage={errors?.MovieInPlaylists?.errorMessage}
+        getBadgeText={getDisplayValue.MovieInPlaylists}
+        setFieldValue={(model) => {
+          setCurrentMovieInPlaylistsDisplayValue(
+            model ? getDisplayValue.MovieInPlaylists(model) : ""
+          );
+          setCurrentMovieInPlaylistsValue(model);
+        }}
+        inputFieldRef={MovieInPlaylistsRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Movie in playlists"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search MoviePlaylist"
+          value={currentMovieInPlaylistsDisplayValue}
+          options={MovieInPlaylistsRecords.map((r) => ({
+            id: getIDValue.MovieInPlaylists?.(r),
+            label: getDisplayValue.MovieInPlaylists?.(r),
+          }))}
+          isLoading={MovieInPlaylistsLoading}
+          onSelect={({ id, label }) => {
+            setCurrentMovieInPlaylistsValue(
+              MovieInPlaylistsRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentMovieInPlaylistsDisplayValue(label);
+            runValidationTasks("MovieInPlaylists", label);
+          }}
+          onClear={() => {
+            setCurrentMovieInPlaylistsDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchMovieInPlaylistsRecords(value);
+            if (errors.MovieInPlaylists?.hasError) {
+              runValidationTasks("MovieInPlaylists", value);
+            }
+            setCurrentMovieInPlaylistsDisplayValue(value);
+            setCurrentMovieInPlaylistsValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks(
+              "MovieInPlaylists",
+              currentMovieInPlaylistsDisplayValue
+            )
+          }
+          errorMessage={errors.MovieInPlaylists?.errorMessage}
+          hasError={errors.MovieInPlaylists?.hasError}
+          ref={MovieInPlaylistsRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "MovieInPlaylists")}
         ></Autocomplete>
       </ArrayField>
       <Flex

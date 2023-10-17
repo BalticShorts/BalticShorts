@@ -23,9 +23,10 @@ const Layout = () => {
             <div className="MainContainer mb-auto h-10 flex-grow">
               <Outlet />
             </div>
-            <div >
+            {/* Footer needs fixing - disabled for now */}
+            {/* <div >
                 <Footer />
-            </div>
+            </div> */}
 
             
         </div>
