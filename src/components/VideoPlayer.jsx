@@ -48,7 +48,7 @@ const VideoPlayer = ({ movieURL }) => {
 
   return (
     <div className='top-10'>
-      <video id='video-player' ref={videoNode} className="video-js vjs-default-skin w-full h-screen object-fill" />
+      <video id='video-player' ref={videoNode} className="video-js vjs-default-skin w-full h-[80vh] object-fill" />
     </div>
   );
 };
