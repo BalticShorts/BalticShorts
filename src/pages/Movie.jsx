@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import VideoPlayer from '../components/VideoPlayer';
-import { getMovie } from '../graphql/queries.js'
+import { getMovie, getMovieTeam } from '../graphql/queries.js'
 import { Amplify, API, graphqlOperation  } from 'aws-amplify';
 import awsExports from '../aws-exports';
 import { isVideoPlaying } from '../components/VideoPlayer';
@@ -20,6 +20,7 @@ function Movie() {
   const { id } = useParams();
   const [movieURL, setMovieURL] = useState('');
   const [movieData, setMovieData] = useState({});
+  const [movieTeamData, setMovieTeamData] = useState({});
   const [textOnMovie, setTextOnMovie] = useState(true);
 
   const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -37,11 +38,13 @@ function Movie() {
         ).then((response) => response.json());
         setMovieURL(data.Item.hlsUrl.S);
         setMovieData(movie);
+        setMovieTeamData(movie.MovieTeam);
+        console.log(movie.MovieTeam)
       } catch (error) {
         console.log('Error on fetching: ', error);
       }
     }
-    get()
+    get();
   }, [id]);
 
   function removeText() {
@@ -70,7 +73,7 @@ function Movie() {
             <div className="Rectangle4 w-full h-[19vh] left-[0] top-0 relative -rotate-180 mix-blend-multiply bg-gradient-to-b from-slate-600 to-zinc-300" />
             <div className="w-full top-14 absolute text-center flex flex-col items-center">
               <span className="text-stone-50 text-xl font-normal font-['SchoolBook'] uppercase relative inline">
-                Režisors Test Name
+                Režisors {movieTeamData.director}
               </span>
               <span className="text-stone-50 text-xl font-normal font-['SchoolBook'] relative">
                 {movieData.origin_country} | {movieData.created_year} | {movieData.length}’ | 18+
@@ -83,7 +86,6 @@ function Movie() {
           </div>
         </div>
       </div>
-      {/* <div className="Komanda w-full h-5 left-[305px] top-[1227px] absolute text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">KOMANDA</div> */}
       {/* <div className="FilmasKadri w-full h-5 left-[305px] top-[1531px] absolute text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">FILMAS KADRI</div>
       <div className="SarakstiKurosFilmaIrIekAuta w-full h-5 left-[305px] top-[2288px] absolute text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">Saraksti, kuros filma ir iekļauta</div>
       <div className="SaistTiDarbi w-full h-5 left-[305px] top-[2579px] absolute text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">SAISTĪTI DARBI</div>
@@ -97,6 +99,77 @@ function Movie() {
       </div>
       <div className='Team w-[75%] pt-8 flex flex-col'>
         <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">KOMANDA</div>
+          <div className="relative justify-center pt-8 gap-6 inline-flex flex-row items-center left-[15%] max-w-full min-w-fit">
+
+            <div className="w-40 mr-auto">
+              <span className="text-black text-sm font-normal font-['SchoolBook']">REŽISORS<br/></span>
+              <span className="text-black text-base font-bold font-['SchoolBook']">{movieTeamData.director}<br/><br/></span>
+              <span className="text-black text-sm font-normal font-['SchoolBook']">OPERATORS<br/></span>
+              { movieTeamData.operator.map( (person) => {
+                return(
+                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                )
+              }) }
+              <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
+              <span className="text-black text-sm font-normal font-['SchoolBook']">SCENĀRIJA AUTORS<br/></span>
+              { movieTeamData.scenario.map( (person) => {
+                return(
+                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                )
+              }) }
+              <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
+              <span className="text-black text-sm font-normal font-['SchoolBook']">MONTĀŽAS REŽISORS<br/></span>
+              { movieTeamData.editor.map( (person) => {
+                return(
+                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                )
+              }) }
+            </div>
+
+            <div className="w-40 mr-auto">
+              <span className="text-black text-sm font-normal font-['SchoolBook']">LOMĀS<br/></span>
+              { movieTeamData.actors.map( (person) => {
+                return(
+                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                )
+              }) }
+              <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
+              <span className="text-black text-sm font-normal font-['SchoolBook']">TĒRPU MĀKSLINIEKS<br/></span>
+              { movieTeamData.costumes.map( (person) => {
+                return(
+                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                )
+              }) }
+              <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
+              <span className="text-black text-sm font-normal font-['SchoolBook']">GRIMMA MĀKSLINIEKS<br/></span>
+              { movieTeamData.makeup.map( (person) => {
+                return(
+                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                )
+              }) }
+              
+            </div>
+
+            <div className="w-40 mr-auto">
+              <span className="text-black text-sm font-normal font-['SchoolBook']">IZPILDPRODUCENTS<br/></span>
+              { movieTeamData.executive_producer.map( (person) => {
+                return(
+                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                )
+              }) }
+              <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
+              <span className="text-black text-sm font-normal font-['SchoolBook']">PRODUCENTS<br/></span>
+              { movieTeamData.producer.map( (person) => {
+                
+                return(
+                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                )
+              }) }
+              
+            </div>
+          </div>
+
+          
       </div>
     </div>
     </>

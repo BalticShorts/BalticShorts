@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, SelectFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 export declare type ValidationResponse = {
     hasError: boolean;
@@ -26,6 +26,7 @@ export declare type UploadMovieInputValues = {
     created_year?: string;
     uploaded_at?: string;
     guid?: string;
+    MovieTeam?: any;
 };
 export declare type UploadMovieValidationValues = {
     name?: ValidationFunction<string>;
@@ -41,6 +42,7 @@ export declare type UploadMovieValidationValues = {
     created_year?: ValidationFunction<string>;
     uploaded_at?: ValidationFunction<string>;
     guid?: ValidationFunction<string>;
+    MovieTeam?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type UploadMovieOverridesProps = {
@@ -58,6 +60,7 @@ export declare type UploadMovieOverridesProps = {
     created_year?: PrimitiveOverrideProps<TextFieldProps>;
     uploaded_at?: PrimitiveOverrideProps<TextFieldProps>;
     guid?: PrimitiveOverrideProps<TextFieldProps>;
+    MovieTeam?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type UploadMovieProps = React.PropsWithChildren<{
     overrides?: UploadMovieOverridesProps | undefined | null;

@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 export declare type ValidationResponse = {
     hasError: boolean;
@@ -24,6 +24,7 @@ export declare type MovieCreateFormInputValues = {
     origin_country?: string;
     length?: number;
     created_year?: string;
+    MovieTeam?: any;
 };
 export declare type MovieCreateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -37,6 +38,7 @@ export declare type MovieCreateFormValidationValues = {
     origin_country?: ValidationFunction<string>;
     length?: ValidationFunction<number>;
     created_year?: ValidationFunction<string>;
+    MovieTeam?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MovieCreateFormOverridesProps = {
@@ -52,6 +54,7 @@ export declare type MovieCreateFormOverridesProps = {
     origin_country?: PrimitiveOverrideProps<TextFieldProps>;
     length?: PrimitiveOverrideProps<TextFieldProps>;
     created_year?: PrimitiveOverrideProps<TextFieldProps>;
+    MovieTeam?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type MovieCreateFormProps = React.PropsWithChildren<{
     overrides?: MovieCreateFormOverridesProps | undefined | null;

@@ -6,12 +6,179 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import {
+  Autocomplete,
+  Badge,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  Icon,
+  ScrollView,
+  Text,
+  TextField,
+  useTheme,
+} from "@aws-amplify/ui-react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { fetchByPath, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { getMovie } from "../graphql/queries";
+import { getMovie, listMovieTeams } from "../graphql/queries";
 import { updateMovie } from "../graphql/mutations";
+function ArrayField({
+  items = [],
+  onChange,
+  label,
+  inputFieldRef,
+  children,
+  hasError,
+  setFieldValue,
+  currentFieldValue,
+  defaultFieldValue,
+  lengthLimit,
+  getBadgeText,
+  runValidationTasks,
+  errorMessage,
+}) {
+  const labelElement = <Text>{label}</Text>;
+  const {
+    tokens: {
+      components: {
+        fieldmessages: { error: errorStyles },
+      },
+    },
+  } = useTheme();
+  const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
+  const [isEditing, setIsEditing] = React.useState();
+  React.useEffect(() => {
+    if (isEditing) {
+      inputFieldRef?.current?.focus();
+    }
+  }, [isEditing]);
+  const removeItem = async (removeIndex) => {
+    const newItems = items.filter((value, index) => index !== removeIndex);
+    await onChange(newItems);
+    setSelectedBadgeIndex(undefined);
+  };
+  const addItem = async () => {
+    const { hasError } = runValidationTasks();
+    if (
+      currentFieldValue !== undefined &&
+      currentFieldValue !== null &&
+      currentFieldValue !== "" &&
+      !hasError
+    ) {
+      const newItems = [...items];
+      if (selectedBadgeIndex !== undefined) {
+        newItems[selectedBadgeIndex] = currentFieldValue;
+        setSelectedBadgeIndex(undefined);
+      } else {
+        newItems.push(currentFieldValue);
+      }
+      await onChange(newItems);
+      setIsEditing(false);
+    }
+  };
+  const arraySection = (
+    <React.Fragment>
+      {!!items?.length && (
+        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
+          {items.map((value, index) => {
+            return (
+              <Badge
+                key={index}
+                style={{
+                  cursor: "pointer",
+                  alignItems: "center",
+                  marginRight: 3,
+                  marginTop: 3,
+                  backgroundColor:
+                    index === selectedBadgeIndex ? "#B8CEF9" : "",
+                }}
+                onClick={() => {
+                  setSelectedBadgeIndex(index);
+                  setFieldValue(items[index]);
+                  setIsEditing(true);
+                }}
+              >
+                {getBadgeText ? getBadgeText(value) : value.toString()}
+                <Icon
+                  style={{
+                    cursor: "pointer",
+                    paddingLeft: 3,
+                    width: 20,
+                    height: 20,
+                  }}
+                  viewBox={{ width: 20, height: 20 }}
+                  paths={[
+                    {
+                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
+                      stroke: "black",
+                    },
+                  ]}
+                  ariaLabel="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    removeItem(index);
+                  }}
+                />
+              </Badge>
+            );
+          })}
+        </ScrollView>
+      )}
+      <Divider orientation="horizontal" marginTop={5} />
+    </React.Fragment>
+  );
+  if (lengthLimit !== undefined && items.length >= lengthLimit && !isEditing) {
+    return (
+      <React.Fragment>
+        {labelElement}
+        {arraySection}
+      </React.Fragment>
+    );
+  }
+  return (
+    <React.Fragment>
+      {labelElement}
+      {isEditing && children}
+      {!isEditing ? (
+        <>
+          <Button
+            onClick={() => {
+              setIsEditing(true);
+            }}
+          >
+            Add item
+          </Button>
+          {errorMessage && hasError && (
+            <Text color={errorStyles.color} fontSize={errorStyles.fontSize}>
+              {errorMessage}
+            </Text>
+          )}
+        </>
+      ) : (
+        <Flex justifyContent="flex-end">
+          {(currentFieldValue || isEditing) && (
+            <Button
+              children="Cancel"
+              type="button"
+              size="small"
+              onClick={() => {
+                setFieldValue(defaultFieldValue);
+                setIsEditing(false);
+                setSelectedBadgeIndex(undefined);
+              }}
+            ></Button>
+          )}
+          <Button size="small" variation="link" onClick={addItem}>
+            {selectedBadgeIndex !== undefined ? "Save" : "Add"}
+          </Button>
+        </Flex>
+      )}
+      {arraySection}
+    </React.Fragment>
+  );
+}
 export default function MovieUpdateForm(props) {
   const {
     id: idProp,
@@ -38,6 +205,7 @@ export default function MovieUpdateForm(props) {
     created_year: "",
     uploaded_at: "",
     guid: "",
+    MovieTeam: undefined,
   };
   const [name, setName] = React.useState(initialValues.name);
   const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
@@ -66,10 +234,14 @@ export default function MovieUpdateForm(props) {
     initialValues.uploaded_at
   );
   const [guid, setGuid] = React.useState(initialValues.guid);
+  const [MovieTeam, setMovieTeam] = React.useState(initialValues.MovieTeam);
+  const [MovieTeamLoading, setMovieTeamLoading] = React.useState(false);
+  const [MovieTeamRecords, setMovieTeamRecords] = React.useState([]);
+  const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = movieRecord
-      ? { ...initialValues, ...movieRecord }
+      ? { ...initialValues, ...movieRecord, MovieTeam }
       : initialValues;
     setName(cleanValues.name);
     setName_eng(cleanValues.name_eng);
@@ -84,6 +256,9 @@ export default function MovieUpdateForm(props) {
     setCreated_year(cleanValues.created_year);
     setUploaded_at(cleanValues.uploaded_at);
     setGuid(cleanValues.guid);
+    setMovieTeam(cleanValues.MovieTeam);
+    setCurrentMovieTeamValue(undefined);
+    setCurrentMovieTeamDisplayValue("");
     setErrors({});
   };
   const [movieRecord, setMovieRecord] = React.useState(movieModelProp);
@@ -92,16 +267,34 @@ export default function MovieUpdateForm(props) {
       const record = idProp
         ? (
             await API.graphql({
-              query: getMovie,
+              query: getMovie.replaceAll("__typename", ""),
               variables: { id: idProp },
             })
           )?.data?.getMovie
         : movieModelProp;
+      const MovieTeamRecord = record ? await record.MovieTeam : undefined;
+      setMovieTeam(MovieTeamRecord);
       setMovieRecord(record);
     };
     queryData();
   }, [idProp, movieModelProp]);
-  React.useEffect(resetStateValues, [movieRecord]);
+  React.useEffect(resetStateValues, [movieRecord, MovieTeam]);
+  const [currentMovieTeamDisplayValue, setCurrentMovieTeamDisplayValue] =
+    React.useState("");
+  const [currentMovieTeamValue, setCurrentMovieTeamValue] =
+    React.useState(undefined);
+  const MovieTeamRef = React.createRef();
+  const getIDValue = {
+    MovieTeam: (r) => JSON.stringify({ id: r?.id }),
+  };
+  const MovieTeamIdSet = new Set(
+    Array.isArray(MovieTeam)
+      ? MovieTeam.map((r) => getIDValue.MovieTeam?.(r))
+      : getIDValue.MovieTeam?.(MovieTeam)
+  );
+  const getDisplayValue = {
+    MovieTeam: (r) => `${r?.director ? r?.director + " - " : ""}${r?.id}`,
+  };
   const validations = {
     name: [],
     name_eng: [],
@@ -116,6 +309,7 @@ export default function MovieUpdateForm(props) {
     created_year: [],
     uploaded_at: [],
     guid: [],
+    MovieTeam: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -134,6 +328,38 @@ export default function MovieUpdateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
+  const fetchMovieTeamRecords = async (value) => {
+    setMovieTeamLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: {
+          or: [{ director: { contains: value } }, { id: { contains: value } }],
+        },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await API.graphql({
+          query: listMovieTeams.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listMovieTeams?.items;
+      var loaded = result.filter(
+        (item) => !MovieTeamIdSet.has(getIDValue.MovieTeam?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setMovieTeamRecords(newOptions.slice(0, autocompleteLength));
+    setMovieTeamLoading(false);
+  };
+  React.useEffect(() => {
+    fetchMovieTeamRecords("");
+  }, []);
   return (
     <Grid
       as="form"
@@ -156,19 +382,28 @@ export default function MovieUpdateForm(props) {
           created_year: created_year ?? null,
           uploaded_at: uploaded_at ?? null,
           guid: guid ?? null,
+          MovieTeam: MovieTeam ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
             if (Array.isArray(modelFields[fieldName])) {
               promises.push(
                 ...modelFields[fieldName].map((item) =>
-                  runValidationTasks(fieldName, item)
+                  runValidationTasks(
+                    fieldName,
+                    item,
+                    getDisplayValue[fieldName]
+                  )
                 )
               );
               return promises;
             }
             promises.push(
-              runValidationTasks(fieldName, modelFields[fieldName])
+              runValidationTasks(
+                fieldName,
+                modelFields[fieldName],
+                getDisplayValue[fieldName]
+              )
             );
             return promises;
           }, [])
@@ -185,12 +420,28 @@ export default function MovieUpdateForm(props) {
               modelFields[key] = null;
             }
           });
+          const modelFieldsToSave = {
+            name: modelFields.name ?? null,
+            name_eng: modelFields.name_eng ?? null,
+            type: modelFields.type ?? null,
+            genre: modelFields.genre ?? null,
+            description: modelFields.description ?? null,
+            description_eng: modelFields.description_eng ?? null,
+            screen_language: modelFields.screen_language ?? null,
+            captions_language: modelFields.captions_language ?? null,
+            origin_country: modelFields.origin_country ?? null,
+            length: modelFields.length ?? null,
+            created_year: modelFields.created_year ?? null,
+            uploaded_at: modelFields.uploaded_at ?? null,
+            guid: modelFields.guid ?? null,
+            movieMovieTeamId: modelFields?.MovieTeam?.id ?? null,
+          };
           await API.graphql({
-            query: updateMovie,
+            query: updateMovie.replaceAll("__typename", ""),
             variables: {
               input: {
                 id: movieRecord.id,
-                ...modelFields,
+                ...modelFieldsToSave,
               },
             },
           });
@@ -229,6 +480,7 @@ export default function MovieUpdateForm(props) {
               created_year,
               uploaded_at,
               guid,
+              MovieTeam,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -265,6 +517,7 @@ export default function MovieUpdateForm(props) {
               created_year,
               uploaded_at,
               guid,
+              MovieTeam,
             };
             const result = onChange(modelFields);
             value = result?.name_eng ?? value;
@@ -301,6 +554,7 @@ export default function MovieUpdateForm(props) {
               created_year,
               uploaded_at,
               guid,
+              MovieTeam,
             };
             const result = onChange(modelFields);
             value = result?.type ?? value;
@@ -337,6 +591,7 @@ export default function MovieUpdateForm(props) {
               created_year,
               uploaded_at,
               guid,
+              MovieTeam,
             };
             const result = onChange(modelFields);
             value = result?.genre ?? value;
@@ -373,6 +628,7 @@ export default function MovieUpdateForm(props) {
               created_year,
               uploaded_at,
               guid,
+              MovieTeam,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -409,6 +665,7 @@ export default function MovieUpdateForm(props) {
               created_year,
               uploaded_at,
               guid,
+              MovieTeam,
             };
             const result = onChange(modelFields);
             value = result?.description_eng ?? value;
@@ -445,6 +702,7 @@ export default function MovieUpdateForm(props) {
               created_year,
               uploaded_at,
               guid,
+              MovieTeam,
             };
             const result = onChange(modelFields);
             value = result?.screen_language ?? value;
@@ -481,6 +739,7 @@ export default function MovieUpdateForm(props) {
               created_year,
               uploaded_at,
               guid,
+              MovieTeam,
             };
             const result = onChange(modelFields);
             value = result?.captions_language ?? value;
@@ -519,6 +778,7 @@ export default function MovieUpdateForm(props) {
               created_year,
               uploaded_at,
               guid,
+              MovieTeam,
             };
             const result = onChange(modelFields);
             value = result?.origin_country ?? value;
@@ -559,6 +819,7 @@ export default function MovieUpdateForm(props) {
               created_year,
               uploaded_at,
               guid,
+              MovieTeam,
             };
             const result = onChange(modelFields);
             value = result?.length ?? value;
@@ -595,6 +856,7 @@ export default function MovieUpdateForm(props) {
               created_year: value,
               uploaded_at,
               guid,
+              MovieTeam,
             };
             const result = onChange(modelFields);
             value = result?.created_year ?? value;
@@ -631,6 +893,7 @@ export default function MovieUpdateForm(props) {
               created_year,
               uploaded_at: value,
               guid,
+              MovieTeam,
             };
             const result = onChange(modelFields);
             value = result?.uploaded_at ?? value;
@@ -667,6 +930,7 @@ export default function MovieUpdateForm(props) {
               created_year,
               uploaded_at,
               guid: value,
+              MovieTeam,
             };
             const result = onChange(modelFields);
             value = result?.guid ?? value;
@@ -681,6 +945,99 @@ export default function MovieUpdateForm(props) {
         hasError={errors.guid?.hasError}
         {...getOverrideProps(overrides, "guid")}
       ></TextField>
+      <ArrayField
+        lengthLimit={1}
+        onChange={async (items) => {
+          let value = items[0];
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              type,
+              genre,
+              description,
+              description_eng,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              uploaded_at,
+              guid,
+              MovieTeam: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.MovieTeam ?? value;
+          }
+          setMovieTeam(value);
+          setCurrentMovieTeamValue(undefined);
+          setCurrentMovieTeamDisplayValue("");
+        }}
+        currentFieldValue={currentMovieTeamValue}
+        label={"Movie team"}
+        items={MovieTeam ? [MovieTeam] : []}
+        hasError={errors?.MovieTeam?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("MovieTeam", currentMovieTeamValue)
+        }
+        errorMessage={errors?.MovieTeam?.errorMessage}
+        getBadgeText={getDisplayValue.MovieTeam}
+        setFieldValue={(model) => {
+          setCurrentMovieTeamDisplayValue(
+            model ? getDisplayValue.MovieTeam(model) : ""
+          );
+          setCurrentMovieTeamValue(model);
+        }}
+        inputFieldRef={MovieTeamRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Movie team"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search MovieTeam"
+          value={currentMovieTeamDisplayValue}
+          options={MovieTeamRecords.filter(
+            (r) => !MovieTeamIdSet.has(getIDValue.MovieTeam?.(r))
+          ).map((r) => ({
+            id: getIDValue.MovieTeam?.(r),
+            label: getDisplayValue.MovieTeam?.(r),
+          }))}
+          isLoading={MovieTeamLoading}
+          onSelect={({ id, label }) => {
+            setCurrentMovieTeamValue(
+              MovieTeamRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentMovieTeamDisplayValue(label);
+            runValidationTasks("MovieTeam", label);
+          }}
+          onClear={() => {
+            setCurrentMovieTeamDisplayValue("");
+          }}
+          defaultValue={MovieTeam}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchMovieTeamRecords(value);
+            if (errors.MovieTeam?.hasError) {
+              runValidationTasks("MovieTeam", value);
+            }
+            setCurrentMovieTeamDisplayValue(value);
+            setCurrentMovieTeamValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks("MovieTeam", currentMovieTeamDisplayValue)
+          }
+          errorMessage={errors.MovieTeam?.errorMessage}
+          hasError={errors.MovieTeam?.hasError}
+          ref={MovieTeamRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "MovieTeam")}
+        ></Autocomplete>
+      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
