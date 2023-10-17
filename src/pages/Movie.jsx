@@ -215,12 +215,12 @@ function Movie() {
 
           
       </div>
-      <div className='w-full h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
-        <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative text-center">Saraksti, kuros filma ir iekļauta</div>
+      <div className='w-[75%] h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
+        <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative left-[15%]">Saraksti, kuros filma ir iekļauta</div>
         {playlists?.slice(0, playlists?.length >= playlistRows ? playlistRows : playlists.length).map((row, rowIdx) => {
           return(
           <>
-            <div className="w-full h-44 gap-6 mt-10 flex flex-row items-center relative justify-center">
+            <div className="w-full h-44 gap-6 mt-10 flex flex-row items-center relative justify-cente left-[15%]">
 
               {row.map( (item, itemIdx) => {
                 return(
