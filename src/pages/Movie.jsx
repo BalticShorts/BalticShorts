@@ -105,21 +105,21 @@ function Movie() {
               <span className="text-black text-sm font-normal font-['SchoolBook']">REŽISORS<br/></span>
               <span className="text-black text-base font-bold font-['SchoolBook']">{movieTeamData.director}<br/><br/></span>
               <span className="text-black text-sm font-normal font-['SchoolBook']">OPERATORS<br/></span>
-              { movieTeamData.operator.map( (person) => {
+              { movieTeamData.operator?.map( (person) => {
                 return(
                   <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
                 )
               }) }
               <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
               <span className="text-black text-sm font-normal font-['SchoolBook']">SCENĀRIJA AUTORS<br/></span>
-              { movieTeamData.scenario.map( (person) => {
+              { movieTeamData.scenario?.map( (person) => {
                 return(
                   <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
                 )
               }) }
               <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
               <span className="text-black text-sm font-normal font-['SchoolBook']">MONTĀŽAS REŽISORS<br/></span>
-              { movieTeamData.editor.map( (person) => {
+              { movieTeamData.editor?.map( (person) => {
                 return(
                   <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
                 )
@@ -128,21 +128,21 @@ function Movie() {
 
             <div className="w-40 mr-auto">
               <span className="text-black text-sm font-normal font-['SchoolBook']">LOMĀS<br/></span>
-              { movieTeamData.actors.map( (person) => {
+              { movieTeamData.actors?.map( (person) => {
                 return(
                   <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
                 )
               }) }
               <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
               <span className="text-black text-sm font-normal font-['SchoolBook']">TĒRPU MĀKSLINIEKS<br/></span>
-              { movieTeamData.costumes.map( (person) => {
+              { movieTeamData.costumes?.map( (person) => {
                 return(
                   <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
                 )
               }) }
               <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
               <span className="text-black text-sm font-normal font-['SchoolBook']">GRIMMA MĀKSLINIEKS<br/></span>
-              { movieTeamData.makeup.map( (person) => {
+              { movieTeamData.makeup?.map( (person) => {
                 return(
                   <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
                 )
@@ -152,14 +152,14 @@ function Movie() {
 
             <div className="w-40 mr-auto">
               <span className="text-black text-sm font-normal font-['SchoolBook']">IZPILDPRODUCENTS<br/></span>
-              { movieTeamData.executive_producer.map( (person) => {
+              { movieTeamData.executive_producer?.map( (person) => {
                 return(
                   <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
                 )
               }) }
               <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
               <span className="text-black text-sm font-normal font-['SchoolBook']">PRODUCENTS<br/></span>
-              { movieTeamData.producer.map( (person) => {
+              { movieTeamData.producer?.map( (person) => {
                 
                 return(
                   <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>

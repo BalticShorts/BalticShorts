@@ -1,10 +1,11 @@
-import { Outlet } from "react-router-dom";
+import React from 'react';
+import { Outlet } from 'react-router-dom';
 import { Navbar } from '../modified-ui-components/Header';
 import { Authenticator } from '@aws-amplify/ui-react';
 import awsExports from '../aws-exports';
 import { Amplify } from 'aws-amplify';
 import { Footer } from '../modified-ui-components/Footer';
-import './style.css'
+import './style.css';
 
 const Layout = () => {
   Amplify.configure(awsExports);
@@ -21,7 +22,6 @@ const Layout = () => {
             
             <div className="MainContainer mb-auto h-10 flex-grow">
               <Outlet />
-
             </div>
             <div >
                 <Footer />
