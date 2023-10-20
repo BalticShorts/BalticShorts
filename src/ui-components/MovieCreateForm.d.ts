@@ -26,6 +26,8 @@ export declare type MovieCreateFormInputValues = {
     created_year?: string;
     MovieTeam?: any;
     MovieInPlaylists?: any[];
+    times_watched?: number;
+    MovieType?: any;
 };
 export declare type MovieCreateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -41,6 +43,8 @@ export declare type MovieCreateFormValidationValues = {
     created_year?: ValidationFunction<string>;
     MovieTeam?: ValidationFunction<any>;
     MovieInPlaylists?: ValidationFunction<any>;
+    times_watched?: ValidationFunction<number>;
+    MovieType?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MovieCreateFormOverridesProps = {
@@ -58,6 +62,8 @@ export declare type MovieCreateFormOverridesProps = {
     created_year?: PrimitiveOverrideProps<TextFieldProps>;
     MovieTeam?: PrimitiveOverrideProps<AutocompleteProps>;
     MovieInPlaylists?: PrimitiveOverrideProps<AutocompleteProps>;
+    times_watched?: PrimitiveOverrideProps<TextFieldProps>;
+    MovieType?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type MovieCreateFormProps = React.PropsWithChildren<{
     overrides?: MovieCreateFormOverridesProps | undefined | null;

@@ -1,6 +1,473 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const getMovieType = /* GraphQL */ `
+  query GetMovieType($id: ID!) {
+    getMovieType(id: $id) {
+      id
+      type
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listMovieTypes = /* GraphQL */ `
+  query ListMovieTypes(
+    $filter: ModelMovieTypeFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMovieTypes(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getPersonMovieTeam = /* GraphQL */ `
+  query GetPersonMovieTeam($id: ID!) {
+    getPersonMovieTeam(id: $id) {
+      id
+      movieteamID
+      personID
+      MovieTeam {
+        id
+        director
+        operator
+        scenario
+        editor
+        actors
+        costumes
+        makeup
+        executive_producer
+        producer
+        producer_org
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      Person {
+        id
+        name
+        surname
+        role
+        description
+        Instagram
+        Facebook
+        IMBD
+        email
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      roleID
+      Role {
+        id
+        name
+        PersonMovieTeam {
+          nextToken
+          __typename
+        }
+        name_eng
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listPersonMovieTeams = /* GraphQL */ `
+  query ListPersonMovieTeams(
+    $filter: ModelPersonMovieTeamFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPersonMovieTeams(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        movieteamID
+        personID
+        MovieTeam {
+          id
+          director
+          operator
+          scenario
+          editor
+          actors
+          costumes
+          makeup
+          executive_producer
+          producer
+          producer_org
+          createdAt
+          updatedAt
+          __typename
+        }
+        Person {
+          id
+          name
+          surname
+          role
+          description
+          Instagram
+          Facebook
+          IMBD
+          email
+          createdAt
+          updatedAt
+          __typename
+        }
+        roleID
+        Role {
+          id
+          name
+          name_eng
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const personMovieTeamsByMovieteamID = /* GraphQL */ `
+  query PersonMovieTeamsByMovieteamID(
+    $movieteamID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPersonMovieTeamFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    personMovieTeamsByMovieteamID(
+      movieteamID: $movieteamID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        movieteamID
+        personID
+        MovieTeam {
+          id
+          director
+          operator
+          scenario
+          editor
+          actors
+          costumes
+          makeup
+          executive_producer
+          producer
+          producer_org
+          createdAt
+          updatedAt
+          __typename
+        }
+        Person {
+          id
+          name
+          surname
+          role
+          description
+          Instagram
+          Facebook
+          IMBD
+          email
+          createdAt
+          updatedAt
+          __typename
+        }
+        roleID
+        Role {
+          id
+          name
+          name_eng
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const personMovieTeamsByPersonID = /* GraphQL */ `
+  query PersonMovieTeamsByPersonID(
+    $personID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPersonMovieTeamFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    personMovieTeamsByPersonID(
+      personID: $personID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        movieteamID
+        personID
+        MovieTeam {
+          id
+          director
+          operator
+          scenario
+          editor
+          actors
+          costumes
+          makeup
+          executive_producer
+          producer
+          producer_org
+          createdAt
+          updatedAt
+          __typename
+        }
+        Person {
+          id
+          name
+          surname
+          role
+          description
+          Instagram
+          Facebook
+          IMBD
+          email
+          createdAt
+          updatedAt
+          __typename
+        }
+        roleID
+        Role {
+          id
+          name
+          name_eng
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const personMovieTeamsByRoleID = /* GraphQL */ `
+  query PersonMovieTeamsByRoleID(
+    $roleID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPersonMovieTeamFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    personMovieTeamsByRoleID(
+      roleID: $roleID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        movieteamID
+        personID
+        MovieTeam {
+          id
+          director
+          operator
+          scenario
+          editor
+          actors
+          costumes
+          makeup
+          executive_producer
+          producer
+          producer_org
+          createdAt
+          updatedAt
+          __typename
+        }
+        Person {
+          id
+          name
+          surname
+          role
+          description
+          Instagram
+          Facebook
+          IMBD
+          email
+          createdAt
+          updatedAt
+          __typename
+        }
+        roleID
+        Role {
+          id
+          name
+          name_eng
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getRole = /* GraphQL */ `
+  query GetRole($id: ID!) {
+    getRole(id: $id) {
+      id
+      name
+      PersonMovieTeam {
+        items {
+          id
+          movieteamID
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      name_eng
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listRoles = /* GraphQL */ `
+  query ListRoles(
+    $filter: ModelRoleFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listRoles(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        PersonMovieTeam {
+          nextToken
+          __typename
+        }
+        name_eng
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getPerson = /* GraphQL */ `
+  query GetPerson($id: ID!) {
+    getPerson(id: $id) {
+      id
+      name
+      surname
+      role
+      description
+      Instagram
+      Facebook
+      IMBD
+      email
+      PersonMovieTeams {
+        items {
+          id
+          movieteamID
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listPeople = /* GraphQL */ `
+  query ListPeople(
+    $filter: ModelPersonFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPeople(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        surname
+        role
+        description
+        Instagram
+        Facebook
+        IMBD
+        email
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getMoviePlaylist = /* GraphQL */ `
   query GetMoviePlaylist($id: ID!) {
     getMoviePlaylist(id: $id) {
@@ -20,6 +487,7 @@ export const getMoviePlaylist = /* GraphQL */ `
       }
       Title
       is_public
+      is_recommended
       createdAt
       updatedAt
       __typename
@@ -42,6 +510,7 @@ export const listMoviePlaylists = /* GraphQL */ `
         }
         Title
         is_public
+        is_recommended
         createdAt
         updatedAt
         __typename
@@ -64,6 +533,20 @@ export const getMovieTeam = /* GraphQL */ `
       makeup
       executive_producer
       producer
+      producer_org
+      PersonMovieTeams {
+        items {
+          id
+          movieteamID
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -88,6 +571,11 @@ export const listMovieTeams = /* GraphQL */ `
         makeup
         executive_producer
         producer
+        producer_org
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -125,6 +613,11 @@ export const getMovie = /* GraphQL */ `
         makeup
         executive_producer
         producer
+        producer_org
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -141,9 +634,18 @@ export const getMovie = /* GraphQL */ `
         nextToken
         __typename
       }
+      times_watched
+      MovieType {
+        id
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       movieMovieTeamId
+      movieMovieTypeId
       __typename
     }
   }
@@ -181,6 +683,7 @@ export const listMovies = /* GraphQL */ `
           makeup
           executive_producer
           producer
+          producer_org
           createdAt
           updatedAt
           __typename
@@ -189,9 +692,18 @@ export const listMovies = /* GraphQL */ `
           nextToken
           __typename
         }
+        times_watched
+        MovieType {
+          id
+          type
+          createdAt
+          updatedAt
+          __typename
+        }
         createdAt
         updatedAt
         movieMovieTeamId
+        movieMovieTypeId
         __typename
       }
       nextToken
@@ -214,6 +726,7 @@ export const getMovieMoviePlaylist = /* GraphQL */ `
         }
         Title
         is_public
+        is_recommended
         createdAt
         updatedAt
         __typename
@@ -244,6 +757,7 @@ export const getMovieMoviePlaylist = /* GraphQL */ `
           makeup
           executive_producer
           producer
+          producer_org
           createdAt
           updatedAt
           __typename
@@ -252,9 +766,18 @@ export const getMovieMoviePlaylist = /* GraphQL */ `
           nextToken
           __typename
         }
+        times_watched
+        MovieType {
+          id
+          type
+          createdAt
+          updatedAt
+          __typename
+        }
         createdAt
         updatedAt
         movieMovieTeamId
+        movieMovieTypeId
         __typename
       }
       createdAt
@@ -283,6 +806,7 @@ export const listMovieMoviePlaylists = /* GraphQL */ `
           Creator
           Title
           is_public
+          is_recommended
           createdAt
           updatedAt
           __typename
@@ -302,9 +826,11 @@ export const listMovieMoviePlaylists = /* GraphQL */ `
           created_year
           uploaded_at
           guid
+          times_watched
           createdAt
           updatedAt
           movieMovieTeamId
+          movieMovieTypeId
           __typename
         }
         createdAt
@@ -340,6 +866,7 @@ export const movieMoviePlaylistsByMoviePlaylistId = /* GraphQL */ `
           Creator
           Title
           is_public
+          is_recommended
           createdAt
           updatedAt
           __typename
@@ -359,9 +886,11 @@ export const movieMoviePlaylistsByMoviePlaylistId = /* GraphQL */ `
           created_year
           uploaded_at
           guid
+          times_watched
           createdAt
           updatedAt
           movieMovieTeamId
+          movieMovieTypeId
           __typename
         }
         createdAt
@@ -397,6 +926,7 @@ export const movieMoviePlaylistsByMovieId = /* GraphQL */ `
           Creator
           Title
           is_public
+          is_recommended
           createdAt
           updatedAt
           __typename
@@ -416,9 +946,11 @@ export const movieMoviePlaylistsByMovieId = /* GraphQL */ `
           created_year
           uploaded_at
           guid
+          times_watched
           createdAt
           updatedAt
           movieMovieTeamId
+          movieMovieTypeId
           __typename
         }
         createdAt

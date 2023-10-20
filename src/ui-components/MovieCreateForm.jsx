@@ -22,7 +22,11 @@ import {
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { fetchByPath, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { listMoviePlaylists, listMovieTeams } from "../graphql/queries";
+import {
+  listMoviePlaylists,
+  listMovieTeams,
+  listMovieTypes,
+} from "../graphql/queries";
 import { createMovie, createMovieMoviePlaylist } from "../graphql/mutations";
 function ArrayField({
   items = [],
@@ -204,6 +208,8 @@ export default function MovieCreateForm(props) {
     created_year: "",
     MovieTeam: undefined,
     MovieInPlaylists: [],
+    times_watched: "",
+    MovieType: undefined,
   };
   const [name, setName] = React.useState(initialValues.name);
   const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
@@ -239,6 +245,12 @@ export default function MovieCreateForm(props) {
   const [MovieInPlaylistsRecords, setMovieInPlaylistsRecords] = React.useState(
     []
   );
+  const [times_watched, setTimes_watched] = React.useState(
+    initialValues.times_watched
+  );
+  const [MovieType, setMovieType] = React.useState(initialValues.MovieType);
+  const [MovieTypeLoading, setMovieTypeLoading] = React.useState(false);
+  const [MovieTypeRecords, setMovieTypeRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -259,6 +271,10 @@ export default function MovieCreateForm(props) {
     setMovieInPlaylists(initialValues.MovieInPlaylists);
     setCurrentMovieInPlaylistsValue(undefined);
     setCurrentMovieInPlaylistsDisplayValue("");
+    setTimes_watched(initialValues.times_watched);
+    setMovieType(initialValues.MovieType);
+    setCurrentMovieTypeValue(undefined);
+    setCurrentMovieTypeDisplayValue("");
     setErrors({});
   };
   const [currentMovieTeamDisplayValue, setCurrentMovieTeamDisplayValue] =
@@ -273,9 +289,15 @@ export default function MovieCreateForm(props) {
   const [currentMovieInPlaylistsValue, setCurrentMovieInPlaylistsValue] =
     React.useState(undefined);
   const MovieInPlaylistsRef = React.createRef();
+  const [currentMovieTypeDisplayValue, setCurrentMovieTypeDisplayValue] =
+    React.useState("");
+  const [currentMovieTypeValue, setCurrentMovieTypeValue] =
+    React.useState(undefined);
+  const MovieTypeRef = React.createRef();
   const getIDValue = {
     MovieTeam: (r) => JSON.stringify({ id: r?.id }),
     MovieInPlaylists: (r) => JSON.stringify({ id: r?.id }),
+    MovieType: (r) => JSON.stringify({ id: r?.id }),
   };
   const MovieTeamIdSet = new Set(
     Array.isArray(MovieTeam)
@@ -287,9 +309,15 @@ export default function MovieCreateForm(props) {
       ? MovieInPlaylists.map((r) => getIDValue.MovieInPlaylists?.(r))
       : getIDValue.MovieInPlaylists?.(MovieInPlaylists)
   );
+  const MovieTypeIdSet = new Set(
+    Array.isArray(MovieType)
+      ? MovieType.map((r) => getIDValue.MovieType?.(r))
+      : getIDValue.MovieType?.(MovieType)
+  );
   const getDisplayValue = {
     MovieTeam: (r) => `${r?.director ? r?.director + " - " : ""}${r?.id}`,
     MovieInPlaylists: (r) => `${r?.Creator ? r?.Creator + " - " : ""}${r?.id}`,
+    MovieType: (r) => `${r?.type ? r?.type + " - " : ""}${r?.id}`,
   };
   const validations = {
     name: [{ type: "Required" }],
@@ -305,6 +333,8 @@ export default function MovieCreateForm(props) {
     created_year: [],
     MovieTeam: [],
     MovieInPlaylists: [],
+    times_watched: [],
+    MovieType: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -382,9 +412,39 @@ export default function MovieCreateForm(props) {
     setMovieInPlaylistsRecords(newOptions.slice(0, autocompleteLength));
     setMovieInPlaylistsLoading(false);
   };
+  const fetchMovieTypeRecords = async (value) => {
+    setMovieTypeLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: {
+          or: [{ type: { contains: value } }, { id: { contains: value } }],
+        },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await API.graphql({
+          query: listMovieTypes.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listMovieTypes?.items;
+      var loaded = result.filter(
+        (item) => !MovieTypeIdSet.has(getIDValue.MovieType?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setMovieTypeRecords(newOptions.slice(0, autocompleteLength));
+    setMovieTypeLoading(false);
+  };
   React.useEffect(() => {
     fetchMovieTeamRecords("");
     fetchMovieInPlaylistsRecords("");
+    fetchMovieTypeRecords("");
   }, []);
   return (
     <Grid
@@ -408,6 +468,8 @@ export default function MovieCreateForm(props) {
           created_year,
           MovieTeam,
           MovieInPlaylists,
+          times_watched,
+          MovieType,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -458,6 +520,8 @@ export default function MovieCreateForm(props) {
             length: modelFields.length,
             created_year: modelFields.created_year,
             movieMovieTeamId: modelFields?.MovieTeam?.id,
+            times_watched: modelFields.times_watched,
+            movieMovieTypeId: modelFields?.MovieType?.id,
           };
           const movie = (
             await API.graphql({
@@ -525,6 +589,8 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              times_watched,
+              MovieType,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -561,6 +627,8 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              times_watched,
+              MovieType,
             };
             const result = onChange(modelFields);
             value = result?.name_eng ?? value;
@@ -597,6 +665,8 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              times_watched,
+              MovieType,
             };
             const result = onChange(modelFields);
             value = result?.type ?? value;
@@ -633,6 +703,8 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              times_watched,
+              MovieType,
             };
             const result = onChange(modelFields);
             value = result?.genre ?? value;
@@ -669,6 +741,8 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              times_watched,
+              MovieType,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -705,6 +779,8 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              times_watched,
+              MovieType,
             };
             const result = onChange(modelFields);
             value = result?.description_eng ?? value;
@@ -741,6 +817,8 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              times_watched,
+              MovieType,
             };
             const result = onChange(modelFields);
             value = result?.screen_language ?? value;
@@ -777,6 +855,8 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              times_watched,
+              MovieType,
             };
             const result = onChange(modelFields);
             value = result?.captions_language ?? value;
@@ -815,6 +895,8 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              times_watched,
+              MovieType,
             };
             const result = onChange(modelFields);
             value = result?.origin_country ?? value;
@@ -855,6 +937,8 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              times_watched,
+              MovieType,
             };
             const result = onChange(modelFields);
             value = result?.length ?? value;
@@ -891,6 +975,8 @@ export default function MovieCreateForm(props) {
               created_year: value,
               MovieTeam,
               MovieInPlaylists,
+              times_watched,
+              MovieType,
             };
             const result = onChange(modelFields);
             value = result?.created_year ?? value;
@@ -924,6 +1010,8 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam: value,
               MovieInPlaylists,
+              times_watched,
+              MovieType,
             };
             const result = onChange(modelFields);
             value = result?.MovieTeam ?? value;
@@ -1014,6 +1102,8 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists: values,
+              times_watched,
+              MovieType,
             };
             const result = onChange(modelFields);
             values = result?.MovieInPlaylists ?? values;
@@ -1088,6 +1178,141 @@ export default function MovieCreateForm(props) {
           ref={MovieInPlaylistsRef}
           labelHidden={true}
           {...getOverrideProps(overrides, "MovieInPlaylists")}
+        ></Autocomplete>
+      </ArrayField>
+      <TextField
+        label="Times watched"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={times_watched}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              type,
+              genre,
+              description,
+              description_eng,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieTeam,
+              MovieInPlaylists,
+              times_watched: value,
+              MovieType,
+            };
+            const result = onChange(modelFields);
+            value = result?.times_watched ?? value;
+          }
+          if (errors.times_watched?.hasError) {
+            runValidationTasks("times_watched", value);
+          }
+          setTimes_watched(value);
+        }}
+        onBlur={() => runValidationTasks("times_watched", times_watched)}
+        errorMessage={errors.times_watched?.errorMessage}
+        hasError={errors.times_watched?.hasError}
+        {...getOverrideProps(overrides, "times_watched")}
+      ></TextField>
+      <ArrayField
+        lengthLimit={1}
+        onChange={async (items) => {
+          let value = items[0];
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              type,
+              genre,
+              description,
+              description_eng,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieTeam,
+              MovieInPlaylists,
+              times_watched,
+              MovieType: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.MovieType ?? value;
+          }
+          setMovieType(value);
+          setCurrentMovieTypeValue(undefined);
+          setCurrentMovieTypeDisplayValue("");
+        }}
+        currentFieldValue={currentMovieTypeValue}
+        label={"Movie type"}
+        items={MovieType ? [MovieType] : []}
+        hasError={errors?.MovieType?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("MovieType", currentMovieTypeValue)
+        }
+        errorMessage={errors?.MovieType?.errorMessage}
+        getBadgeText={getDisplayValue.MovieType}
+        setFieldValue={(model) => {
+          setCurrentMovieTypeDisplayValue(
+            model ? getDisplayValue.MovieType(model) : ""
+          );
+          setCurrentMovieTypeValue(model);
+        }}
+        inputFieldRef={MovieTypeRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Movie type"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search MovieType"
+          value={currentMovieTypeDisplayValue}
+          options={MovieTypeRecords.filter(
+            (r) => !MovieTypeIdSet.has(getIDValue.MovieType?.(r))
+          ).map((r) => ({
+            id: getIDValue.MovieType?.(r),
+            label: getDisplayValue.MovieType?.(r),
+          }))}
+          isLoading={MovieTypeLoading}
+          onSelect={({ id, label }) => {
+            setCurrentMovieTypeValue(
+              MovieTypeRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentMovieTypeDisplayValue(label);
+            runValidationTasks("MovieType", label);
+          }}
+          onClear={() => {
+            setCurrentMovieTypeDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchMovieTypeRecords(value);
+            if (errors.MovieType?.hasError) {
+              runValidationTasks("MovieType", value);
+            }
+            setCurrentMovieTypeDisplayValue(value);
+            setCurrentMovieTypeValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks("MovieType", currentMovieTypeDisplayValue)
+          }
+          errorMessage={errors.MovieType?.errorMessage}
+          hasError={errors.MovieType?.hasError}
+          ref={MovieTypeRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "MovieType")}
         ></Autocomplete>
       </ArrayField>
       <Flex

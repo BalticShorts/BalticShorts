@@ -10,9 +10,46 @@ import { useNavigate } from "react-router-dom";
 Amplify.configure(awsExports);
 
 const fetchMovie = async id => {
-      const movieData = await API.graphql(graphqlOperation(getMovie, {"id":id}));
-      const movie = movieData.data.getMovie;
-      return movie;
+
+  const getMovieQuery = `
+    query MyQuery($id: ID!) {
+      getMovie(id: $id) {
+        MovieTeam {
+          PersonMovieTeams {
+            items {
+              Role {
+                name
+                name_eng
+              }
+              Person {
+                name
+                surname
+              }
+            }
+          }
+        }
+        genre
+        captions_language
+        created_year
+        description
+        description_eng
+        id
+        length
+        MovieType {
+          type
+        }
+        name
+        name_eng
+        origin_country
+        screen_language
+        times_watched
+        guid
+      }
+    }
+  `;
+  const movieData = await API.graphql(graphqlOperation(getMovieQuery, {'id':id}));
+  const movie = movieData.data.getMovie;
+  return movie;
 }
 
 const fetchVideo = async guid => {
@@ -67,10 +104,12 @@ function Movie() {
       const movie = await fetchMovie(id);
       const data = await fetchVideo(movie.guid);
       const playlists = await fetchPlaylists(id);
+      const team = setMovieCast(movie.MovieTeam.PersonMovieTeams.items);
+      console.log(movie)
       try {     
         setMovieURL(data.Item.hlsUrl.S);
         setMovieData(movie);
-        setMovieTeamData(movie.MovieTeam);
+        setMovieTeamData(team);
         setPlaylists(playlists);
       } catch (error) {
         console.log('Error on fetching: ', error);
@@ -101,6 +140,16 @@ function Movie() {
     }
   }
 
+  function setMovieCast(team){
+    const teamMap = {};
+    team.map( (person) => {
+      if(!(person.Role.name_eng in teamMap))
+        teamMap[person.Role.name_eng] = [] 
+      teamMap[person.Role.name_eng].push(person.Person.name + " " + person.Person.surname)
+    })
+    return teamMap
+  }
+
   return (
     <>
     <div className="FilmasSkats w-full h-200 relative bg-stone-50 rounded-3xl">
@@ -118,7 +167,7 @@ function Movie() {
             <div className="Rectangle4 w-full h-[19vh] left-[0] top-0 relative -rotate-180 mix-blend-multiply bg-gradient-to-b from-slate-600 to-zinc-300" />
             <div className="w-full top-14 absolute text-center flex flex-col items-center">
               <span className="text-stone-50 text-xl font-normal font-['SchoolBook'] uppercase relative inline">
-                Režisors {movieTeamData.director}
+                Režisors {movieTeamData.director?.join(', ')}
               </span>
               <span className="text-stone-50 text-xl font-normal font-['SchoolBook'] relative">
                 {movieData.origin_country} | {movieData.created_year} | {movieData.length}’ | 18+
@@ -147,7 +196,11 @@ function Movie() {
 
             <div className="w-40 m-auto">
               <span className="text-black text-sm font-normal font-['SchoolBook']">REŽISORS<br/></span>
-              <span className="text-black text-base font-bold font-['SchoolBook']">{movieTeamData.director}<br/><br/></span>
+              { movieTeamData.director?.map( (person) => {
+                return(
+                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                )
+              }) }
               <span className="text-black text-sm font-normal font-['SchoolBook']">OPERATORS<br/></span>
               { movieTeamData.operator?.map( (person) => {
                 return(

@@ -1,14 +1,50 @@
+type MovieType @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  type: String!
+}
+
+type PersonMovieTeam @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  movieteamID: ID! @index(name: "byMovieTeam")
+  personID: ID! @index(name: "byPerson")
+  MovieTeam: MovieTeam @belongsTo(fields: ["movieteamID"])
+  Person: Person @belongsTo(fields: ["personID"])
+  roleID: ID! @index(name: "byRole")
+  Role: Role @belongsTo(fields: ["roleID"])
+}
+
+type Role @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  PersonMovieTeam: [PersonMovieTeam] @hasMany(indexName: "byRole", fields: ["id"])
+  name_eng: String
+}
+
+type Person @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String!
+  surname: String!
+  role: String
+  description: String
+  Instagram: AWSURL
+  Facebook: AWSURL
+  IMBD: AWSURL
+  email: AWSEmail
+  PersonMovieTeams: [PersonMovieTeam] @hasMany(indexName: "byPerson", fields: ["id"])
+}
+
 type MoviePlaylist @model @auth(rules: [{allow: public}]) {
   id: ID!
   Creator: String!
   movies: [Movie] @manyToMany(relationName: "MovieMoviePlaylist")
   Title: String!
   is_public: Boolean!
+  is_recommended: Boolean
 }
 
 type MovieTeam @model @auth(rules: [{allow: public}]) {
   id: ID!
-  director: String
+  director: [String]
   operator: [String]
   scenario: [String]
   editor: [String]
@@ -17,6 +53,8 @@ type MovieTeam @model @auth(rules: [{allow: public}]) {
   makeup: [String]
   executive_producer: [String]
   producer: [String]
+  producer_org: [String]
+  PersonMovieTeams: [PersonMovieTeam] @hasMany(indexName: "byMovieTeam", fields: ["id"])
 }
 
 type Movie @model @auth(rules: [{allow: public}]) {
@@ -36,5 +74,7 @@ type Movie @model @auth(rules: [{allow: public}]) {
   guid: ID
   MovieTeam: MovieTeam @hasOne
   MovieInPlaylists: [MoviePlaylist] @manyToMany(relationName: "MovieMoviePlaylist")
+  times_watched: Int
+  MovieType: MovieType @hasOne
 }
  

@@ -1,6 +1,432 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createMovieType = /* GraphQL */ `
+  mutation CreateMovieType(
+    $input: CreateMovieTypeInput!
+    $condition: ModelMovieTypeConditionInput
+  ) {
+    createMovieType(input: $input, condition: $condition) {
+      id
+      type
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateMovieType = /* GraphQL */ `
+  mutation UpdateMovieType(
+    $input: UpdateMovieTypeInput!
+    $condition: ModelMovieTypeConditionInput
+  ) {
+    updateMovieType(input: $input, condition: $condition) {
+      id
+      type
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteMovieType = /* GraphQL */ `
+  mutation DeleteMovieType(
+    $input: DeleteMovieTypeInput!
+    $condition: ModelMovieTypeConditionInput
+  ) {
+    deleteMovieType(input: $input, condition: $condition) {
+      id
+      type
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createPersonMovieTeam = /* GraphQL */ `
+  mutation CreatePersonMovieTeam(
+    $input: CreatePersonMovieTeamInput!
+    $condition: ModelPersonMovieTeamConditionInput
+  ) {
+    createPersonMovieTeam(input: $input, condition: $condition) {
+      id
+      movieteamID
+      personID
+      MovieTeam {
+        id
+        director
+        operator
+        scenario
+        editor
+        actors
+        costumes
+        makeup
+        executive_producer
+        producer
+        producer_org
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      Person {
+        id
+        name
+        surname
+        role
+        description
+        Instagram
+        Facebook
+        IMBD
+        email
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      roleID
+      Role {
+        id
+        name
+        PersonMovieTeam {
+          nextToken
+          __typename
+        }
+        name_eng
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updatePersonMovieTeam = /* GraphQL */ `
+  mutation UpdatePersonMovieTeam(
+    $input: UpdatePersonMovieTeamInput!
+    $condition: ModelPersonMovieTeamConditionInput
+  ) {
+    updatePersonMovieTeam(input: $input, condition: $condition) {
+      id
+      movieteamID
+      personID
+      MovieTeam {
+        id
+        director
+        operator
+        scenario
+        editor
+        actors
+        costumes
+        makeup
+        executive_producer
+        producer
+        producer_org
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      Person {
+        id
+        name
+        surname
+        role
+        description
+        Instagram
+        Facebook
+        IMBD
+        email
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      roleID
+      Role {
+        id
+        name
+        PersonMovieTeam {
+          nextToken
+          __typename
+        }
+        name_eng
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deletePersonMovieTeam = /* GraphQL */ `
+  mutation DeletePersonMovieTeam(
+    $input: DeletePersonMovieTeamInput!
+    $condition: ModelPersonMovieTeamConditionInput
+  ) {
+    deletePersonMovieTeam(input: $input, condition: $condition) {
+      id
+      movieteamID
+      personID
+      MovieTeam {
+        id
+        director
+        operator
+        scenario
+        editor
+        actors
+        costumes
+        makeup
+        executive_producer
+        producer
+        producer_org
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      Person {
+        id
+        name
+        surname
+        role
+        description
+        Instagram
+        Facebook
+        IMBD
+        email
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      roleID
+      Role {
+        id
+        name
+        PersonMovieTeam {
+          nextToken
+          __typename
+        }
+        name_eng
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createRole = /* GraphQL */ `
+  mutation CreateRole(
+    $input: CreateRoleInput!
+    $condition: ModelRoleConditionInput
+  ) {
+    createRole(input: $input, condition: $condition) {
+      id
+      name
+      PersonMovieTeam {
+        items {
+          id
+          movieteamID
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      name_eng
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateRole = /* GraphQL */ `
+  mutation UpdateRole(
+    $input: UpdateRoleInput!
+    $condition: ModelRoleConditionInput
+  ) {
+    updateRole(input: $input, condition: $condition) {
+      id
+      name
+      PersonMovieTeam {
+        items {
+          id
+          movieteamID
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      name_eng
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteRole = /* GraphQL */ `
+  mutation DeleteRole(
+    $input: DeleteRoleInput!
+    $condition: ModelRoleConditionInput
+  ) {
+    deleteRole(input: $input, condition: $condition) {
+      id
+      name
+      PersonMovieTeam {
+        items {
+          id
+          movieteamID
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      name_eng
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createPerson = /* GraphQL */ `
+  mutation CreatePerson(
+    $input: CreatePersonInput!
+    $condition: ModelPersonConditionInput
+  ) {
+    createPerson(input: $input, condition: $condition) {
+      id
+      name
+      surname
+      role
+      description
+      Instagram
+      Facebook
+      IMBD
+      email
+      PersonMovieTeams {
+        items {
+          id
+          movieteamID
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updatePerson = /* GraphQL */ `
+  mutation UpdatePerson(
+    $input: UpdatePersonInput!
+    $condition: ModelPersonConditionInput
+  ) {
+    updatePerson(input: $input, condition: $condition) {
+      id
+      name
+      surname
+      role
+      description
+      Instagram
+      Facebook
+      IMBD
+      email
+      PersonMovieTeams {
+        items {
+          id
+          movieteamID
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deletePerson = /* GraphQL */ `
+  mutation DeletePerson(
+    $input: DeletePersonInput!
+    $condition: ModelPersonConditionInput
+  ) {
+    deletePerson(input: $input, condition: $condition) {
+      id
+      name
+      surname
+      role
+      description
+      Instagram
+      Facebook
+      IMBD
+      email
+      PersonMovieTeams {
+        items {
+          id
+          movieteamID
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createMoviePlaylist = /* GraphQL */ `
   mutation CreateMoviePlaylist(
     $input: CreateMoviePlaylistInput!
@@ -23,6 +449,7 @@ export const createMoviePlaylist = /* GraphQL */ `
       }
       Title
       is_public
+      is_recommended
       createdAt
       updatedAt
       __typename
@@ -51,6 +478,7 @@ export const updateMoviePlaylist = /* GraphQL */ `
       }
       Title
       is_public
+      is_recommended
       createdAt
       updatedAt
       __typename
@@ -79,6 +507,7 @@ export const deleteMoviePlaylist = /* GraphQL */ `
       }
       Title
       is_public
+      is_recommended
       createdAt
       updatedAt
       __typename
@@ -101,6 +530,20 @@ export const createMovieTeam = /* GraphQL */ `
       makeup
       executive_producer
       producer
+      producer_org
+      PersonMovieTeams {
+        items {
+          id
+          movieteamID
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -123,6 +566,20 @@ export const updateMovieTeam = /* GraphQL */ `
       makeup
       executive_producer
       producer
+      producer_org
+      PersonMovieTeams {
+        items {
+          id
+          movieteamID
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -145,6 +602,20 @@ export const deleteMovieTeam = /* GraphQL */ `
       makeup
       executive_producer
       producer
+      producer_org
+      PersonMovieTeams {
+        items {
+          id
+          movieteamID
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -182,6 +653,11 @@ export const createMovie = /* GraphQL */ `
         makeup
         executive_producer
         producer
+        producer_org
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -198,9 +674,18 @@ export const createMovie = /* GraphQL */ `
         nextToken
         __typename
       }
+      times_watched
+      MovieType {
+        id
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       movieMovieTeamId
+      movieMovieTypeId
       __typename
     }
   }
@@ -236,6 +721,11 @@ export const updateMovie = /* GraphQL */ `
         makeup
         executive_producer
         producer
+        producer_org
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -252,9 +742,18 @@ export const updateMovie = /* GraphQL */ `
         nextToken
         __typename
       }
+      times_watched
+      MovieType {
+        id
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       movieMovieTeamId
+      movieMovieTypeId
       __typename
     }
   }
@@ -290,6 +789,11 @@ export const deleteMovie = /* GraphQL */ `
         makeup
         executive_producer
         producer
+        producer_org
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -306,9 +810,18 @@ export const deleteMovie = /* GraphQL */ `
         nextToken
         __typename
       }
+      times_watched
+      MovieType {
+        id
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       movieMovieTeamId
+      movieMovieTypeId
       __typename
     }
   }
@@ -331,6 +844,7 @@ export const createMovieMoviePlaylist = /* GraphQL */ `
         }
         Title
         is_public
+        is_recommended
         createdAt
         updatedAt
         __typename
@@ -361,6 +875,7 @@ export const createMovieMoviePlaylist = /* GraphQL */ `
           makeup
           executive_producer
           producer
+          producer_org
           createdAt
           updatedAt
           __typename
@@ -369,9 +884,18 @@ export const createMovieMoviePlaylist = /* GraphQL */ `
           nextToken
           __typename
         }
+        times_watched
+        MovieType {
+          id
+          type
+          createdAt
+          updatedAt
+          __typename
+        }
         createdAt
         updatedAt
         movieMovieTeamId
+        movieMovieTypeId
         __typename
       }
       createdAt
@@ -398,6 +922,7 @@ export const updateMovieMoviePlaylist = /* GraphQL */ `
         }
         Title
         is_public
+        is_recommended
         createdAt
         updatedAt
         __typename
@@ -428,6 +953,7 @@ export const updateMovieMoviePlaylist = /* GraphQL */ `
           makeup
           executive_producer
           producer
+          producer_org
           createdAt
           updatedAt
           __typename
@@ -436,9 +962,18 @@ export const updateMovieMoviePlaylist = /* GraphQL */ `
           nextToken
           __typename
         }
+        times_watched
+        MovieType {
+          id
+          type
+          createdAt
+          updatedAt
+          __typename
+        }
         createdAt
         updatedAt
         movieMovieTeamId
+        movieMovieTypeId
         __typename
       }
       createdAt
@@ -465,6 +1000,7 @@ export const deleteMovieMoviePlaylist = /* GraphQL */ `
         }
         Title
         is_public
+        is_recommended
         createdAt
         updatedAt
         __typename
@@ -495,6 +1031,7 @@ export const deleteMovieMoviePlaylist = /* GraphQL */ `
           makeup
           executive_producer
           producer
+          producer_org
           createdAt
           updatedAt
           __typename
@@ -503,9 +1040,18 @@ export const deleteMovieMoviePlaylist = /* GraphQL */ `
           nextToken
           __typename
         }
+        times_watched
+        MovieType {
+          id
+          type
+          createdAt
+          updatedAt
+          __typename
+        }
         createdAt
         updatedAt
         movieMovieTeamId
+        movieMovieTypeId
         __typename
       }
       createdAt

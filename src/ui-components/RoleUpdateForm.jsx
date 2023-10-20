@@ -15,7 +15,6 @@ import {
   Grid,
   Icon,
   ScrollView,
-  SwitchField,
   Text,
   TextField,
   useTheme,
@@ -23,11 +22,8 @@ import {
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { fetchByPath, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { listMovies } from "../graphql/queries";
-import {
-  createMovieMoviePlaylist,
-  createMoviePlaylist,
-} from "../graphql/mutations";
+import { getRole, listPersonMovieTeams } from "../graphql/queries";
+import { updatePersonMovieTeam, updateRole } from "../graphql/mutations";
 function ArrayField({
   items = [],
   onChange,
@@ -183,9 +179,10 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function MoviePlaylistCreateForm(props) {
+export default function RoleUpdateForm(props) {
   const {
-    clearOnSuccess = true,
+    id: idProp,
+    role: roleModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -195,54 +192,79 @@ export default function MoviePlaylistCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    Creator: "",
-    movies: [],
-    Title: "",
-    is_public: false,
-    is_recommended: false,
+    name: "",
+    PersonMovieTeam: [],
+    name_eng: "",
   };
-  const [Creator, setCreator] = React.useState(initialValues.Creator);
-  const [movies, setMovies] = React.useState(initialValues.movies);
-  const [moviesLoading, setMoviesLoading] = React.useState(false);
-  const [moviesRecords, setMoviesRecords] = React.useState([]);
-  const [Title, setTitle] = React.useState(initialValues.Title);
-  const [is_public, setIs_public] = React.useState(initialValues.is_public);
-  const [is_recommended, setIs_recommended] = React.useState(
-    initialValues.is_recommended
+  const [name, setName] = React.useState(initialValues.name);
+  const [PersonMovieTeam, setPersonMovieTeam] = React.useState(
+    initialValues.PersonMovieTeam
   );
+  const [PersonMovieTeamLoading, setPersonMovieTeamLoading] =
+    React.useState(false);
+  const [PersonMovieTeamRecords, setPersonMovieTeamRecords] = React.useState(
+    []
+  );
+  const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setCreator(initialValues.Creator);
-    setMovies(initialValues.movies);
-    setCurrentMoviesValue(undefined);
-    setCurrentMoviesDisplayValue("");
-    setTitle(initialValues.Title);
-    setIs_public(initialValues.is_public);
-    setIs_recommended(initialValues.is_recommended);
+    const cleanValues = roleRecord
+      ? {
+          ...initialValues,
+          ...roleRecord,
+          PersonMovieTeam: linkedPersonMovieTeam,
+        }
+      : initialValues;
+    setName(cleanValues.name);
+    setPersonMovieTeam(cleanValues.PersonMovieTeam ?? []);
+    setCurrentPersonMovieTeamValue(undefined);
+    setCurrentPersonMovieTeamDisplayValue("");
+    setName_eng(cleanValues.name_eng);
     setErrors({});
   };
-  const [currentMoviesDisplayValue, setCurrentMoviesDisplayValue] =
-    React.useState("");
-  const [currentMoviesValue, setCurrentMoviesValue] = React.useState(undefined);
-  const moviesRef = React.createRef();
+  const [roleRecord, setRoleRecord] = React.useState(roleModelProp);
+  const [linkedPersonMovieTeam, setLinkedPersonMovieTeam] = React.useState([]);
+  const canUnlinkPersonMovieTeam = true;
+  React.useEffect(() => {
+    const queryData = async () => {
+      const record = idProp
+        ? (
+            await API.graphql({
+              query: getRole.replaceAll("__typename", ""),
+              variables: { id: idProp },
+            })
+          )?.data?.getRole
+        : roleModelProp;
+      const linkedPersonMovieTeam = record?.PersonMovieTeam?.items ?? [];
+      setLinkedPersonMovieTeam(linkedPersonMovieTeam);
+      setRoleRecord(record);
+    };
+    queryData();
+  }, [idProp, roleModelProp]);
+  React.useEffect(resetStateValues, [roleRecord, linkedPersonMovieTeam]);
+  const [
+    currentPersonMovieTeamDisplayValue,
+    setCurrentPersonMovieTeamDisplayValue,
+  ] = React.useState("");
+  const [currentPersonMovieTeamValue, setCurrentPersonMovieTeamValue] =
+    React.useState(undefined);
+  const PersonMovieTeamRef = React.createRef();
   const getIDValue = {
-    movies: (r) => JSON.stringify({ id: r?.id }),
+    PersonMovieTeam: (r) => JSON.stringify({ id: r?.id }),
   };
-  const moviesIdSet = new Set(
-    Array.isArray(movies)
-      ? movies.map((r) => getIDValue.movies?.(r))
-      : getIDValue.movies?.(movies)
+  const PersonMovieTeamIdSet = new Set(
+    Array.isArray(PersonMovieTeam)
+      ? PersonMovieTeam.map((r) => getIDValue.PersonMovieTeam?.(r))
+      : getIDValue.PersonMovieTeam?.(PersonMovieTeam)
   );
   const getDisplayValue = {
-    movies: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
+    PersonMovieTeam: (r) => r?.id,
   };
   const validations = {
-    Creator: [{ type: "Required" }],
-    movies: [],
-    Title: [{ type: "Required" }],
-    is_public: [{ type: "Required" }],
-    is_recommended: [],
+    name: [{ type: "Required" }],
+    PersonMovieTeam: [],
+    name_eng: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -261,37 +283,35 @@ export default function MoviePlaylistCreateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const fetchMoviesRecords = async (value) => {
-    setMoviesLoading(true);
+  const fetchPersonMovieTeamRecords = async (value) => {
+    setPersonMovieTeamLoading(true);
     const newOptions = [];
     let newNext = "";
     while (newOptions.length < autocompleteLength && newNext != null) {
       const variables = {
         limit: autocompleteLength * 5,
-        filter: {
-          or: [{ name: { contains: value } }, { id: { contains: value } }],
-        },
+        filter: { or: [{ id: { contains: value } }] },
       };
       if (newNext) {
         variables["nextToken"] = newNext;
       }
       const result = (
         await API.graphql({
-          query: listMovies.replaceAll("__typename", ""),
+          query: listPersonMovieTeams.replaceAll("__typename", ""),
           variables,
         })
-      )?.data?.listMovies?.items;
+      )?.data?.listPersonMovieTeams?.items;
       var loaded = result.filter(
-        (item) => !moviesIdSet.has(getIDValue.movies?.(item))
+        (item) => !PersonMovieTeamIdSet.has(getIDValue.PersonMovieTeam?.(item))
       );
       newOptions.push(...loaded);
       newNext = result.nextToken;
     }
-    setMoviesRecords(newOptions.slice(0, autocompleteLength));
-    setMoviesLoading(false);
+    setPersonMovieTeamRecords(newOptions.slice(0, autocompleteLength));
+    setPersonMovieTeamLoading(false);
   };
   React.useEffect(() => {
-    fetchMoviesRecords("");
+    fetchPersonMovieTeamRecords("");
   }, []);
   return (
     <Grid
@@ -302,11 +322,9 @@ export default function MoviePlaylistCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          Creator,
-          movies,
-          Title,
-          is_public,
-          is_recommended,
+          name,
+          PersonMovieTeam: PersonMovieTeam ?? null,
+          name_eng: name_eng ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -344,45 +362,76 @@ export default function MoviePlaylistCreateForm(props) {
               modelFields[key] = null;
             }
           });
+          const promises = [];
+          const personMovieTeamToLink = [];
+          const personMovieTeamToUnLink = [];
+          const personMovieTeamSet = new Set();
+          const linkedPersonMovieTeamSet = new Set();
+          PersonMovieTeam.forEach((r) =>
+            personMovieTeamSet.add(getIDValue.PersonMovieTeam?.(r))
+          );
+          linkedPersonMovieTeam.forEach((r) =>
+            linkedPersonMovieTeamSet.add(getIDValue.PersonMovieTeam?.(r))
+          );
+          linkedPersonMovieTeam.forEach((r) => {
+            if (!personMovieTeamSet.has(getIDValue.PersonMovieTeam?.(r))) {
+              personMovieTeamToUnLink.push(r);
+            }
+          });
+          PersonMovieTeam.forEach((r) => {
+            if (
+              !linkedPersonMovieTeamSet.has(getIDValue.PersonMovieTeam?.(r))
+            ) {
+              personMovieTeamToLink.push(r);
+            }
+          });
+          personMovieTeamToUnLink.forEach((original) => {
+            if (!canUnlinkPersonMovieTeam) {
+              throw Error(
+                `PersonMovieTeam ${original.id} cannot be unlinked from Role because undefined is a required field.`
+              );
+            }
+            promises.push(
+              API.graphql({
+                query: updatePersonMovieTeam.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: original.id,
+                  },
+                },
+              })
+            );
+          });
+          personMovieTeamToLink.forEach((original) => {
+            promises.push(
+              API.graphql({
+                query: updatePersonMovieTeam.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: original.id,
+                  },
+                },
+              })
+            );
+          });
           const modelFieldsToSave = {
-            Creator: modelFields.Creator,
-            Title: modelFields.Title,
-            is_public: modelFields.is_public,
-            is_recommended: modelFields.is_recommended,
+            name: modelFields.name,
+            name_eng: modelFields.name_eng ?? null,
           };
-          const moviePlaylist = (
-            await API.graphql({
-              query: createMoviePlaylist.replaceAll("__typename", ""),
+          promises.push(
+            API.graphql({
+              query: updateRole.replaceAll("__typename", ""),
               variables: {
                 input: {
+                  id: roleRecord.id,
                   ...modelFieldsToSave,
                 },
               },
             })
-          )?.data?.createMoviePlaylist;
-          const promises = [];
-          promises.push(
-            ...movies.reduce((promises, movie) => {
-              promises.push(
-                API.graphql({
-                  query: createMovieMoviePlaylist.replaceAll("__typename", ""),
-                  variables: {
-                    input: {
-                      moviePlaylistId: moviePlaylist.id,
-                      movieId: Movie.id,
-                    },
-                  },
-                })
-              );
-              return promises;
-            }, [])
           );
           await Promise.all(promises);
           if (onSuccess) {
             onSuccess(modelFields);
-          }
-          if (clearOnSuccess) {
-            resetStateValues();
           }
         } catch (err) {
           if (onError) {
@@ -391,211 +440,158 @@ export default function MoviePlaylistCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "MoviePlaylistCreateForm")}
+      {...getOverrideProps(overrides, "RoleUpdateForm")}
       {...rest}
     >
       <TextField
-        label="Creator"
+        label="Name"
         isRequired={true}
         isReadOnly={false}
-        value={Creator}
+        value={name}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Creator: value,
-              movies,
-              Title,
-              is_public,
-              is_recommended,
+              name: value,
+              PersonMovieTeam,
+              name_eng,
             };
             const result = onChange(modelFields);
-            value = result?.Creator ?? value;
+            value = result?.name ?? value;
           }
-          if (errors.Creator?.hasError) {
-            runValidationTasks("Creator", value);
+          if (errors.name?.hasError) {
+            runValidationTasks("name", value);
           }
-          setCreator(value);
+          setName(value);
         }}
-        onBlur={() => runValidationTasks("Creator", Creator)}
-        errorMessage={errors.Creator?.errorMessage}
-        hasError={errors.Creator?.hasError}
-        {...getOverrideProps(overrides, "Creator")}
+        onBlur={() => runValidationTasks("name", name)}
+        errorMessage={errors.name?.errorMessage}
+        hasError={errors.name?.hasError}
+        {...getOverrideProps(overrides, "name")}
       ></TextField>
       <ArrayField
         onChange={async (items) => {
           let values = items;
           if (onChange) {
             const modelFields = {
-              Creator,
-              movies: values,
-              Title,
-              is_public,
-              is_recommended,
+              name,
+              PersonMovieTeam: values,
+              name_eng,
             };
             const result = onChange(modelFields);
-            values = result?.movies ?? values;
+            values = result?.PersonMovieTeam ?? values;
           }
-          setMovies(values);
-          setCurrentMoviesValue(undefined);
-          setCurrentMoviesDisplayValue("");
+          setPersonMovieTeam(values);
+          setCurrentPersonMovieTeamValue(undefined);
+          setCurrentPersonMovieTeamDisplayValue("");
         }}
-        currentFieldValue={currentMoviesValue}
-        label={"Movies"}
-        items={movies}
-        hasError={errors?.movies?.hasError}
+        currentFieldValue={currentPersonMovieTeamValue}
+        label={"Person movie team"}
+        items={PersonMovieTeam}
+        hasError={errors?.PersonMovieTeam?.hasError}
         runValidationTasks={async () =>
-          await runValidationTasks("movies", currentMoviesValue)
+          await runValidationTasks(
+            "PersonMovieTeam",
+            currentPersonMovieTeamValue
+          )
         }
-        errorMessage={errors?.movies?.errorMessage}
-        getBadgeText={getDisplayValue.movies}
+        errorMessage={errors?.PersonMovieTeam?.errorMessage}
+        getBadgeText={getDisplayValue.PersonMovieTeam}
         setFieldValue={(model) => {
-          setCurrentMoviesDisplayValue(
-            model ? getDisplayValue.movies(model) : ""
+          setCurrentPersonMovieTeamDisplayValue(
+            model ? getDisplayValue.PersonMovieTeam(model) : ""
           );
-          setCurrentMoviesValue(model);
+          setCurrentPersonMovieTeamValue(model);
         }}
-        inputFieldRef={moviesRef}
+        inputFieldRef={PersonMovieTeamRef}
         defaultFieldValue={""}
       >
         <Autocomplete
-          label="Movies"
+          label="Person movie team"
           isRequired={false}
           isReadOnly={false}
-          placeholder="Search Movie"
-          value={currentMoviesDisplayValue}
-          options={moviesRecords.map((r) => ({
-            id: getIDValue.movies?.(r),
-            label: getDisplayValue.movies?.(r),
+          placeholder="Search PersonMovieTeam"
+          value={currentPersonMovieTeamDisplayValue}
+          options={PersonMovieTeamRecords.map((r) => ({
+            id: getIDValue.PersonMovieTeam?.(r),
+            label: getDisplayValue.PersonMovieTeam?.(r),
           }))}
-          isLoading={moviesLoading}
+          isLoading={PersonMovieTeamLoading}
           onSelect={({ id, label }) => {
-            setCurrentMoviesValue(
-              moviesRecords.find((r) =>
+            setCurrentPersonMovieTeamValue(
+              PersonMovieTeamRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )
               )
             );
-            setCurrentMoviesDisplayValue(label);
-            runValidationTasks("movies", label);
+            setCurrentPersonMovieTeamDisplayValue(label);
+            runValidationTasks("PersonMovieTeam", label);
           }}
           onClear={() => {
-            setCurrentMoviesDisplayValue("");
+            setCurrentPersonMovieTeamDisplayValue("");
           }}
           onChange={(e) => {
             let { value } = e.target;
-            fetchMoviesRecords(value);
-            if (errors.movies?.hasError) {
-              runValidationTasks("movies", value);
+            fetchPersonMovieTeamRecords(value);
+            if (errors.PersonMovieTeam?.hasError) {
+              runValidationTasks("PersonMovieTeam", value);
             }
-            setCurrentMoviesDisplayValue(value);
-            setCurrentMoviesValue(undefined);
+            setCurrentPersonMovieTeamDisplayValue(value);
+            setCurrentPersonMovieTeamValue(undefined);
           }}
-          onBlur={() => runValidationTasks("movies", currentMoviesDisplayValue)}
-          errorMessage={errors.movies?.errorMessage}
-          hasError={errors.movies?.hasError}
-          ref={moviesRef}
+          onBlur={() =>
+            runValidationTasks(
+              "PersonMovieTeam",
+              currentPersonMovieTeamDisplayValue
+            )
+          }
+          errorMessage={errors.PersonMovieTeam?.errorMessage}
+          hasError={errors.PersonMovieTeam?.hasError}
+          ref={PersonMovieTeamRef}
           labelHidden={true}
-          {...getOverrideProps(overrides, "movies")}
+          {...getOverrideProps(overrides, "PersonMovieTeam")}
         ></Autocomplete>
       </ArrayField>
       <TextField
-        label="Title"
-        isRequired={true}
+        label="Name eng"
+        isRequired={false}
         isReadOnly={false}
-        value={Title}
+        value={name_eng}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Creator,
-              movies,
-              Title: value,
-              is_public,
-              is_recommended,
+              name,
+              PersonMovieTeam,
+              name_eng: value,
             };
             const result = onChange(modelFields);
-            value = result?.Title ?? value;
+            value = result?.name_eng ?? value;
           }
-          if (errors.Title?.hasError) {
-            runValidationTasks("Title", value);
+          if (errors.name_eng?.hasError) {
+            runValidationTasks("name_eng", value);
           }
-          setTitle(value);
+          setName_eng(value);
         }}
-        onBlur={() => runValidationTasks("Title", Title)}
-        errorMessage={errors.Title?.errorMessage}
-        hasError={errors.Title?.hasError}
-        {...getOverrideProps(overrides, "Title")}
+        onBlur={() => runValidationTasks("name_eng", name_eng)}
+        errorMessage={errors.name_eng?.errorMessage}
+        hasError={errors.name_eng?.hasError}
+        {...getOverrideProps(overrides, "name_eng")}
       ></TextField>
-      <SwitchField
-        label="Is public"
-        defaultChecked={false}
-        isDisabled={false}
-        isChecked={is_public}
-        onChange={(e) => {
-          let value = e.target.checked;
-          if (onChange) {
-            const modelFields = {
-              Creator,
-              movies,
-              Title,
-              is_public: value,
-              is_recommended,
-            };
-            const result = onChange(modelFields);
-            value = result?.is_public ?? value;
-          }
-          if (errors.is_public?.hasError) {
-            runValidationTasks("is_public", value);
-          }
-          setIs_public(value);
-        }}
-        onBlur={() => runValidationTasks("is_public", is_public)}
-        errorMessage={errors.is_public?.errorMessage}
-        hasError={errors.is_public?.hasError}
-        {...getOverrideProps(overrides, "is_public")}
-      ></SwitchField>
-      <SwitchField
-        label="Is recommended"
-        defaultChecked={false}
-        isDisabled={false}
-        isChecked={is_recommended}
-        onChange={(e) => {
-          let value = e.target.checked;
-          if (onChange) {
-            const modelFields = {
-              Creator,
-              movies,
-              Title,
-              is_public,
-              is_recommended: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.is_recommended ?? value;
-          }
-          if (errors.is_recommended?.hasError) {
-            runValidationTasks("is_recommended", value);
-          }
-          setIs_recommended(value);
-        }}
-        onBlur={() => runValidationTasks("is_recommended", is_recommended)}
-        errorMessage={errors.is_recommended?.errorMessage}
-        hasError={errors.is_recommended?.hasError}
-        {...getOverrideProps(overrides, "is_recommended")}
-      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
       >
         <Button
-          children="Clear"
+          children="Reset"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          {...getOverrideProps(overrides, "ClearButton")}
+          isDisabled={!(idProp || roleModelProp)}
+          {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
           gap="15px"
@@ -605,7 +601,10 @@ export default function MoviePlaylistCreateForm(props) {
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            isDisabled={
+              !(idProp || roleModelProp) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

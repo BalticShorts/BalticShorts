@@ -7,6 +7,7 @@
 /* eslint-disable */
 import * as React from "react";
 import {
+  Autocomplete,
   Badge,
   Button,
   Divider,
@@ -21,8 +22,8 @@ import {
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
 import { fetchByPath, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { getMovieTeam } from "../graphql/queries";
-import { updateMovieTeam } from "../graphql/mutations";
+import { getMovieTeam, listPersonMovieTeams } from "../graphql/queries";
+import { updateMovieTeam, updatePersonMovieTeam } from "../graphql/mutations";
 function ArrayField({
   items = [],
   onChange,
@@ -191,7 +192,7 @@ export default function MovieTeamUpdateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    director: "",
+    director: [],
     operator: [],
     scenario: [],
     editor: [],
@@ -200,6 +201,8 @@ export default function MovieTeamUpdateForm(props) {
     makeup: [],
     executive_producer: [],
     producer: [],
+    producer_org: [],
+    PersonMovieTeams: [],
   };
   const [director, setDirector] = React.useState(initialValues.director);
   const [operator, setOperator] = React.useState(initialValues.operator);
@@ -212,12 +215,29 @@ export default function MovieTeamUpdateForm(props) {
     initialValues.executive_producer
   );
   const [producer, setProducer] = React.useState(initialValues.producer);
+  const [producer_org, setProducer_org] = React.useState(
+    initialValues.producer_org
+  );
+  const [PersonMovieTeams, setPersonMovieTeams] = React.useState(
+    initialValues.PersonMovieTeams
+  );
+  const [PersonMovieTeamsLoading, setPersonMovieTeamsLoading] =
+    React.useState(false);
+  const [PersonMovieTeamsRecords, setPersonMovieTeamsRecords] = React.useState(
+    []
+  );
+  const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = movieTeamRecord
-      ? { ...initialValues, ...movieTeamRecord }
+      ? {
+          ...initialValues,
+          ...movieTeamRecord,
+          PersonMovieTeams: linkedPersonMovieTeams,
+        }
       : initialValues;
-    setDirector(cleanValues.director);
+    setDirector(cleanValues.director ?? []);
+    setCurrentDirectorValue("");
     setOperator(cleanValues.operator ?? []);
     setCurrentOperatorValue("");
     setScenario(cleanValues.scenario ?? []);
@@ -234,10 +254,19 @@ export default function MovieTeamUpdateForm(props) {
     setCurrentExecutive_producerValue("");
     setProducer(cleanValues.producer ?? []);
     setCurrentProducerValue("");
+    setProducer_org(cleanValues.producer_org ?? []);
+    setCurrentProducer_orgValue("");
+    setPersonMovieTeams(cleanValues.PersonMovieTeams ?? []);
+    setCurrentPersonMovieTeamsValue(undefined);
+    setCurrentPersonMovieTeamsDisplayValue("");
     setErrors({});
   };
   const [movieTeamRecord, setMovieTeamRecord] =
     React.useState(movieTeamModelProp);
+  const [linkedPersonMovieTeams, setLinkedPersonMovieTeams] = React.useState(
+    []
+  );
+  const canUnlinkPersonMovieTeams = true;
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
@@ -248,11 +277,15 @@ export default function MovieTeamUpdateForm(props) {
             })
           )?.data?.getMovieTeam
         : movieTeamModelProp;
+      const linkedPersonMovieTeams = record?.PersonMovieTeams?.items ?? [];
+      setLinkedPersonMovieTeams(linkedPersonMovieTeams);
       setMovieTeamRecord(record);
     };
     queryData();
   }, [idProp, movieTeamModelProp]);
-  React.useEffect(resetStateValues, [movieTeamRecord]);
+  React.useEffect(resetStateValues, [movieTeamRecord, linkedPersonMovieTeams]);
+  const [currentDirectorValue, setCurrentDirectorValue] = React.useState("");
+  const directorRef = React.createRef();
   const [currentOperatorValue, setCurrentOperatorValue] = React.useState("");
   const operatorRef = React.createRef();
   const [currentScenarioValue, setCurrentScenarioValue] = React.useState("");
@@ -270,6 +303,27 @@ export default function MovieTeamUpdateForm(props) {
   const executive_producerRef = React.createRef();
   const [currentProducerValue, setCurrentProducerValue] = React.useState("");
   const producerRef = React.createRef();
+  const [currentProducer_orgValue, setCurrentProducer_orgValue] =
+    React.useState("");
+  const producer_orgRef = React.createRef();
+  const [
+    currentPersonMovieTeamsDisplayValue,
+    setCurrentPersonMovieTeamsDisplayValue,
+  ] = React.useState("");
+  const [currentPersonMovieTeamsValue, setCurrentPersonMovieTeamsValue] =
+    React.useState(undefined);
+  const PersonMovieTeamsRef = React.createRef();
+  const getIDValue = {
+    PersonMovieTeams: (r) => JSON.stringify({ id: r?.id }),
+  };
+  const PersonMovieTeamsIdSet = new Set(
+    Array.isArray(PersonMovieTeams)
+      ? PersonMovieTeams.map((r) => getIDValue.PersonMovieTeams?.(r))
+      : getIDValue.PersonMovieTeams?.(PersonMovieTeams)
+  );
+  const getDisplayValue = {
+    PersonMovieTeams: (r) => r?.id,
+  };
   const validations = {
     director: [],
     operator: [],
@@ -280,6 +334,8 @@ export default function MovieTeamUpdateForm(props) {
     makeup: [],
     executive_producer: [],
     producer: [],
+    producer_org: [],
+    PersonMovieTeams: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -298,6 +354,37 @@ export default function MovieTeamUpdateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
+  const fetchPersonMovieTeamsRecords = async (value) => {
+    setPersonMovieTeamsLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: { or: [{ id: { contains: value } }] },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await API.graphql({
+          query: listPersonMovieTeams.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listPersonMovieTeams?.items;
+      var loaded = result.filter(
+        (item) =>
+          !PersonMovieTeamsIdSet.has(getIDValue.PersonMovieTeams?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setPersonMovieTeamsRecords(newOptions.slice(0, autocompleteLength));
+    setPersonMovieTeamsLoading(false);
+  };
+  React.useEffect(() => {
+    fetchPersonMovieTeamsRecords("");
+  }, []);
   return (
     <Grid
       as="form"
@@ -316,19 +403,29 @@ export default function MovieTeamUpdateForm(props) {
           makeup: makeup ?? null,
           executive_producer: executive_producer ?? null,
           producer: producer ?? null,
+          producer_org: producer_org ?? null,
+          PersonMovieTeams: PersonMovieTeams ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
             if (Array.isArray(modelFields[fieldName])) {
               promises.push(
                 ...modelFields[fieldName].map((item) =>
-                  runValidationTasks(fieldName, item)
+                  runValidationTasks(
+                    fieldName,
+                    item,
+                    getDisplayValue[fieldName]
+                  )
                 )
               );
               return promises;
             }
             promises.push(
-              runValidationTasks(fieldName, modelFields[fieldName])
+              runValidationTasks(
+                fieldName,
+                modelFields[fieldName],
+                getDisplayValue[fieldName]
+              )
             );
             return promises;
           }, [])
@@ -345,15 +442,82 @@ export default function MovieTeamUpdateForm(props) {
               modelFields[key] = null;
             }
           });
-          await API.graphql({
-            query: updateMovieTeam.replaceAll("__typename", ""),
-            variables: {
-              input: {
-                id: movieTeamRecord.id,
-                ...modelFields,
-              },
-            },
+          const promises = [];
+          const personMovieTeamsToLink = [];
+          const personMovieTeamsToUnLink = [];
+          const personMovieTeamsSet = new Set();
+          const linkedPersonMovieTeamsSet = new Set();
+          PersonMovieTeams.forEach((r) =>
+            personMovieTeamsSet.add(getIDValue.PersonMovieTeams?.(r))
+          );
+          linkedPersonMovieTeams.forEach((r) =>
+            linkedPersonMovieTeamsSet.add(getIDValue.PersonMovieTeams?.(r))
+          );
+          linkedPersonMovieTeams.forEach((r) => {
+            if (!personMovieTeamsSet.has(getIDValue.PersonMovieTeams?.(r))) {
+              personMovieTeamsToUnLink.push(r);
+            }
           });
+          PersonMovieTeams.forEach((r) => {
+            if (
+              !linkedPersonMovieTeamsSet.has(getIDValue.PersonMovieTeams?.(r))
+            ) {
+              personMovieTeamsToLink.push(r);
+            }
+          });
+          personMovieTeamsToUnLink.forEach((original) => {
+            if (!canUnlinkPersonMovieTeams) {
+              throw Error(
+                `PersonMovieTeam ${original.id} cannot be unlinked from MovieTeam because undefined is a required field.`
+              );
+            }
+            promises.push(
+              API.graphql({
+                query: updatePersonMovieTeam.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: original.id,
+                  },
+                },
+              })
+            );
+          });
+          personMovieTeamsToLink.forEach((original) => {
+            promises.push(
+              API.graphql({
+                query: updatePersonMovieTeam.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: original.id,
+                  },
+                },
+              })
+            );
+          });
+          const modelFieldsToSave = {
+            director: modelFields.director ?? null,
+            operator: modelFields.operator ?? null,
+            scenario: modelFields.scenario ?? null,
+            editor: modelFields.editor ?? null,
+            actors: modelFields.actors ?? null,
+            costumes: modelFields.costumes ?? null,
+            makeup: modelFields.makeup ?? null,
+            executive_producer: modelFields.executive_producer ?? null,
+            producer: modelFields.producer ?? null,
+            producer_org: modelFields.producer_org ?? null,
+          };
+          promises.push(
+            API.graphql({
+              query: updateMovieTeam.replaceAll("__typename", ""),
+              variables: {
+                input: {
+                  id: movieTeamRecord.id,
+                  ...modelFieldsToSave,
+                },
+              },
+            })
+          );
+          await Promise.all(promises);
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -367,16 +531,12 @@ export default function MovieTeamUpdateForm(props) {
       {...getOverrideProps(overrides, "MovieTeamUpdateForm")}
       {...rest}
     >
-      <TextField
-        label="Director"
-        isRequired={false}
-        isReadOnly={false}
-        value={director}
-        onChange={(e) => {
-          let { value } = e.target;
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
           if (onChange) {
             const modelFields = {
-              director: value,
+              director: values,
               operator,
               scenario,
               editor,
@@ -385,20 +545,47 @@ export default function MovieTeamUpdateForm(props) {
               makeup,
               executive_producer,
               producer,
+              producer_org,
+              PersonMovieTeams,
             };
             const result = onChange(modelFields);
-            value = result?.director ?? value;
+            values = result?.director ?? values;
           }
-          if (errors.director?.hasError) {
-            runValidationTasks("director", value);
-          }
-          setDirector(value);
+          setDirector(values);
+          setCurrentDirectorValue("");
         }}
-        onBlur={() => runValidationTasks("director", director)}
-        errorMessage={errors.director?.errorMessage}
-        hasError={errors.director?.hasError}
-        {...getOverrideProps(overrides, "director")}
-      ></TextField>
+        currentFieldValue={currentDirectorValue}
+        label={"Director"}
+        items={director}
+        hasError={errors?.director?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("director", currentDirectorValue)
+        }
+        errorMessage={errors?.director?.errorMessage}
+        setFieldValue={setCurrentDirectorValue}
+        inputFieldRef={directorRef}
+        defaultFieldValue={""}
+      >
+        <TextField
+          label="Director"
+          isRequired={false}
+          isReadOnly={false}
+          value={currentDirectorValue}
+          onChange={(e) => {
+            let { value } = e.target;
+            if (errors.director?.hasError) {
+              runValidationTasks("director", value);
+            }
+            setCurrentDirectorValue(value);
+          }}
+          onBlur={() => runValidationTasks("director", currentDirectorValue)}
+          errorMessage={errors.director?.errorMessage}
+          hasError={errors.director?.hasError}
+          ref={directorRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "director")}
+        ></TextField>
+      </ArrayField>
       <ArrayField
         onChange={async (items) => {
           let values = items;
@@ -413,6 +600,8 @@ export default function MovieTeamUpdateForm(props) {
               makeup,
               executive_producer,
               producer,
+              producer_org,
+              PersonMovieTeams,
             };
             const result = onChange(modelFields);
             values = result?.operator ?? values;
@@ -466,6 +655,8 @@ export default function MovieTeamUpdateForm(props) {
               makeup,
               executive_producer,
               producer,
+              producer_org,
+              PersonMovieTeams,
             };
             const result = onChange(modelFields);
             values = result?.scenario ?? values;
@@ -519,6 +710,8 @@ export default function MovieTeamUpdateForm(props) {
               makeup,
               executive_producer,
               producer,
+              producer_org,
+              PersonMovieTeams,
             };
             const result = onChange(modelFields);
             values = result?.editor ?? values;
@@ -572,6 +765,8 @@ export default function MovieTeamUpdateForm(props) {
               makeup,
               executive_producer,
               producer,
+              producer_org,
+              PersonMovieTeams,
             };
             const result = onChange(modelFields);
             values = result?.actors ?? values;
@@ -625,6 +820,8 @@ export default function MovieTeamUpdateForm(props) {
               makeup,
               executive_producer,
               producer,
+              producer_org,
+              PersonMovieTeams,
             };
             const result = onChange(modelFields);
             values = result?.costumes ?? values;
@@ -678,6 +875,8 @@ export default function MovieTeamUpdateForm(props) {
               makeup: values,
               executive_producer,
               producer,
+              producer_org,
+              PersonMovieTeams,
             };
             const result = onChange(modelFields);
             values = result?.makeup ?? values;
@@ -731,6 +930,8 @@ export default function MovieTeamUpdateForm(props) {
               makeup,
               executive_producer: values,
               producer,
+              producer_org,
+              PersonMovieTeams,
             };
             const result = onChange(modelFields);
             values = result?.executive_producer ?? values;
@@ -792,6 +993,8 @@ export default function MovieTeamUpdateForm(props) {
               makeup,
               executive_producer,
               producer: values,
+              producer_org,
+              PersonMovieTeams,
             };
             const result = onChange(modelFields);
             values = result?.producer ?? values;
@@ -830,6 +1033,155 @@ export default function MovieTeamUpdateForm(props) {
           labelHidden={true}
           {...getOverrideProps(overrides, "producer")}
         ></TextField>
+      </ArrayField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              director,
+              operator,
+              scenario,
+              editor,
+              actors,
+              costumes,
+              makeup,
+              executive_producer,
+              producer,
+              producer_org: values,
+              PersonMovieTeams,
+            };
+            const result = onChange(modelFields);
+            values = result?.producer_org ?? values;
+          }
+          setProducer_org(values);
+          setCurrentProducer_orgValue("");
+        }}
+        currentFieldValue={currentProducer_orgValue}
+        label={"Producer org"}
+        items={producer_org}
+        hasError={errors?.producer_org?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("producer_org", currentProducer_orgValue)
+        }
+        errorMessage={errors?.producer_org?.errorMessage}
+        setFieldValue={setCurrentProducer_orgValue}
+        inputFieldRef={producer_orgRef}
+        defaultFieldValue={""}
+      >
+        <TextField
+          label="Producer org"
+          isRequired={false}
+          isReadOnly={false}
+          value={currentProducer_orgValue}
+          onChange={(e) => {
+            let { value } = e.target;
+            if (errors.producer_org?.hasError) {
+              runValidationTasks("producer_org", value);
+            }
+            setCurrentProducer_orgValue(value);
+          }}
+          onBlur={() =>
+            runValidationTasks("producer_org", currentProducer_orgValue)
+          }
+          errorMessage={errors.producer_org?.errorMessage}
+          hasError={errors.producer_org?.hasError}
+          ref={producer_orgRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "producer_org")}
+        ></TextField>
+      </ArrayField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              director,
+              operator,
+              scenario,
+              editor,
+              actors,
+              costumes,
+              makeup,
+              executive_producer,
+              producer,
+              producer_org,
+              PersonMovieTeams: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.PersonMovieTeams ?? values;
+          }
+          setPersonMovieTeams(values);
+          setCurrentPersonMovieTeamsValue(undefined);
+          setCurrentPersonMovieTeamsDisplayValue("");
+        }}
+        currentFieldValue={currentPersonMovieTeamsValue}
+        label={"Person movie teams"}
+        items={PersonMovieTeams}
+        hasError={errors?.PersonMovieTeams?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks(
+            "PersonMovieTeams",
+            currentPersonMovieTeamsValue
+          )
+        }
+        errorMessage={errors?.PersonMovieTeams?.errorMessage}
+        getBadgeText={getDisplayValue.PersonMovieTeams}
+        setFieldValue={(model) => {
+          setCurrentPersonMovieTeamsDisplayValue(
+            model ? getDisplayValue.PersonMovieTeams(model) : ""
+          );
+          setCurrentPersonMovieTeamsValue(model);
+        }}
+        inputFieldRef={PersonMovieTeamsRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Person movie teams"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search PersonMovieTeam"
+          value={currentPersonMovieTeamsDisplayValue}
+          options={PersonMovieTeamsRecords.map((r) => ({
+            id: getIDValue.PersonMovieTeams?.(r),
+            label: getDisplayValue.PersonMovieTeams?.(r),
+          }))}
+          isLoading={PersonMovieTeamsLoading}
+          onSelect={({ id, label }) => {
+            setCurrentPersonMovieTeamsValue(
+              PersonMovieTeamsRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentPersonMovieTeamsDisplayValue(label);
+            runValidationTasks("PersonMovieTeams", label);
+          }}
+          onClear={() => {
+            setCurrentPersonMovieTeamsDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchPersonMovieTeamsRecords(value);
+            if (errors.PersonMovieTeams?.hasError) {
+              runValidationTasks("PersonMovieTeams", value);
+            }
+            setCurrentPersonMovieTeamsDisplayValue(value);
+            setCurrentPersonMovieTeamsValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks(
+              "PersonMovieTeams",
+              currentPersonMovieTeamsDisplayValue
+            )
+          }
+          errorMessage={errors.PersonMovieTeams?.errorMessage}
+          hasError={errors.PersonMovieTeams?.hasError}
+          ref={PersonMovieTeamsRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "PersonMovieTeams")}
+        ></Autocomplete>
       </ArrayField>
       <Flex
         justifyContent="space-between"

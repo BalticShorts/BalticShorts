@@ -28,6 +28,8 @@ export declare type UploadMovieInputValues = {
     guid?: string;
     MovieTeam?: any;
     MovieInPlaylists?: any[];
+    times_watched?: number;
+    MovieType?: any;
 };
 export declare type UploadMovieValidationValues = {
     name?: ValidationFunction<string>;
@@ -45,6 +47,8 @@ export declare type UploadMovieValidationValues = {
     guid?: ValidationFunction<string>;
     MovieTeam?: ValidationFunction<any>;
     MovieInPlaylists?: ValidationFunction<any>;
+    times_watched?: ValidationFunction<number>;
+    MovieType?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type UploadMovieOverridesProps = {
@@ -64,6 +68,8 @@ export declare type UploadMovieOverridesProps = {
     guid?: PrimitiveOverrideProps<TextFieldProps>;
     MovieTeam?: PrimitiveOverrideProps<AutocompleteProps>;
     MovieInPlaylists?: PrimitiveOverrideProps<AutocompleteProps>;
+    times_watched?: PrimitiveOverrideProps<TextFieldProps>;
+    MovieType?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type UploadMovieProps = React.PropsWithChildren<{
     overrides?: UploadMovieOverridesProps | undefined | null;

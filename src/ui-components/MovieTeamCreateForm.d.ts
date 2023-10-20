@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 export declare type ValidationResponse = {
     hasError: boolean;
@@ -13,7 +13,7 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type MovieTeamCreateFormInputValues = {
-    director?: string;
+    director?: string[];
     operator?: string[];
     scenario?: string[];
     editor?: string[];
@@ -22,6 +22,8 @@ export declare type MovieTeamCreateFormInputValues = {
     makeup?: string[];
     executive_producer?: string[];
     producer?: string[];
+    producer_org?: string[];
+    PersonMovieTeams?: any[];
 };
 export declare type MovieTeamCreateFormValidationValues = {
     director?: ValidationFunction<string>;
@@ -33,6 +35,8 @@ export declare type MovieTeamCreateFormValidationValues = {
     makeup?: ValidationFunction<string>;
     executive_producer?: ValidationFunction<string>;
     producer?: ValidationFunction<string>;
+    producer_org?: ValidationFunction<string>;
+    PersonMovieTeams?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MovieTeamCreateFormOverridesProps = {
@@ -46,6 +50,8 @@ export declare type MovieTeamCreateFormOverridesProps = {
     makeup?: PrimitiveOverrideProps<TextFieldProps>;
     executive_producer?: PrimitiveOverrideProps<TextFieldProps>;
     producer?: PrimitiveOverrideProps<TextFieldProps>;
+    producer_org?: PrimitiveOverrideProps<TextFieldProps>;
+    PersonMovieTeams?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type MovieTeamCreateFormProps = React.PropsWithChildren<{
     overrides?: MovieTeamCreateFormOverridesProps | undefined | null;
