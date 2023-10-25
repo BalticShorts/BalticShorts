@@ -12,26 +12,24 @@ const Layout = () => {
 
   return (
     <>
-      <div><Authenticator>
-        {({ signOut, user }) => (
-          <div className="min-h-[200vh]">
-            <div className=" bg-amber-50"  >
-              <Navbar signOut={signOut}/>;
-              {/* <Navbar meklTGroup="group-16-2.png" property1="variant-4" />; */}
-            </div>
-            
-            <div className="MainContainer mb-auto h-10 flex-grow">
-              <Outlet />
-            </div>
-            {/* Footer needs fixing - disabled for now */}
-            {/* <div >
-                <Footer />
-            </div> */}
-
-            
-        </div>
-      )}
-    </Authenticator></div>
+      <div className='bg-amber-50'>
+        <Authenticator>
+          {({ signOut, user }) => ( 
+            <div className="min-h-[200vh]">
+              <div className="h-12 mb-0 max-h-12"  >
+                <Navbar signOut={signOut}/>;
+              </div>
+              <div className="MainContainer mb-auto h-10 flex-grow bg-inherit">
+                <Outlet/>
+              </div>
+              {/* Footer needs fixing - disabled for now */}
+              {/* <div >
+                  <Footer />
+              </div> */}
+          </div>
+        )}
+      </Authenticator>
+    </div>
     </>
   )
 };

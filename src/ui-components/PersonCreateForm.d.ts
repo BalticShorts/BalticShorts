@@ -22,6 +22,7 @@ export declare type PersonCreateFormInputValues = {
     IMBD?: string;
     email?: string;
     PersonMovieTeams?: any[];
+    user_id?: string;
 };
 export declare type PersonCreateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -33,6 +34,7 @@ export declare type PersonCreateFormValidationValues = {
     IMBD?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
     PersonMovieTeams?: ValidationFunction<any>;
+    user_id?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type PersonCreateFormOverridesProps = {
@@ -46,6 +48,7 @@ export declare type PersonCreateFormOverridesProps = {
     IMBD?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
     PersonMovieTeams?: PrimitiveOverrideProps<AutocompleteProps>;
+    user_id?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type PersonCreateFormProps = React.PropsWithChildren<{
     overrides?: PersonCreateFormOverridesProps | undefined | null;

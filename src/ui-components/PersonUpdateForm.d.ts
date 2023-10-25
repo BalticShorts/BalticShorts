@@ -22,6 +22,7 @@ export declare type PersonUpdateFormInputValues = {
     IMBD?: string;
     email?: string;
     PersonMovieTeams?: any[];
+    user_id?: string;
 };
 export declare type PersonUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -33,6 +34,7 @@ export declare type PersonUpdateFormValidationValues = {
     IMBD?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
     PersonMovieTeams?: ValidationFunction<any>;
+    user_id?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type PersonUpdateFormOverridesProps = {
@@ -46,6 +48,7 @@ export declare type PersonUpdateFormOverridesProps = {
     IMBD?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
     PersonMovieTeams?: PrimitiveOverrideProps<AutocompleteProps>;
+    user_id?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type PersonUpdateFormProps = React.PropsWithChildren<{
     overrides?: PersonUpdateFormOverridesProps | undefined | null;

@@ -201,6 +201,7 @@ export default function PersonUpdateForm(props) {
     IMBD: "",
     email: "",
     PersonMovieTeams: [],
+    user_id: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [surname, setSurname] = React.useState(initialValues.surname);
@@ -220,6 +221,7 @@ export default function PersonUpdateForm(props) {
   const [PersonMovieTeamsRecords, setPersonMovieTeamsRecords] = React.useState(
     []
   );
+  const [user_id, setUser_id] = React.useState(initialValues.user_id);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -241,6 +243,7 @@ export default function PersonUpdateForm(props) {
     setPersonMovieTeams(cleanValues.PersonMovieTeams ?? []);
     setCurrentPersonMovieTeamsValue(undefined);
     setCurrentPersonMovieTeamsDisplayValue("");
+    setUser_id(cleanValues.user_id);
     setErrors({});
   };
   const [personRecord, setPersonRecord] = React.useState(personModelProp);
@@ -293,6 +296,7 @@ export default function PersonUpdateForm(props) {
     IMBD: [{ type: "URL" }],
     email: [{ type: "Email" }],
     PersonMovieTeams: [],
+    user_id: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -360,6 +364,7 @@ export default function PersonUpdateForm(props) {
           IMBD: IMBD ?? null,
           email: email ?? null,
           PersonMovieTeams: PersonMovieTeams ?? null,
+          user_id: user_id ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -458,6 +463,7 @@ export default function PersonUpdateForm(props) {
             Facebook: modelFields.Facebook ?? null,
             IMBD: modelFields.IMBD ?? null,
             email: modelFields.email ?? null,
+            user_id: modelFields.user_id ?? null,
           };
           promises.push(
             API.graphql({
@@ -502,6 +508,7 @@ export default function PersonUpdateForm(props) {
               IMBD,
               email,
               PersonMovieTeams,
+              user_id,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -534,6 +541,7 @@ export default function PersonUpdateForm(props) {
               IMBD,
               email,
               PersonMovieTeams,
+              user_id,
             };
             const result = onChange(modelFields);
             value = result?.surname ?? value;
@@ -566,6 +574,7 @@ export default function PersonUpdateForm(props) {
               IMBD,
               email,
               PersonMovieTeams,
+              user_id,
             };
             const result = onChange(modelFields);
             value = result?.role ?? value;
@@ -598,6 +607,7 @@ export default function PersonUpdateForm(props) {
               IMBD,
               email,
               PersonMovieTeams,
+              user_id,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -630,6 +640,7 @@ export default function PersonUpdateForm(props) {
               IMBD,
               email,
               PersonMovieTeams,
+              user_id,
             };
             const result = onChange(modelFields);
             value = result?.Instagram ?? value;
@@ -662,6 +673,7 @@ export default function PersonUpdateForm(props) {
               IMBD,
               email,
               PersonMovieTeams,
+              user_id,
             };
             const result = onChange(modelFields);
             value = result?.Facebook ?? value;
@@ -694,6 +706,7 @@ export default function PersonUpdateForm(props) {
               IMBD: value,
               email,
               PersonMovieTeams,
+              user_id,
             };
             const result = onChange(modelFields);
             value = result?.IMBD ?? value;
@@ -726,6 +739,7 @@ export default function PersonUpdateForm(props) {
               IMBD,
               email: value,
               PersonMovieTeams,
+              user_id,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -754,6 +768,7 @@ export default function PersonUpdateForm(props) {
               IMBD,
               email,
               PersonMovieTeams: values,
+              user_id,
             };
             const result = onChange(modelFields);
             values = result?.PersonMovieTeams ?? values;
@@ -830,6 +845,39 @@ export default function PersonUpdateForm(props) {
           {...getOverrideProps(overrides, "PersonMovieTeams")}
         ></Autocomplete>
       </ArrayField>
+      <TextField
+        label="User id"
+        isRequired={false}
+        isReadOnly={false}
+        value={user_id}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              role,
+              description,
+              Instagram,
+              Facebook,
+              IMBD,
+              email,
+              PersonMovieTeams,
+              user_id: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.user_id ?? value;
+          }
+          if (errors.user_id?.hasError) {
+            runValidationTasks("user_id", value);
+          }
+          setUser_id(value);
+        }}
+        onBlur={() => runValidationTasks("user_id", user_id)}
+        errorMessage={errors.user_id?.errorMessage}
+        hasError={errors.user_id?.hasError}
+        {...getOverrideProps(overrides, "user_id")}
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

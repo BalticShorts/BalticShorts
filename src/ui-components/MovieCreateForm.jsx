@@ -27,7 +27,12 @@ import {
   listMovieTeams,
   listMovieTypes,
 } from "../graphql/queries";
-import { createMovie, createMovieMoviePlaylist } from "../graphql/mutations";
+import {
+  createMovie,
+  createMovieMoviePlaylist,
+  updateMovie,
+  updateMovieTeam,
+} from "../graphql/mutations";
 function ArrayField({
   items = [],
   onChange,
@@ -534,6 +539,34 @@ export default function MovieCreateForm(props) {
             })
           )?.data?.createMovie;
           const promises = [];
+          const movieTeamToLink = modelFields.MovieTeam;
+          if (movieTeamToLink) {
+            promises.push(
+              API.graphql({
+                query: updateMovieTeam.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: MovieTeam.id,
+                    movieTeamMovieId: movie.id,
+                  },
+                },
+              })
+            );
+            const movieToUnlink = await movieTeamToLink.Movie;
+            if (movieToUnlink) {
+              promises.push(
+                API.graphql({
+                  query: updateMovie.replaceAll("__typename", ""),
+                  variables: {
+                    input: {
+                      id: movieToUnlink.id,
+                      movieMovieTeamId: null,
+                    },
+                  },
+                })
+              );
+            }
+          }
           promises.push(
             ...MovieInPlaylists.reduce((promises, moviePlaylist) => {
               promises.push(

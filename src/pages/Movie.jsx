@@ -6,47 +6,11 @@ import { Amplify, API, graphqlOperation  } from 'aws-amplify';
 import awsExports from '../aws-exports';
 import { isVideoPlaying } from '../components/VideoPlayer';
 import { useNavigate } from "react-router-dom";
+import { getMovieQuery } from '../custom-queries/queries';
 
 Amplify.configure(awsExports);
 
 const fetchMovie = async id => {
-
-  const getMovieQuery = `
-    query MyQuery($id: ID!) {
-      getMovie(id: $id) {
-        MovieTeam {
-          PersonMovieTeams {
-            items {
-              Role {
-                name
-                name_eng
-              }
-              Person {
-                name
-                surname
-              }
-            }
-          }
-        }
-        genre
-        captions_language
-        created_year
-        description
-        description_eng
-        id
-        length
-        MovieType {
-          type
-        }
-        name
-        name_eng
-        origin_country
-        screen_language
-        times_watched
-        guid
-      }
-    }
-  `;
   const movieData = await API.graphql(graphqlOperation(getMovieQuery, {'id':id}));
   const movie = movieData.data.getMovie;
   return movie;
@@ -104,8 +68,7 @@ function Movie() {
       const movie = await fetchMovie(id);
       const data = await fetchVideo(movie.guid);
       const playlists = await fetchPlaylists(id);
-      const team = setMovieCast(movie.MovieTeam.PersonMovieTeams.items);
-      console.log(movie)
+      const team = getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
       try {     
         setMovieURL(data.Item.hlsUrl.S);
         setMovieData(movie);
@@ -140,12 +103,12 @@ function Movie() {
     }
   }
 
-  function setMovieCast(team){
+  function getMovieCast(team){
     const teamMap = {};
     team.map( (person) => {
       if(!(person.Role.name_eng in teamMap))
         teamMap[person.Role.name_eng] = [] 
-      teamMap[person.Role.name_eng].push(person.Person.name + " " + person.Person.surname)
+      teamMap[person.Role.name_eng].push({"name":person.Person.name + " " + person.Person.surname, "id":person.Person.id})
     })
     return teamMap
   }
@@ -198,27 +161,27 @@ function Movie() {
               <span className="text-black text-sm font-normal font-['SchoolBook']">REŽISORS<br/></span>
               { movieTeamData.director?.map( (person) => {
                 return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
                 )
               }) }
               <span className="text-black text-sm font-normal font-['SchoolBook']">OPERATORS<br/></span>
               { movieTeamData.operator?.map( (person) => {
                 return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
                 )
               }) }
               <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
               <span className="text-black text-sm font-normal font-['SchoolBook']">SCENĀRIJA AUTORS<br/></span>
               { movieTeamData.scenario?.map( (person) => {
                 return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
                 )
               }) }
               <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
               <span className="text-black text-sm font-normal font-['SchoolBook']">MONTĀŽAS REŽISORS<br/></span>
               { movieTeamData.editor?.map( (person) => {
                 return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
                 )
               }) }
             </div>
@@ -227,21 +190,21 @@ function Movie() {
               <span className="text-black text-sm font-normal font-['SchoolBook']">LOMĀS<br/></span>
               { movieTeamData.actors?.map( (person) => {
                 return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
                 )
               }) }
               <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
               <span className="text-black text-sm font-normal font-['SchoolBook']">TĒRPU MĀKSLINIEKS<br/></span>
               { movieTeamData.costumes?.map( (person) => {
                 return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
                 )
               }) }
               <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
               <span className="text-black text-sm font-normal font-['SchoolBook']">GRIMMA MĀKSLINIEKS<br/></span>
               { movieTeamData.makeup?.map( (person) => {
                 return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
                 )
               }) }
               
@@ -251,7 +214,7 @@ function Movie() {
               <span className="text-black text-sm font-normal font-['SchoolBook']">IZPILDPRODUCENTS<br/></span>
               { movieTeamData.executive_producer?.map( (person) => {
                 return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
                 )
               }) }
               <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
@@ -259,7 +222,7 @@ function Movie() {
               { movieTeamData.producer?.map( (person) => {
                 
                 return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']">{person}<br/></span>
+                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
                 )
               }) }
               

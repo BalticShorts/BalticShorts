@@ -24,6 +24,7 @@ export declare type MovieTeamUpdateFormInputValues = {
     producer?: string[];
     producer_org?: string[];
     PersonMovieTeams?: any[];
+    Movie?: any;
 };
 export declare type MovieTeamUpdateFormValidationValues = {
     director?: ValidationFunction<string>;
@@ -37,6 +38,7 @@ export declare type MovieTeamUpdateFormValidationValues = {
     producer?: ValidationFunction<string>;
     producer_org?: ValidationFunction<string>;
     PersonMovieTeams?: ValidationFunction<any>;
+    Movie?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MovieTeamUpdateFormOverridesProps = {
@@ -52,6 +54,7 @@ export declare type MovieTeamUpdateFormOverridesProps = {
     producer?: PrimitiveOverrideProps<TextFieldProps>;
     producer_org?: PrimitiveOverrideProps<TextFieldProps>;
     PersonMovieTeams?: PrimitiveOverrideProps<AutocompleteProps>;
+    Movie?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type MovieTeamUpdateFormProps = React.PropsWithChildren<{
     overrides?: MovieTeamUpdateFormOverridesProps | undefined | null;

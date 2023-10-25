@@ -34,6 +34,7 @@ import {
   createMovieMoviePlaylist,
   deleteMovieMoviePlaylist,
   updateMovie,
+  updateMovieTeam,
 } from "../graphql/mutations";
 function ArrayField({
   items = [],
@@ -577,6 +578,48 @@ export default function MovieUpdateForm(props) {
             }
           });
           const promises = [];
+          const movieTeamToUnlink = await movieRecord.MovieTeam;
+          if (movieTeamToUnlink) {
+            promises.push(
+              API.graphql({
+                query: updateMovieTeam.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: movieTeamToUnlink.id,
+                    movieTeamMovieId: null,
+                  },
+                },
+              })
+            );
+          }
+          const movieTeamToLink = modelFields.MovieTeam;
+          if (movieTeamToLink) {
+            promises.push(
+              API.graphql({
+                query: updateMovieTeam.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: MovieTeam.id,
+                    movieTeamMovieId: movieRecord.id,
+                  },
+                },
+              })
+            );
+            const movieToUnlink = await movieTeamToLink.Movie;
+            if (movieToUnlink) {
+              promises.push(
+                API.graphql({
+                  query: updateMovie.replaceAll("__typename", ""),
+                  variables: {
+                    input: {
+                      id: movieToUnlink.id,
+                      movieMovieTeamId: null,
+                    },
+                  },
+                })
+              );
+            }
+          }
           const movieInPlaylistsToLinkMap = new Map();
           const movieInPlaylistsToUnLinkMap = new Map();
           const movieInPlaylistsMap = new Map();

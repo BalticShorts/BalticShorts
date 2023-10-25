@@ -68,8 +68,31 @@ export const createPersonMovieTeam = /* GraphQL */ `
           nextToken
           __typename
         }
+        Movie {
+          id
+          name
+          name_eng
+          type
+          genre
+          description
+          description_eng
+          screen_language
+          captions_language
+          origin_country
+          length
+          created_year
+          uploaded_at
+          guid
+          times_watched
+          createdAt
+          updatedAt
+          movieMovieTeamId
+          movieMovieTypeId
+          __typename
+        }
         createdAt
         updatedAt
+        movieTeamMovieId
         __typename
       }
       Person {
@@ -86,6 +109,7 @@ export const createPersonMovieTeam = /* GraphQL */ `
           nextToken
           __typename
         }
+        user_id
         createdAt
         updatedAt
         __typename
@@ -134,8 +158,31 @@ export const updatePersonMovieTeam = /* GraphQL */ `
           nextToken
           __typename
         }
+        Movie {
+          id
+          name
+          name_eng
+          type
+          genre
+          description
+          description_eng
+          screen_language
+          captions_language
+          origin_country
+          length
+          created_year
+          uploaded_at
+          guid
+          times_watched
+          createdAt
+          updatedAt
+          movieMovieTeamId
+          movieMovieTypeId
+          __typename
+        }
         createdAt
         updatedAt
+        movieTeamMovieId
         __typename
       }
       Person {
@@ -152,6 +199,7 @@ export const updatePersonMovieTeam = /* GraphQL */ `
           nextToken
           __typename
         }
+        user_id
         createdAt
         updatedAt
         __typename
@@ -200,8 +248,31 @@ export const deletePersonMovieTeam = /* GraphQL */ `
           nextToken
           __typename
         }
+        Movie {
+          id
+          name
+          name_eng
+          type
+          genre
+          description
+          description_eng
+          screen_language
+          captions_language
+          origin_country
+          length
+          created_year
+          uploaded_at
+          guid
+          times_watched
+          createdAt
+          updatedAt
+          movieMovieTeamId
+          movieMovieTypeId
+          __typename
+        }
         createdAt
         updatedAt
+        movieTeamMovieId
         __typename
       }
       Person {
@@ -218,6 +289,7 @@ export const deletePersonMovieTeam = /* GraphQL */ `
           nextToken
           __typename
         }
+        user_id
         createdAt
         updatedAt
         __typename
@@ -353,6 +425,7 @@ export const createPerson = /* GraphQL */ `
         nextToken
         __typename
       }
+      user_id
       createdAt
       updatedAt
       __typename
@@ -387,6 +460,7 @@ export const updatePerson = /* GraphQL */ `
         nextToken
         __typename
       }
+      user_id
       createdAt
       updatedAt
       __typename
@@ -421,6 +495,7 @@ export const deletePerson = /* GraphQL */ `
         nextToken
         __typename
       }
+      user_id
       createdAt
       updatedAt
       __typename
@@ -544,8 +619,59 @@ export const createMovieTeam = /* GraphQL */ `
         nextToken
         __typename
       }
+      Movie {
+        id
+        name
+        name_eng
+        type
+        genre
+        description
+        description_eng
+        screen_language
+        captions_language
+        origin_country
+        length
+        created_year
+        uploaded_at
+        guid
+        MovieTeam {
+          id
+          director
+          operator
+          scenario
+          editor
+          actors
+          costumes
+          makeup
+          executive_producer
+          producer
+          producer_org
+          createdAt
+          updatedAt
+          movieTeamMovieId
+          __typename
+        }
+        MovieInPlaylists {
+          nextToken
+          __typename
+        }
+        times_watched
+        MovieType {
+          id
+          type
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        movieMovieTeamId
+        movieMovieTypeId
+        __typename
+      }
       createdAt
       updatedAt
+      movieTeamMovieId
       __typename
     }
   }
@@ -580,8 +706,59 @@ export const updateMovieTeam = /* GraphQL */ `
         nextToken
         __typename
       }
+      Movie {
+        id
+        name
+        name_eng
+        type
+        genre
+        description
+        description_eng
+        screen_language
+        captions_language
+        origin_country
+        length
+        created_year
+        uploaded_at
+        guid
+        MovieTeam {
+          id
+          director
+          operator
+          scenario
+          editor
+          actors
+          costumes
+          makeup
+          executive_producer
+          producer
+          producer_org
+          createdAt
+          updatedAt
+          movieTeamMovieId
+          __typename
+        }
+        MovieInPlaylists {
+          nextToken
+          __typename
+        }
+        times_watched
+        MovieType {
+          id
+          type
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        movieMovieTeamId
+        movieMovieTypeId
+        __typename
+      }
       createdAt
       updatedAt
+      movieTeamMovieId
       __typename
     }
   }
@@ -616,8 +793,59 @@ export const deleteMovieTeam = /* GraphQL */ `
         nextToken
         __typename
       }
+      Movie {
+        id
+        name
+        name_eng
+        type
+        genre
+        description
+        description_eng
+        screen_language
+        captions_language
+        origin_country
+        length
+        created_year
+        uploaded_at
+        guid
+        MovieTeam {
+          id
+          director
+          operator
+          scenario
+          editor
+          actors
+          costumes
+          makeup
+          executive_producer
+          producer
+          producer_org
+          createdAt
+          updatedAt
+          movieTeamMovieId
+          __typename
+        }
+        MovieInPlaylists {
+          nextToken
+          __typename
+        }
+        times_watched
+        MovieType {
+          id
+          type
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        movieMovieTeamId
+        movieMovieTypeId
+        __typename
+      }
       createdAt
       updatedAt
+      movieTeamMovieId
       __typename
     }
   }
@@ -658,8 +886,31 @@ export const createMovie = /* GraphQL */ `
           nextToken
           __typename
         }
+        Movie {
+          id
+          name
+          name_eng
+          type
+          genre
+          description
+          description_eng
+          screen_language
+          captions_language
+          origin_country
+          length
+          created_year
+          uploaded_at
+          guid
+          times_watched
+          createdAt
+          updatedAt
+          movieMovieTeamId
+          movieMovieTypeId
+          __typename
+        }
         createdAt
         updatedAt
+        movieTeamMovieId
         __typename
       }
       MovieInPlaylists {
@@ -726,8 +977,31 @@ export const updateMovie = /* GraphQL */ `
           nextToken
           __typename
         }
+        Movie {
+          id
+          name
+          name_eng
+          type
+          genre
+          description
+          description_eng
+          screen_language
+          captions_language
+          origin_country
+          length
+          created_year
+          uploaded_at
+          guid
+          times_watched
+          createdAt
+          updatedAt
+          movieMovieTeamId
+          movieMovieTypeId
+          __typename
+        }
         createdAt
         updatedAt
+        movieTeamMovieId
         __typename
       }
       MovieInPlaylists {
@@ -794,8 +1068,31 @@ export const deleteMovie = /* GraphQL */ `
           nextToken
           __typename
         }
+        Movie {
+          id
+          name
+          name_eng
+          type
+          genre
+          description
+          description_eng
+          screen_language
+          captions_language
+          origin_country
+          length
+          created_year
+          uploaded_at
+          guid
+          times_watched
+          createdAt
+          updatedAt
+          movieMovieTeamId
+          movieMovieTypeId
+          __typename
+        }
         createdAt
         updatedAt
+        movieTeamMovieId
         __typename
       }
       MovieInPlaylists {
@@ -878,6 +1175,7 @@ export const createMovieMoviePlaylist = /* GraphQL */ `
           producer_org
           createdAt
           updatedAt
+          movieTeamMovieId
           __typename
         }
         MovieInPlaylists {
@@ -956,6 +1254,7 @@ export const updateMovieMoviePlaylist = /* GraphQL */ `
           producer_org
           createdAt
           updatedAt
+          movieTeamMovieId
           __typename
         }
         MovieInPlaylists {
@@ -1034,6 +1333,7 @@ export const deleteMovieMoviePlaylist = /* GraphQL */ `
           producer_org
           createdAt
           updatedAt
+          movieTeamMovieId
           __typename
         }
         MovieInPlaylists {
