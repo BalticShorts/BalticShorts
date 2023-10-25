@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getProfile } from "../custom-queries/queries";
 import { API, graphqlOperation  } from 'aws-amplify';
+import { Footer } from "../modified-ui-components/Footer";
 
 const fetchProfile = async id => {
     const profileData = await API.graphql(graphqlOperation(getProfile, {'id':id}));
@@ -45,7 +46,7 @@ function Profile () {
                 </div>
             </div>
 
-            <div className="Content left-[12%] relative pt-2 my-2 h-fit">
+            <div className="Content left-[12%] relative pt-2 my-2 h-fit w-5/6">
                 <div className="PersonalInfo flex flex-row h-full">
                     <img className="Rectangle32 w-52 h-72 border border-black mx-4" src="https://via.placeholder.com/200x260" />
                     <div className="flex flex-col relative ml-4 space-y-3">
@@ -56,12 +57,13 @@ function Profile () {
                             <div><a href={profile?.instagram}>INSTAGRAM</a><br/></div>
                             <div><a href={profile?.IMBD}>IMDB</a><br/></div>
                         </div>
-                        <div className="w-4/5 text-black text-lg font-normal font-['SchoolBook']">{profile.description}</div>
+                        <div className="w-full text-black text-lg font-normal font-['SchoolBook']">{profile.description}</div>
 
 
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     )
 }

@@ -1,3 +1,5 @@
+import { Footer } from "../modified-ui-components/Footer";
+
 const About = () => {
     return(
         <>
@@ -66,8 +68,8 @@ const About = () => {
 
             </div>
 
-                <div className="w-full h-5 py-20 mt-10 relative text-center text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">info@balticshorts.com</div>
-
+            <div id="contact" className="w-full h-64 py-20 my-10 relative text-center text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">info@balticshorts.com</div>
+            <Footer/>
         </div>
         </>
     );

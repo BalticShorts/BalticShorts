@@ -7,6 +7,7 @@ import awsExports from '../aws-exports';
 import { isVideoPlaying } from '../components/VideoPlayer';
 import { useNavigate } from "react-router-dom";
 import { getMovieQuery } from '../custom-queries/queries';
+import { Footer } from '../modified-ui-components/Footer';
 
 Amplify.configure(awsExports);
 
@@ -115,7 +116,7 @@ function Movie() {
 
   return (
     <>
-    <div className="FilmasSkats w-full h-200 relative bg-stone-50 rounded-3xl">
+    <div className="FilmasSkats w-full relative bg-amber-50 rounded-3xl">
       <div className='MovieContainer max-h-[80vh]' >
         <div onClick={() => removeText()} className='MovieContainer max-h-[80vh]' >
           <VideoPlayer movieURL={movieURL} />
@@ -126,7 +127,7 @@ function Movie() {
             <div className="w-full m-auto top-[3%] absolute text-center text-stone-50 text-4xl font-bold font-['SchoolBook'] uppercase leading-10">{movieData.name}</div>
             <div className="w-full m-auto top-[6%] absolute text-center text-stone-50 text-base font-normal font-['SchoolBook'] uppercase tracking-wider">{movieData.name_eng}</div>
           </div>
-          <div className='w-full h-full top-[60vh] absolute py-4'>
+          <div className='w-full top-[60vh] absolute py-4'>
             <div className="Rectangle4 w-full h-[19vh] left-[0] top-0 relative -rotate-180 mix-blend-multiply bg-gradient-to-b from-slate-600 to-zinc-300" />
             <div className="w-full top-14 absolute text-center flex flex-col items-center">
               <span className="text-stone-50 text-xl font-normal font-['SchoolBook'] uppercase relative inline">
@@ -271,6 +272,7 @@ function Movie() {
       <div className='MoreWorks w-[75%] pt-8 flex flex-col'>
         <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">SAISTĪTI DARBI</div>
       </div>
+    <Footer />
     </div>
     </>
   );

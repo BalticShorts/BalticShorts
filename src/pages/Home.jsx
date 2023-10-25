@@ -16,6 +16,7 @@ import { StorageManager } from '@aws-amplify/ui-react-storage';
 import moment from "moment";
 import awsExports from '../aws-exports';
 import { useNavigate } from "react-router-dom";
+import { Footer } from "../modified-ui-components/Footer";
 // https://mui.com/material-ui/material-icons/
 
 
@@ -111,7 +112,8 @@ const Home = () => {
 
 
   return (
-          <div className='movieList'>
+    <>
+          <div className='movieList h-fit'>
             { movies.map( (movie, idx) => {
                 return (
                   <Paper variant="outlined" elevation={2} key={`movie${idx}`} onClick={() => goMovie(idx)}>
@@ -143,6 +145,8 @@ const Home = () => {
             ) : <IconButton onClick={() => setShowAddMovie(true)}><AddIcon/></IconButton>
           } */}
           </div>
+          <Footer/>
+    </>
   );
 }
 

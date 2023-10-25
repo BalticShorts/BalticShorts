@@ -15,11 +15,11 @@ const Layout = () => {
       <div className='bg-amber-50'>
         <Authenticator>
           {({ signOut, user }) => ( 
-            <div className="min-h-[200vh]">
+            <div className="min-h-[96vh]">
               <div className="h-12 mb-0 max-h-12"  >
                 <Navbar signOut={signOut}/>;
               </div>
-              <div className="MainContainer mb-auto h-10 flex-grow bg-inherit">
+              <div className="MainContainer mb-auto flex-grow bg-inherit">
                 <Outlet/>
               </div>
               {/* Footer needs fixing - disabled for now */}
