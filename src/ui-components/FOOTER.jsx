@@ -10,7 +10,7 @@ import {
   getOverrideProps,
   getOverridesFromVariants,
   mergeVariantsAndOverrides,
-} from "@aws-amplify/ui-react/internal";
+} from "./utils";
 import { Flex, Icon, Text, View } from "@aws-amplify/ui-react";
 export default function FOOTER(props) {
   const { overrides: overridesProp, ...rest } = props;

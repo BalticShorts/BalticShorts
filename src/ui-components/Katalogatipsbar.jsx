@@ -6,7 +6,7 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
+import { getOverrideProps } from "./utils";
 import { View } from "@aws-amplify/ui-react";
 import Katalogatipsbartitle from "./Katalogatipsbartitle";
 export default function Katalogatipsbar(props) {
