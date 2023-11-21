@@ -58,6 +58,7 @@ function Movie() {
   const [movieURL, setMovieURL] = useState('');
   const [movieData, setMovieData] = useState({});
   const [movieTeamData, setMovieTeamData] = useState({});
+  const [movieDirectors, setMovieDirectors] = useState([]);
   const [textOnMovie, setTextOnMovie] = useState(true);
   const [playlists, setPlaylists] = useState([]);
   const [playlistRows, setPlaylistRows] = useState(1);
@@ -108,7 +109,7 @@ function Movie() {
     const teamMap = {};
     team.map( (person) => {
       if(!(person.Role.name_eng in teamMap))
-        teamMap[person.Role.name_eng] = [] 
+        teamMap[person.Role.name_eng] = []
       teamMap[person.Role.name_eng].push({"name":person.Person.name + " " + person.Person.surname, "id":person.Person.id})
     })
     return teamMap
@@ -131,7 +132,7 @@ function Movie() {
             <div className="Rectangle4 w-full h-[19vh] left-[0] top-0 relative -rotate-180 mix-blend-multiply bg-gradient-to-b from-slate-600 to-zinc-300" />
             <div className="w-full top-14 absolute text-center flex flex-col items-center">
               <span className="text-stone-50 text-xl font-normal font-['SchoolBook'] uppercase relative inline">
-                Režisors {movieTeamData.director?.join(', ')}
+                Režisors {movieTeamData.director?.map((person) => person.name).join(", ")}
               </span>
               <span className="text-stone-50 text-xl font-normal font-['SchoolBook'] relative">
                 {movieData.origin_country} | {movieData.created_year} | {movieData.length}’ | 18+

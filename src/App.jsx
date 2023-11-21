@@ -5,6 +5,8 @@ import Home from "./pages/Home";
 import Movie from "./pages/Movie";
 import About from "./pages/About";
 import Profile from "./pages/Profile";
+import Search from "./pages/Search";
+import Catalogue from "./pages/Catalogue";
 
 export default function App() {
   return (
@@ -14,7 +16,9 @@ export default function App() {
         <Route index element={<Home />} />
         <Route path="Movie/:id" element={<Movie />} />
         <Route path="about" element={<About />} />
-        <Route path="profile/:id" element={<Profile />} />
+        <Route path="profile/:id?" element={<Profile />} />
+        <Route path="search/:query?" element={<Search />} />
+        <Route path="catalogue/:givenTab?" element={<Catalogue />} />
         </Route>
       </Routes>
     </BrowserRouter>

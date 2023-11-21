@@ -23,7 +23,9 @@ function Profile () {
 
     useEffect(() => {
         const get = async () => {
-          const profileData = await fetchProfile(id);
+            if (id === undefined)
+                return;
+            const profileData = await fetchProfile(id);
             console.log(profileData)
           try {     
             setProfile(profileData);
@@ -40,9 +42,9 @@ function Profile () {
             <div className="w-full h-12 relative">
                 <div className="w-full h-12 absolute bg-amber-50 border-b border-black" />
                 <div className="w-full mt-1 h-6 flex items-center justify-center relative">
-                    <div className="h-5 mx-2 text-center text-black tex text-xl font-normal font-['SchoolBook'] tracking-tight inline-flex"><a href="/search/movie">Filmas</a></div>
-                    <div className="h-5 mx-6 text-center text-black text-xl font-bold font-['SchoolBook'] tracking-tight inline-flex"><a href="">Personas</a></div>
-                    <div className="h-5 mx-2 my-auto text-center text-black text-xl font-normal font-['SchoolBook'] tracking-tight inline-flex"><a href="/search/playlist">Saraksti</a></div>
+                    <div className="h-5 mx-2 text-center text-black tex text-xl font-normal font-['SchoolBook'] tracking-tight inline-flex"><a href="/catalogue/Movies">Filmas</a></div>
+                    <div className="h-5 mx-6 text-center text-black text-xl font-bold font-['SchoolBook'] tracking-tight inline-flex"><a href="/catalogue/Persons">Personas</a></div>
+                    <div className="h-5 mx-2 my-auto text-center text-black text-xl font-normal font-['SchoolBook'] tracking-tight inline-flex"><a href="/catalogue/Playlists">Saraksti</a></div>
                 </div>
             </div>
 
