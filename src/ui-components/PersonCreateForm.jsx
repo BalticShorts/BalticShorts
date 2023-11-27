@@ -216,7 +216,7 @@ export default function PersonCreateForm(props) {
   );
   const [PersonMovieTeamsLoading, setPersonMovieTeamsLoading] =
     React.useState(false);
-  const [PersonMovieTeamsRecords, setPersonMovieTeamsRecords] = React.useState(
+  const [personMovieTeamsRecords, setPersonMovieTeamsRecords] = React.useState(
     []
   );
   const [user_id, setUser_id] = React.useState(initialValues.user_id);
@@ -739,14 +739,14 @@ export default function PersonCreateForm(props) {
           isReadOnly={false}
           placeholder="Search PersonMovieTeam"
           value={currentPersonMovieTeamsDisplayValue}
-          options={PersonMovieTeamsRecords.map((r) => ({
+          options={personMovieTeamsRecords.map((r) => ({
             id: getIDValue.PersonMovieTeams?.(r),
             label: getDisplayValue.PersonMovieTeams?.(r),
           }))}
           isLoading={PersonMovieTeamsLoading}
           onSelect={({ id, label }) => {
             setCurrentPersonMovieTeamsValue(
-              PersonMovieTeamsRecords.find((r) =>
+              personMovieTeamsRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )

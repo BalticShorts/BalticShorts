@@ -1,11 +1,24 @@
 import { useEffect, useState } from "react";
 import { Footer } from "../modified-ui-components/Footer";
+import { getSearch } from "../custom-queries/queries";
+import { API, graphqlOperation } from "aws-amplify";
 
 const Search = () => {
 
     const [inputText, setInputText] = useState("");
     const [searchResult, setSearchResult] = useState({"movies": [], "persons": [], "playlists": []})
 
+
+    const fetchSearch = async searchString => {
+      const original = searchString;
+      const lowSearchString = searchString.toLowerCase();
+      const firstCapitalisedSearchString = searchString.charAt(0).toUpperCase() + searchString.slice(1).toLowerCase();
+      const capitalisedSearchString = searchString.toUpperCase();
+      const res = await API.graphql(graphqlOperation(getSearch,
+        {'searchString':original, 'lowSearchString':lowSearchString, 'firstCapitalisedSearchString':firstCapitalisedSearchString, 'capitalisedSearchString':capitalisedSearchString}
+        ));
+      return {"movies": res.data.listMovies.items, "persons": res.data.listPeople.items, "playlists": res.data.listMoviePlaylists.items}
+    }
 
     useEffect(() => {
         const get = async () => {
@@ -26,11 +39,17 @@ const Search = () => {
       
 
       useEffect(() => {
-        if (inputText.length > 0) {
-            console.log(inputText)
-// Add search request to the db
-// maybe add cooldown for too many requests?
+        const search = async () => {
+          if (inputText.length > 0) {
+            const res = await fetchSearch(inputText);
+            try {
+              setSearchResult(res)
+            } catch (error) {      
+            }
+              // maybe add cooldown for too many requests?
           }
+        }
+        search();
       }, [inputText]);
 
 
@@ -43,6 +62,21 @@ const Search = () => {
                         <input placeholder="Meklēt" className="bg-beige text-center border-none outline-none" onChange={handleChange} value={inputText}></input>
                     </div>
                 </div>
+                {searchResult.movies?.map( movie => {
+                  return(
+                    <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/movie/'+movie.id}>{movie.name}</a><br/></span>
+                  )
+                })}
+                {searchResult.persons?.map( person => {
+                  return(
+                    <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/person/'+person.id}>{person.name} {person.surname}</a><br/></span>
+                  )
+                })}
+                {searchResult.playlists?.map( playlist => {
+                  return(
+                    <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/playlist/'+playlist.id}>{playlist.Title}</a><br/></span>
+                  )
+                })}
                 <Footer/>
             </div>
         </>

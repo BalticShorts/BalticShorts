@@ -453,7 +453,7 @@ export default function MoviePlaylistUpdateForm(props) {
             }
           });
           moviesToLinkMap.forEach((count, id) => {
-            const movieToLink = movieRecords.find((r) =>
+            const movieToLink = moviesRecords.find((r) =>
               Object.entries(JSON.parse(id)).every(
                 ([key, value]) => r[key] === value
               )

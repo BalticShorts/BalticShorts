@@ -227,12 +227,12 @@ export default function MovieTeamCreateForm(props) {
   );
   const [PersonMovieTeamsLoading, setPersonMovieTeamsLoading] =
     React.useState(false);
-  const [PersonMovieTeamsRecords, setPersonMovieTeamsRecords] = React.useState(
+  const [personMovieTeamsRecords, setPersonMovieTeamsRecords] = React.useState(
     []
   );
   const [Movie, setMovie] = React.useState(initialValues.Movie);
   const [MovieLoading, setMovieLoading] = React.useState(false);
-  const [MovieRecords, setMovieRecords] = React.useState([]);
+  const [movieRecords, setMovieRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -1171,14 +1171,14 @@ export default function MovieTeamCreateForm(props) {
           isReadOnly={false}
           placeholder="Search PersonMovieTeam"
           value={currentPersonMovieTeamsDisplayValue}
-          options={PersonMovieTeamsRecords.map((r) => ({
+          options={personMovieTeamsRecords.map((r) => ({
             id: getIDValue.PersonMovieTeams?.(r),
             label: getDisplayValue.PersonMovieTeams?.(r),
           }))}
           isLoading={PersonMovieTeamsLoading}
           onSelect={({ id, label }) => {
             setCurrentPersonMovieTeamsValue(
-              PersonMovieTeamsRecords.find((r) =>
+              personMovieTeamsRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )
@@ -1262,16 +1262,16 @@ export default function MovieTeamCreateForm(props) {
           isReadOnly={false}
           placeholder="Search Movie"
           value={currentMovieDisplayValue}
-          options={MovieRecords.filter(
-            (r) => !MovieIdSet.has(getIDValue.Movie?.(r))
-          ).map((r) => ({
-            id: getIDValue.Movie?.(r),
-            label: getDisplayValue.Movie?.(r),
-          }))}
+          options={movieRecords
+            .filter((r) => !MovieIdSet.has(getIDValue.Movie?.(r)))
+            .map((r) => ({
+              id: getIDValue.Movie?.(r),
+              label: getDisplayValue.Movie?.(r),
+            }))}
           isLoading={MovieLoading}
           onSelect={({ id, label }) => {
             setCurrentMovieValue(
-              MovieRecords.find((r) =>
+              movieRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )

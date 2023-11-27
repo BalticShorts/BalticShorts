@@ -201,13 +201,13 @@ export default function PersonMovieTeamUpdateForm(props) {
   };
   const [MovieTeam, setMovieTeam] = React.useState(initialValues.MovieTeam);
   const [MovieTeamLoading, setMovieTeamLoading] = React.useState(false);
-  const [MovieTeamRecords, setMovieTeamRecords] = React.useState([]);
+  const [movieTeamRecords, setMovieTeamRecords] = React.useState([]);
   const [Person, setPerson] = React.useState(initialValues.Person);
   const [PersonLoading, setPersonLoading] = React.useState(false);
-  const [PersonRecords, setPersonRecords] = React.useState([]);
+  const [personRecords, setPersonRecords] = React.useState([]);
   const [Role, setRole] = React.useState(initialValues.Role);
   const [RoleLoading, setRoleLoading] = React.useState(false);
-  const [RoleRecords, setRoleRecords] = React.useState([]);
+  const [roleRecords, setRoleRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -523,16 +523,16 @@ export default function PersonMovieTeamUpdateForm(props) {
           isReadOnly={false}
           placeholder="Search MovieTeam"
           value={currentMovieTeamDisplayValue}
-          options={MovieTeamRecords.filter(
-            (r) => !MovieTeamIdSet.has(getIDValue.MovieTeam?.(r))
-          ).map((r) => ({
-            id: getIDValue.MovieTeam?.(r),
-            label: getDisplayValue.MovieTeam?.(r),
-          }))}
+          options={movieTeamRecords
+            .filter((r) => !MovieTeamIdSet.has(getIDValue.MovieTeam?.(r)))
+            .map((r) => ({
+              id: getIDValue.MovieTeam?.(r),
+              label: getDisplayValue.MovieTeam?.(r),
+            }))}
           isLoading={MovieTeamLoading}
           onSelect={({ id, label }) => {
             setCurrentMovieTeamValue(
-              MovieTeamRecords.find((r) =>
+              movieTeamRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )
@@ -605,16 +605,16 @@ export default function PersonMovieTeamUpdateForm(props) {
           isReadOnly={false}
           placeholder="Search Person"
           value={currentPersonDisplayValue}
-          options={PersonRecords.filter(
-            (r) => !PersonIdSet.has(getIDValue.Person?.(r))
-          ).map((r) => ({
-            id: getIDValue.Person?.(r),
-            label: getDisplayValue.Person?.(r),
-          }))}
+          options={personRecords
+            .filter((r) => !PersonIdSet.has(getIDValue.Person?.(r)))
+            .map((r) => ({
+              id: getIDValue.Person?.(r),
+              label: getDisplayValue.Person?.(r),
+            }))}
           isLoading={PersonLoading}
           onSelect={({ id, label }) => {
             setCurrentPersonValue(
-              PersonRecords.find((r) =>
+              personRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )
@@ -683,16 +683,16 @@ export default function PersonMovieTeamUpdateForm(props) {
           isReadOnly={false}
           placeholder="Search Role"
           value={currentRoleDisplayValue}
-          options={RoleRecords.filter(
-            (r) => !RoleIdSet.has(getIDValue.Role?.(r))
-          ).map((r) => ({
-            id: getIDValue.Role?.(r),
-            label: getDisplayValue.Role?.(r),
-          }))}
+          options={roleRecords
+            .filter((r) => !RoleIdSet.has(getIDValue.Role?.(r)))
+            .map((r) => ({
+              id: getIDValue.Role?.(r),
+              label: getDisplayValue.Role?.(r),
+            }))}
           isLoading={RoleLoading}
           onSelect={({ id, label }) => {
             setCurrentRoleValue(
-              RoleRecords.find((r) =>
+              roleRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )

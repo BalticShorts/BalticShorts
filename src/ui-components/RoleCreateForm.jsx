@@ -200,7 +200,7 @@ export default function RoleCreateForm(props) {
   );
   const [PersonMovieTeamLoading, setPersonMovieTeamLoading] =
     React.useState(false);
-  const [PersonMovieTeamRecords, setPersonMovieTeamRecords] = React.useState(
+  const [personMovieTeamRecords, setPersonMovieTeamRecords] = React.useState(
     []
   );
   const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
@@ -449,14 +449,14 @@ export default function RoleCreateForm(props) {
           isReadOnly={false}
           placeholder="Search PersonMovieTeam"
           value={currentPersonMovieTeamDisplayValue}
-          options={PersonMovieTeamRecords.map((r) => ({
+          options={personMovieTeamRecords.map((r) => ({
             id: getIDValue.PersonMovieTeam?.(r),
             label: getDisplayValue.PersonMovieTeam?.(r),
           }))}
           isLoading={PersonMovieTeamLoading}
           onSelect={({ id, label }) => {
             setCurrentPersonMovieTeamValue(
-              PersonMovieTeamRecords.find((r) =>
+              personMovieTeamRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )

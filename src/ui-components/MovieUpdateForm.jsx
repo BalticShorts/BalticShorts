@@ -250,13 +250,13 @@ export default function MovieUpdateForm(props) {
   const [guid, setGuid] = React.useState(initialValues.guid);
   const [MovieTeam, setMovieTeam] = React.useState(initialValues.MovieTeam);
   const [MovieTeamLoading, setMovieTeamLoading] = React.useState(false);
-  const [MovieTeamRecords, setMovieTeamRecords] = React.useState([]);
+  const [movieTeamRecords, setMovieTeamRecords] = React.useState([]);
   const [MovieInPlaylists, setMovieInPlaylists] = React.useState(
     initialValues.MovieInPlaylists
   );
   const [MovieInPlaylistsLoading, setMovieInPlaylistsLoading] =
     React.useState(false);
-  const [MovieInPlaylistsRecords, setMovieInPlaylistsRecords] = React.useState(
+  const [movieInPlaylistsRecords, setMovieInPlaylistsRecords] = React.useState(
     []
   );
   const [times_watched, setTimes_watched] = React.useState(
@@ -264,7 +264,7 @@ export default function MovieUpdateForm(props) {
   );
   const [MovieType, setMovieType] = React.useState(initialValues.MovieType);
   const [MovieTypeLoading, setMovieTypeLoading] = React.useState(false);
-  const [MovieTypeRecords, setMovieTypeRecords] = React.useState([]);
+  const [movieTypeRecords, setMovieTypeRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -691,7 +691,7 @@ export default function MovieUpdateForm(props) {
             }
           });
           movieInPlaylistsToLinkMap.forEach((count, id) => {
-            const moviePlaylistToLink = moviePlaylistRecords.find((r) =>
+            const moviePlaylistToLink = movieInPlaylistsRecords.find((r) =>
               Object.entries(JSON.parse(id)).every(
                 ([key, value]) => r[key] === value
               )
@@ -1334,16 +1334,16 @@ export default function MovieUpdateForm(props) {
           isReadOnly={false}
           placeholder="Search MovieTeam"
           value={currentMovieTeamDisplayValue}
-          options={MovieTeamRecords.filter(
-            (r) => !MovieTeamIdSet.has(getIDValue.MovieTeam?.(r))
-          ).map((r) => ({
-            id: getIDValue.MovieTeam?.(r),
-            label: getDisplayValue.MovieTeam?.(r),
-          }))}
+          options={movieTeamRecords
+            .filter((r) => !MovieTeamIdSet.has(getIDValue.MovieTeam?.(r)))
+            .map((r) => ({
+              id: getIDValue.MovieTeam?.(r),
+              label: getDisplayValue.MovieTeam?.(r),
+            }))}
           isLoading={MovieTeamLoading}
           onSelect={({ id, label }) => {
             setCurrentMovieTeamValue(
-              MovieTeamRecords.find((r) =>
+              movieTeamRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )
@@ -1432,14 +1432,14 @@ export default function MovieUpdateForm(props) {
           isReadOnly={false}
           placeholder="Search MoviePlaylist"
           value={currentMovieInPlaylistsDisplayValue}
-          options={MovieInPlaylistsRecords.map((r) => ({
+          options={movieInPlaylistsRecords.map((r) => ({
             id: getIDValue.MovieInPlaylists?.(r),
             label: getDisplayValue.MovieInPlaylists?.(r),
           }))}
           isLoading={MovieInPlaylistsLoading}
           onSelect={({ id, label }) => {
             setCurrentMovieInPlaylistsValue(
-              MovieInPlaylistsRecords.find((r) =>
+              movieInPlaylistsRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )
@@ -1572,16 +1572,16 @@ export default function MovieUpdateForm(props) {
           isReadOnly={false}
           placeholder="Search MovieType"
           value={currentMovieTypeDisplayValue}
-          options={MovieTypeRecords.filter(
-            (r) => !MovieTypeIdSet.has(getIDValue.MovieType?.(r))
-          ).map((r) => ({
-            id: getIDValue.MovieType?.(r),
-            label: getDisplayValue.MovieType?.(r),
-          }))}
+          options={movieTypeRecords
+            .filter((r) => !MovieTypeIdSet.has(getIDValue.MovieType?.(r)))
+            .map((r) => ({
+              id: getIDValue.MovieType?.(r),
+              label: getDisplayValue.MovieType?.(r),
+            }))}
           isLoading={MovieTypeLoading}
           onSelect={({ id, label }) => {
             setCurrentMovieTypeValue(
-              MovieTypeRecords.find((r) =>
+              movieTypeRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )
