@@ -62,21 +62,37 @@ const Search = () => {
                         <input placeholder="Meklēt" className="bg-beige text-center border-none outline-none" onChange={handleChange} value={inputText}></input>
                     </div>
                 </div>
-                {searchResult.movies?.map( movie => {
-                  return(
-                    <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/movie/'+movie.id}>{movie.name}</a><br/></span>
-                  )
-                })}
+                {searchResult.movies?.length > 0 ?
+                <div className='w-[75%] h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
+                  <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative left-[15%]">Filmas</div>
+                  
+                  {searchResult.movies?.map( movie => {
+                    return(
+                      <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/movie/'+movie.id}>{movie.name}</a><br/></span>
+                    )
+                  })}
+                  </div>
+                : <></>}
+                {searchResult.persons?.length > 0 ?
+                  <div className='w-[75%] h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
+                    <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative left-[15%]">Personas</div>
                 {searchResult.persons?.map( person => {
-                  return(
-                    <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/person/'+person.id}>{person.name} {person.surname}</a><br/></span>
-                  )
-                })}
-                {searchResult.playlists?.map( playlist => {
-                  return(
-                    <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/playlist/'+playlist.id}>{playlist.Title}</a><br/></span>
-                  )
-                })}
+                    return(
+                      <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name} {person.surname}</a><br/></span>
+                    )
+                  })}
+                  </div>
+                : <></>}
+                {searchResult.playlists?.length > 0 ?
+                  <div className='w-[75%] h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
+                    <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative left-[15%]">Saraksti</div>
+                  {searchResult.playlists?.map( playlist => {
+                    return(
+                      <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/playlist/'+playlist.id}>{playlist.Title}</a><br/></span>
+                    )
+                  })}
+                  </div>
+                : <></>}
                 <Footer/>
             </div>
         </>
