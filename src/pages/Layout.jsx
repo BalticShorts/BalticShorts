@@ -12,7 +12,7 @@ const Layout = () => {
 
   return (
     <>
-      <div className='bg-amber-50'>
+      <div className='bg-beige'>
         <Authenticator>
           {({ signOut, user }) => ( 
             <div className="min-h-[96vh]">

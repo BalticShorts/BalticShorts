@@ -50,13 +50,13 @@ const Catalogue = () => {
 
     return(
         <>
-          <div className="bg-amber-50">
+          <div className="bg-beige">
               <div className="w-full h-12 relative">
-                  <div className="w-full h-12 absolute bg-amber-50 border-b border-black" />
+                  <div className="w-full h-12 absolute bg-beige border-b border-black" />
                   <div className="w-full mt-1 h-6 flex items-center justify-center relative">
-                      <div id="Movies" className="h-5 mx-2 text-center text-black tex text-xl font-bold font-['SchoolBook'] tracking-tight inline-flex" style={{ cursor: 'pointer' }} onClick={ () => setTab(['Movies', tab[0]]) }>Filmas</div>
-                      <div id="Persons" className="h-5 mx-6 text-center text-black text-xl font-['SchoolBook'] font-normal tracking-tight inline-flex" style={{ cursor: 'pointer' }} onClick={ () => setTab(['Persons', tab[0]]) }>Personas</div>
-                      <div id="Playlists" className="h-5 mx-2 my-auto text-center text-black text-xl font-normal font-['SchoolBook'] tracking-tight inline-flex" style={{ cursor: 'pointer' }} onClick={ () => setTab(['Playlists', tab[0]]) }>Saraksti</div>
+                      <div id="Movies" className="h-5 mx-2 text-center text-black tex text-xl font-bold font-['SchoolBook'] tracking-tight inline-flex cursor-pointer" onClick={ () => setTab(['Movies', tab[0]]) }>Filmas</div>
+                      <div id="Persons" className="h-5 mx-6 text-center text-black text-xl font-['SchoolBook'] font-normal tracking-tight inline-flex cursor-pointer" onClick={ () => setTab(['Persons', tab[0]]) }>Personas</div>
+                      <div id="Playlists" className="h-5 mx-2 my-auto text-center text-black text-xl font-normal font-['SchoolBook'] tracking-tight inline-flex cursor-pointer" onClick={ () => setTab(['Playlists', tab[0]]) }>Saraksti</div>
                   </div>
               </div>
               <Footer/>

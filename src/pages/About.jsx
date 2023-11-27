@@ -3,7 +3,7 @@ import { Footer } from "../modified-ui-components/Footer";
 const About = () => {
     return(
         <>
-        <div className="ParBalticShorts w-full h-fit relative bg-amber-50">
+        <div className="ParBalticShorts w-full h-fit relative bg-beige">
                 <div className="LogoContainer w-full h-fit flex flex-col items-center justify-center">
                     <div className="Logo w-80 h-48 relative flex flex-col items-center mt-10 mb-24">
                         <img className="w-full h-full" src={require("./static/Logo.png")} alt="Baltic shorts logo" />

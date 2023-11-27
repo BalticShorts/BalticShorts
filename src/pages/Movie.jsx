@@ -117,7 +117,7 @@ function Movie() {
 
   return (
     <>
-    <div className="FilmasSkats w-full relative bg-amber-50 rounded-3xl">
+    <div className="FilmasSkats w-full relative bg-beige rounded-3xl">
       <div className='MovieContainer max-h-[80vh]' >
         <div onClick={() => removeText()} className='MovieContainer max-h-[80vh]' >
           <VideoPlayer movieURL={movieURL} />

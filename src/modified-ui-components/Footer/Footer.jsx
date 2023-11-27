@@ -4,8 +4,8 @@ import { HashLink } from 'react-router-hash-link';
 export const Footer = () => {
   const filePath = "./static/img/"
   return(
-    <div className="w-[100%] h-[4vh] absolute bottom-0 bg-amber-50">
-      <div className="Rectangle1 w-full h-48 left-0 top-0 absolute bg-amber-50 border-t border-black" />
+    <div className="w-[100%] h-[4vh] absolute bottom-0 bg-beige">
+      <div className="Rectangle1 w-full h-48 left-0 top-0 absolute bg-beige border-t border-black" />
       <div className="Group45 w-44 h-24 left-[12.5%] top-[35px] absolute">
         <div className="Group w-40 h-20 left-[0] top-[8.53px] absolute">
           <img id='footer-logo'
