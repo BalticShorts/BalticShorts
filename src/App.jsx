@@ -43,17 +43,13 @@ export default function App() {
           <Route path="/" element={<Layout/>}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
-          <Route path="Movie/:id" element={<Movie />} />
-          <Route path="profile/:id?" element={<Profile />} />
-          <Route path="search/:query?" element={<Search />} />
-          <Route path="catalogue/:givenTab?" element={<Catalogue />} />
 
           {loggedIn ?
           <>
-            {/* <Route path="Movie/:id" element={<Movie />} />
+            <Route path="Movie/:id" element={<Movie />} />
             <Route path="profile/:id?" element={<Profile />} />
             <Route path="search/:query?" element={<Search />} />
-            <Route path="catalogue/:givenTab?" element={<Catalogue />} /> */}
+            <Route path="catalogue/:givenTab?" element={<Catalogue />} />
           </>
           : 
           <>
