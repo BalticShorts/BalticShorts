@@ -107,10 +107,6 @@ const Home = () => {
 
   }
 
-
-
-
-
   return (
     <>
           <div className='movieList h-fit'>
