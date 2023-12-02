@@ -58,7 +58,10 @@ const Home = () => {
 
   const fetchMovies = async () => {
     try {
-        const movieData = await API.graphql(graphqlOperation(listMovies));
+        const movieData = await API.graphql({
+          query: listMovies,
+          authMode: 'AWS_IAM'
+        });
         const movieList = movieData.data.listMovies.items;
         // console.log('movies', movieData);
         // console.log('moviesssss', movieList);

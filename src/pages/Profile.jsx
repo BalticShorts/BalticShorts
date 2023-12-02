@@ -5,7 +5,13 @@ import { API, graphqlOperation  } from 'aws-amplify';
 import { Footer } from "../modified-ui-components/Footer";
 
 const fetchProfile = async id => {
-    const profileData = await API.graphql(graphqlOperation(getProfile, {'id':id}));
+    const profileData = await API.graphql({
+        query : getProfile,
+        variables :  {
+            id:id
+        },
+        authMode: 'AWS_IAM'
+    });
     const person = profileData.data.getPerson;
     return person;
 }

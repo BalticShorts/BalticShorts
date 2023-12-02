@@ -12,7 +12,13 @@ import { Footer } from '../modified-ui-components/Footer';
 Amplify.configure(awsExports);
 
 const fetchMovie = async id => {
-  const movieData = await API.graphql(graphqlOperation(getMovieQuery, {'id':id}));
+  const movieData = await API.graphql({
+    query: getMovieQuery,
+    variables : {
+      id: id
+    },
+    authMode: 'AWS_IAM'
+  });
   const movie = movieData.data.getMovie;
   return movie;
 }
@@ -29,7 +35,13 @@ const fetchVideo = async guid => {
 }
 
 const fetchPlaylists = async id => {
-  const movieData = await API.graphql(graphqlOperation(movieMoviePlaylistsByMovieId, {movieId:id}));
+  const movieData = await API.graphql({
+    query : movieMoviePlaylistsByMovieId,
+    variables :  {
+      movieId : id
+    },
+    authMode: 'AWS_IAM'
+  });
   const playlistInfo = movieData.data.movieMoviePlaylistsByMovieId.items;
   const playlistsList = [];
   let row = [];

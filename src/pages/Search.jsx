@@ -17,9 +17,11 @@ const Search = () => {
       const lowSearchString = searchString.toLowerCase();
       const firstCapitalisedSearchString = searchString.charAt(0).toUpperCase() + searchString.slice(1).toLowerCase();
       const capitalisedSearchString = searchString.toUpperCase();
-      const res = await API.graphql(graphqlOperation(getSearch,
-        {'searchString':original, 'lowSearchString':lowSearchString, 'firstCapitalisedSearchString':firstCapitalisedSearchString, 'capitalisedSearchString':capitalisedSearchString}
-        ));
+      const res = await API.graphql({
+        query : getSearch,
+        variables : {'searchString':original, 'lowSearchString':lowSearchString, 'firstCapitalisedSearchString':firstCapitalisedSearchString, 'capitalisedSearchString':capitalisedSearchString},
+        authMode: 'AWS_IAM'
+        });
       return {"movies": res.data.listMovies.items, "persons": res.data.listPeople.items, "playlists": res.data.listMoviePlaylists.items}
     }
 
