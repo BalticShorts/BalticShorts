@@ -135,10 +135,10 @@ function Movie() {
           <VideoPlayer movieURL={movieURL} />
         </div>
         <div id='textOnMovie' className='max-h-[80vh] h-full'>
-          <div className='w-full h-full top-0 absolute py-4'>
-            <div className="Rectangle3 w-full h-52 left-0 top-[0]  absolute mix-blend-multiply bg-gradient-to-b from-slate-500 to-zinc-300" />
-            <div className="w-full m-auto top-[3%] absolute text-center text-stone-50 text-4xl font-bold font-['SchoolBook'] uppercase leading-10">{movieData.name}</div>
-            <div className="w-full m-auto top-[6%] absolute text-center text-stone-50 text-base font-normal font-['SchoolBook'] uppercase tracking-wider">{movieData.name_eng}</div>
+        <div className="Rectangle3 w-full h-52 left-0 top-[0]  absolute mix-blend-multiply bg-gradient-to-b from-slate-500 to-zinc-300" />
+          <div className='w-full top-0 absolute py-4 flex flex-col items-center justify-center gap-6 mt-12'>
+            <div className="w-full m-auto text-center text-stone-50 text-4xl font-bold font-['SchoolBook'] uppercase leading-10">{movieData.name}</div>
+            <div className="w-full m-auto text-center text-stone-50 text-base font-normal font-['SchoolBook'] uppercase tracking-wider">{movieData.name_eng}</div>
           </div>
           <div className='w-full top-[60vh] absolute py-4'>
             <div className="Rectangle4 w-full h-[19vh] left-[0] top-0 relative -rotate-180 mix-blend-multiply bg-gradient-to-b from-slate-600 to-zinc-300" />
