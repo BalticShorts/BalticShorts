@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Footer } from "../modified-ui-components/Footer";
 import { getSearch } from "../custom-queries/queries";
-import { API, graphqlOperation } from "aws-amplify";
+import { API } from "aws-amplify";
 import { MyGridMovies, MyGridPersons, MyGridPlaylists } from "../modified-ui-components/Grid";
 
 const Search = () => {

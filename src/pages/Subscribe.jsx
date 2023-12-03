@@ -6,10 +6,9 @@ import { GlobalContext } from "../App";
 const Subscribe = () => {
     const context = useContext(GlobalContext)
 
-
     return(
         <>
-        <div className="ParBalticShorts w-full h-fit relative bg-beige z-10">
+        <div className="ParBalticShorts w-full h-fit relative bg-beige z-0">
             <div className="Advertisement w-full h-fit flex-col justify-start items-start inline-flex">
                 <img className="w-full h-fit max-h-[980px]" src={require("./static/ad_1.jpg")} alt="Subscribe" />
                 <div className="w-full flex-col justify-center items-center flex absolute">

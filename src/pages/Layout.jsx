@@ -11,7 +11,7 @@ const Layout = () => {
 
             <div className="min-h-[96vh]">
               <div className="h-12 mb-0 max-h-12"  >
-                <Navbar />;
+                <Navbar className="z-10"/>;
               </div>
               <div className="MainContainer mb-auto flex-grow bg-inherit">
                 <Outlet/>

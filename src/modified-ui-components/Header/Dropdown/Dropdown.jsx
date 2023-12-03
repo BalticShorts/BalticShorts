@@ -16,8 +16,8 @@ export const Dropdown = () => {
 
     return(
         <>
-            <div className="w-40 h-fit pb-0 justify-start inline-flex">
-                <div className={`w-full ${context.loggedIn ? 'h-60' : 'h-40'} relative`}>
+            <div className="w-40 h-fit pb-0 justify-start inline-flex z-10">
+                <div className={`w-full ${context.loggedIn ? 'h-60' : 'h-40'} absolute`}>
                     <div className="w-full h-full absolute bg-beige shadow border border-black flex-col justify-start items-center inline-flex">
                         <div className="h-full w-full flex-col justify-center items-center flex">
                             <div className="h-full w-full flex-col justify-center items-start gap-3.5 flex">

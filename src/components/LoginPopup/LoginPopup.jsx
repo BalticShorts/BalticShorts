@@ -33,7 +33,7 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
     
     const logIn = async () => {
         try {
-            const user = await Auth.signIn(email, password);
+            await Auth.signIn(email, password);
             context.setLoggedIn(true);
             setShowModal(false);
             resetModal();
@@ -126,6 +126,7 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
         setConfirmationStage(false);
         setRestorePassword(false);
         setForgetEmail('');
+        context.setLoggedInModal(false);
         setPage('login');
     }
 
