@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -32,6 +32,8 @@ export declare type PersonCreateFormInputValues = {
     email?: string;
     PersonMovieTeams?: any[];
     user_id?: string;
+    is_public?: boolean;
+    completed_setup?: boolean;
 };
 export declare type PersonCreateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -44,6 +46,8 @@ export declare type PersonCreateFormValidationValues = {
     email?: ValidationFunction<string>;
     PersonMovieTeams?: ValidationFunction<any>;
     user_id?: ValidationFunction<string>;
+    is_public?: ValidationFunction<boolean>;
+    completed_setup?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type PersonCreateFormOverridesProps = {
@@ -58,6 +62,8 @@ export declare type PersonCreateFormOverridesProps = {
     email?: PrimitiveOverrideProps<TextFieldProps>;
     PersonMovieTeams?: PrimitiveOverrideProps<AutocompleteProps>;
     user_id?: PrimitiveOverrideProps<TextFieldProps>;
+    is_public?: PrimitiveOverrideProps<SwitchFieldProps>;
+    completed_setup?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type PersonCreateFormProps = React.PropsWithChildren<{
     overrides?: PersonCreateFormOverridesProps | undefined | null;

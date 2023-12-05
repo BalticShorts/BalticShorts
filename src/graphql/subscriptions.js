@@ -106,6 +106,8 @@ export const onCreatePersonMovieTeam = /* GraphQL */ `
           __typename
         }
         user_id
+        is_public
+        completed_setup
         createdAt
         updatedAt
         __typename
@@ -195,6 +197,8 @@ export const onUpdatePersonMovieTeam = /* GraphQL */ `
           __typename
         }
         user_id
+        is_public
+        completed_setup
         createdAt
         updatedAt
         __typename
@@ -284,6 +288,8 @@ export const onDeletePersonMovieTeam = /* GraphQL */ `
           __typename
         }
         user_id
+        is_public
+        completed_setup
         createdAt
         updatedAt
         __typename
@@ -408,6 +414,8 @@ export const onCreatePerson = /* GraphQL */ `
         __typename
       }
       user_id
+      is_public
+      completed_setup
       createdAt
       updatedAt
       __typename
@@ -440,6 +448,8 @@ export const onUpdatePerson = /* GraphQL */ `
         __typename
       }
       user_id
+      is_public
+      completed_setup
       createdAt
       updatedAt
       __typename
@@ -472,6 +482,8 @@ export const onDeletePerson = /* GraphQL */ `
         __typename
       }
       user_id
+      is_public
+      completed_setup
       createdAt
       updatedAt
       __typename

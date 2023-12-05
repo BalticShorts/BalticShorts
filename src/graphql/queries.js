@@ -95,6 +95,8 @@ export const getPersonMovieTeam = /* GraphQL */ `
           __typename
         }
         user_id
+        is_public
+        completed_setup
         createdAt
         updatedAt
         __typename
@@ -161,6 +163,8 @@ export const listPersonMovieTeams = /* GraphQL */ `
           IMBD
           email
           user_id
+          is_public
+          completed_setup
           createdAt
           updatedAt
           __typename
@@ -230,6 +234,8 @@ export const personMovieTeamsByMovieteamID = /* GraphQL */ `
           IMBD
           email
           user_id
+          is_public
+          completed_setup
           createdAt
           updatedAt
           __typename
@@ -299,6 +305,8 @@ export const personMovieTeamsByPersonID = /* GraphQL */ `
           IMBD
           email
           user_id
+          is_public
+          completed_setup
           createdAt
           updatedAt
           __typename
@@ -368,6 +376,8 @@ export const personMovieTeamsByRoleID = /* GraphQL */ `
           IMBD
           email
           user_id
+          is_public
+          completed_setup
           createdAt
           updatedAt
           __typename
@@ -465,6 +475,8 @@ export const getPerson = /* GraphQL */ `
         __typename
       }
       user_id
+      is_public
+      completed_setup
       createdAt
       updatedAt
       __typename
@@ -493,6 +505,8 @@ export const listPeople = /* GraphQL */ `
           __typename
         }
         user_id
+        is_public
+        completed_setup
         createdAt
         updatedAt
         __typename

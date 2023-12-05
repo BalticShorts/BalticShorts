@@ -15,6 +15,7 @@ import {
   Grid,
   Icon,
   ScrollView,
+  SwitchField,
   Text,
   TextField,
   useTheme,
@@ -200,6 +201,8 @@ export default function PersonCreateForm(props) {
     email: "",
     PersonMovieTeams: [],
     user_id: "",
+    is_public: false,
+    completed_setup: false,
   };
   const [name, setName] = React.useState(initialValues.name);
   const [surname, setSurname] = React.useState(initialValues.surname);
@@ -220,6 +223,10 @@ export default function PersonCreateForm(props) {
     []
   );
   const [user_id, setUser_id] = React.useState(initialValues.user_id);
+  const [is_public, setIs_public] = React.useState(initialValues.is_public);
+  const [completed_setup, setCompleted_setup] = React.useState(
+    initialValues.completed_setup
+  );
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -235,6 +242,8 @@ export default function PersonCreateForm(props) {
     setCurrentPersonMovieTeamsValue(undefined);
     setCurrentPersonMovieTeamsDisplayValue("");
     setUser_id(initialValues.user_id);
+    setIs_public(initialValues.is_public);
+    setCompleted_setup(initialValues.completed_setup);
     setErrors({});
   };
   const [
@@ -266,6 +275,8 @@ export default function PersonCreateForm(props) {
     email: [{ type: "Email" }],
     PersonMovieTeams: [],
     user_id: [],
+    is_public: [],
+    completed_setup: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -334,6 +345,8 @@ export default function PersonCreateForm(props) {
           email,
           PersonMovieTeams,
           user_id,
+          is_public,
+          completed_setup,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -381,6 +394,8 @@ export default function PersonCreateForm(props) {
             IMBD: modelFields.IMBD,
             email: modelFields.email,
             user_id: modelFields.user_id,
+            is_public: modelFields.is_public,
+            completed_setup: modelFields.completed_setup,
           };
           const person = (
             await API.graphql({
@@ -444,6 +459,8 @@ export default function PersonCreateForm(props) {
               email,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -477,6 +494,8 @@ export default function PersonCreateForm(props) {
               email,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.surname ?? value;
@@ -510,6 +529,8 @@ export default function PersonCreateForm(props) {
               email,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.role ?? value;
@@ -543,6 +564,8 @@ export default function PersonCreateForm(props) {
               email,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -576,6 +599,8 @@ export default function PersonCreateForm(props) {
               email,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.Instagram ?? value;
@@ -609,6 +634,8 @@ export default function PersonCreateForm(props) {
               email,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.Facebook ?? value;
@@ -642,6 +669,8 @@ export default function PersonCreateForm(props) {
               email,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.IMBD ?? value;
@@ -675,6 +704,8 @@ export default function PersonCreateForm(props) {
               email: value,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -704,6 +735,8 @@ export default function PersonCreateForm(props) {
               email,
               PersonMovieTeams: values,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             values = result?.PersonMovieTeams ?? values;
@@ -799,6 +832,8 @@ export default function PersonCreateForm(props) {
               email,
               PersonMovieTeams,
               user_id: value,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.user_id ?? value;
@@ -813,6 +848,76 @@ export default function PersonCreateForm(props) {
         hasError={errors.user_id?.hasError}
         {...getOverrideProps(overrides, "user_id")}
       ></TextField>
+      <SwitchField
+        label="Is public"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={is_public}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              role,
+              description,
+              Instagram,
+              Facebook,
+              IMBD,
+              email,
+              PersonMovieTeams,
+              user_id,
+              is_public: value,
+              completed_setup,
+            };
+            const result = onChange(modelFields);
+            value = result?.is_public ?? value;
+          }
+          if (errors.is_public?.hasError) {
+            runValidationTasks("is_public", value);
+          }
+          setIs_public(value);
+        }}
+        onBlur={() => runValidationTasks("is_public", is_public)}
+        errorMessage={errors.is_public?.errorMessage}
+        hasError={errors.is_public?.hasError}
+        {...getOverrideProps(overrides, "is_public")}
+      ></SwitchField>
+      <SwitchField
+        label="Completed setup"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={completed_setup}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              role,
+              description,
+              Instagram,
+              Facebook,
+              IMBD,
+              email,
+              PersonMovieTeams,
+              user_id,
+              is_public,
+              completed_setup: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.completed_setup ?? value;
+          }
+          if (errors.completed_setup?.hasError) {
+            runValidationTasks("completed_setup", value);
+          }
+          setCompleted_setup(value);
+        }}
+        onBlur={() => runValidationTasks("completed_setup", completed_setup)}
+        errorMessage={errors.completed_setup?.errorMessage}
+        hasError={errors.completed_setup?.hasError}
+        {...getOverrideProps(overrides, "completed_setup")}
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

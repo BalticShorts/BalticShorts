@@ -44,6 +44,8 @@ type Person @model @auth(rules: [
   email: AWSEmail
   PersonMovieTeams: [PersonMovieTeam] @hasMany(indexName: "byPerson", fields: ["id"])
   user_id: String
+  is_public: Boolean 
+  completed_setup: Boolean
 }
 
 type MoviePlaylist @model @auth(rules: [

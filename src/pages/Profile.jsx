@@ -25,7 +25,7 @@ function getMovies(PersonMovieTeam){
 function Profile () {
 
     const [profile, setProfile] = useState({});
-    const { id } = useParams();
+    const { id, mode } = useParams();
 
     useEffect(() => {
         const get = async () => {
@@ -62,8 +62,8 @@ function Profile () {
                         <div className="text-black text-xl font-normal font-['SchoolBook'] uppercase tracking-wider">{profile?.role}</div>
                         <div className="text-black text-sm font-normal font-['Arial'] uppercase leading-tight tracking-wide felx flex-col space-y-2">
                             <div><a>E-PASTS</a><br/></div>
-                            <div><a href={profile?.instagram}>INSTAGRAM</a><br/></div>
-                            <div><a href={profile?.IMBD}>IMDB</a><br/></div>
+                            <div className="cursor-pointer"><a href={profile?.instagram}>INSTAGRAM</a><br/></div>
+                            <div className="cursor-pointer"><a href={profile?.IMBD}>IMDB</a><br/></div>
                         </div>
                         <div className="w-full text-black text-lg font-normal font-['SchoolBook']">{profile.description}</div>
 

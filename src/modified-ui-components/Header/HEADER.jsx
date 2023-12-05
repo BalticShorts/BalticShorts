@@ -5,8 +5,10 @@ import { Dropdown } from "./Dropdown";
 import { useContext } from "react";
 import { GlobalContext } from "../../App";
 import { LoginPopup } from "../../components/LoginPopup/LoginPopup";
+import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
+  const navigate = useNavigate();
   const context = useContext(GlobalContext)
   const Auth = context.auth
 
@@ -23,7 +25,31 @@ export const Navbar = () => {
   }
 
   useEffect(() => {
-    console.log(Auth.user)
+
+    // need fixing
+    // console.log('test')
+    // if(context.loggedIn){
+    //   console.log('test2')
+
+
+    //   if(!context.currentUser.completed_setup){
+    //     console.log('test3')
+
+    //     if(context.currentUser.id !== undefined){
+    //       console.log('test4')
+
+        
+    //     if(window.location.pathname !== '/profile/'+context.currentUser.id+'/setup'){
+    //       console.log('test5')
+
+    //       navigate('/profile/'+context.currentUser.id+'/setup');
+    //     }
+    //   }
+        // console.log('context.currentUser')
+        // console.log(context.currentUser)
+        // need to finish creating profile
+    //   }
+    // }
   }, [context.loggedIn])
 
   return (
@@ -40,7 +66,7 @@ export const Navbar = () => {
           {/* <div className="h-[19px] m-auto pt-1 text-lg relative text-right text-black font-normal font-['SchoolBook'] tracking-tight"><a href="/profile">Mans profils</a></div> */}
           <div className="relative m-auto pt-1 flex flex-row cursor-pointer" >
             {context.loggedIn ? 
-              <div className="m-auto relative mr-20">pic</div> 
+              <div className="m-auto relative mr-20">{context.currentUser.name}</div> 
               : 
               <div className="cursor-pointer m-auto pt-1 relative text-black text-lg font-normal font-['SchoolBook'] mr-20" onClick={() => openModal()}>Ienākt</div>}
 

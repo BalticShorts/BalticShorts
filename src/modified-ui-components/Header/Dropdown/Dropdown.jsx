@@ -23,7 +23,7 @@ export const Dropdown = () => {
                             <div className="h-full w-full flex-col justify-center items-start gap-3.5 flex">
                                 {context.loggedIn && (
                                     <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide">
-                                            <a href="/profile">MANS PROFILS</a>
+                                            <a href={'/profile/'+context.currentUser.id}>MANS PROFILS</a>
                                     </div>
                                 )}
                                 <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide"><a href="/catalogue">KATALOGS</a></div>
@@ -32,7 +32,7 @@ export const Dropdown = () => {
                                 <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide"><a href="/about">PAR PROJEKTU</a></div>
                                 {context.loggedIn && (
                                     <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide">
-                                            <a href="/profile">UZSTĀDĪJUMI</a>
+                                            <a href={'/profile/'+context.currentUser.id+'/settings'}>UZSTĀDĪJUMI</a>
                                     </div>
                                 )}
                                 <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide">palīdzība</div>

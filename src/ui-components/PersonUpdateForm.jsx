@@ -15,6 +15,7 @@ import {
   Grid,
   Icon,
   ScrollView,
+  SwitchField,
   Text,
   TextField,
   useTheme,
@@ -201,6 +202,8 @@ export default function PersonUpdateForm(props) {
     email: "",
     PersonMovieTeams: [],
     user_id: "",
+    is_public: false,
+    completed_setup: false,
   };
   const [name, setName] = React.useState(initialValues.name);
   const [surname, setSurname] = React.useState(initialValues.surname);
@@ -221,6 +224,10 @@ export default function PersonUpdateForm(props) {
     []
   );
   const [user_id, setUser_id] = React.useState(initialValues.user_id);
+  const [is_public, setIs_public] = React.useState(initialValues.is_public);
+  const [completed_setup, setCompleted_setup] = React.useState(
+    initialValues.completed_setup
+  );
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -243,6 +250,8 @@ export default function PersonUpdateForm(props) {
     setCurrentPersonMovieTeamsValue(undefined);
     setCurrentPersonMovieTeamsDisplayValue("");
     setUser_id(cleanValues.user_id);
+    setIs_public(cleanValues.is_public);
+    setCompleted_setup(cleanValues.completed_setup);
     setErrors({});
   };
   const [personRecord, setPersonRecord] = React.useState(personModelProp);
@@ -296,6 +305,8 @@ export default function PersonUpdateForm(props) {
     email: [{ type: "Email" }],
     PersonMovieTeams: [],
     user_id: [],
+    is_public: [],
+    completed_setup: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -364,6 +375,8 @@ export default function PersonUpdateForm(props) {
           email: email ?? null,
           PersonMovieTeams: PersonMovieTeams ?? null,
           user_id: user_id ?? null,
+          is_public: is_public ?? null,
+          completed_setup: completed_setup ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -463,6 +476,8 @@ export default function PersonUpdateForm(props) {
             IMBD: modelFields.IMBD ?? null,
             email: modelFields.email ?? null,
             user_id: modelFields.user_id ?? null,
+            is_public: modelFields.is_public ?? null,
+            completed_setup: modelFields.completed_setup ?? null,
           };
           promises.push(
             API.graphql({
@@ -508,6 +523,8 @@ export default function PersonUpdateForm(props) {
               email,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -541,6 +558,8 @@ export default function PersonUpdateForm(props) {
               email,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.surname ?? value;
@@ -574,6 +593,8 @@ export default function PersonUpdateForm(props) {
               email,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.role ?? value;
@@ -607,6 +628,8 @@ export default function PersonUpdateForm(props) {
               email,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -640,6 +663,8 @@ export default function PersonUpdateForm(props) {
               email,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.Instagram ?? value;
@@ -673,6 +698,8 @@ export default function PersonUpdateForm(props) {
               email,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.Facebook ?? value;
@@ -706,6 +733,8 @@ export default function PersonUpdateForm(props) {
               email,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.IMBD ?? value;
@@ -739,6 +768,8 @@ export default function PersonUpdateForm(props) {
               email: value,
               PersonMovieTeams,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -768,6 +799,8 @@ export default function PersonUpdateForm(props) {
               email,
               PersonMovieTeams: values,
               user_id,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             values = result?.PersonMovieTeams ?? values;
@@ -863,6 +896,8 @@ export default function PersonUpdateForm(props) {
               email,
               PersonMovieTeams,
               user_id: value,
+              is_public,
+              completed_setup,
             };
             const result = onChange(modelFields);
             value = result?.user_id ?? value;
@@ -877,6 +912,76 @@ export default function PersonUpdateForm(props) {
         hasError={errors.user_id?.hasError}
         {...getOverrideProps(overrides, "user_id")}
       ></TextField>
+      <SwitchField
+        label="Is public"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={is_public}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              role,
+              description,
+              Instagram,
+              Facebook,
+              IMBD,
+              email,
+              PersonMovieTeams,
+              user_id,
+              is_public: value,
+              completed_setup,
+            };
+            const result = onChange(modelFields);
+            value = result?.is_public ?? value;
+          }
+          if (errors.is_public?.hasError) {
+            runValidationTasks("is_public", value);
+          }
+          setIs_public(value);
+        }}
+        onBlur={() => runValidationTasks("is_public", is_public)}
+        errorMessage={errors.is_public?.errorMessage}
+        hasError={errors.is_public?.hasError}
+        {...getOverrideProps(overrides, "is_public")}
+      ></SwitchField>
+      <SwitchField
+        label="Completed setup"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={completed_setup}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              role,
+              description,
+              Instagram,
+              Facebook,
+              IMBD,
+              email,
+              PersonMovieTeams,
+              user_id,
+              is_public,
+              completed_setup: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.completed_setup ?? value;
+          }
+          if (errors.completed_setup?.hasError) {
+            runValidationTasks("completed_setup", value);
+          }
+          setCompleted_setup(value);
+        }}
+        onBlur={() => runValidationTasks("completed_setup", completed_setup)}
+        errorMessage={errors.completed_setup?.errorMessage}
+        hasError={errors.completed_setup?.hasError}
+        {...getOverrideProps(overrides, "completed_setup")}
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

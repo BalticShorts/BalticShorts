@@ -136,3 +136,51 @@ export const getSearch = `
   }
   `
 ;
+
+export const checkPersonExists = `
+query MyQuery($email: String!) {
+  listPeople(filter: {email: {eq: $email}}) {
+    items {
+      user_id
+    }
+  }
+}
+`
+;
+
+export const getPersonByEmail = `
+query MyQuery($email: String!) {
+  listPeople(filter: {email: {eq: $email}}) {
+    items {
+      id
+      name
+      surname
+      role
+      description
+      Instagram
+      Facebook
+      IMBD
+      email
+      PersonMovieTeams {
+        items {
+          id
+          movieteamID
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      user_id
+      is_public
+      completed_setup
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+}
+`;

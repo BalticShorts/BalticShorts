@@ -1,6 +1,10 @@
 import { useContext, useEffect, useState } from "react"
 import CloseIcon from '@mui/icons-material/Close';
 import { GlobalContext } from "../../App";
+import { createPerson } from "../../graphql/mutations";
+import { API } from "aws-amplify";
+import { checkPersonExists } from "../../custom-queries/queries";
+import { getPerson } from "../../graphql/queries";
 
 
 
@@ -59,7 +63,6 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
           });
 
           setConfirmationStage(true);
-          console.log(user);
 
         } catch (error) {
           console.log('error signing up:', error.code);
@@ -72,10 +75,11 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
         try {
             const username = email;
             const code = confirmationCode;
-            const user = await Auth.confirmSignUp(username, code)
+            await Auth.confirmSignUp(username, code)
             setShowModal(false);
             setError({});
             setConfirmationStage(false);
+            createProfile();
             logIn();
         } catch (error) {
             
@@ -119,6 +123,48 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
         }
     }
 
+    async function createProfile() {
+        try {
+            const name = Auth.user.attributes.given_name;
+            const surname = Auth.user.attributes.family_name;
+            const email = Auth.user.attributes.email;
+            const id = Auth.user.username;
+            console.log(id)
+            // need to add a new field for login username or id !!!
+            const exists = await API.graphql({
+                query: checkPersonExists,
+                variables : {
+                    email: email
+                },
+                authMode: 'AWS_IAM'
+            });
+
+            if(exists.data.listPeople.items.length === 0){
+                const createdPerson = await API.graphql({
+                    query : createPerson,
+                    variables : {
+                    input : {
+                        name: name,
+                        surname: surname,
+                        email: email,
+                        user_id: id,
+                        is_public: false,
+                        completed_setup: false
+                    }},
+                    authMode: 'AWS_IAM'
+                });
+            }
+        } catch (error) {
+
+        }
+    }
+
+    function changePage(page){
+        setEmail('');
+        setPassword('');
+        setPage(page);
+    }
+
     function resetModal(){
         setShowModal(false);
         setError({});
@@ -126,12 +172,16 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
         setConfirmationStage(false);
         setRestorePassword(false);
         setForgetEmail('');
+        setPiekrituTicked(false);
         context.setLoggedInModal(false);
         setPage('login');
     }
 
     useEffect(() => {
-        setError({});
+        if(context.showModal){
+            setError({});
+            createProfile();
+        }
     }, [page])
 
 
@@ -221,7 +271,7 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
                             </div>
                             <div className="Frame137 pt-6 flex-col justify-start items-start flex">
                                 <div className="Button h-7 px-2.5 pt-1 pb-0.5 bg-beige border border-black justify-center items-center gap-2.5 inline-flex">
-                                    <div type="submit" className="cursor-pointer grow shrink basis-0 text-center text-black text-base font-normal font-['SchoolBook']" onClick={() => handleSignUp()}>Reģistrēties</div>
+                                    <div type="submit" className="cursor-pointer grow shrink basis-0 text-center text-black text-base font-normal font-['SchoolBook']" onClick={() => {piekrituTicked ? handleSignUp() : setError({"code":'AcceptRules', "message": 'Jāpiekrīt noteikumiem!'})}}>Reģistrēties</div>
                                 </div>
                             </div>
                         </div>
@@ -293,7 +343,7 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
                     <div className="w-full h-fit max-h-[18px] flex mt-auto felx-row mb-5">
                         <img className="bottom-0" src={require("./static/Info_button.png")} alt="info" />
                         <div className="w-full justify-center items-center inline-flex text-base">
-                            <div className="inline-flex items-center cursor-pointer" onClick={() => {page !== 'login' ? setPage('login') : setPage('register')}}>
+                            <div className="inline-flex items-center cursor-pointer" onClick={() => {page !== 'login' ? changePage('login') : changePage('register')}}>
                                 {page !== 'login' && (
                                     <svg xmlns="http://www.w3.org/2000/svg" width="7" height="10" viewBox="0 0 7 10" fill="none">
                                         <path d="M5.36661e-08 4.99965L7 0.500069L7 9.50007L5.36661e-08 4.99965Z" fill="black"/>
