@@ -87,24 +87,24 @@ const Search = () => {
                         <input placeholder="Meklēt" className="bg-beige text-center border-none outline-none" onChange={handleChange} value={inputText}></input>
                     </div>
                 </div>
-                {searchResult.movies?.length > 0 ?
+                {searchResult.movies?.length > 0 &&
                 <div className='w-[75%] h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
                   <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative left-[15%]">Filmas</div>
-                  <MyGridMovies data={searchResult.movies}></MyGridMovies>
+                  <MyGridMovies data={searchResult.movies} maxRows={1} maxColumns={1}></MyGridMovies>
                   </div>
-                : <></>}
-                {searchResult.persons?.length > 0 ?
+                }
+                {searchResult.persons?.length > 0 &&
                   <div className='w-[75%] h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
                     <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative left-[15%]">Personas</div>
-                    <MyGridPersons data={searchResult.persons}></MyGridPersons>
+                    <MyGridPersons data={searchResult.persons} maxRows={2} maxColumns={5}></MyGridPersons>
                   </div>
-                : <></>}
-                {searchResult.playlists?.length > 0 ?
+                }
+                {searchResult.playlists?.length > 0 &&
                   <div className='w-[75%] h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
                     <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative left-[15%]">Saraksti</div>
-                    <MyGridPlaylists data = {searchResult.playlists !== undefined ? searchResult.playlists : []}></MyGridPlaylists>
+                    <MyGridPlaylists data = {searchResult.playlists !== undefined ? searchResult.playlists : []} maxRows={1} maxColumns={1}></MyGridPlaylists>
                   </div>
-                : <></>}
+                }
               </div>
               <div id="footer" className="mt-10 min-h-fit" >
                 <Footer/>
