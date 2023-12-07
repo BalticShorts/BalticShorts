@@ -90,7 +90,7 @@ const Search = () => {
                 {searchResult.movies?.length > 0 &&
                 <div className='w-[75%] h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
                   <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative left-[15%]">Filmas</div>
-                  <MyGridMovies data={searchResult.movies} maxRows={1} maxColumns={1}></MyGridMovies>
+                  <MyGridMovies data={searchResult.movies} maxRows={2} maxColumns={3}></MyGridMovies>
                   </div>
                 }
                 {searchResult.persons?.length > 0 &&
@@ -102,7 +102,7 @@ const Search = () => {
                 {searchResult.playlists?.length > 0 &&
                   <div className='w-[75%] h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
                     <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative left-[15%]">Saraksti</div>
-                    <MyGridPlaylists data = {searchResult.playlists !== undefined ? searchResult.playlists : []} maxRows={1} maxColumns={1}></MyGridPlaylists>
+                    <MyGridPlaylists data = {searchResult.playlists !== undefined ? searchResult.playlists : []} maxRows={2} maxColumns={3}></MyGridPlaylists>
                   </div>
                 }
               </div>
