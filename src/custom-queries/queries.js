@@ -184,3 +184,32 @@ query MyQuery($email: String!) {
   }
 }
 `;
+
+export const getMoviesMain = `
+  query MyQuery {
+    listMovies {
+      items {
+        id
+        name
+        name_eng
+        created_year
+        origin_country
+        length
+        MovieTeam {
+          PersonMovieTeams {
+            items {
+              Role {
+                name
+              }
+              Person {
+                name
+                surname
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  `
+;
