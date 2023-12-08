@@ -14,7 +14,7 @@ export function MyGridPersons({data, maxRows, maxColumns}) {
     return (
         
         <div className='left-[15%] w-[75%] h-fit gap-6 flex flex-col items-center relative justify-center '>
-            <div className={`grid grid-cols-${columns} items-center`}>
+            <div className={`grid grid-cols-5 items-center`}>
                 {data.map((item, idx) => (
                     <>
                     {checkRow(idx) &&  
@@ -33,7 +33,7 @@ export function MyGridPersons({data, maxRows, maxColumns}) {
                     </>
                 ))}
                 {data.length / columns > rows && (
-                    <div className={`-left-6 h-24 relative flex -top-8 mb-4 col-span-${columns}`}>
+                    <div className={`-left-6 h-24 relative flex -top-8 mb-4 col-span-5`}>
                         <div className='w-full h-20 relative flex opacity-60'>
                             <div className="w-full h-16 relative bg-gradient-to-b from-stone-50 to-zinc-300" />
                         </div>
