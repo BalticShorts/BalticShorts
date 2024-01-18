@@ -136,7 +136,7 @@ const Upload = () => {
                         <MovieUploadComponent movie = {movie} setMovieFile = {setMovieFile}/>
                     </div>
                     <div className="flex justify-center gap-4 p-5">
-                        <button className="button rounded-xl border w-fit p-2" onClick={() => changeState('team')}>Back</button>
+                        {/* <button className="button rounded-xl border w-fit p-2" onClick={() => changeState('team')}>Back</button> */}
                         <button className="btn rounded-xl border w-fit p-2" onClick={() => {handleFileUpload()}}>BE DONE</button>
                     </div>
 
