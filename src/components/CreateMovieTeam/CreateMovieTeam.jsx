@@ -289,7 +289,7 @@ export function CreateMovieTeam(props) {
             </div>
             <div>
               <Button className='left-0 mr-auto' onClick={() => {setIsNewPersonMode(true); clearNewPerson();}}>Create new person</Button>
-              <Button onClick={() => props.changeState('movie')}>Back</Button>
+              {/* <Button onClick={() => props.changeState('movie')}>Back</Button> */}
               <Button onClick={handleSubmit} color="blue">
                 Submit
               </Button>
