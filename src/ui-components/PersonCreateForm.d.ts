@@ -34,6 +34,9 @@ export declare type PersonCreateFormInputValues = {
     user_id?: string;
     is_public?: boolean;
     completed_setup?: boolean;
+    photo_location?: string;
+    description_confirmed?: boolean;
+    photo_confirmed?: boolean;
 };
 export declare type PersonCreateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -48,6 +51,9 @@ export declare type PersonCreateFormValidationValues = {
     user_id?: ValidationFunction<string>;
     is_public?: ValidationFunction<boolean>;
     completed_setup?: ValidationFunction<boolean>;
+    photo_location?: ValidationFunction<string>;
+    description_confirmed?: ValidationFunction<boolean>;
+    photo_confirmed?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type PersonCreateFormOverridesProps = {
@@ -64,6 +70,9 @@ export declare type PersonCreateFormOverridesProps = {
     user_id?: PrimitiveOverrideProps<TextFieldProps>;
     is_public?: PrimitiveOverrideProps<SwitchFieldProps>;
     completed_setup?: PrimitiveOverrideProps<SwitchFieldProps>;
+    photo_location?: PrimitiveOverrideProps<TextFieldProps>;
+    description_confirmed?: PrimitiveOverrideProps<SwitchFieldProps>;
+    photo_confirmed?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type PersonCreateFormProps = React.PropsWithChildren<{
     overrides?: PersonCreateFormOverridesProps | undefined | null;

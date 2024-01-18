@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import VideoPlayer from '../components/VideoPlayer';
-import { getMovie, movieMoviePlaylistsByMovieId } from '../graphql/queries.js'
-import { Amplify, API, graphqlOperation  } from 'aws-amplify';
+import { movieMoviePlaylistsByMovieId } from '../graphql/queries.js'
+import { Amplify, API  } from 'aws-amplify';
 import awsExports from '../aws-exports';
 import { isVideoPlaying } from '../components/VideoPlayer';
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ import { Footer } from '../modified-ui-components/Footer';
 
 Amplify.configure(awsExports);
 
+const movieTeamKeyOrder = ['Director', 'Actor', 'Executive producer', 'Operator', 'Costume artist', 'Producer', 'Author of the scenario', 'Makeup artist', 'Production company', 'Editing director', 'Film artist', 'Sound director', 'Composer']
 const fetchMovie = async id => {
   const movieData = await API.graphql({
     query: getMovieQuery,
@@ -70,7 +71,6 @@ function Movie() {
   const [movieURL, setMovieURL] = useState('');
   const [movieData, setMovieData] = useState({});
   const [movieTeamData, setMovieTeamData] = useState({});
-  const [movieDirectors, setMovieDirectors] = useState([]);
   const [textOnMovie, setTextOnMovie] = useState(true);
   const [playlists, setPlaylists] = useState([]);
   const [playlistRows, setPlaylistRows] = useState(1);
@@ -80,11 +80,13 @@ function Movie() {
   useEffect(() => {
     const get = async () => {
       const movie = await fetchMovie(id);
-      const data = await fetchVideo(movie.guid);
+      await fetchVideo(movie.guid);
       const playlists = await fetchPlaylists(id);
-      const team = getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
+      const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
+      // console.log(movie)
       try {     
-        setMovieURL(data.Item.hlsUrl.S);
+        // setMovieURL(data.Item.hlsUrl.S);
+        setMovieURL("");
         setMovieData(movie);
         setMovieTeamData(team);
         setPlaylists(playlists);
@@ -117,15 +119,16 @@ function Movie() {
     }
   }
 
-  function getMovieCast(team){
+  async function getMovieCast(team){
     const teamMap = {};
     team.map( (person) => {
       if(!(person.Role.name_eng in teamMap))
         teamMap[person.Role.name_eng] = []
-      teamMap[person.Role.name_eng].push({"name":person.Person.name + " " + person.Person.surname, "id":person.Person.id})
+      teamMap[person.Role.name_eng].push({"name":person.Person.name + " " + person.Person.surname, "id":person.Person.id, "roleName": person.Role.name})
     })
     return teamMap
   }
+  var teamList = [];
 
   return (
     <>
@@ -144,7 +147,7 @@ function Movie() {
             <div className="Rectangle4 w-full h-[19vh] left-[0] top-0 relative -rotate-180 mix-blend-multiply bg-gradient-to-b from-slate-600 to-zinc-300" />
             <div className="w-full top-14 absolute text-center flex flex-col items-center">
               <span className="text-stone-50 text-xl font-normal font-['SchoolBook'] uppercase relative inline">
-                Režisors {movieTeamData.director?.map((person) => person.name).join(", ")}
+                Režisors {movieTeamData.Director?.map((person) => person.name).join(", ")}
               </span>
               <span className="text-stone-50 text-xl font-normal font-['SchoolBook'] relative">
                 {movieData.origin_country} | {movieData.created_year} | {movieData.length}’ | 18+
@@ -171,75 +174,35 @@ function Movie() {
         <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">KOMANDA</div>
           <div className="relative justify-center pt-8 gap-6 inline-flex flex-row items-center left-[15%] max-w-full min-w-fit">
 
-            <div className="w-40 m-auto">
-              <span className="text-black text-sm font-normal font-['SchoolBook']">REŽISORS<br/></span>
-              { movieTeamData.director?.map( (person) => {
-                return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
-                )
-              }) }
-              <span className="text-black text-sm font-normal font-['SchoolBook']">OPERATORS<br/></span>
-              { movieTeamData.operator?.map( (person) => {
-                return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
-                )
-              }) }
-              <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
-              <span className="text-black text-sm font-normal font-['SchoolBook']">SCENĀRIJA AUTORS<br/></span>
-              { movieTeamData.scenario?.map( (person) => {
-                return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
-                )
-              }) }
-              <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
-              <span className="text-black text-sm font-normal font-['SchoolBook']">MONTĀŽAS REŽISORS<br/></span>
-              { movieTeamData.editor?.map( (person) => {
-                return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
-                )
-              }) }
-            </div>
-
-            <div className="w-40 m-auto">
-              <span className="text-black text-sm font-normal font-['SchoolBook']">LOMĀS<br/></span>
-              { movieTeamData.actors?.map( (person) => {
-                return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
-                )
-              }) }
-              <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
-              <span className="text-black text-sm font-normal font-['SchoolBook']">TĒRPU MĀKSLINIEKS<br/></span>
-              { movieTeamData.costumes?.map( (person) => {
-                return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
-                )
-              }) }
-              <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
-              <span className="text-black text-sm font-normal font-['SchoolBook']">GRIMMA MĀKSLINIEKS<br/></span>
-              { movieTeamData.makeup?.map( (person) => {
-                return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
-                )
-              }) }
-              
-            </div>
-
-            <div className="w-40 m-auto">
-              <span className="text-black text-sm font-normal font-['SchoolBook']">IZPILDPRODUCENTS<br/></span>
-              { movieTeamData.executive_producer?.map( (person) => {
-                return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
-                )
-              }) }
-              <span className="text-black text-base font-normal font-['SchoolBook']"><br/></span>
-              <span className="text-black text-sm font-normal font-['SchoolBook']">PRODUCENTS<br/></span>
-              { movieTeamData.producer?.map( (person) => {
-                
-                return(
-                  <span className="text-black text-base font-bold font-['SchoolBook']"><a href={'/profile/'+person.id}>{person.name}</a><br/></span>
-                )
-              }) }
-              
+            <div className="m-auto w-full">
+              {movieTeamKeyOrder.map((key, idx) => {
+                if (key in movieTeamData) {
+                  teamList.push(movieTeamData[key]);
+                }
+                if (teamList.length % 3 === 0 || (idx === movieTeamKeyOrder.length - 1 && teamList.length !== 0)) {
+                  const tm = teamList;
+                  teamList = [];
+                  return (
+                    <div key={idx} className="grid grid-cols-3 gap-8 py-4 mx-auto">
+                      {tm.map((item, teamIdx) => (
+                        <div key={teamIdx} className="flex flex-col items-center gap-4">
+                          <span className="text-black text-base font-['SchoolBook']">{item[0].roleName}</span>
+                          <div className="flex flex-col">
+                            {item.map((person) => (
+                              <div key={person.id} className="flex flex-col items-center">
+                                <span className="text-black text-base font-bold font-['SchoolBook']">
+                                  <a href={"/profile/" + person.id}>{person.name}</a>
+                                  <br />
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                }
+              })}
             </div>
           </div>
 

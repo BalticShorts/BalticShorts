@@ -8,6 +8,9 @@ export function getDirectors(data) {
         const rez = {}
         const names = []
         rez[itemId] = []
+        // console.log(item)
+        if(item.MovieTeam === null)
+            return;
        item.MovieTeam.PersonMovieTeams.items.forEach((person) => {
          if (person.Role.name === 'Režisors') {
             names.push(
@@ -34,7 +37,7 @@ export function MyGridMovies({data, maxRows, maxColumns}) {
 
     return (
         
-        <div className='left-[15%] w-[75%] h-fit gap-6 flex flex-col items-center relative justify-center '>
+        <div className='w-[75%] h-fit gap-6 flex flex-col items-center relative justify-center '>
             <div className={`grid grid-cols-3 items-center`}>
                 {data.map((item, idx) => (
                     <>

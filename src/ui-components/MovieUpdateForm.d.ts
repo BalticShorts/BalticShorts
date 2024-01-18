@@ -24,7 +24,6 @@ export declare type ValidationFunction<T> = (value: T, validationResponse: Valid
 export declare type MovieUpdateFormInputValues = {
     name?: string;
     name_eng?: string;
-    type?: string;
     genre?: string;
     description?: string;
     description_eng?: string;
@@ -32,18 +31,19 @@ export declare type MovieUpdateFormInputValues = {
     captions_language?: string;
     origin_country?: string;
     length?: number;
-    created_year?: string;
+    created_year?: number;
     uploaded_at?: string;
     guid?: string;
     MovieTeam?: any;
     MovieInPlaylists?: any[];
     times_watched?: number;
     MovieType?: any;
+    photo_location?: string;
+    age_rating?: number;
 };
 export declare type MovieUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
     name_eng?: ValidationFunction<string>;
-    type?: ValidationFunction<string>;
     genre?: ValidationFunction<string>;
     description?: ValidationFunction<string>;
     description_eng?: ValidationFunction<string>;
@@ -51,20 +51,21 @@ export declare type MovieUpdateFormValidationValues = {
     captions_language?: ValidationFunction<string>;
     origin_country?: ValidationFunction<string>;
     length?: ValidationFunction<number>;
-    created_year?: ValidationFunction<string>;
+    created_year?: ValidationFunction<number>;
     uploaded_at?: ValidationFunction<string>;
     guid?: ValidationFunction<string>;
     MovieTeam?: ValidationFunction<any>;
     MovieInPlaylists?: ValidationFunction<any>;
     times_watched?: ValidationFunction<number>;
     MovieType?: ValidationFunction<any>;
+    photo_location?: ValidationFunction<string>;
+    age_rating?: ValidationFunction<number>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MovieUpdateFormOverridesProps = {
     MovieUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
     name_eng?: PrimitiveOverrideProps<TextFieldProps>;
-    type?: PrimitiveOverrideProps<TextFieldProps>;
     genre?: PrimitiveOverrideProps<TextFieldProps>;
     description?: PrimitiveOverrideProps<TextFieldProps>;
     description_eng?: PrimitiveOverrideProps<TextFieldProps>;
@@ -79,6 +80,8 @@ export declare type MovieUpdateFormOverridesProps = {
     MovieInPlaylists?: PrimitiveOverrideProps<AutocompleteProps>;
     times_watched?: PrimitiveOverrideProps<TextFieldProps>;
     MovieType?: PrimitiveOverrideProps<AutocompleteProps>;
+    photo_location?: PrimitiveOverrideProps<TextFieldProps>;
+    age_rating?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type MovieUpdateFormProps = React.PropsWithChildren<{
     overrides?: MovieUpdateFormOverridesProps | undefined | null;

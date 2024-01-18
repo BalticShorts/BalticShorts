@@ -1,10 +1,3 @@
-/***************************************************************************
- * The contents of this file were generated with Amplify Studio.           *
- * Please refrain from making any modifications to this file.              *
- * Any changes to this file will be overwritten when running amplify pull. *
- **************************************************************************/
-
-/* eslint-disable */
 import * as React from "react";
 import {
   Autocomplete,
@@ -19,26 +12,19 @@ import {
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
-import { StorageManager } from "@aws-amplify/ui-react-storage";
 import {
   fetchByPath,
   getOverrideProps,
-  processFile,
   validateField,
 } from "./utils";
 import { API } from "aws-amplify";
 import {
-  listMoviePlaylists,
-  listMovieTeams,
+
   listMovieTypes,
-} from "../graphql/queries";
+} from "../../graphql/queries";
 import {
   createMovie,
-  createMovieMoviePlaylist,
-  updateMovie,
-  updateMovieTeam,
-} from "../graphql/mutations";
-import { Field } from "@aws-amplify/ui-react/internal";
+} from "../../graphql/mutations";
 function ArrayField({
   items = [],
   onChange,
@@ -217,13 +203,8 @@ export default function MovieCreateForm(props) {
     origin_country: "",
     length: "",
     created_year: "",
-    MovieTeam: undefined,
-    MovieInPlaylists: [],
     MovieType: undefined,
-    Field0: undefined,
-    Field1: undefined,
     photo_location: "",
-    age_rating: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
@@ -249,25 +230,15 @@ export default function MovieCreateForm(props) {
     initialValues.created_year
   );
   const [MovieTeam, setMovieTeam] = React.useState(initialValues.MovieTeam);
-  const [MovieTeamLoading, setMovieTeamLoading] = React.useState(false);
-  const [movieTeamRecords, setMovieTeamRecords] = React.useState([]);
   const [MovieInPlaylists, setMovieInPlaylists] = React.useState(
     initialValues.MovieInPlaylists
   );
-  const [MovieInPlaylistsLoading, setMovieInPlaylistsLoading] =
-    React.useState(false);
-  const [movieInPlaylistsRecords, setMovieInPlaylistsRecords] = React.useState(
-    []
+  const [photo_location, setPhoto_location] = React.useState(
+    initialValues.photo_location
   );
   const [MovieType, setMovieType] = React.useState(initialValues.MovieType);
   const [MovieTypeLoading, setMovieTypeLoading] = React.useState(false);
   const [movieTypeRecords, setMovieTypeRecords] = React.useState([]);
-  const [Field0, setField0] = React.useState(initialValues.Field0);
-  const [Field1, setField1] = React.useState(initialValues.Field1);
-  const [photo_location, setPhoto_location] = React.useState(
-    initialValues.photo_location
-  );
-  const [age_rating, setAge_rating] = React.useState(initialValues.age_rating);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -283,32 +254,12 @@ export default function MovieCreateForm(props) {
     setLength(initialValues.length);
     setCreated_year(initialValues.created_year);
     setMovieTeam(initialValues.MovieTeam);
-    setCurrentMovieTeamValue(undefined);
-    setCurrentMovieTeamDisplayValue("");
-    setMovieInPlaylists(initialValues.MovieInPlaylists);
-    setCurrentMovieInPlaylistsValue(undefined);
-    setCurrentMovieInPlaylistsDisplayValue("");
     setMovieType(initialValues.MovieType);
     setCurrentMovieTypeValue(undefined);
     setCurrentMovieTypeDisplayValue("");
-    setField0(initialValues.Field0);
-    setField1(initialValues.Field1);
     setPhoto_location(initialValues.photo_location);
-    setAge_rating(initialValues.age_rating);
     setErrors({});
   };
-  const [currentMovieTeamDisplayValue, setCurrentMovieTeamDisplayValue] =
-    React.useState("");
-  const [currentMovieTeamValue, setCurrentMovieTeamValue] =
-    React.useState(undefined);
-  const MovieTeamRef = React.createRef();
-  const [
-    currentMovieInPlaylistsDisplayValue,
-    setCurrentMovieInPlaylistsDisplayValue,
-  ] = React.useState("");
-  const [currentMovieInPlaylistsValue, setCurrentMovieInPlaylistsValue] =
-    React.useState(undefined);
-  const MovieInPlaylistsRef = React.createRef();
   const [currentMovieTypeDisplayValue, setCurrentMovieTypeDisplayValue] =
     React.useState("");
   const [currentMovieTypeValue, setCurrentMovieTypeValue] =
@@ -319,16 +270,6 @@ export default function MovieCreateForm(props) {
     MovieInPlaylists: (r) => JSON.stringify({ id: r?.id }),
     MovieType: (r) => JSON.stringify({ id: r?.id }),
   };
-  const MovieTeamIdSet = new Set(
-    Array.isArray(MovieTeam)
-      ? MovieTeam.map((r) => getIDValue.MovieTeam?.(r))
-      : getIDValue.MovieTeam?.(MovieTeam)
-  );
-  const MovieInPlaylistsIdSet = new Set(
-    Array.isArray(MovieInPlaylists)
-      ? MovieInPlaylists.map((r) => getIDValue.MovieInPlaylists?.(r))
-      : getIDValue.MovieInPlaylists?.(MovieInPlaylists)
-  );
   const MovieTypeIdSet = new Set(
     Array.isArray(MovieType)
       ? MovieType.map((r) => getIDValue.MovieType?.(r))
@@ -342,7 +283,6 @@ export default function MovieCreateForm(props) {
   const validations = {
     name: [{ type: "Required" }],
     name_eng: [{ type: "Required" }],
-    type: [{ type: "Required" }],
     genre: [{ type: "Required" }],
     description: [{ type: "Required" }],
     description_eng: [{ type: "Required" }],
@@ -351,13 +291,8 @@ export default function MovieCreateForm(props) {
     origin_country: [],
     length: [],
     created_year: [],
-    MovieTeam: [],
-    MovieInPlaylists: [],
-    MovieType: [],
-    Field0: [{ type: "Required" }],
-    Field1: [{ type: "Required" }],
+    MovieType: [{ type: "Required" }],
     photo_location: [],
-    age_rating: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -376,66 +311,6 @@ export default function MovieCreateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const fetchMovieTeamRecords = async (value) => {
-    setMovieTeamLoading(true);
-    const newOptions = [];
-    let newNext = "";
-    while (newOptions.length < autocompleteLength && newNext != null) {
-      const variables = {
-        limit: autocompleteLength * 5,
-        filter: { or: [{ director: { contains: value } }] },
-      };
-      if (newNext) {
-        variables["nextToken"] = newNext;
-      }
-      const result = (
-        await API.graphql({
-          query: listMovieTeams.replaceAll("__typename", ""),
-          variables,
-        })
-      )?.data?.listMovieTeams?.items;
-      var loaded = result.filter(
-        (item) => !MovieTeamIdSet.has(getIDValue.MovieTeam?.(item))
-      );
-      newOptions.push(...loaded);
-      newNext = result.nextToken;
-    }
-    setMovieTeamRecords(newOptions.slice(0, autocompleteLength));
-    setMovieTeamLoading(false);
-  };
-  const fetchMovieInPlaylistsRecords = async (value) => {
-    setMovieInPlaylistsLoading(true);
-    const newOptions = [];
-    let newNext = "";
-    while (newOptions.length < autocompleteLength && newNext != null) {
-      const variables = {
-        limit: autocompleteLength * 5,
-        filter: {
-          or: [
-            { Title: { contains: value } },
-            { Creator: { contains: value } },
-          ],
-        },
-      };
-      if (newNext) {
-        variables["nextToken"] = newNext;
-      }
-      const result = (
-        await API.graphql({
-          query: listMoviePlaylists.replaceAll("__typename", ""),
-          variables,
-        })
-      )?.data?.listMoviePlaylists?.items;
-      var loaded = result.filter(
-        (item) =>
-          !MovieInPlaylistsIdSet.has(getIDValue.MovieInPlaylists?.(item))
-      );
-      newOptions.push(...loaded);
-      newNext = result.nextToken;
-    }
-    setMovieInPlaylistsRecords(newOptions.slice(0, autocompleteLength));
-    setMovieInPlaylistsLoading(false);
-  };
   const fetchMovieTypeRecords = async (value) => {
     setMovieTypeLoading(true);
     const newOptions = [];
@@ -452,6 +327,7 @@ export default function MovieCreateForm(props) {
         await API.graphql({
           query: listMovieTypes.replaceAll("__typename", ""),
           variables,
+          authMode: 'AWS_IAM',
         })
       )?.data?.listMovieTypes?.items;
       var loaded = result.filter(
@@ -463,9 +339,9 @@ export default function MovieCreateForm(props) {
     setMovieTypeRecords(newOptions.slice(0, autocompleteLength));
     setMovieTypeLoading(false);
   };
+
+
   React.useEffect(() => {
-    fetchMovieTeamRecords("");
-    fetchMovieInPlaylistsRecords("");
     fetchMovieTypeRecords("");
   }, []);
   return (
@@ -488,13 +364,8 @@ export default function MovieCreateForm(props) {
           origin_country,
           length,
           created_year,
-          MovieTeam,
-          MovieInPlaylists,
           MovieType,
-          Field0,
-          Field1,
           photo_location,
-          age_rating,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -520,12 +391,14 @@ export default function MovieCreateForm(props) {
             return promises;
           }, [])
         );
+
         if (validationResponses.some((r) => r.hasError)) {
           return;
         }
         if (onSubmit) {
           modelFields = onSubmit(modelFields);
         }
+
         try {
           Object.entries(modelFields).forEach(([key, value]) => {
             if (typeof value === "string" && value === "") {
@@ -535,6 +408,7 @@ export default function MovieCreateForm(props) {
           const modelFieldsToSave = {
             name: modelFields.name,
             name_eng: modelFields.name_eng,
+            type: modelFields.type,
             genre: modelFields.genre,
             description: modelFields.description,
             description_eng: modelFields.description_eng,
@@ -545,8 +419,6 @@ export default function MovieCreateForm(props) {
             created_year: modelFields.created_year,
             movieMovieTeamId: modelFields?.MovieTeam?.id,
             movieMovieTypeId: modelFields?.MovieType?.id,
-            photo_location: modelFields.photo_location,
-            age_rating: modelFields.age_rating,
           };
           const movie = (
             await API.graphql({
@@ -556,60 +428,18 @@ export default function MovieCreateForm(props) {
                   ...modelFieldsToSave,
                 },
               },
+              authMode: 'AWS_IAM',
             })
           )?.data?.createMovie;
-          const promises = [];
-          const movieTeamToLink = modelFields.MovieTeam;
-          if (movieTeamToLink) {
-            promises.push(
-              API.graphql({
-                query: updateMovieTeam.replaceAll("__typename", ""),
-                variables: {
-                  input: {
-                    id: MovieTeam.id,
-                    movieTeamMovieId: movie.id,
-                  },
-                },
-              })
-            );
-            const movieToUnlink = await movieTeamToLink.Movie;
-            if (movieToUnlink) {
-              promises.push(
-                API.graphql({
-                  query: updateMovie.replaceAll("__typename", ""),
-                  variables: {
-                    input: {
-                      id: movieToUnlink.id,
-                      movieMovieTeamId: null,
-                    },
-                  },
-                })
-              );
-            }
-          }
-          promises.push(
-            ...MovieInPlaylists.reduce((promises, moviePlaylist) => {
-              promises.push(
-                API.graphql({
-                  query: createMovieMoviePlaylist.replaceAll("__typename", ""),
-                  variables: {
-                    input: {
-                      movieId: movie.id,
-                      moviePlaylistId: moviePlaylist.id,
-                    },
-                  },
-                })
-              );
-              return promises;
-            }, [])
-          );
-          await Promise.all(promises);
+          // console.log(movie);
+          // await Promise.all(promises);
           if (onSuccess) {
             onSuccess(modelFields);
           }
           if (clearOnSuccess) {
             resetStateValues();
           }
+          props.changeState('team', movie);
         } catch (err) {
           if (onError) {
             const messages = err.errors.map((e) => e.message).join("\n");
@@ -640,13 +470,8 @@ export default function MovieCreateForm(props) {
               origin_country,
               length,
               created_year,
-              MovieTeam,
-              MovieInPlaylists,
               MovieType,
-              Field0,
-              Field1,
-              photo_location,
-              age_rating,
+          photo_location,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -681,13 +506,8 @@ export default function MovieCreateForm(props) {
               origin_country,
               length,
               created_year,
-              MovieTeam,
-              MovieInPlaylists,
               MovieType,
-              Field0,
-              Field1,
-              photo_location,
-              age_rating,
+          photo_location,
             };
             const result = onChange(modelFields);
             value = result?.name_eng ?? value;
@@ -701,46 +521,6 @@ export default function MovieCreateForm(props) {
         errorMessage={errors.name_eng?.errorMessage}
         hasError={errors.name_eng?.hasError}
         {...getOverrideProps(overrides, "name_eng")}
-      ></TextField>
-      <TextField
-        label="Movie type"
-        isRequired={true}
-        value={type}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              name_eng,
-              type: value,
-              genre,
-              description,
-              description_eng,
-              screen_language,
-              captions_language,
-              origin_country,
-              length,
-              created_year,
-              MovieTeam,
-              MovieInPlaylists,
-              MovieType,
-              Field0,
-              Field1,
-              photo_location,
-              age_rating,
-            };
-            const result = onChange(modelFields);
-            value = result?.type ?? value;
-          }
-          if (errors.type?.hasError) {
-            runValidationTasks("type", value);
-          }
-          setType(value);
-        }}
-        onBlur={() => runValidationTasks("type", type)}
-        errorMessage={errors.type?.errorMessage}
-        hasError={errors.type?.hasError}
-        {...getOverrideProps(overrides, "type")}
       ></TextField>
       <TextField
         label="Genre"
@@ -762,13 +542,8 @@ export default function MovieCreateForm(props) {
               origin_country,
               length,
               created_year,
-              MovieTeam,
-              MovieInPlaylists,
               MovieType,
-              Field0,
-              Field1,
-              photo_location,
-              age_rating,
+             photo_location,
             };
             const result = onChange(modelFields);
             value = result?.genre ?? value;
@@ -806,10 +581,7 @@ export default function MovieCreateForm(props) {
               MovieTeam,
               MovieInPlaylists,
               MovieType,
-              Field0,
-              Field1,
               photo_location,
-              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -844,13 +616,8 @@ export default function MovieCreateForm(props) {
               origin_country,
               length,
               created_year,
-              MovieTeam,
-              MovieInPlaylists,
               MovieType,
-              Field0,
-              Field1,
-              photo_location,
-              age_rating,
+             photo_location,
             };
             const result = onChange(modelFields);
             value = result?.description_eng ?? value;
@@ -885,13 +652,8 @@ export default function MovieCreateForm(props) {
               origin_country,
               length,
               created_year,
-              MovieTeam,
-              MovieInPlaylists,
               MovieType,
-              Field0,
-              Field1,
-              photo_location,
-              age_rating,
+             photo_location,
             };
             const result = onChange(modelFields);
             value = result?.screen_language ?? value;
@@ -926,13 +688,8 @@ export default function MovieCreateForm(props) {
               origin_country,
               length,
               created_year,
-              MovieTeam,
-              MovieInPlaylists,
               MovieType,
-              Field0,
-              Field1,
-              photo_location,
-              age_rating,
+             photo_location,
             };
             const result = onChange(modelFields);
             value = result?.captions_language ?? value;
@@ -969,13 +726,8 @@ export default function MovieCreateForm(props) {
               origin_country: value,
               length,
               created_year,
-              MovieTeam,
-              MovieInPlaylists,
               MovieType,
-              Field0,
-              Field1,
-              photo_location,
-              age_rating,
+             photo_location,
             };
             const result = onChange(modelFields);
             value = result?.origin_country ?? value;
@@ -1014,13 +766,8 @@ export default function MovieCreateForm(props) {
               origin_country,
               length: value,
               created_year,
-              MovieTeam,
-              MovieInPlaylists,
               MovieType,
-              Field0,
-              Field1,
               photo_location,
-              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.length ?? value;
@@ -1039,13 +786,9 @@ export default function MovieCreateForm(props) {
         label="Created year"
         isRequired={false}
         isReadOnly={false}
-        type="number"
-        step="any"
         value={created_year}
         onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
               name,
@@ -1059,13 +802,8 @@ export default function MovieCreateForm(props) {
               origin_country,
               length,
               created_year: value,
-              MovieTeam,
-              MovieInPlaylists,
               MovieType,
-              Field0,
-              Field1,
-              photo_location,
-              age_rating,
+             photo_location,
             };
             const result = onChange(modelFields);
             value = result?.created_year ?? value;
@@ -1097,208 +835,10 @@ export default function MovieCreateForm(props) {
               origin_country,
               length,
               created_year,
-              MovieTeam: value,
-              MovieInPlaylists,
-              MovieType,
-              Field0,
-              Field1,
-              photo_location,
-              age_rating,
-            };
-            const result = onChange(modelFields);
-            value = result?.MovieTeam ?? value;
-          }
-          setMovieTeam(value);
-          setCurrentMovieTeamValue(undefined);
-          setCurrentMovieTeamDisplayValue("");
-        }}
-        currentFieldValue={currentMovieTeamValue}
-        label={"Director"}
-        items={MovieTeam ? [MovieTeam] : []}
-        hasError={errors?.MovieTeam?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks("MovieTeam", currentMovieTeamValue)
-        }
-        errorMessage={errors?.MovieTeam?.errorMessage}
-        getBadgeText={getDisplayValue.MovieTeam}
-        setFieldValue={(model) => {
-          setCurrentMovieTeamDisplayValue(
-            model ? getDisplayValue.MovieTeam(model) : ""
-          );
-          setCurrentMovieTeamValue(model);
-        }}
-        inputFieldRef={MovieTeamRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Director"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search MovieTeam"
-          value={currentMovieTeamDisplayValue}
-          options={movieTeamRecords
-            .filter((r) => !MovieTeamIdSet.has(getIDValue.MovieTeam?.(r)))
-            .map((r) => ({
-              id: getIDValue.MovieTeam?.(r),
-              label: getDisplayValue.MovieTeam?.(r),
-            }))}
-          isLoading={MovieTeamLoading}
-          onSelect={({ id, label }) => {
-            setCurrentMovieTeamValue(
-              movieTeamRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentMovieTeamDisplayValue(label);
-            runValidationTasks("MovieTeam", label);
-          }}
-          onClear={() => {
-            setCurrentMovieTeamDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchMovieTeamRecords(value);
-            if (errors.MovieTeam?.hasError) {
-              runValidationTasks("MovieTeam", value);
-            }
-            setCurrentMovieTeamDisplayValue(value);
-            setCurrentMovieTeamValue(undefined);
-          }}
-          onBlur={() =>
-            runValidationTasks("MovieTeam", currentMovieTeamDisplayValue)
-          }
-          errorMessage={errors.MovieTeam?.errorMessage}
-          hasError={errors.MovieTeam?.hasError}
-          ref={MovieTeamRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "MovieTeam")}
-        ></Autocomplete>
-      </ArrayField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
-          if (onChange) {
-            const modelFields = {
-              name,
-              name_eng,
-              type,
-              genre,
-              description,
-              description_eng,
-              screen_language,
-              captions_language,
-              origin_country,
-              length,
-              created_year,
-              MovieTeam,
-              MovieInPlaylists: values,
-              MovieType,
-              Field0,
-              Field1,
-              photo_location,
-              age_rating,
-            };
-            const result = onChange(modelFields);
-            values = result?.MovieInPlaylists ?? values;
-          }
-          setMovieInPlaylists(values);
-          setCurrentMovieInPlaylistsValue(undefined);
-          setCurrentMovieInPlaylistsDisplayValue("");
-        }}
-        currentFieldValue={currentMovieInPlaylistsValue}
-        label={"Movie in playlists"}
-        items={MovieInPlaylists}
-        hasError={errors?.MovieInPlaylists?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks(
-            "MovieInPlaylists",
-            currentMovieInPlaylistsValue
-          )
-        }
-        errorMessage={errors?.MovieInPlaylists?.errorMessage}
-        getBadgeText={getDisplayValue.MovieInPlaylists}
-        setFieldValue={(model) => {
-          setCurrentMovieInPlaylistsDisplayValue(
-            model ? getDisplayValue.MovieInPlaylists(model) : ""
-          );
-          setCurrentMovieInPlaylistsValue(model);
-        }}
-        inputFieldRef={MovieInPlaylistsRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Movie in playlists"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Select Movie Playlist"
-          value={currentMovieInPlaylistsDisplayValue}
-          options={movieInPlaylistsRecords.map((r) => ({
-            id: getIDValue.MovieInPlaylists?.(r),
-            label: getDisplayValue.MovieInPlaylists?.(r),
-          }))}
-          isLoading={MovieInPlaylistsLoading}
-          onSelect={({ id, label }) => {
-            setCurrentMovieInPlaylistsValue(
-              movieInPlaylistsRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentMovieInPlaylistsDisplayValue(label);
-            runValidationTasks("MovieInPlaylists", label);
-          }}
-          onClear={() => {
-            setCurrentMovieInPlaylistsDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchMovieInPlaylistsRecords(value);
-            if (errors.MovieInPlaylists?.hasError) {
-              runValidationTasks("MovieInPlaylists", value);
-            }
-            setCurrentMovieInPlaylistsDisplayValue(value);
-            setCurrentMovieInPlaylistsValue(undefined);
-          }}
-          onBlur={() =>
-            runValidationTasks(
-              "MovieInPlaylists",
-              currentMovieInPlaylistsDisplayValue
-            )
-          }
-          errorMessage={errors.MovieInPlaylists?.errorMessage}
-          hasError={errors.MovieInPlaylists?.hasError}
-          ref={MovieInPlaylistsRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "MovieInPlaylists")}
-        ></Autocomplete>
-      </ArrayField>
-      <ArrayField
-        lengthLimit={1}
-        onChange={async (items) => {
-          let value = items[0];
-          if (onChange) {
-            const modelFields = {
-              name,
-              name_eng,
-              type,
-              genre,
-              description,
-              description_eng,
-              screen_language,
-              captions_language,
-              origin_country,
-              length,
-              created_year,
               MovieTeam,
               MovieInPlaylists,
               MovieType: value,
-              Field0,
-              Field1,
-              photo_location,
-              age_rating,
+             photo_location,
             };
             const result = onChange(modelFields);
             value = result?.MovieType ?? value;
@@ -1371,244 +911,6 @@ export default function MovieCreateForm(props) {
           {...getOverrideProps(overrides, "MovieType")}
         ></Autocomplete>
       </ArrayField>
-      <Field
-        errorMessage={errors.Field0?.errorMessage}
-        hasError={errors.Field0?.hasError}
-        label={"Movie file"}
-        isRequired={true}
-      >
-        <StorageManager
-          onUploadSuccess={({ key }) => {
-            setField0((prev) => {
-              let value = key;
-              if (onChange) {
-                const modelFields = {
-                  name,
-                  name_eng,
-                  type,
-                  genre,
-                  description,
-                  description_eng,
-                  screen_language,
-                  captions_language,
-                  origin_country,
-                  length,
-                  created_year,
-                  MovieTeam,
-                  MovieInPlaylists,
-                  MovieType,
-                  Field0: value,
-                  Field1,
-                  photo_location,
-                  age_rating,
-                };
-                const result = onChange(modelFields);
-                value = result?.Field0 ?? value;
-              }
-              return value;
-            });
-          }}
-          onFileRemove={({ key }) => {
-            setField0((prev) => {
-              let value = initialValues?.Field0;
-              if (onChange) {
-                const modelFields = {
-                  name,
-                  name_eng,
-                  type,
-                  genre,
-                  description,
-                  description_eng,
-                  screen_language,
-                  captions_language,
-                  origin_country,
-                  length,
-                  created_year,
-                  MovieTeam,
-                  MovieInPlaylists,
-                  MovieType,
-                  Field0: value,
-                  Field1,
-                  photo_location,
-                  age_rating,
-                };
-                const result = onChange(modelFields);
-                value = result?.Field0 ?? value;
-              }
-              return value;
-            });
-          }}
-          processFile={processFile}
-          accessLevel={"private"}
-          acceptedFileTypes={["video/*"]}
-          isResumable={true}
-          showThumbnails={true}
-          maxFileCount={1}
-          {...getOverrideProps(overrides, "Field0")}
-        ></StorageManager>
-      </Field>
-      <Field
-        errorMessage={errors.Field1?.errorMessage}
-        hasError={errors.Field1?.hasError}
-        label={"Thubmnail upload"}
-        isRequired={true}
-      >
-        <StorageManager
-          onUploadSuccess={({ key }) => {
-            setField1((prev) => {
-              let value = key;
-              if (onChange) {
-                const modelFields = {
-                  name,
-                  name_eng,
-                  type,
-                  genre,
-                  description,
-                  description_eng,
-                  screen_language,
-                  captions_language,
-                  origin_country,
-                  length,
-                  created_year,
-                  MovieTeam,
-                  MovieInPlaylists,
-                  MovieType,
-                  Field0,
-                  Field1: value,
-                  photo_location,
-                  age_rating,
-                };
-                const result = onChange(modelFields);
-                value = result?.Field1 ?? value;
-              }
-              return value;
-            });
-          }}
-          onFileRemove={({ key }) => {
-            setField1((prev) => {
-              let value = initialValues?.Field1;
-              if (onChange) {
-                const modelFields = {
-                  name,
-                  name_eng,
-                  type,
-                  genre,
-                  description,
-                  description_eng,
-                  screen_language,
-                  captions_language,
-                  origin_country,
-                  length,
-                  created_year,
-                  MovieTeam,
-                  MovieInPlaylists,
-                  MovieType,
-                  Field0,
-                  Field1: value,
-                  photo_location,
-                  age_rating,
-                };
-                const result = onChange(modelFields);
-                value = result?.Field1 ?? value;
-              }
-              return value;
-            });
-          }}
-          processFile={processFile}
-          accessLevel={"private"}
-          acceptedFileTypes={["image/*"]}
-          isResumable={true}
-          showThumbnails={true}
-          maxFileCount={1}
-          {...getOverrideProps(overrides, "Field1")}
-        ></StorageManager>
-      </Field>
-      <TextField
-        label="Photo location"
-        isRequired={false}
-        isReadOnly={false}
-        value={photo_location}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              name_eng,
-              type,
-              genre,
-              description,
-              description_eng,
-              screen_language,
-              captions_language,
-              origin_country,
-              length,
-              created_year,
-              MovieTeam,
-              MovieInPlaylists,
-              MovieType,
-              Field0,
-              Field1,
-              photo_location: value,
-              age_rating,
-            };
-            const result = onChange(modelFields);
-            value = result?.photo_location ?? value;
-          }
-          if (errors.photo_location?.hasError) {
-            runValidationTasks("photo_location", value);
-          }
-          setPhoto_location(value);
-        }}
-        onBlur={() => runValidationTasks("photo_location", photo_location)}
-        errorMessage={errors.photo_location?.errorMessage}
-        hasError={errors.photo_location?.hasError}
-        {...getOverrideProps(overrides, "photo_location")}
-      ></TextField>
-      <TextField
-        label="Age rating"
-        isRequired={false}
-        isReadOnly={false}
-        type="number"
-        step="any"
-        value={age_rating}
-        onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
-          if (onChange) {
-            const modelFields = {
-              name,
-              name_eng,
-              type,
-              genre,
-              description,
-              description_eng,
-              screen_language,
-              captions_language,
-              origin_country,
-              length,
-              created_year,
-              MovieTeam,
-              MovieInPlaylists,
-              MovieType,
-              Field0,
-              Field1,
-              photo_location,
-              age_rating: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.age_rating ?? value;
-          }
-          if (errors.age_rating?.hasError) {
-            runValidationTasks("age_rating", value);
-          }
-          setAge_rating(value);
-        }}
-        onBlur={() => runValidationTasks("age_rating", age_rating)}
-        errorMessage={errors.age_rating?.errorMessage}
-        hasError={errors.age_rating?.hasError}
-        {...getOverrideProps(overrides, "age_rating")}
-      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

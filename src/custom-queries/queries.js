@@ -139,7 +139,7 @@ export const getSearch = `
 
 export const checkPersonExists = `
 query MyQuery($email: String!) {
-  listPeople(filter: {email: {eq: $email}}) {
+  listUserProfiles(filter: {email: {eq: $email}}) {
     items {
       user_id
     }
@@ -150,33 +150,15 @@ query MyQuery($email: String!) {
 
 export const getPersonByEmail = `
 query MyQuery($email: String!) {
-  listPeople(filter: {email: {eq: $email}}) {
+  listUserProfiles(filter: {email: {eq: $email}}) {
     items {
       id
       name
       surname
-      role
-      description
-      Instagram
-      Facebook
-      IMBD
       email
-      PersonMovieTeams {
-        items {
-          id
-          movieteamID
-          personID
-          roleID
-          createdAt
-          updatedAt
-          __typename
-        }
-        nextToken
-        __typename
-      }
       user_id
-      is_public
-      completed_setup
+      is_member
+      member_untill
       createdAt
       updatedAt
       __typename
@@ -195,6 +177,7 @@ export const getMoviesMain = `
         created_year
         origin_country
         length
+        photo_location
         MovieTeam {
           PersonMovieTeams {
             items {

@@ -288,7 +288,7 @@ export default function PersonMovieTeamUpdateForm(props) {
       : getIDValue.Role?.(Role)
   );
   const getDisplayValue = {
-    MovieTeam: (r) => `${r?.director ? r?.director + " - " : ""}${r?.id}`,
+    MovieTeam: (r) => `${r?.MovieName ? r?.MovieName + " - " : ""}${r?.id}`,
     Person: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
     Role: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
   };
@@ -322,7 +322,7 @@ export default function PersonMovieTeamUpdateForm(props) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ director: { contains: value } }, { id: { contains: value } }],
+          or: [{ MovieName: { contains: value } }, { id: { contains: value } }],
         },
       };
       if (newNext) {

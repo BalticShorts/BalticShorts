@@ -205,7 +205,6 @@ export default function MovieUpdateForm(props) {
   const initialValues = {
     name: "",
     name_eng: "",
-    type: "",
     genre: "",
     description: "",
     description_eng: "",
@@ -220,10 +219,11 @@ export default function MovieUpdateForm(props) {
     MovieInPlaylists: [],
     times_watched: "",
     MovieType: undefined,
+    photo_location: "",
+    age_rating: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
-  const [type, setType] = React.useState(initialValues.type);
   const [genre, setGenre] = React.useState(initialValues.genre);
   const [description, setDescription] = React.useState(
     initialValues.description
@@ -265,6 +265,10 @@ export default function MovieUpdateForm(props) {
   const [MovieType, setMovieType] = React.useState(initialValues.MovieType);
   const [MovieTypeLoading, setMovieTypeLoading] = React.useState(false);
   const [movieTypeRecords, setMovieTypeRecords] = React.useState([]);
+  const [photo_location, setPhoto_location] = React.useState(
+    initialValues.photo_location
+  );
+  const [age_rating, setAge_rating] = React.useState(initialValues.age_rating);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -279,7 +283,6 @@ export default function MovieUpdateForm(props) {
       : initialValues;
     setName(cleanValues.name);
     setName_eng(cleanValues.name_eng);
-    setType(cleanValues.type);
     setGenre(cleanValues.genre);
     setDescription(cleanValues.description);
     setDescription_eng(cleanValues.description_eng);
@@ -300,6 +303,8 @@ export default function MovieUpdateForm(props) {
     setMovieType(cleanValues.MovieType);
     setCurrentMovieTypeValue(undefined);
     setCurrentMovieTypeDisplayValue("");
+    setPhoto_location(cleanValues.photo_location);
+    setAge_rating(cleanValues.age_rating);
     setErrors({});
   };
   const [movieRecord, setMovieRecord] = React.useState(movieModelProp);
@@ -380,14 +385,13 @@ export default function MovieUpdateForm(props) {
       : getIDValue.MovieType?.(MovieType)
   );
   const getDisplayValue = {
-    MovieTeam: (r) => `${r?.director ? r?.director + " - " : ""}${r?.id}`,
+    MovieTeam: (r) => `${r?.MovieName ? r?.MovieName + " - " : ""}${r?.id}`,
     MovieInPlaylists: (r) => `${r?.Creator ? r?.Creator + " - " : ""}${r?.id}`,
     MovieType: (r) => `${r?.type ? r?.type + " - " : ""}${r?.id}`,
   };
   const validations = {
     name: [],
     name_eng: [],
-    type: [],
     genre: [],
     description: [],
     description_eng: [],
@@ -402,6 +406,8 @@ export default function MovieUpdateForm(props) {
     MovieInPlaylists: [],
     times_watched: [],
     MovieType: [],
+    photo_location: [],
+    age_rating: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -428,7 +434,7 @@ export default function MovieUpdateForm(props) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ director: { contains: value } }, { id: { contains: value } }],
+          or: [{ MovieName: { contains: value } }, { id: { contains: value } }],
         },
       };
       if (newNext) {
@@ -524,7 +530,6 @@ export default function MovieUpdateForm(props) {
         let modelFields = {
           name: name ?? null,
           name_eng: name_eng ?? null,
-          type: type ?? null,
           genre: genre ?? null,
           description: description ?? null,
           description_eng: description_eng ?? null,
@@ -539,6 +544,8 @@ export default function MovieUpdateForm(props) {
           MovieInPlaylists: MovieInPlaylists ?? null,
           times_watched: times_watched ?? null,
           MovieType: MovieType ?? null,
+          photo_location: photo_location ?? null,
+          age_rating: age_rating ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -713,7 +720,6 @@ export default function MovieUpdateForm(props) {
           const modelFieldsToSave = {
             name: modelFields.name ?? null,
             name_eng: modelFields.name_eng ?? null,
-            type: modelFields.type ?? null,
             genre: modelFields.genre ?? null,
             description: modelFields.description ?? null,
             description_eng: modelFields.description_eng ?? null,
@@ -727,6 +733,8 @@ export default function MovieUpdateForm(props) {
             movieMovieTeamId: modelFields?.MovieTeam?.id ?? null,
             times_watched: modelFields.times_watched ?? null,
             movieMovieTypeId: modelFields?.MovieType?.id ?? null,
+            photo_location: modelFields.photo_location ?? null,
+            age_rating: modelFields.age_rating ?? null,
           };
           promises.push(
             API.graphql({
@@ -764,7 +772,6 @@ export default function MovieUpdateForm(props) {
             const modelFields = {
               name: value,
               name_eng,
-              type,
               genre,
               description,
               description_eng,
@@ -779,6 +786,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists,
               times_watched,
               MovieType,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -804,7 +813,6 @@ export default function MovieUpdateForm(props) {
             const modelFields = {
               name,
               name_eng: value,
-              type,
               genre,
               description,
               description_eng,
@@ -819,6 +827,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists,
               times_watched,
               MovieType,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.name_eng ?? value;
@@ -834,46 +844,6 @@ export default function MovieUpdateForm(props) {
         {...getOverrideProps(overrides, "name_eng")}
       ></TextField>
       <TextField
-        label="Type"
-        isRequired={false}
-        isReadOnly={false}
-        value={type}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              name_eng,
-              type: value,
-              genre,
-              description,
-              description_eng,
-              screen_language,
-              captions_language,
-              origin_country,
-              length,
-              created_year,
-              uploaded_at,
-              guid,
-              MovieTeam,
-              MovieInPlaylists,
-              times_watched,
-              MovieType,
-            };
-            const result = onChange(modelFields);
-            value = result?.type ?? value;
-          }
-          if (errors.type?.hasError) {
-            runValidationTasks("type", value);
-          }
-          setType(value);
-        }}
-        onBlur={() => runValidationTasks("type", type)}
-        errorMessage={errors.type?.errorMessage}
-        hasError={errors.type?.hasError}
-        {...getOverrideProps(overrides, "type")}
-      ></TextField>
-      <TextField
         label="Genre"
         isRequired={false}
         isReadOnly={false}
@@ -884,7 +854,6 @@ export default function MovieUpdateForm(props) {
             const modelFields = {
               name,
               name_eng,
-              type,
               genre: value,
               description,
               description_eng,
@@ -899,6 +868,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists,
               times_watched,
               MovieType,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.genre ?? value;
@@ -924,7 +895,6 @@ export default function MovieUpdateForm(props) {
             const modelFields = {
               name,
               name_eng,
-              type,
               genre,
               description: value,
               description_eng,
@@ -939,6 +909,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists,
               times_watched,
               MovieType,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -964,7 +936,6 @@ export default function MovieUpdateForm(props) {
             const modelFields = {
               name,
               name_eng,
-              type,
               genre,
               description,
               description_eng: value,
@@ -979,6 +950,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists,
               times_watched,
               MovieType,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.description_eng ?? value;
@@ -1004,7 +977,6 @@ export default function MovieUpdateForm(props) {
             const modelFields = {
               name,
               name_eng,
-              type,
               genre,
               description,
               description_eng,
@@ -1019,6 +991,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists,
               times_watched,
               MovieType,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.screen_language ?? value;
@@ -1044,7 +1018,6 @@ export default function MovieUpdateForm(props) {
             const modelFields = {
               name,
               name_eng,
-              type,
               genre,
               description,
               description_eng,
@@ -1059,6 +1032,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists,
               times_watched,
               MovieType,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.captions_language ?? value;
@@ -1086,7 +1061,6 @@ export default function MovieUpdateForm(props) {
             const modelFields = {
               name,
               name_eng,
-              type,
               genre,
               description,
               description_eng,
@@ -1101,6 +1075,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists,
               times_watched,
               MovieType,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.origin_country ?? value;
@@ -1130,7 +1106,6 @@ export default function MovieUpdateForm(props) {
             const modelFields = {
               name,
               name_eng,
-              type,
               genre,
               description,
               description_eng,
@@ -1145,6 +1120,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists,
               times_watched,
               MovieType,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.length ?? value;
@@ -1163,14 +1140,17 @@ export default function MovieUpdateForm(props) {
         label="Created year"
         isRequired={false}
         isReadOnly={false}
+        type="number"
+        step="any"
         value={created_year}
         onChange={(e) => {
-          let { value } = e.target;
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
               name,
               name_eng,
-              type,
               genre,
               description,
               description_eng,
@@ -1185,6 +1165,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists,
               times_watched,
               MovieType,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.created_year ?? value;
@@ -1210,7 +1192,6 @@ export default function MovieUpdateForm(props) {
             const modelFields = {
               name,
               name_eng,
-              type,
               genre,
               description,
               description_eng,
@@ -1225,6 +1206,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists,
               times_watched,
               MovieType,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.uploaded_at ?? value;
@@ -1250,7 +1233,6 @@ export default function MovieUpdateForm(props) {
             const modelFields = {
               name,
               name_eng,
-              type,
               genre,
               description,
               description_eng,
@@ -1265,6 +1247,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists,
               times_watched,
               MovieType,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.guid ?? value;
@@ -1287,7 +1271,6 @@ export default function MovieUpdateForm(props) {
             const modelFields = {
               name,
               name_eng,
-              type,
               genre,
               description,
               description_eng,
@@ -1302,6 +1285,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists,
               times_watched,
               MovieType,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.MovieTeam ?? value;
@@ -1382,7 +1367,6 @@ export default function MovieUpdateForm(props) {
             const modelFields = {
               name,
               name_eng,
-              type,
               genre,
               description,
               description_eng,
@@ -1397,6 +1381,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists: values,
               times_watched,
               MovieType,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             values = result?.MovieInPlaylists ?? values;
@@ -1488,7 +1474,6 @@ export default function MovieUpdateForm(props) {
             const modelFields = {
               name,
               name_eng,
-              type,
               genre,
               description,
               description_eng,
@@ -1503,6 +1488,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists,
               times_watched: value,
               MovieType,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.times_watched ?? value;
@@ -1525,7 +1512,6 @@ export default function MovieUpdateForm(props) {
             const modelFields = {
               name,
               name_eng,
-              type,
               genre,
               description,
               description_eng,
@@ -1540,6 +1526,8 @@ export default function MovieUpdateForm(props) {
               MovieInPlaylists,
               times_watched,
               MovieType: value,
+              photo_location,
+              age_rating,
             };
             const result = onChange(modelFields);
             value = result?.MovieType ?? value;
@@ -1613,6 +1601,92 @@ export default function MovieUpdateForm(props) {
           {...getOverrideProps(overrides, "MovieType")}
         ></Autocomplete>
       </ArrayField>
+      <TextField
+        label="Photo location"
+        isRequired={false}
+        isReadOnly={false}
+        value={photo_location}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              uploaded_at,
+              guid,
+              MovieTeam,
+              MovieInPlaylists,
+              times_watched,
+              MovieType,
+              photo_location: value,
+              age_rating,
+            };
+            const result = onChange(modelFields);
+            value = result?.photo_location ?? value;
+          }
+          if (errors.photo_location?.hasError) {
+            runValidationTasks("photo_location", value);
+          }
+          setPhoto_location(value);
+        }}
+        onBlur={() => runValidationTasks("photo_location", photo_location)}
+        errorMessage={errors.photo_location?.errorMessage}
+        hasError={errors.photo_location?.hasError}
+        {...getOverrideProps(overrides, "photo_location")}
+      ></TextField>
+      <TextField
+        label="Age rating"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={age_rating}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              uploaded_at,
+              guid,
+              MovieTeam,
+              MovieInPlaylists,
+              times_watched,
+              MovieType,
+              photo_location,
+              age_rating: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.age_rating ?? value;
+          }
+          if (errors.age_rating?.hasError) {
+            runValidationTasks("age_rating", value);
+          }
+          setAge_rating(value);
+        }}
+        onBlur={() => runValidationTasks("age_rating", age_rating)}
+        errorMessage={errors.age_rating?.errorMessage}
+        hasError={errors.age_rating?.hasError}
+        {...getOverrideProps(overrides, "age_rating")}
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

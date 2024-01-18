@@ -22,8 +22,8 @@ import {
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { listMovieTypes } from "../graphql/queries";
-import { createMovie } from "../graphql/mutations";
+import { listCountryCodes, listMovieTypes } from "../../graphql/queries";
+import { createMovie } from "../../graphql/mutations";
 function ArrayField({
   items = [],
   onChange,
@@ -230,6 +230,9 @@ export default function UploadMovie(props) {
   const [MovieType, setMovieType] = React.useState(initialValues.MovieType);
   const [MovieTypeLoading, setMovieTypeLoading] = React.useState(false);
   const [movieTypeRecords, setMovieTypeRecords] = React.useState([]);
+  const [CountryCode, setCountryCode] = React.useState(undefined);
+  const [CountryCodeLoading, setCountryCodeLoading] = React.useState(false);
+  const [countryCodeRecords, setCountryCodeRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -251,22 +254,45 @@ export default function UploadMovie(props) {
   };
   const [currentMovieTypeDisplayValue, setCurrentMovieTypeDisplayValue] =
     React.useState("");
+  const [currentOriginCountryDisplayValue, setCurrentOriginCountryDisplayValue] =
+    React.useState("");
+  const [currentCaptionsLanguageDisplayValue, setCurrentCaptionsLanguageDisplayValue] =
+    React.useState("");
+    const [currentScreenLanguageDisplayValue, setCurrentScreenLanguageDisplayValue] =
+    React.useState("");
   const [currentMovieTypeValue, setCurrentMovieTypeValue] =
+    React.useState(undefined);
+  const [currentOriginCountryValue, setCurrentOriginCountryValue] =
+    React.useState(undefined);
+  const [currentCaptionsLanguageValue, setCurrentCaptionsLanguageValue] =
+    React.useState(undefined);
+  const [currentScreenLanguageValue, setCurrentScreenLanguageValue] =
     React.useState(undefined);
   const MovieTypeRef = React.createRef();
   const getIDValue = {
     MovieType: (r) => JSON.stringify({ id: r?.id }),
+  };
+  const getCountryIDValue = {
+    CountryCode: (r) => JSON.stringify({ id: r?.id }),
   };
   const MovieTypeIdSet = new Set(
     Array.isArray(MovieType)
       ? MovieType.map((r) => getIDValue.MovieType?.(r))
       : getIDValue.MovieType?.(MovieType)
   );
+  const CountryCodeIdSet = new Set(
+    Array.isArray(CountryCode)
+      ? CountryCode.map((r) => getCountryIDValue.CountryCode?.(r))
+      : getCountryIDValue.CountryCode?.(CountryCode)
+  );
   const getDisplayValue = {
     MovieType: (r) => `${r?.type}`,
   };
+  const getCountryDisplayValue = {
+    CountryCode: (r) => `${r?.Country}`,
+  };
   const validations = {
-    name: [],
+    name: [{ type: "Required" }],
     name_eng: [{ type: "Required" }],
     genre: [{ type: "Required" }],
     description: [{ type: "Required" }],
@@ -314,6 +340,7 @@ export default function UploadMovie(props) {
         await API.graphql({
           query: listMovieTypes.replaceAll("__typename", ""),
           variables,
+          authMode: 'AWS_IAM',
         })
       )?.data?.listMovieTypes?.items;
       var loaded = result.filter(
@@ -325,8 +352,38 @@ export default function UploadMovie(props) {
     setMovieTypeRecords(newOptions.slice(0, autocompleteLength));
     setMovieTypeLoading(false);
   };
+  const fetchCountryCodeRecords = async (value) => {
+    setCountryCodeLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: { or: [{ Country: { contains: value } }, { Code: { contains: value } }] },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await API.graphql({
+          query: listCountryCodes.replaceAll("__typename", ""),
+          variables,
+          authMode: 'AWS_IAM',
+        })
+      )?.data?.listCountryCodes?.items;
+      var loaded = result.filter(
+        (item) => !CountryCodeIdSet.has(getCountryIDValue.CountryCode?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setCountryCodeRecords(newOptions.slice(0, autocompleteLength));
+    setCountryCodeLoading(false);
+  };
+
   React.useEffect(() => {
     fetchMovieTypeRecords("");
+    fetchCountryCodeRecords("");
   }, []);
   return (
     <Grid
@@ -400,20 +457,24 @@ export default function UploadMovie(props) {
             created_year: modelFields.created_year,
             movieMovieTypeId: modelFields?.MovieType?.id,
           };
-          await API.graphql({
-            query: createMovie.replaceAll("__typename", ""),
-            variables: {
-              input: {
-                ...modelFieldsToSave,
+          const movie = (
+            await API.graphql({
+              query: createMovie.replaceAll("__typename", ""),
+              variables: {
+                input: {
+                  ...modelFieldsToSave,
+                },
               },
-            },
-          });
+              authMode: 'AWS_IAM',
+            })
+          )?.data?.createMovie;
           if (onSuccess) {
             onSuccess(modelFields);
           }
           if (clearOnSuccess) {
             resetStateValues();
           }
+          props.changeState('team', movie);
         } catch (err) {
           if (onError) {
             const messages = err.errors.map((e) => e.message).join("\n");
@@ -426,7 +487,7 @@ export default function UploadMovie(props) {
     >
       <TextField
         label="Name"
-        isRequired={false}
+        isRequired={true}
         isReadOnly={false}
         value={name}
         onChange={(e) => {
@@ -460,7 +521,7 @@ export default function UploadMovie(props) {
         {...getOverrideProps(overrides, "name")}
       ></TextField>
       <TextField
-        label="Name eng"
+        label="Name in English"
         isRequired={true}
         isReadOnly={false}
         value={name_eng}
@@ -564,7 +625,7 @@ export default function UploadMovie(props) {
         {...getOverrideProps(overrides, "description")}
       ></TextAreaField>
       <TextAreaField
-        label="Description eng"
+        label="Description in English"
         isRequired={true}
         isReadOnly={false}
         onChange={(e) => {
@@ -640,38 +701,43 @@ export default function UploadMovie(props) {
         label="Screen language"
         isRequired={true}
         isReadOnly={false}
-        options={[]}
+        value={currentScreenLanguageDisplayValue}
+        options={countryCodeRecords
+          .filter((r) => !CountryCodeIdSet.has(getCountryIDValue.CountryCode?.(r)))
+          .map((r) => ({
+            id: getCountryIDValue.CountryCode?.(r),
+            label: getCountryDisplayValue.CountryCode?.(r),
+        }))}
         onSelect={({ id, label }) => {
-          setScreen_language(id);
+          const object = (countryCodeRecords.find((r) =>
+            Object.entries(JSON.parse(id)).every(
+              ([key, value]) => r[key] === value
+            )
+          ))
+          setCurrentScreenLanguageValue(
+            countryCodeRecords.find((r) =>
+              Object.entries(JSON.parse(id)).every(
+                ([key, value]) => r[key] === value
+              )
+            )
+          );
+          setScreen_language(object.Code);
+          setCurrentScreenLanguageDisplayValue(object.Code);
           runValidationTasks("screen_language", id);
         }}
         onClear={() => {
+          setCurrentScreenLanguageDisplayValue("");
           setScreen_language("");
         }}
         onChange={(e) => {
           let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              name_eng,
-              genre,
-              description,
-              description_eng,
-              age_rating,
-              screen_language: value,
-              captions_language,
-              origin_country,
-              length,
-              created_year,
-              MovieType,
-            };
-            const result = onChange(modelFields);
-            value = result?.screen_language ?? value;
+          fetchCountryCodeRecords(value);
+          if (errors.CountryCode?.hasError) {
+            runValidationTasks("captions_language", value);
           }
-          if (errors.screen_language?.hasError) {
-            runValidationTasks("screen_language", value);
-          }
-          setScreen_language(value);
+          setCurrentScreenLanguageDisplayValue(value);
+          setCurrentScreenLanguageValue(undefined);
+          setScreen_language(undefined);
         }}
         onBlur={() => runValidationTasks("screen_language", screen_language)}
         errorMessage={errors.screen_language?.errorMessage}
@@ -683,38 +749,43 @@ export default function UploadMovie(props) {
         label="Captions language"
         isRequired={true}
         isReadOnly={false}
-        options={[]}
+        value={currentCaptionsLanguageDisplayValue}
+        options={countryCodeRecords
+          .filter((r) => !CountryCodeIdSet.has(getCountryIDValue.CountryCode?.(r)))
+          .map((r) => ({
+            id: getCountryIDValue.CountryCode?.(r),
+            label: getCountryDisplayValue.CountryCode?.(r),
+          }))}
         onSelect={({ id, label }) => {
-          setCaptions_language(id);
+          const object = (countryCodeRecords.find((r) =>
+            Object.entries(JSON.parse(id)).every(
+              ([key, value]) => r[key] === value
+            )
+          ))
+          setCurrentCaptionsLanguageValue(
+            countryCodeRecords.find((r) =>
+              Object.entries(JSON.parse(id)).every(
+                ([key, value]) => r[key] === value
+              )
+            )
+          );
+          setCaptions_language(object.Code);
+          setCurrentCaptionsLanguageDisplayValue(object.Code);
           runValidationTasks("captions_language", id);
         }}
         onClear={() => {
+          setCurrentCaptionsLanguageDisplayValue("");
           setCaptions_language("");
         }}
         onChange={(e) => {
           let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              name_eng,
-              genre,
-              description,
-              description_eng,
-              age_rating,
-              screen_language,
-              captions_language: value,
-              origin_country,
-              length,
-              created_year,
-              MovieType,
-            };
-            const result = onChange(modelFields);
-            value = result?.captions_language ?? value;
-          }
-          if (errors.captions_language?.hasError) {
+          fetchCountryCodeRecords(value);
+          if (errors.CountryCode?.hasError) {
             runValidationTasks("captions_language", value);
           }
-          setCaptions_language(value);
+          setCurrentCaptionsLanguageDisplayValue(value);
+          setCurrentCaptionsLanguageValue(undefined);
+          setCaptions_language(undefined);
         }}
         onBlur={() =>
           runValidationTasks("captions_language", captions_language)
@@ -728,38 +799,43 @@ export default function UploadMovie(props) {
         label="Origin country"
         isRequired={true}
         isReadOnly={false}
-        options={[]}
+        value={currentOriginCountryDisplayValue}
+        options={countryCodeRecords
+          .filter((r) => !CountryCodeIdSet.has(getCountryIDValue.CountryCode?.(r)))
+          .map((r) => ({
+            id: getCountryIDValue.CountryCode?.(r),
+            label: getCountryDisplayValue.CountryCode?.(r),
+          }))}
         onSelect={({ id, label }) => {
-          setOrigin_country(id);
+          const object = (countryCodeRecords.find((r) =>
+          Object.entries(JSON.parse(id)).every(
+            ([key, value]) => r[key] === value
+          )
+        ))
+          setCurrentOriginCountryValue(
+            countryCodeRecords.find((r) =>
+              Object.entries(JSON.parse(id)).every(
+                ([key, value]) => r[key] === value
+              )
+            )
+          );
+          setOrigin_country(object.Code);
+          setCurrentOriginCountryDisplayValue(label);
           runValidationTasks("origin_country", id);
         }}
         onClear={() => {
+          setCurrentOriginCountryDisplayValue("");
           setOrigin_country("");
         }}
         onChange={(e) => {
           let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              name_eng,
-              genre,
-              description,
-              description_eng,
-              age_rating,
-              screen_language,
-              captions_language,
-              origin_country: value,
-              length,
-              created_year,
-              MovieType,
-            };
-            const result = onChange(modelFields);
-            value = result?.origin_country ?? value;
-          }
-          if (errors.origin_country?.hasError) {
+          fetchCountryCodeRecords(value);
+          if (errors.CountryCode?.hasError) {
             runValidationTasks("origin_country", value);
           }
-          setOrigin_country(value);
+          setCurrentOriginCountryDisplayValue(value);
+          setCurrentOriginCountryValue(undefined);
+          setOrigin_country(undefined);
         }}
         onBlur={() => runValidationTasks("origin_country", origin_country)}
         errorMessage={errors.origin_country?.errorMessage}
@@ -768,7 +844,7 @@ export default function UploadMovie(props) {
         {...getOverrideProps(overrides, "origin_country")}
       ></Autocomplete>
       <TextField
-        label="Length"
+        label="Length in minutes"
         isRequired={true}
         isReadOnly={false}
         type="number"
@@ -951,7 +1027,15 @@ export default function UploadMovie(props) {
         <Flex
           gap="15px"
           {...getOverrideProps(overrides, "RightAlignCTASubFlex")}
-        ></Flex>
+        >
+           <Button
+            children="Submit"
+            type="submit"
+            variation="primary"
+            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            {...getOverrideProps(overrides, "SubmitButton")}
+          ></Button>
+        </Flex>
       </Flex>
     </Grid>
   );

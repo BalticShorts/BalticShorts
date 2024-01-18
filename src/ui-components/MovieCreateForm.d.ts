@@ -6,6 +6,7 @@
 
 import * as React from "react";
 import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { StorageManagerProps } from "@aws-amplify/ui-react-storage";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -32,11 +33,14 @@ export declare type MovieCreateFormInputValues = {
     captions_language?: string;
     origin_country?: string;
     length?: number;
-    created_year?: string;
+    created_year?: number;
     MovieTeam?: any;
     MovieInPlaylists?: any[];
-    times_watched?: number;
     MovieType?: any;
+    Field0?: string;
+    Field1?: string;
+    photo_location?: string;
+    age_rating?: number;
 };
 export declare type MovieCreateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -49,11 +53,14 @@ export declare type MovieCreateFormValidationValues = {
     captions_language?: ValidationFunction<string>;
     origin_country?: ValidationFunction<string>;
     length?: ValidationFunction<number>;
-    created_year?: ValidationFunction<string>;
+    created_year?: ValidationFunction<number>;
     MovieTeam?: ValidationFunction<any>;
     MovieInPlaylists?: ValidationFunction<any>;
-    times_watched?: ValidationFunction<number>;
     MovieType?: ValidationFunction<any>;
+    Field0?: ValidationFunction<string>;
+    Field1?: ValidationFunction<string>;
+    photo_location?: ValidationFunction<string>;
+    age_rating?: ValidationFunction<number>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MovieCreateFormOverridesProps = {
@@ -71,8 +78,11 @@ export declare type MovieCreateFormOverridesProps = {
     created_year?: PrimitiveOverrideProps<TextFieldProps>;
     MovieTeam?: PrimitiveOverrideProps<AutocompleteProps>;
     MovieInPlaylists?: PrimitiveOverrideProps<AutocompleteProps>;
-    times_watched?: PrimitiveOverrideProps<TextFieldProps>;
     MovieType?: PrimitiveOverrideProps<AutocompleteProps>;
+    Field0?: PrimitiveOverrideProps<StorageManagerProps>;
+    Field1?: PrimitiveOverrideProps<StorageManagerProps>;
+    photo_location?: PrimitiveOverrideProps<TextFieldProps>;
+    age_rating?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type MovieCreateFormProps = React.PropsWithChildren<{
     overrides?: MovieCreateFormOverridesProps | undefined | null;

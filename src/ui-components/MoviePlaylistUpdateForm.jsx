@@ -23,8 +23,10 @@ import {
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import {
   getMoviePlaylist,
+  getUserProfile,
   listMovieMoviePlaylists,
   listMovies,
+  listUserProfiles,
   movieMoviePlaylistsByMoviePlaylistId,
 } from "../graphql/queries";
 import { API } from "aws-amplify";
@@ -206,6 +208,8 @@ export default function MoviePlaylistUpdateForm(props) {
     Title: "",
     is_public: false,
     is_recommended: false,
+    photo_location: "",
+    userprofileID: undefined,
   };
   const [Creator, setCreator] = React.useState(initialValues.Creator);
   const [movies, setMovies] = React.useState(initialValues.movies);
@@ -216,11 +220,26 @@ export default function MoviePlaylistUpdateForm(props) {
   const [is_recommended, setIs_recommended] = React.useState(
     initialValues.is_recommended
   );
+  const [photo_location, setPhoto_location] = React.useState(
+    initialValues.photo_location
+  );
+  const [userprofileID, setUserprofileID] = React.useState(
+    initialValues.userprofileID
+  );
+  const [userprofileIDLoading, setUserprofileIDLoading] = React.useState(false);
+  const [userprofileIDRecords, setUserprofileIDRecords] = React.useState([]);
+  const [selectedUserprofileIDRecords, setSelectedUserprofileIDRecords] =
+    React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = moviePlaylistRecord
-      ? { ...initialValues, ...moviePlaylistRecord, movies: linkedMovies }
+      ? {
+          ...initialValues,
+          ...moviePlaylistRecord,
+          movies: linkedMovies,
+          userprofileID,
+        }
       : initialValues;
     setCreator(cleanValues.Creator);
     setMovies(cleanValues.movies ?? []);
@@ -229,6 +248,10 @@ export default function MoviePlaylistUpdateForm(props) {
     setTitle(cleanValues.Title);
     setIs_public(cleanValues.is_public);
     setIs_recommended(cleanValues.is_recommended);
+    setPhoto_location(cleanValues.photo_location);
+    setUserprofileID(cleanValues.userprofileID);
+    setCurrentUserprofileIDValue(undefined);
+    setCurrentUserprofileIDDisplayValue("");
     setErrors({});
   };
   const [moviePlaylistRecord, setMoviePlaylistRecord] = React.useState(
@@ -260,15 +283,37 @@ export default function MoviePlaylistUpdateForm(props) {
           ).data.movieMoviePlaylistsByMoviePlaylistId.items.map((t) => t.movie)
         : [];
       setLinkedMovies(linkedMovies);
+      const userprofileIDRecord = record ? record.userprofileID : undefined;
+      const userProfileRecord = userprofileIDRecord
+        ? (
+            await API.graphql({
+              query: getUserProfile.replaceAll("__typename", ""),
+              variables: { id: userprofileIDRecord },
+            })
+          )?.data?.getUserProfile
+        : undefined;
+      setUserprofileID(userprofileIDRecord);
+      setSelectedUserprofileIDRecords([userProfileRecord]);
       setMoviePlaylistRecord(record);
     };
     queryData();
   }, [idProp, moviePlaylistModelProp]);
-  React.useEffect(resetStateValues, [moviePlaylistRecord, linkedMovies]);
+  React.useEffect(resetStateValues, [
+    moviePlaylistRecord,
+    linkedMovies,
+    userprofileID,
+  ]);
   const [currentMoviesDisplayValue, setCurrentMoviesDisplayValue] =
     React.useState("");
   const [currentMoviesValue, setCurrentMoviesValue] = React.useState(undefined);
   const moviesRef = React.createRef();
+  const [
+    currentUserprofileIDDisplayValue,
+    setCurrentUserprofileIDDisplayValue,
+  ] = React.useState("");
+  const [currentUserprofileIDValue, setCurrentUserprofileIDValue] =
+    React.useState(undefined);
+  const userprofileIDRef = React.createRef();
   const getIDValue = {
     movies: (r) => JSON.stringify({ id: r?.id }),
   };
@@ -279,6 +324,7 @@ export default function MoviePlaylistUpdateForm(props) {
   );
   const getDisplayValue = {
     movies: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
+    userprofileID: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
   };
   const validations = {
     Creator: [{ type: "Required" }],
@@ -286,6 +332,8 @@ export default function MoviePlaylistUpdateForm(props) {
     Title: [{ type: "Required" }],
     is_public: [{ type: "Required" }],
     is_recommended: [],
+    photo_location: [],
+    userprofileID: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -333,8 +381,36 @@ export default function MoviePlaylistUpdateForm(props) {
     setMoviesRecords(newOptions.slice(0, autocompleteLength));
     setMoviesLoading(false);
   };
+  const fetchUserprofileIDRecords = async (value) => {
+    setUserprofileIDLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: {
+          or: [{ name: { contains: value } }, { id: { contains: value } }],
+        },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await API.graphql({
+          query: listUserProfiles.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listUserProfiles?.items;
+      var loaded = result.filter((item) => userprofileID !== item.id);
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setUserprofileIDRecords(newOptions.slice(0, autocompleteLength));
+    setUserprofileIDLoading(false);
+  };
   React.useEffect(() => {
     fetchMoviesRecords("");
+    fetchUserprofileIDRecords("");
   }, []);
   return (
     <Grid
@@ -350,6 +426,8 @@ export default function MoviePlaylistUpdateForm(props) {
           Title,
           is_public,
           is_recommended: is_recommended ?? null,
+          photo_location: photo_location ?? null,
+          userprofileID: userprofileID ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -477,6 +555,8 @@ export default function MoviePlaylistUpdateForm(props) {
             Title: modelFields.Title,
             is_public: modelFields.is_public,
             is_recommended: modelFields.is_recommended ?? null,
+            photo_location: modelFields.photo_location ?? null,
+            userprofileID: modelFields.userprofileID ?? null,
           };
           promises.push(
             API.graphql({
@@ -517,6 +597,8 @@ export default function MoviePlaylistUpdateForm(props) {
               Title,
               is_public,
               is_recommended,
+              photo_location,
+              userprofileID,
             };
             const result = onChange(modelFields);
             value = result?.Creator ?? value;
@@ -541,6 +623,8 @@ export default function MoviePlaylistUpdateForm(props) {
               Title,
               is_public,
               is_recommended,
+              photo_location,
+              userprofileID,
             };
             const result = onChange(modelFields);
             values = result?.movies ?? values;
@@ -623,6 +707,8 @@ export default function MoviePlaylistUpdateForm(props) {
               Title: value,
               is_public,
               is_recommended,
+              photo_location,
+              userprofileID,
             };
             const result = onChange(modelFields);
             value = result?.Title ?? value;
@@ -651,6 +737,8 @@ export default function MoviePlaylistUpdateForm(props) {
               Title,
               is_public: value,
               is_recommended,
+              photo_location,
+              userprofileID,
             };
             const result = onChange(modelFields);
             value = result?.is_public ?? value;
@@ -679,6 +767,8 @@ export default function MoviePlaylistUpdateForm(props) {
               Title,
               is_public,
               is_recommended: value,
+              photo_location,
+              userprofileID,
             };
             const result = onChange(modelFields);
             value = result?.is_recommended ?? value;
@@ -693,6 +783,136 @@ export default function MoviePlaylistUpdateForm(props) {
         hasError={errors.is_recommended?.hasError}
         {...getOverrideProps(overrides, "is_recommended")}
       ></SwitchField>
+      <TextField
+        label="Photo location"
+        isRequired={false}
+        isReadOnly={false}
+        value={photo_location}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              Creator,
+              movies,
+              Title,
+              is_public,
+              is_recommended,
+              photo_location: value,
+              userprofileID,
+            };
+            const result = onChange(modelFields);
+            value = result?.photo_location ?? value;
+          }
+          if (errors.photo_location?.hasError) {
+            runValidationTasks("photo_location", value);
+          }
+          setPhoto_location(value);
+        }}
+        onBlur={() => runValidationTasks("photo_location", photo_location)}
+        errorMessage={errors.photo_location?.errorMessage}
+        hasError={errors.photo_location?.hasError}
+        {...getOverrideProps(overrides, "photo_location")}
+      ></TextField>
+      <ArrayField
+        lengthLimit={1}
+        onChange={async (items) => {
+          let value = items[0];
+          if (onChange) {
+            const modelFields = {
+              Creator,
+              movies,
+              Title,
+              is_public,
+              is_recommended,
+              photo_location,
+              userprofileID: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.userprofileID ?? value;
+          }
+          setUserprofileID(value);
+          setCurrentUserprofileIDValue(undefined);
+        }}
+        currentFieldValue={currentUserprofileIDValue}
+        label={"Userprofile id"}
+        items={userprofileID ? [userprofileID] : []}
+        hasError={errors?.userprofileID?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("userprofileID", currentUserprofileIDValue)
+        }
+        errorMessage={errors?.userprofileID?.errorMessage}
+        getBadgeText={(value) =>
+          value
+            ? getDisplayValue.userprofileID(
+                userprofileIDRecords.find((r) => r.id === value) ??
+                  selectedUserprofileIDRecords.find((r) => r.id === value)
+              )
+            : ""
+        }
+        setFieldValue={(value) => {
+          setCurrentUserprofileIDDisplayValue(
+            value
+              ? getDisplayValue.userprofileID(
+                  userprofileIDRecords.find((r) => r.id === value) ??
+                    selectedUserprofileIDRecords.find((r) => r.id === value)
+                )
+              : ""
+          );
+          setCurrentUserprofileIDValue(value);
+          const selectedRecord = userprofileIDRecords.find(
+            (r) => r.id === value
+          );
+          if (selectedRecord) {
+            setSelectedUserprofileIDRecords([selectedRecord]);
+          }
+        }}
+        inputFieldRef={userprofileIDRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Userprofile id"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search UserProfile"
+          value={currentUserprofileIDDisplayValue}
+          options={userprofileIDRecords
+            .filter(
+              (r, i, arr) =>
+                arr.findIndex((member) => member?.id === r?.id) === i
+            )
+            .map((r) => ({
+              id: r?.id,
+              label: getDisplayValue.userprofileID?.(r),
+            }))}
+          isLoading={userprofileIDLoading}
+          onSelect={({ id, label }) => {
+            setCurrentUserprofileIDValue(id);
+            setCurrentUserprofileIDDisplayValue(label);
+            runValidationTasks("userprofileID", label);
+          }}
+          onClear={() => {
+            setCurrentUserprofileIDDisplayValue("");
+          }}
+          defaultValue={userprofileID}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchUserprofileIDRecords(value);
+            if (errors.userprofileID?.hasError) {
+              runValidationTasks("userprofileID", value);
+            }
+            setCurrentUserprofileIDDisplayValue(value);
+            setCurrentUserprofileIDValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks("userprofileID", currentUserprofileIDValue)
+          }
+          errorMessage={errors.userprofileID?.errorMessage}
+          hasError={errors.userprofileID?.hasError}
+          ref={userprofileIDRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "userprofileID")}
+        ></Autocomplete>
+      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

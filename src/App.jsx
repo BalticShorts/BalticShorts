@@ -12,6 +12,7 @@ import { API, Amplify, Auth } from "aws-amplify";
 import awsExports from './aws-exports';
 import Subscribe from "./pages/Subscribe";
 import { getPersonByEmail } from "./custom-queries/queries";
+import Upload from "./pages/Upload";
 
 Amplify.configure(awsExports);
 export const GlobalContext = React.createContext();
@@ -22,18 +23,25 @@ export default function App() {
   const [currentUser, setCurrentUser ] = useState({});
   
   const assessLoggedInState = async () => {
+    // try {
+    //   await Auth.signOut();
+    //   setLoggedIn(false);
+    // } catch (error) {
+    //   console.log("error on logging out: " + error);
+    // }
     Auth.currentAuthenticatedUser()
       .then(sess => {
         console.log('logged in');
         setLoggedIn(true);
         getUser(sess).then(user => {
-          setCurrentUser(user);
+          if(user != currentUser)
+            setCurrentUser(user);
         });
       })
       .catch(() => {
         console.log('not logged in')
         setLoggedIn(false);
-
+        Auth.signOut();
       })
     }
 
@@ -43,36 +51,46 @@ export default function App() {
       variables : {
           email: sess.attributes.email
       },
-      authMode: 'AWS_IAM'
-  });
-  return exists.data.listPeople.items[0];
+      authMode: "AWS_IAM",
+    });
+    return exists.data.listUserProfiles.items[0];
   }
 
   useEffect(() => {
     assessLoggedInState();
-  }, [])
+  }, [loggedIn]);
 
   return (
-    <GlobalContext.Provider value={{'auth':Auth, 'loggedIn':loggedIn, 'setLoggedIn':setLoggedIn, 'loggedInModal': loggedInModal, 'setLoggedInModal' : setLoggedInModal, 'currentUser': currentUser, 'setCurrentUser': setCurrentUser}}>
+    <GlobalContext.Provider
+      value={{
+        auth: Auth,
+        loggedIn: loggedIn,
+        setLoggedIn: setLoggedIn,
+        currentUser: currentUser,
+        setCurrentUser: setCurrentUser,
+        loggedInModal: loggedInModal,
+        setLoggedInModal: setLoggedInModal,
+      }}
+    >
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout/>}>
-          <Route index element={<Home />} />
-          <Route path="about" element={<About />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="about" element={<About />} />
 
-          {loggedIn ?
-          <>
-            <Route path="Movie/:id" element={<Movie />} />
-            <Route path="profile/:id/:mode?" element={<Profile />} />
-            <Route path="search/:query?" element={<Search />} />
-            <Route path="catalogue/:givenTab?" element={<Catalogue />} />
-          </>
-          : 
-          <>
-            <Route path="*" element={<Subscribe />} />
-          </>
-        }
-          
+            {loggedIn ? (
+              <>
+                <Route path="movie/:id" element={<Movie />} />
+                <Route path="profile/:id/:mode?" element={<Profile />} />
+                <Route path="search/:query?" element={<Search />} />
+                <Route path="catalogue/:givenTab?" element={<Catalogue />} />
+                <Route path="upload" element={<Upload />} />
+              </>
+            ) : (
+              <>
+                <Route path="*" element={<Subscribe />} />
+              </>
+            )}
           </Route>
         </Routes>
       </BrowserRouter>

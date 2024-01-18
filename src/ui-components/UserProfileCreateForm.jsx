@@ -22,11 +22,8 @@ import {
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { listMovies, listUserProfiles } from "../graphql/queries";
-import {
-  createMovieMoviePlaylist,
-  createMoviePlaylist,
-} from "../graphql/mutations";
+import { listMoviePlaylists } from "../graphql/queries";
+import { createUserProfile, updateMoviePlaylist } from "../graphql/mutations";
 function ArrayField({
   items = [],
   onChange,
@@ -182,7 +179,7 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function MoviePlaylistCreateForm(props) {
+export default function UserProfileCreateForm(props) {
   const {
     clearOnSuccess = true,
     onSuccess,
@@ -194,80 +191,78 @@ export default function MoviePlaylistCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    Creator: "",
-    movies: [],
-    Title: "",
-    is_public: false,
-    is_recommended: false,
+    name: "",
+    surname: "",
+    is_member: false,
+    member_untill: "",
+    is_admin: false,
+    email: "",
+    user_id: "",
     photo_location: "",
-    userprofileID: undefined,
+    MoviePlaylists: [],
   };
-  const [Creator, setCreator] = React.useState(initialValues.Creator);
-  const [movies, setMovies] = React.useState(initialValues.movies);
-  const [moviesLoading, setMoviesLoading] = React.useState(false);
-  const [moviesRecords, setMoviesRecords] = React.useState([]);
-  const [Title, setTitle] = React.useState(initialValues.Title);
-  const [is_public, setIs_public] = React.useState(initialValues.is_public);
-  const [is_recommended, setIs_recommended] = React.useState(
-    initialValues.is_recommended
+  const [name, setName] = React.useState(initialValues.name);
+  const [surname, setSurname] = React.useState(initialValues.surname);
+  const [is_member, setIs_member] = React.useState(initialValues.is_member);
+  const [member_untill, setMember_untill] = React.useState(
+    initialValues.member_untill
   );
+  const [is_admin, setIs_admin] = React.useState(initialValues.is_admin);
+  const [email, setEmail] = React.useState(initialValues.email);
+  const [user_id, setUser_id] = React.useState(initialValues.user_id);
   const [photo_location, setPhoto_location] = React.useState(
     initialValues.photo_location
   );
-  const [userprofileID, setUserprofileID] = React.useState(
-    initialValues.userprofileID
+  const [MoviePlaylists, setMoviePlaylists] = React.useState(
+    initialValues.MoviePlaylists
   );
-  const [userprofileIDLoading, setUserprofileIDLoading] = React.useState(false);
-  const [userprofileIDRecords, setUserprofileIDRecords] = React.useState([]);
-  const [selectedUserprofileIDRecords, setSelectedUserprofileIDRecords] =
-    React.useState([]);
+  const [MoviePlaylistsLoading, setMoviePlaylistsLoading] =
+    React.useState(false);
+  const [moviePlaylistsRecords, setMoviePlaylistsRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setCreator(initialValues.Creator);
-    setMovies(initialValues.movies);
-    setCurrentMoviesValue(undefined);
-    setCurrentMoviesDisplayValue("");
-    setTitle(initialValues.Title);
-    setIs_public(initialValues.is_public);
-    setIs_recommended(initialValues.is_recommended);
+    setName(initialValues.name);
+    setSurname(initialValues.surname);
+    setIs_member(initialValues.is_member);
+    setMember_untill(initialValues.member_untill);
+    setIs_admin(initialValues.is_admin);
+    setEmail(initialValues.email);
+    setUser_id(initialValues.user_id);
     setPhoto_location(initialValues.photo_location);
-    setUserprofileID(initialValues.userprofileID);
-    setCurrentUserprofileIDValue(undefined);
-    setCurrentUserprofileIDDisplayValue("");
+    setMoviePlaylists(initialValues.MoviePlaylists);
+    setCurrentMoviePlaylistsValue(undefined);
+    setCurrentMoviePlaylistsDisplayValue("");
     setErrors({});
   };
-  const [currentMoviesDisplayValue, setCurrentMoviesDisplayValue] =
-    React.useState("");
-  const [currentMoviesValue, setCurrentMoviesValue] = React.useState(undefined);
-  const moviesRef = React.createRef();
   const [
-    currentUserprofileIDDisplayValue,
-    setCurrentUserprofileIDDisplayValue,
+    currentMoviePlaylistsDisplayValue,
+    setCurrentMoviePlaylistsDisplayValue,
   ] = React.useState("");
-  const [currentUserprofileIDValue, setCurrentUserprofileIDValue] =
+  const [currentMoviePlaylistsValue, setCurrentMoviePlaylistsValue] =
     React.useState(undefined);
-  const userprofileIDRef = React.createRef();
+  const MoviePlaylistsRef = React.createRef();
   const getIDValue = {
-    movies: (r) => JSON.stringify({ id: r?.id }),
+    MoviePlaylists: (r) => JSON.stringify({ id: r?.id }),
   };
-  const moviesIdSet = new Set(
-    Array.isArray(movies)
-      ? movies.map((r) => getIDValue.movies?.(r))
-      : getIDValue.movies?.(movies)
+  const MoviePlaylistsIdSet = new Set(
+    Array.isArray(MoviePlaylists)
+      ? MoviePlaylists.map((r) => getIDValue.MoviePlaylists?.(r))
+      : getIDValue.MoviePlaylists?.(MoviePlaylists)
   );
   const getDisplayValue = {
-    movies: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
-    userprofileID: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
+    MoviePlaylists: (r) => `${r?.Creator ? r?.Creator + " - " : ""}${r?.id}`,
   };
   const validations = {
-    Creator: [{ type: "Required" }],
-    movies: [],
-    Title: [{ type: "Required" }],
-    is_public: [{ type: "Required" }],
-    is_recommended: [],
+    name: [],
+    surname: [],
+    is_member: [],
+    member_untill: [],
+    is_admin: [],
+    email: [{ type: "Email" }],
+    user_id: [],
     photo_location: [],
-    userprofileID: [],
+    MoviePlaylists: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -286,15 +281,32 @@ export default function MoviePlaylistCreateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const fetchMoviesRecords = async (value) => {
-    setMoviesLoading(true);
+  const convertToLocal = (date) => {
+    const df = new Intl.DateTimeFormat("default", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      calendar: "iso8601",
+      numberingSystem: "latn",
+      hourCycle: "h23",
+    });
+    const parts = df.formatToParts(date).reduce((acc, part) => {
+      acc[part.type] = part.value;
+      return acc;
+    }, {});
+    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
+  };
+  const fetchMoviePlaylistsRecords = async (value) => {
+    setMoviePlaylistsLoading(true);
     const newOptions = [];
     let newNext = "";
     while (newOptions.length < autocompleteLength && newNext != null) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ name: { contains: value } }, { id: { contains: value } }],
+          or: [{ Creator: { contains: value } }, { id: { contains: value } }],
         },
       };
       if (newNext) {
@@ -302,49 +314,21 @@ export default function MoviePlaylistCreateForm(props) {
       }
       const result = (
         await API.graphql({
-          query: listMovies.replaceAll("__typename", ""),
+          query: listMoviePlaylists.replaceAll("__typename", ""),
           variables,
         })
-      )?.data?.listMovies?.items;
+      )?.data?.listMoviePlaylists?.items;
       var loaded = result.filter(
-        (item) => !moviesIdSet.has(getIDValue.movies?.(item))
+        (item) => !MoviePlaylistsIdSet.has(getIDValue.MoviePlaylists?.(item))
       );
       newOptions.push(...loaded);
       newNext = result.nextToken;
     }
-    setMoviesRecords(newOptions.slice(0, autocompleteLength));
-    setMoviesLoading(false);
-  };
-  const fetchUserprofileIDRecords = async (value) => {
-    setUserprofileIDLoading(true);
-    const newOptions = [];
-    let newNext = "";
-    while (newOptions.length < autocompleteLength && newNext != null) {
-      const variables = {
-        limit: autocompleteLength * 5,
-        filter: {
-          or: [{ name: { contains: value } }, { id: { contains: value } }],
-        },
-      };
-      if (newNext) {
-        variables["nextToken"] = newNext;
-      }
-      const result = (
-        await API.graphql({
-          query: listUserProfiles.replaceAll("__typename", ""),
-          variables,
-        })
-      )?.data?.listUserProfiles?.items;
-      var loaded = result.filter((item) => userprofileID !== item.id);
-      newOptions.push(...loaded);
-      newNext = result.nextToken;
-    }
-    setUserprofileIDRecords(newOptions.slice(0, autocompleteLength));
-    setUserprofileIDLoading(false);
+    setMoviePlaylistsRecords(newOptions.slice(0, autocompleteLength));
+    setMoviePlaylistsLoading(false);
   };
   React.useEffect(() => {
-    fetchMoviesRecords("");
-    fetchUserprofileIDRecords("");
+    fetchMoviePlaylistsRecords("");
   }, []);
   return (
     <Grid
@@ -355,13 +339,15 @@ export default function MoviePlaylistCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          Creator,
-          movies,
-          Title,
-          is_public,
-          is_recommended,
+          name,
+          surname,
+          is_member,
+          member_untill,
+          is_admin,
+          email,
+          user_id,
           photo_location,
-          userprofileID,
+          MoviePlaylists,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -400,33 +386,35 @@ export default function MoviePlaylistCreateForm(props) {
             }
           });
           const modelFieldsToSave = {
-            Creator: modelFields.Creator,
-            Title: modelFields.Title,
-            is_public: modelFields.is_public,
-            is_recommended: modelFields.is_recommended,
+            name: modelFields.name,
+            surname: modelFields.surname,
+            is_member: modelFields.is_member,
+            member_untill: modelFields.member_untill,
+            is_admin: modelFields.is_admin,
+            email: modelFields.email,
+            user_id: modelFields.user_id,
             photo_location: modelFields.photo_location,
-            userprofileID: modelFields.userprofileID,
           };
-          const moviePlaylist = (
+          const userProfile = (
             await API.graphql({
-              query: createMoviePlaylist.replaceAll("__typename", ""),
+              query: createUserProfile.replaceAll("__typename", ""),
               variables: {
                 input: {
                   ...modelFieldsToSave,
                 },
               },
             })
-          )?.data?.createMoviePlaylist;
+          )?.data?.createUserProfile;
           const promises = [];
           promises.push(
-            ...movies.reduce((promises, movie) => {
+            ...MoviePlaylists.reduce((promises, original) => {
               promises.push(
                 API.graphql({
-                  query: createMovieMoviePlaylist.replaceAll("__typename", ""),
+                  query: updateMoviePlaylist.replaceAll("__typename", ""),
                   variables: {
                     input: {
-                      moviePlaylistId: moviePlaylist.id,
-                      movieId: movie.id,
+                      id: original.id,
+                      userprofileID: userProfile.id,
                     },
                   },
                 })
@@ -448,209 +436,235 @@ export default function MoviePlaylistCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "MoviePlaylistCreateForm")}
+      {...getOverrideProps(overrides, "UserProfileCreateForm")}
       {...rest}
     >
       <TextField
-        label="Creator"
-        isRequired={true}
+        label="Name"
+        isRequired={false}
         isReadOnly={false}
-        value={Creator}
+        value={name}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Creator: value,
-              movies,
-              Title,
-              is_public,
-              is_recommended,
+              name: value,
+              surname,
+              is_member,
+              member_untill,
+              is_admin,
+              email,
+              user_id,
               photo_location,
-              userprofileID,
+              MoviePlaylists,
             };
             const result = onChange(modelFields);
-            value = result?.Creator ?? value;
+            value = result?.name ?? value;
           }
-          if (errors.Creator?.hasError) {
-            runValidationTasks("Creator", value);
+          if (errors.name?.hasError) {
+            runValidationTasks("name", value);
           }
-          setCreator(value);
+          setName(value);
         }}
-        onBlur={() => runValidationTasks("Creator", Creator)}
-        errorMessage={errors.Creator?.errorMessage}
-        hasError={errors.Creator?.hasError}
-        {...getOverrideProps(overrides, "Creator")}
+        onBlur={() => runValidationTasks("name", name)}
+        errorMessage={errors.name?.errorMessage}
+        hasError={errors.name?.hasError}
+        {...getOverrideProps(overrides, "name")}
       ></TextField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
-          if (onChange) {
-            const modelFields = {
-              Creator,
-              movies: values,
-              Title,
-              is_public,
-              is_recommended,
-              photo_location,
-              userprofileID,
-            };
-            const result = onChange(modelFields);
-            values = result?.movies ?? values;
-          }
-          setMovies(values);
-          setCurrentMoviesValue(undefined);
-          setCurrentMoviesDisplayValue("");
-        }}
-        currentFieldValue={currentMoviesValue}
-        label={"Movies"}
-        items={movies}
-        hasError={errors?.movies?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks("movies", currentMoviesValue)
-        }
-        errorMessage={errors?.movies?.errorMessage}
-        getBadgeText={getDisplayValue.movies}
-        setFieldValue={(model) => {
-          setCurrentMoviesDisplayValue(
-            model ? getDisplayValue.movies(model) : ""
-          );
-          setCurrentMoviesValue(model);
-        }}
-        inputFieldRef={moviesRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Movies"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search Movie"
-          value={currentMoviesDisplayValue}
-          options={moviesRecords.map((r) => ({
-            id: getIDValue.movies?.(r),
-            label: getDisplayValue.movies?.(r),
-          }))}
-          isLoading={moviesLoading}
-          onSelect={({ id, label }) => {
-            setCurrentMoviesValue(
-              moviesRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentMoviesDisplayValue(label);
-            runValidationTasks("movies", label);
-          }}
-          onClear={() => {
-            setCurrentMoviesDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchMoviesRecords(value);
-            if (errors.movies?.hasError) {
-              runValidationTasks("movies", value);
-            }
-            setCurrentMoviesDisplayValue(value);
-            setCurrentMoviesValue(undefined);
-          }}
-          onBlur={() => runValidationTasks("movies", currentMoviesDisplayValue)}
-          errorMessage={errors.movies?.errorMessage}
-          hasError={errors.movies?.hasError}
-          ref={moviesRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "movies")}
-        ></Autocomplete>
-      </ArrayField>
       <TextField
-        label="Title"
-        isRequired={true}
+        label="Surname"
+        isRequired={false}
         isReadOnly={false}
-        value={Title}
+        value={surname}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Creator,
-              movies,
-              Title: value,
-              is_public,
-              is_recommended,
+              name,
+              surname: value,
+              is_member,
+              member_untill,
+              is_admin,
+              email,
+              user_id,
               photo_location,
-              userprofileID,
+              MoviePlaylists,
             };
             const result = onChange(modelFields);
-            value = result?.Title ?? value;
+            value = result?.surname ?? value;
           }
-          if (errors.Title?.hasError) {
-            runValidationTasks("Title", value);
+          if (errors.surname?.hasError) {
+            runValidationTasks("surname", value);
           }
-          setTitle(value);
+          setSurname(value);
         }}
-        onBlur={() => runValidationTasks("Title", Title)}
-        errorMessage={errors.Title?.errorMessage}
-        hasError={errors.Title?.hasError}
-        {...getOverrideProps(overrides, "Title")}
+        onBlur={() => runValidationTasks("surname", surname)}
+        errorMessage={errors.surname?.errorMessage}
+        hasError={errors.surname?.hasError}
+        {...getOverrideProps(overrides, "surname")}
       ></TextField>
       <SwitchField
-        label="Is public"
+        label="Is member"
         defaultChecked={false}
         isDisabled={false}
-        isChecked={is_public}
+        isChecked={is_member}
         onChange={(e) => {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
-              Creator,
-              movies,
-              Title,
-              is_public: value,
-              is_recommended,
+              name,
+              surname,
+              is_member: value,
+              member_untill,
+              is_admin,
+              email,
+              user_id,
               photo_location,
-              userprofileID,
+              MoviePlaylists,
             };
             const result = onChange(modelFields);
-            value = result?.is_public ?? value;
+            value = result?.is_member ?? value;
           }
-          if (errors.is_public?.hasError) {
-            runValidationTasks("is_public", value);
+          if (errors.is_member?.hasError) {
+            runValidationTasks("is_member", value);
           }
-          setIs_public(value);
+          setIs_member(value);
         }}
-        onBlur={() => runValidationTasks("is_public", is_public)}
-        errorMessage={errors.is_public?.errorMessage}
-        hasError={errors.is_public?.hasError}
-        {...getOverrideProps(overrides, "is_public")}
+        onBlur={() => runValidationTasks("is_member", is_member)}
+        errorMessage={errors.is_member?.errorMessage}
+        hasError={errors.is_member?.hasError}
+        {...getOverrideProps(overrides, "is_member")}
       ></SwitchField>
+      <TextField
+        label="Member untill"
+        isRequired={false}
+        isReadOnly={false}
+        type="datetime-local"
+        value={member_untill && convertToLocal(new Date(member_untill))}
+        onChange={(e) => {
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              is_member,
+              member_untill: value,
+              is_admin,
+              email,
+              user_id,
+              photo_location,
+              MoviePlaylists,
+            };
+            const result = onChange(modelFields);
+            value = result?.member_untill ?? value;
+          }
+          if (errors.member_untill?.hasError) {
+            runValidationTasks("member_untill", value);
+          }
+          setMember_untill(value);
+        }}
+        onBlur={() => runValidationTasks("member_untill", member_untill)}
+        errorMessage={errors.member_untill?.errorMessage}
+        hasError={errors.member_untill?.hasError}
+        {...getOverrideProps(overrides, "member_untill")}
+      ></TextField>
       <SwitchField
-        label="Is recommended"
+        label="Is admin"
         defaultChecked={false}
         isDisabled={false}
-        isChecked={is_recommended}
+        isChecked={is_admin}
         onChange={(e) => {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
-              Creator,
-              movies,
-              Title,
-              is_public,
-              is_recommended: value,
+              name,
+              surname,
+              is_member,
+              member_untill,
+              is_admin: value,
+              email,
+              user_id,
               photo_location,
-              userprofileID,
+              MoviePlaylists,
             };
             const result = onChange(modelFields);
-            value = result?.is_recommended ?? value;
+            value = result?.is_admin ?? value;
           }
-          if (errors.is_recommended?.hasError) {
-            runValidationTasks("is_recommended", value);
+          if (errors.is_admin?.hasError) {
+            runValidationTasks("is_admin", value);
           }
-          setIs_recommended(value);
+          setIs_admin(value);
         }}
-        onBlur={() => runValidationTasks("is_recommended", is_recommended)}
-        errorMessage={errors.is_recommended?.errorMessage}
-        hasError={errors.is_recommended?.hasError}
-        {...getOverrideProps(overrides, "is_recommended")}
+        onBlur={() => runValidationTasks("is_admin", is_admin)}
+        errorMessage={errors.is_admin?.errorMessage}
+        hasError={errors.is_admin?.hasError}
+        {...getOverrideProps(overrides, "is_admin")}
       ></SwitchField>
+      <TextField
+        label="Email"
+        isRequired={false}
+        isReadOnly={false}
+        value={email}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              is_member,
+              member_untill,
+              is_admin,
+              email: value,
+              user_id,
+              photo_location,
+              MoviePlaylists,
+            };
+            const result = onChange(modelFields);
+            value = result?.email ?? value;
+          }
+          if (errors.email?.hasError) {
+            runValidationTasks("email", value);
+          }
+          setEmail(value);
+        }}
+        onBlur={() => runValidationTasks("email", email)}
+        errorMessage={errors.email?.errorMessage}
+        hasError={errors.email?.hasError}
+        {...getOverrideProps(overrides, "email")}
+      ></TextField>
+      <TextField
+        label="User id"
+        isRequired={false}
+        isReadOnly={false}
+        value={user_id}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              is_member,
+              member_untill,
+              is_admin,
+              email,
+              user_id: value,
+              photo_location,
+              MoviePlaylists,
+            };
+            const result = onChange(modelFields);
+            value = result?.user_id ?? value;
+          }
+          if (errors.user_id?.hasError) {
+            runValidationTasks("user_id", value);
+          }
+          setUser_id(value);
+        }}
+        onBlur={() => runValidationTasks("user_id", user_id)}
+        errorMessage={errors.user_id?.errorMessage}
+        hasError={errors.user_id?.hasError}
+        {...getOverrideProps(overrides, "user_id")}
+      ></TextField>
       <TextField
         label="Photo location"
         isRequired={false}
@@ -660,13 +674,15 @@ export default function MoviePlaylistCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Creator,
-              movies,
-              Title,
-              is_public,
-              is_recommended,
+              name,
+              surname,
+              is_member,
+              member_untill,
+              is_admin,
+              email,
+              user_id,
               photo_location: value,
-              userprofileID,
+              MoviePlaylists,
             };
             const result = onChange(modelFields);
             value = result?.photo_location ?? value;
@@ -682,102 +698,94 @@ export default function MoviePlaylistCreateForm(props) {
         {...getOverrideProps(overrides, "photo_location")}
       ></TextField>
       <ArrayField
-        lengthLimit={1}
         onChange={async (items) => {
-          let value = items[0];
+          let values = items;
           if (onChange) {
             const modelFields = {
-              Creator,
-              movies,
-              Title,
-              is_public,
-              is_recommended,
+              name,
+              surname,
+              is_member,
+              member_untill,
+              is_admin,
+              email,
+              user_id,
               photo_location,
-              userprofileID: value,
+              MoviePlaylists: values,
             };
             const result = onChange(modelFields);
-            value = result?.userprofileID ?? value;
+            values = result?.MoviePlaylists ?? values;
           }
-          setUserprofileID(value);
-          setCurrentUserprofileIDValue(undefined);
+          setMoviePlaylists(values);
+          setCurrentMoviePlaylistsValue(undefined);
+          setCurrentMoviePlaylistsDisplayValue("");
         }}
-        currentFieldValue={currentUserprofileIDValue}
-        label={"Userprofile id"}
-        items={userprofileID ? [userprofileID] : []}
-        hasError={errors?.userprofileID?.hasError}
+        currentFieldValue={currentMoviePlaylistsValue}
+        label={"Movie playlists"}
+        items={MoviePlaylists}
+        hasError={errors?.MoviePlaylists?.hasError}
         runValidationTasks={async () =>
-          await runValidationTasks("userprofileID", currentUserprofileIDValue)
+          await runValidationTasks("MoviePlaylists", currentMoviePlaylistsValue)
         }
-        errorMessage={errors?.userprofileID?.errorMessage}
-        getBadgeText={(value) =>
-          value
-            ? getDisplayValue.userprofileID(
-                userprofileIDRecords.find((r) => r.id === value) ??
-                  selectedUserprofileIDRecords.find((r) => r.id === value)
-              )
-            : ""
-        }
-        setFieldValue={(value) => {
-          setCurrentUserprofileIDDisplayValue(
-            value
-              ? getDisplayValue.userprofileID(
-                  userprofileIDRecords.find((r) => r.id === value) ??
-                    selectedUserprofileIDRecords.find((r) => r.id === value)
-                )
-              : ""
+        errorMessage={errors?.MoviePlaylists?.errorMessage}
+        getBadgeText={getDisplayValue.MoviePlaylists}
+        setFieldValue={(model) => {
+          setCurrentMoviePlaylistsDisplayValue(
+            model ? getDisplayValue.MoviePlaylists(model) : ""
           );
-          setCurrentUserprofileIDValue(value);
-          const selectedRecord = userprofileIDRecords.find(
-            (r) => r.id === value
-          );
-          if (selectedRecord) {
-            setSelectedUserprofileIDRecords([selectedRecord]);
-          }
+          setCurrentMoviePlaylistsValue(model);
         }}
-        inputFieldRef={userprofileIDRef}
+        inputFieldRef={MoviePlaylistsRef}
         defaultFieldValue={""}
       >
         <Autocomplete
-          label="Userprofile id"
+          label="Movie playlists"
           isRequired={false}
           isReadOnly={false}
-          placeholder="Search UserProfile"
-          value={currentUserprofileIDDisplayValue}
-          options={userprofileIDRecords
+          placeholder="Search MoviePlaylist"
+          value={currentMoviePlaylistsDisplayValue}
+          options={moviePlaylistsRecords
             .filter(
-              (r, i, arr) =>
-                arr.findIndex((member) => member?.id === r?.id) === i
+              (r) => !MoviePlaylistsIdSet.has(getIDValue.MoviePlaylists?.(r))
             )
             .map((r) => ({
-              id: r?.id,
-              label: getDisplayValue.userprofileID?.(r),
+              id: getIDValue.MoviePlaylists?.(r),
+              label: getDisplayValue.MoviePlaylists?.(r),
             }))}
-          isLoading={userprofileIDLoading}
+          isLoading={MoviePlaylistsLoading}
           onSelect={({ id, label }) => {
-            setCurrentUserprofileIDValue(id);
-            setCurrentUserprofileIDDisplayValue(label);
-            runValidationTasks("userprofileID", label);
+            setCurrentMoviePlaylistsValue(
+              moviePlaylistsRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentMoviePlaylistsDisplayValue(label);
+            runValidationTasks("MoviePlaylists", label);
           }}
           onClear={() => {
-            setCurrentUserprofileIDDisplayValue("");
+            setCurrentMoviePlaylistsDisplayValue("");
           }}
           onChange={(e) => {
             let { value } = e.target;
-            fetchUserprofileIDRecords(value);
-            if (errors.userprofileID?.hasError) {
-              runValidationTasks("userprofileID", value);
+            fetchMoviePlaylistsRecords(value);
+            if (errors.MoviePlaylists?.hasError) {
+              runValidationTasks("MoviePlaylists", value);
             }
-            setCurrentUserprofileIDDisplayValue(value);
-            setCurrentUserprofileIDValue(undefined);
+            setCurrentMoviePlaylistsDisplayValue(value);
+            setCurrentMoviePlaylistsValue(undefined);
           }}
           onBlur={() =>
-            runValidationTasks("userprofileID", currentUserprofileIDValue)
+            runValidationTasks(
+              "MoviePlaylists",
+              currentMoviePlaylistsDisplayValue
+            )
           }
-          errorMessage={errors.userprofileID?.errorMessage}
-          hasError={errors.userprofileID?.hasError}
-          ref={userprofileIDRef}
+          errorMessage={errors.MoviePlaylists?.errorMessage}
+          hasError={errors.MoviePlaylists?.hasError}
+          ref={MoviePlaylistsRef}
           labelHidden={true}
-          {...getOverrideProps(overrides, "userprofileID")}
+          {...getOverrideProps(overrides, "MoviePlaylists")}
         ></Autocomplete>
       </ArrayField>
       <Flex

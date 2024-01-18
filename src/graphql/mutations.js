@@ -1,6 +1,117 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const createUserProfile = /* GraphQL */ `
+  mutation CreateUserProfile(
+    $input: CreateUserProfileInput!
+    $condition: ModelUserProfileConditionInput
+  ) {
+    createUserProfile(input: $input, condition: $condition) {
+      id
+      name
+      surname
+      is_member
+      member_untill
+      is_admin
+      email
+      user_id
+      photo_location
+      MoviePlaylists {
+        items {
+          id
+          Creator
+          Title
+          is_public
+          is_recommended
+          photo_location
+          userprofileID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateUserProfile = /* GraphQL */ `
+  mutation UpdateUserProfile(
+    $input: UpdateUserProfileInput!
+    $condition: ModelUserProfileConditionInput
+  ) {
+    updateUserProfile(input: $input, condition: $condition) {
+      id
+      name
+      surname
+      is_member
+      member_untill
+      is_admin
+      email
+      user_id
+      photo_location
+      MoviePlaylists {
+        items {
+          id
+          Creator
+          Title
+          is_public
+          is_recommended
+          photo_location
+          userprofileID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteUserProfile = /* GraphQL */ `
+  mutation DeleteUserProfile(
+    $input: DeleteUserProfileInput!
+    $condition: ModelUserProfileConditionInput
+  ) {
+    deleteUserProfile(input: $input, condition: $condition) {
+      id
+      name
+      surname
+      is_member
+      member_untill
+      is_admin
+      email
+      user_id
+      photo_location
+      MoviePlaylists {
+        items {
+          id
+          Creator
+          Title
+          is_public
+          is_recommended
+          photo_location
+          userprofileID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createMovieType = /* GraphQL */ `
   mutation CreateMovieType(
     $input: CreateMovieTypeInput!
@@ -54,16 +165,7 @@ export const createPersonMovieTeam = /* GraphQL */ `
       personID
       MovieTeam {
         id
-        director
-        operator
-        scenario
-        editor
-        actors
-        costumes
-        makeup
-        executive_producer
-        producer
-        producer_org
+        MovieName
         PersonMovieTeams {
           nextToken
           __typename
@@ -72,7 +174,6 @@ export const createPersonMovieTeam = /* GraphQL */ `
           id
           name
           name_eng
-          type
           genre
           description
           description_eng
@@ -84,6 +185,8 @@ export const createPersonMovieTeam = /* GraphQL */ `
           uploaded_at
           guid
           times_watched
+          photo_location
+          age_rating
           createdAt
           updatedAt
           movieMovieTeamId
@@ -112,6 +215,9 @@ export const createPersonMovieTeam = /* GraphQL */ `
         user_id
         is_public
         completed_setup
+        photo_location
+        description_confirmed
+        photo_confirmed
         createdAt
         updatedAt
         __typename
@@ -146,16 +252,7 @@ export const updatePersonMovieTeam = /* GraphQL */ `
       personID
       MovieTeam {
         id
-        director
-        operator
-        scenario
-        editor
-        actors
-        costumes
-        makeup
-        executive_producer
-        producer
-        producer_org
+        MovieName
         PersonMovieTeams {
           nextToken
           __typename
@@ -164,7 +261,6 @@ export const updatePersonMovieTeam = /* GraphQL */ `
           id
           name
           name_eng
-          type
           genre
           description
           description_eng
@@ -176,6 +272,8 @@ export const updatePersonMovieTeam = /* GraphQL */ `
           uploaded_at
           guid
           times_watched
+          photo_location
+          age_rating
           createdAt
           updatedAt
           movieMovieTeamId
@@ -204,6 +302,9 @@ export const updatePersonMovieTeam = /* GraphQL */ `
         user_id
         is_public
         completed_setup
+        photo_location
+        description_confirmed
+        photo_confirmed
         createdAt
         updatedAt
         __typename
@@ -238,16 +339,7 @@ export const deletePersonMovieTeam = /* GraphQL */ `
       personID
       MovieTeam {
         id
-        director
-        operator
-        scenario
-        editor
-        actors
-        costumes
-        makeup
-        executive_producer
-        producer
-        producer_org
+        MovieName
         PersonMovieTeams {
           nextToken
           __typename
@@ -256,7 +348,6 @@ export const deletePersonMovieTeam = /* GraphQL */ `
           id
           name
           name_eng
-          type
           genre
           description
           description_eng
@@ -268,6 +359,8 @@ export const deletePersonMovieTeam = /* GraphQL */ `
           uploaded_at
           guid
           times_watched
+          photo_location
+          age_rating
           createdAt
           updatedAt
           movieMovieTeamId
@@ -296,6 +389,9 @@ export const deletePersonMovieTeam = /* GraphQL */ `
         user_id
         is_public
         completed_setup
+        photo_location
+        description_confirmed
+        photo_confirmed
         createdAt
         updatedAt
         __typename
@@ -434,6 +530,9 @@ export const createPerson = /* GraphQL */ `
       user_id
       is_public
       completed_setup
+      photo_location
+      description_confirmed
+      photo_confirmed
       createdAt
       updatedAt
       __typename
@@ -471,6 +570,9 @@ export const updatePerson = /* GraphQL */ `
       user_id
       is_public
       completed_setup
+      photo_location
+      description_confirmed
+      photo_confirmed
       createdAt
       updatedAt
       __typename
@@ -508,6 +610,9 @@ export const deletePerson = /* GraphQL */ `
       user_id
       is_public
       completed_setup
+      photo_location
+      description_confirmed
+      photo_confirmed
       createdAt
       updatedAt
       __typename
@@ -537,6 +642,8 @@ export const createMoviePlaylist = /* GraphQL */ `
       Title
       is_public
       is_recommended
+      photo_location
+      userprofileID
       createdAt
       updatedAt
       __typename
@@ -566,6 +673,8 @@ export const updateMoviePlaylist = /* GraphQL */ `
       Title
       is_public
       is_recommended
+      photo_location
+      userprofileID
       createdAt
       updatedAt
       __typename
@@ -595,6 +704,8 @@ export const deleteMoviePlaylist = /* GraphQL */ `
       Title
       is_public
       is_recommended
+      photo_location
+      userprofileID
       createdAt
       updatedAt
       __typename
@@ -608,16 +719,7 @@ export const createMovieTeam = /* GraphQL */ `
   ) {
     createMovieTeam(input: $input, condition: $condition) {
       id
-      director
-      operator
-      scenario
-      editor
-      actors
-      costumes
-      makeup
-      executive_producer
-      producer
-      producer_org
+      MovieName
       PersonMovieTeams {
         items {
           id
@@ -635,7 +737,6 @@ export const createMovieTeam = /* GraphQL */ `
         id
         name
         name_eng
-        type
         genre
         description
         description_eng
@@ -648,16 +749,7 @@ export const createMovieTeam = /* GraphQL */ `
         guid
         MovieTeam {
           id
-          director
-          operator
-          scenario
-          editor
-          actors
-          costumes
-          makeup
-          executive_producer
-          producer
-          producer_org
+          MovieName
           createdAt
           updatedAt
           movieTeamMovieId
@@ -675,6 +767,8 @@ export const createMovieTeam = /* GraphQL */ `
           updatedAt
           __typename
         }
+        photo_location
+        age_rating
         createdAt
         updatedAt
         movieMovieTeamId
@@ -695,16 +789,7 @@ export const updateMovieTeam = /* GraphQL */ `
   ) {
     updateMovieTeam(input: $input, condition: $condition) {
       id
-      director
-      operator
-      scenario
-      editor
-      actors
-      costumes
-      makeup
-      executive_producer
-      producer
-      producer_org
+      MovieName
       PersonMovieTeams {
         items {
           id
@@ -722,7 +807,6 @@ export const updateMovieTeam = /* GraphQL */ `
         id
         name
         name_eng
-        type
         genre
         description
         description_eng
@@ -735,16 +819,7 @@ export const updateMovieTeam = /* GraphQL */ `
         guid
         MovieTeam {
           id
-          director
-          operator
-          scenario
-          editor
-          actors
-          costumes
-          makeup
-          executive_producer
-          producer
-          producer_org
+          MovieName
           createdAt
           updatedAt
           movieTeamMovieId
@@ -762,6 +837,8 @@ export const updateMovieTeam = /* GraphQL */ `
           updatedAt
           __typename
         }
+        photo_location
+        age_rating
         createdAt
         updatedAt
         movieMovieTeamId
@@ -782,16 +859,7 @@ export const deleteMovieTeam = /* GraphQL */ `
   ) {
     deleteMovieTeam(input: $input, condition: $condition) {
       id
-      director
-      operator
-      scenario
-      editor
-      actors
-      costumes
-      makeup
-      executive_producer
-      producer
-      producer_org
+      MovieName
       PersonMovieTeams {
         items {
           id
@@ -809,7 +877,6 @@ export const deleteMovieTeam = /* GraphQL */ `
         id
         name
         name_eng
-        type
         genre
         description
         description_eng
@@ -822,16 +889,7 @@ export const deleteMovieTeam = /* GraphQL */ `
         guid
         MovieTeam {
           id
-          director
-          operator
-          scenario
-          editor
-          actors
-          costumes
-          makeup
-          executive_producer
-          producer
-          producer_org
+          MovieName
           createdAt
           updatedAt
           movieTeamMovieId
@@ -849,6 +907,8 @@ export const deleteMovieTeam = /* GraphQL */ `
           updatedAt
           __typename
         }
+        photo_location
+        age_rating
         createdAt
         updatedAt
         movieMovieTeamId
@@ -871,7 +931,6 @@ export const createMovie = /* GraphQL */ `
       id
       name
       name_eng
-      type
       genre
       description
       description_eng
@@ -884,16 +943,7 @@ export const createMovie = /* GraphQL */ `
       guid
       MovieTeam {
         id
-        director
-        operator
-        scenario
-        editor
-        actors
-        costumes
-        makeup
-        executive_producer
-        producer
-        producer_org
+        MovieName
         PersonMovieTeams {
           nextToken
           __typename
@@ -902,7 +952,6 @@ export const createMovie = /* GraphQL */ `
           id
           name
           name_eng
-          type
           genre
           description
           description_eng
@@ -914,6 +963,8 @@ export const createMovie = /* GraphQL */ `
           uploaded_at
           guid
           times_watched
+          photo_location
+          age_rating
           createdAt
           updatedAt
           movieMovieTeamId
@@ -945,6 +996,8 @@ export const createMovie = /* GraphQL */ `
         updatedAt
         __typename
       }
+      photo_location
+      age_rating
       createdAt
       updatedAt
       movieMovieTeamId
@@ -962,7 +1015,6 @@ export const updateMovie = /* GraphQL */ `
       id
       name
       name_eng
-      type
       genre
       description
       description_eng
@@ -975,16 +1027,7 @@ export const updateMovie = /* GraphQL */ `
       guid
       MovieTeam {
         id
-        director
-        operator
-        scenario
-        editor
-        actors
-        costumes
-        makeup
-        executive_producer
-        producer
-        producer_org
+        MovieName
         PersonMovieTeams {
           nextToken
           __typename
@@ -993,7 +1036,6 @@ export const updateMovie = /* GraphQL */ `
           id
           name
           name_eng
-          type
           genre
           description
           description_eng
@@ -1005,6 +1047,8 @@ export const updateMovie = /* GraphQL */ `
           uploaded_at
           guid
           times_watched
+          photo_location
+          age_rating
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1036,6 +1080,8 @@ export const updateMovie = /* GraphQL */ `
         updatedAt
         __typename
       }
+      photo_location
+      age_rating
       createdAt
       updatedAt
       movieMovieTeamId
@@ -1053,7 +1099,6 @@ export const deleteMovie = /* GraphQL */ `
       id
       name
       name_eng
-      type
       genre
       description
       description_eng
@@ -1066,16 +1111,7 @@ export const deleteMovie = /* GraphQL */ `
       guid
       MovieTeam {
         id
-        director
-        operator
-        scenario
-        editor
-        actors
-        costumes
-        makeup
-        executive_producer
-        producer
-        producer_org
+        MovieName
         PersonMovieTeams {
           nextToken
           __typename
@@ -1084,7 +1120,6 @@ export const deleteMovie = /* GraphQL */ `
           id
           name
           name_eng
-          type
           genre
           description
           description_eng
@@ -1096,6 +1131,8 @@ export const deleteMovie = /* GraphQL */ `
           uploaded_at
           guid
           times_watched
+          photo_location
+          age_rating
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1127,10 +1164,57 @@ export const deleteMovie = /* GraphQL */ `
         updatedAt
         __typename
       }
+      photo_location
+      age_rating
       createdAt
       updatedAt
       movieMovieTeamId
       movieMovieTypeId
+      __typename
+    }
+  }
+`;
+export const createCountryCode = /* GraphQL */ `
+  mutation CreateCountryCode(
+    $input: CreateCountryCodeInput!
+    $condition: ModelCountryCodeConditionInput
+  ) {
+    createCountryCode(input: $input, condition: $condition) {
+      id
+      Country
+      Code
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateCountryCode = /* GraphQL */ `
+  mutation UpdateCountryCode(
+    $input: UpdateCountryCodeInput!
+    $condition: ModelCountryCodeConditionInput
+  ) {
+    updateCountryCode(input: $input, condition: $condition) {
+      id
+      Country
+      Code
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteCountryCode = /* GraphQL */ `
+  mutation DeleteCountryCode(
+    $input: DeleteCountryCodeInput!
+    $condition: ModelCountryCodeConditionInput
+  ) {
+    deleteCountryCode(input: $input, condition: $condition) {
+      id
+      Country
+      Code
+      createdAt
+      updatedAt
       __typename
     }
   }
@@ -1154,6 +1238,8 @@ export const createMovieMoviePlaylist = /* GraphQL */ `
         Title
         is_public
         is_recommended
+        photo_location
+        userprofileID
         createdAt
         updatedAt
         __typename
@@ -1162,7 +1248,6 @@ export const createMovieMoviePlaylist = /* GraphQL */ `
         id
         name
         name_eng
-        type
         genre
         description
         description_eng
@@ -1175,16 +1260,7 @@ export const createMovieMoviePlaylist = /* GraphQL */ `
         guid
         MovieTeam {
           id
-          director
-          operator
-          scenario
-          editor
-          actors
-          costumes
-          makeup
-          executive_producer
-          producer
-          producer_org
+          MovieName
           createdAt
           updatedAt
           movieTeamMovieId
@@ -1202,6 +1278,8 @@ export const createMovieMoviePlaylist = /* GraphQL */ `
           updatedAt
           __typename
         }
+        photo_location
+        age_rating
         createdAt
         updatedAt
         movieMovieTeamId
@@ -1233,6 +1311,8 @@ export const updateMovieMoviePlaylist = /* GraphQL */ `
         Title
         is_public
         is_recommended
+        photo_location
+        userprofileID
         createdAt
         updatedAt
         __typename
@@ -1241,7 +1321,6 @@ export const updateMovieMoviePlaylist = /* GraphQL */ `
         id
         name
         name_eng
-        type
         genre
         description
         description_eng
@@ -1254,16 +1333,7 @@ export const updateMovieMoviePlaylist = /* GraphQL */ `
         guid
         MovieTeam {
           id
-          director
-          operator
-          scenario
-          editor
-          actors
-          costumes
-          makeup
-          executive_producer
-          producer
-          producer_org
+          MovieName
           createdAt
           updatedAt
           movieTeamMovieId
@@ -1281,6 +1351,8 @@ export const updateMovieMoviePlaylist = /* GraphQL */ `
           updatedAt
           __typename
         }
+        photo_location
+        age_rating
         createdAt
         updatedAt
         movieMovieTeamId
@@ -1312,6 +1384,8 @@ export const deleteMovieMoviePlaylist = /* GraphQL */ `
         Title
         is_public
         is_recommended
+        photo_location
+        userprofileID
         createdAt
         updatedAt
         __typename
@@ -1320,7 +1394,6 @@ export const deleteMovieMoviePlaylist = /* GraphQL */ `
         id
         name
         name_eng
-        type
         genre
         description
         description_eng
@@ -1333,16 +1406,7 @@ export const deleteMovieMoviePlaylist = /* GraphQL */ `
         guid
         MovieTeam {
           id
-          director
-          operator
-          scenario
-          editor
-          actors
-          costumes
-          makeup
-          executive_producer
-          producer
-          producer_org
+          MovieName
           createdAt
           updatedAt
           movieTeamMovieId
@@ -1360,6 +1424,8 @@ export const deleteMovieMoviePlaylist = /* GraphQL */ `
           updatedAt
           __typename
         }
+        photo_location
+        age_rating
         createdAt
         updatedAt
         movieMovieTeamId

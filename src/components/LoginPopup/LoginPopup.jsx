@@ -1,15 +1,15 @@
 import { useContext, useEffect, useState } from "react"
 import CloseIcon from '@mui/icons-material/Close';
 import { GlobalContext } from "../../App";
-import { createPerson } from "../../graphql/mutations";
+import { createUserProfile } from "../../graphql/mutations";
 import { API } from "aws-amplify";
 import { checkPersonExists } from "../../custom-queries/queries";
-import { getPerson } from "../../graphql/queries";
 
 
+export const LoginPopup = () => {
+    const context = useContext(GlobalContext)
 
-export const LoginPopup = ({showing, parentSetShowModal}) => {
-    const [showModal, setShowModal] = useState(showing);
+    const [showModal, setShowModal] = useState(context.loggedInModal);
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
@@ -24,16 +24,11 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
     const [forgetEmail, setForgetEmail] = useState('');
     const [restorePassword, setRestorePassword] = useState(false);
 
-    const context = useContext(GlobalContext)
     const Auth = context.auth
 
     useEffect(() => {
-        setShowModal(showing);
-    },[showing])
-
-    useEffect(() => {
-        parentSetShowModal(showModal);
-    }, [showModal])
+        setShowModal(context.loggedInModal);
+    }, [context.loggedInModal])
     
     const logIn = async () => {
         try {
@@ -51,16 +46,16 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
             if(name === "" || surname === ""){
                 throw new Error("Vārds un uzvārds nevar būt tukši!")
             }
-          const user = await Auth.signUp({
-            username: email,
-            password: password,
+            await Auth.signUp({
+                username: email,
+                password: password,
 
-            attributes: {
-                given_name : name,
-                family_name: surname
-            },
-            autoSignIn: true
-          });
+                attributes: {
+                    given_name : name,
+                    family_name: surname
+                },
+                autoSignIn: true
+            });
 
           setConfirmationStage(true);
 
@@ -71,7 +66,7 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
     }
 
     async function handleCodeConfirmatation(){
-        console.log(confirmationCode)
+        // console.log(confirmationCode)
         try {
             const username = email;
             const code = confirmationCode;
@@ -79,8 +74,8 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
             setShowModal(false);
             setError({});
             setConfirmationStage(false);
+            await logIn();
             createProfile();
-            logIn();
         } catch (error) {
             
         }
@@ -129,7 +124,7 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
             const surname = Auth.user.attributes.family_name;
             const email = Auth.user.attributes.email;
             const id = Auth.user.username;
-            console.log(id)
+            // console.log(id)
             // need to add a new field for login username or id !!!
             const exists = await API.graphql({
                 query: checkPersonExists,
@@ -138,24 +133,23 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
                 },
                 authMode: 'AWS_IAM'
             });
-
-            if(exists.data.listPeople.items.length === 0){
-                const createdPerson = await API.graphql({
-                    query : createPerson,
+            if(exists.data.listUserProfiles.items.length === 0){
+                await API.graphql({
+                    query : createUserProfile,
                     variables : {
                     input : {
                         name: name,
                         surname: surname,
                         email: email,
                         user_id: id,
-                        is_public: false,
-                        completed_setup: false
+                        is_member: false,
+                        is_admin: false,
                     }},
                     authMode: 'AWS_IAM'
                 });
             }
         } catch (error) {
-
+            console.log("error creating profile", error)
         }
     }
 
@@ -188,7 +182,7 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
     return(
         <>
             {showModal && (
-            <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md bg-opacity-50">
+            <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md bg-opacity-50 z-10 overscroll-auto">
                 <div className="w-[470px] h-[500px] px-5 pt-5 bg-beige border border-black flex-col justify-start inline-flex">
                     <div className="w-full h-fit relative flex items-left justify-between mb-5">
                         <img src={require("./static/BS_small_logo.png")} alt="logo" />
@@ -235,6 +229,7 @@ export const LoginPopup = ({showing, parentSetShowModal}) => {
                         {confirmationStage ? (
                         <div className="pb-2 self-stretch flex-col justify-start items-center inline-flex">
                             <div className="w-full justify-center items-center flex flex-col text-lg mb-1 text-red-700">{error.message}</div>
+                            <div className="w-full justify-center items-center flex flex-col text-lg mb-1 text-red-700"> Kods nosūtīts uz epastu!</div>
                             <div className="w-full justify-center items-center flex flex-col text-lg border border-black">
                                 <input id="code" type="text" placeholder="Code" className="bg-beige text-center border-none outline-none" onChange={e => setConfirmationCode(e.target.value)} ></input>
                             </div>
