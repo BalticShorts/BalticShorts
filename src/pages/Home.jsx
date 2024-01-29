@@ -49,9 +49,6 @@ const Home = () => {
         });
         const movieList = movieData.data.listMovies;
         setMovies(movieList);
-        // console.log("movieList")
-        // console.log(movieList)
-        // const a = await fetchPhotos(movieList.items);
 
     }catch (error) {
       console.log('Error on fetchnig movies', error);

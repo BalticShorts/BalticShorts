@@ -186,6 +186,7 @@ export const createPersonMovieTeam = /* GraphQL */ `
           guid
           times_watched
           photo_location
+          thumbnail_location
           age_rating
           createdAt
           updatedAt
@@ -273,6 +274,7 @@ export const updatePersonMovieTeam = /* GraphQL */ `
           guid
           times_watched
           photo_location
+          thumbnail_location
           age_rating
           createdAt
           updatedAt
@@ -360,6 +362,7 @@ export const deletePersonMovieTeam = /* GraphQL */ `
           guid
           times_watched
           photo_location
+          thumbnail_location
           age_rating
           createdAt
           updatedAt
@@ -768,6 +771,7 @@ export const createMovieTeam = /* GraphQL */ `
           __typename
         }
         photo_location
+        thumbnail_location
         age_rating
         createdAt
         updatedAt
@@ -838,6 +842,7 @@ export const updateMovieTeam = /* GraphQL */ `
           __typename
         }
         photo_location
+        thumbnail_location
         age_rating
         createdAt
         updatedAt
@@ -908,6 +913,7 @@ export const deleteMovieTeam = /* GraphQL */ `
           __typename
         }
         photo_location
+        thumbnail_location
         age_rating
         createdAt
         updatedAt
@@ -964,6 +970,7 @@ export const createMovie = /* GraphQL */ `
           guid
           times_watched
           photo_location
+          thumbnail_location
           age_rating
           createdAt
           updatedAt
@@ -997,6 +1004,7 @@ export const createMovie = /* GraphQL */ `
         __typename
       }
       photo_location
+      thumbnail_location
       age_rating
       createdAt
       updatedAt
@@ -1048,6 +1056,7 @@ export const updateMovie = /* GraphQL */ `
           guid
           times_watched
           photo_location
+          thumbnail_location
           age_rating
           createdAt
           updatedAt
@@ -1081,6 +1090,7 @@ export const updateMovie = /* GraphQL */ `
         __typename
       }
       photo_location
+      thumbnail_location
       age_rating
       createdAt
       updatedAt
@@ -1132,6 +1142,7 @@ export const deleteMovie = /* GraphQL */ `
           guid
           times_watched
           photo_location
+          thumbnail_location
           age_rating
           createdAt
           updatedAt
@@ -1165,6 +1176,7 @@ export const deleteMovie = /* GraphQL */ `
         __typename
       }
       photo_location
+      thumbnail_location
       age_rating
       createdAt
       updatedAt
@@ -1279,6 +1291,7 @@ export const createMovieMoviePlaylist = /* GraphQL */ `
           __typename
         }
         photo_location
+        thumbnail_location
         age_rating
         createdAt
         updatedAt
@@ -1352,6 +1365,7 @@ export const updateMovieMoviePlaylist = /* GraphQL */ `
           __typename
         }
         photo_location
+        thumbnail_location
         age_rating
         createdAt
         updatedAt
@@ -1425,6 +1439,7 @@ export const deleteMovieMoviePlaylist = /* GraphQL */ `
           __typename
         }
         photo_location
+        thumbnail_location
         age_rating
         createdAt
         updatedAt

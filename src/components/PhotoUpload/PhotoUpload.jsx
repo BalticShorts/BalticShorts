@@ -31,7 +31,12 @@ const handleUpload = async () => {
     if(props.movie){
       props.movie.photo_location = location;
     }
-    props.photoLoc.push(location);
+    if(props.photo_type === 'thumbnail'){
+      const thumbLoc = location + "/" + uploadedFiles[0].name;
+      props.photoLoc.push(thumbLoc);
+    }else{
+      props.photoLoc.push(location);
+    }
     console.log("props.photoLoc")
     console.log(props.photoLoc)
   }else{
@@ -70,6 +75,7 @@ const handleUpload = async () => {
   }
     const { getRootProps, getInputProps } = useDropzone({
         accept: {'image/*': []},
+        maxFiles: props.photo_type === 'thumbnail' ? 1 : undefined,
     onDrop: (acceptedFiles) => {
         setUploadedFiles(acceptedFiles);
         // console.log(acceptedFiles);

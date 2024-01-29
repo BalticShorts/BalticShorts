@@ -223,6 +223,7 @@ export default function MovieCreateForm(props) {
     Field0: undefined,
     Field1: undefined,
     photo_location: "",
+    thumbnail_location: "",
     age_rating: "",
   };
   const [name, setName] = React.useState(initialValues.name);
@@ -267,6 +268,9 @@ export default function MovieCreateForm(props) {
   const [photo_location, setPhoto_location] = React.useState(
     initialValues.photo_location
   );
+  const [thumbnail_location, setThumbnail_location] = React.useState(
+    initialValues.thumbnail_location
+  );
   const [age_rating, setAge_rating] = React.useState(initialValues.age_rating);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
@@ -294,6 +298,7 @@ export default function MovieCreateForm(props) {
     setField0(initialValues.Field0);
     setField1(initialValues.Field1);
     setPhoto_location(initialValues.photo_location);
+    setThumbnail_location(initialValues.thumbnail_location);
     setAge_rating(initialValues.age_rating);
     setErrors({});
   };
@@ -357,6 +362,7 @@ export default function MovieCreateForm(props) {
     Field0: [{ type: "Required" }],
     Field1: [{ type: "Required" }],
     photo_location: [],
+    thumbnail_location: [],
     age_rating: [],
   };
   const runValidationTasks = async (
@@ -494,6 +500,7 @@ export default function MovieCreateForm(props) {
           Field0,
           Field1,
           photo_location,
+          thumbnail_location,
           age_rating,
         };
         const validationResponses = await Promise.all(
@@ -546,6 +553,7 @@ export default function MovieCreateForm(props) {
             movieMovieTeamId: modelFields?.MovieTeam?.id,
             movieMovieTypeId: modelFields?.MovieType?.id,
             photo_location: modelFields.photo_location,
+            thumbnail_location: modelFields.thumbnail_location,
             age_rating: modelFields.age_rating,
           };
           const movie = (
@@ -646,6 +654,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -687,6 +696,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -727,6 +737,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -768,6 +779,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -809,6 +821,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -850,6 +863,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -891,6 +905,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -932,6 +947,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -975,6 +991,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1020,6 +1037,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1065,6 +1083,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1103,6 +1122,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1198,6 +1218,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1298,6 +1319,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1400,6 +1422,7 @@ export default function MovieCreateForm(props) {
                   Field0: value,
                   Field1,
                   photo_location,
+                  thumbnail_location,
                   age_rating,
                 };
                 const result = onChange(modelFields);
@@ -1430,6 +1453,7 @@ export default function MovieCreateForm(props) {
                   Field0: value,
                   Field1,
                   photo_location,
+                  thumbnail_location,
                   age_rating,
                 };
                 const result = onChange(modelFields);
@@ -1476,6 +1500,7 @@ export default function MovieCreateForm(props) {
                   Field0,
                   Field1: value,
                   photo_location,
+                  thumbnail_location,
                   age_rating,
                 };
                 const result = onChange(modelFields);
@@ -1506,6 +1531,7 @@ export default function MovieCreateForm(props) {
                   Field0,
                   Field1: value,
                   photo_location,
+                  thumbnail_location,
                   age_rating,
                 };
                 const result = onChange(modelFields);
@@ -1549,6 +1575,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location: value,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1563,6 +1590,50 @@ export default function MovieCreateForm(props) {
         errorMessage={errors.photo_location?.errorMessage}
         hasError={errors.photo_location?.hasError}
         {...getOverrideProps(overrides, "photo_location")}
+      ></TextField>
+      <TextField
+        label="Thumbnail location"
+        isRequired={false}
+        isReadOnly={false}
+        value={thumbnail_location}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              type,
+              genre,
+              description,
+              description_eng,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieTeam,
+              MovieInPlaylists,
+              MovieType,
+              Field0,
+              Field1,
+              photo_location,
+              thumbnail_location: value,
+              age_rating,
+            };
+            const result = onChange(modelFields);
+            value = result?.thumbnail_location ?? value;
+          }
+          if (errors.thumbnail_location?.hasError) {
+            runValidationTasks("thumbnail_location", value);
+          }
+          setThumbnail_location(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("thumbnail_location", thumbnail_location)
+        }
+        errorMessage={errors.thumbnail_location?.errorMessage}
+        hasError={errors.thumbnail_location?.hasError}
+        {...getOverrideProps(overrides, "thumbnail_location")}
       ></TextField>
       <TextField
         label="Age rating"
@@ -1594,6 +1665,7 @@ export default function MovieCreateForm(props) {
               Field0,
               Field1,
               photo_location,
+              thumbnail_location,
               age_rating: value,
             };
             const result = onChange(modelFields);

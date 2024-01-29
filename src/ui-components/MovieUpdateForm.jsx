@@ -220,6 +220,7 @@ export default function MovieUpdateForm(props) {
     times_watched: "",
     MovieType: undefined,
     photo_location: "",
+    thumbnail_location: "",
     age_rating: "",
   };
   const [name, setName] = React.useState(initialValues.name);
@@ -268,6 +269,9 @@ export default function MovieUpdateForm(props) {
   const [photo_location, setPhoto_location] = React.useState(
     initialValues.photo_location
   );
+  const [thumbnail_location, setThumbnail_location] = React.useState(
+    initialValues.thumbnail_location
+  );
   const [age_rating, setAge_rating] = React.useState(initialValues.age_rating);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
@@ -304,6 +308,7 @@ export default function MovieUpdateForm(props) {
     setCurrentMovieTypeValue(undefined);
     setCurrentMovieTypeDisplayValue("");
     setPhoto_location(cleanValues.photo_location);
+    setThumbnail_location(cleanValues.thumbnail_location);
     setAge_rating(cleanValues.age_rating);
     setErrors({});
   };
@@ -407,6 +412,7 @@ export default function MovieUpdateForm(props) {
     times_watched: [],
     MovieType: [],
     photo_location: [],
+    thumbnail_location: [],
     age_rating: [],
   };
   const runValidationTasks = async (
@@ -545,6 +551,7 @@ export default function MovieUpdateForm(props) {
           times_watched: times_watched ?? null,
           MovieType: MovieType ?? null,
           photo_location: photo_location ?? null,
+          thumbnail_location: thumbnail_location ?? null,
           age_rating: age_rating ?? null,
         };
         const validationResponses = await Promise.all(
@@ -734,6 +741,7 @@ export default function MovieUpdateForm(props) {
             times_watched: modelFields.times_watched ?? null,
             movieMovieTypeId: modelFields?.MovieType?.id ?? null,
             photo_location: modelFields.photo_location ?? null,
+            thumbnail_location: modelFields.thumbnail_location ?? null,
             age_rating: modelFields.age_rating ?? null,
           };
           promises.push(
@@ -787,6 +795,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -828,6 +837,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -869,6 +879,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -910,6 +921,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -951,6 +963,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -992,6 +1005,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1033,6 +1047,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1076,6 +1091,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1121,6 +1137,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1166,6 +1183,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1207,6 +1225,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1248,6 +1267,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1286,6 +1306,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1382,6 +1403,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1489,6 +1511,7 @@ export default function MovieUpdateForm(props) {
               times_watched: value,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1527,6 +1550,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType: value,
               photo_location,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1627,6 +1651,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location: value,
+              thumbnail_location,
               age_rating,
             };
             const result = onChange(modelFields);
@@ -1641,6 +1666,50 @@ export default function MovieUpdateForm(props) {
         errorMessage={errors.photo_location?.errorMessage}
         hasError={errors.photo_location?.hasError}
         {...getOverrideProps(overrides, "photo_location")}
+      ></TextField>
+      <TextField
+        label="Thumbnail location"
+        isRequired={false}
+        isReadOnly={false}
+        value={thumbnail_location}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              uploaded_at,
+              guid,
+              MovieTeam,
+              MovieInPlaylists,
+              times_watched,
+              MovieType,
+              photo_location,
+              thumbnail_location: value,
+              age_rating,
+            };
+            const result = onChange(modelFields);
+            value = result?.thumbnail_location ?? value;
+          }
+          if (errors.thumbnail_location?.hasError) {
+            runValidationTasks("thumbnail_location", value);
+          }
+          setThumbnail_location(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("thumbnail_location", thumbnail_location)
+        }
+        errorMessage={errors.thumbnail_location?.errorMessage}
+        hasError={errors.thumbnail_location?.hasError}
+        {...getOverrideProps(overrides, "thumbnail_location")}
       ></TextField>
       <TextField
         label="Age rating"
@@ -1672,6 +1741,7 @@ export default function MovieUpdateForm(props) {
               times_watched,
               MovieType,
               photo_location,
+              thumbnail_location,
               age_rating: value,
             };
             const result = onChange(modelFields);

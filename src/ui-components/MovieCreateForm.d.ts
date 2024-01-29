@@ -40,6 +40,7 @@ export declare type MovieCreateFormInputValues = {
     Field0?: string;
     Field1?: string;
     photo_location?: string;
+    thumbnail_location?: string;
     age_rating?: number;
 };
 export declare type MovieCreateFormValidationValues = {
@@ -60,6 +61,7 @@ export declare type MovieCreateFormValidationValues = {
     Field0?: ValidationFunction<string>;
     Field1?: ValidationFunction<string>;
     photo_location?: ValidationFunction<string>;
+    thumbnail_location?: ValidationFunction<string>;
     age_rating?: ValidationFunction<number>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
@@ -82,6 +84,7 @@ export declare type MovieCreateFormOverridesProps = {
     Field0?: PrimitiveOverrideProps<StorageManagerProps>;
     Field1?: PrimitiveOverrideProps<StorageManagerProps>;
     photo_location?: PrimitiveOverrideProps<TextFieldProps>;
+    thumbnail_location?: PrimitiveOverrideProps<TextFieldProps>;
     age_rating?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type MovieCreateFormProps = React.PropsWithChildren<{

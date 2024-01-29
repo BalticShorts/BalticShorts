@@ -113,6 +113,7 @@ type Movie @model @auth(rules: [
   times_watched: Int
   MovieType: MovieType @hasOne
   photo_location: String
+  thumbnail_location: String
   age_rating: Int
 }
 

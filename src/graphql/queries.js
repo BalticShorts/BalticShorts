@@ -124,6 +124,7 @@ export const getPersonMovieTeam = /* GraphQL */ `
           guid
           times_watched
           photo_location
+          thumbnail_location
           age_rating
           createdAt
           updatedAt
@@ -702,6 +703,7 @@ export const getMovieTeam = /* GraphQL */ `
           __typename
         }
         photo_location
+        thumbnail_location
         age_rating
         createdAt
         updatedAt
@@ -746,6 +748,7 @@ export const listMovieTeams = /* GraphQL */ `
           guid
           times_watched
           photo_location
+          thumbnail_location
           age_rating
           createdAt
           updatedAt
@@ -802,6 +805,7 @@ export const getMovie = /* GraphQL */ `
           guid
           times_watched
           photo_location
+          thumbnail_location
           age_rating
           createdAt
           updatedAt
@@ -835,6 +839,7 @@ export const getMovie = /* GraphQL */ `
         __typename
       }
       photo_location
+      thumbnail_location
       age_rating
       createdAt
       updatedAt
@@ -886,6 +891,7 @@ export const listMovies = /* GraphQL */ `
           __typename
         }
         photo_location
+        thumbnail_location
         age_rating
         createdAt
         updatedAt
@@ -987,6 +993,7 @@ export const getMovieMoviePlaylist = /* GraphQL */ `
           __typename
         }
         photo_location
+        thumbnail_location
         age_rating
         createdAt
         updatedAt
@@ -1043,6 +1050,7 @@ export const listMovieMoviePlaylists = /* GraphQL */ `
           guid
           times_watched
           photo_location
+          thumbnail_location
           age_rating
           createdAt
           updatedAt
@@ -1106,6 +1114,7 @@ export const movieMoviePlaylistsByMoviePlaylistId = /* GraphQL */ `
           guid
           times_watched
           photo_location
+          thumbnail_location
           age_rating
           createdAt
           updatedAt
@@ -1169,6 +1178,7 @@ export const movieMoviePlaylistsByMovieId = /* GraphQL */ `
           guid
           times_watched
           photo_location
+          thumbnail_location
           age_rating
           createdAt
           updatedAt

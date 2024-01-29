@@ -197,6 +197,7 @@ export default function UploadMovie(props) {
     description: "",
     description_eng: "",
     age_rating: "",
+    thumbnail_location: "",
     screen_language: undefined,
     captions_language: undefined,
     origin_country: undefined,
@@ -214,6 +215,9 @@ export default function UploadMovie(props) {
     initialValues.description_eng
   );
   const [age_rating, setAge_rating] = React.useState(initialValues.age_rating);
+  const [thumbnail_location, setThumbnail_location] = React.useState(
+    initialValues.thumbnail_location
+  );
   const [screen_language, setScreen_language] = React.useState(
     initialValues.screen_language
   );
@@ -239,6 +243,7 @@ export default function UploadMovie(props) {
     setDescription(initialValues.description);
     setDescription_eng(initialValues.description_eng);
     setAge_rating(initialValues.age_rating);
+    setThumbnail_location(initialValues.thumbnail_location);
     setScreen_language(initialValues.screen_language);
     setCaptions_language(initialValues.captions_language);
     setOrigin_country(initialValues.origin_country);
@@ -272,6 +277,7 @@ export default function UploadMovie(props) {
     description: [{ type: "Required" }],
     description_eng: [{ type: "Required" }],
     age_rating: [{ type: "Required" }],
+    thumbnail_location: [],
     screen_language: [{ type: "Required" }],
     captions_language: [{ type: "Required" }],
     origin_country: [{ type: "Required" }],
@@ -343,6 +349,7 @@ export default function UploadMovie(props) {
           description,
           description_eng,
           age_rating,
+          thumbnail_location,
           screen_language,
           captions_language,
           origin_country,
@@ -393,6 +400,7 @@ export default function UploadMovie(props) {
             description: modelFields.description,
             description_eng: modelFields.description_eng,
             age_rating: modelFields.age_rating,
+            thumbnail_location: modelFields.thumbnail_location,
             screen_language: modelFields.screen_language,
             captions_language: modelFields.captions_language,
             origin_country: modelFields.origin_country,
@@ -439,6 +447,7 @@ export default function UploadMovie(props) {
               description,
               description_eng,
               age_rating,
+              thumbnail_location,
               screen_language,
               captions_language,
               origin_country,
@@ -474,6 +483,7 @@ export default function UploadMovie(props) {
               description,
               description_eng,
               age_rating,
+              thumbnail_location,
               screen_language,
               captions_language,
               origin_country,
@@ -509,6 +519,7 @@ export default function UploadMovie(props) {
               description,
               description_eng,
               age_rating,
+              thumbnail_location,
               screen_language,
               captions_language,
               origin_country,
@@ -543,6 +554,7 @@ export default function UploadMovie(props) {
               description: value,
               description_eng,
               age_rating,
+              thumbnail_location,
               screen_language,
               captions_language,
               origin_country,
@@ -577,6 +589,7 @@ export default function UploadMovie(props) {
               description,
               description_eng: value,
               age_rating,
+              thumbnail_location,
               screen_language,
               captions_language,
               origin_country,
@@ -616,6 +629,7 @@ export default function UploadMovie(props) {
               description,
               description_eng,
               age_rating: value,
+              thumbnail_location,
               screen_language,
               captions_language,
               origin_country,
@@ -635,6 +649,44 @@ export default function UploadMovie(props) {
         errorMessage={errors.age_rating?.errorMessage}
         hasError={errors.age_rating?.hasError}
         {...getOverrideProps(overrides, "age_rating")}
+      ></TextField>
+      <TextField
+        label="Thumbnail location"
+        isRequired={false}
+        isReadOnly={false}
+        value={thumbnail_location}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              age_rating,
+              thumbnail_location: value,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieType,
+            };
+            const result = onChange(modelFields);
+            value = result?.thumbnail_location ?? value;
+          }
+          if (errors.thumbnail_location?.hasError) {
+            runValidationTasks("thumbnail_location", value);
+          }
+          setThumbnail_location(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("thumbnail_location", thumbnail_location)
+        }
+        errorMessage={errors.thumbnail_location?.errorMessage}
+        hasError={errors.thumbnail_location?.hasError}
+        {...getOverrideProps(overrides, "thumbnail_location")}
       ></TextField>
       <Autocomplete
         label="Screen language"
@@ -658,6 +710,7 @@ export default function UploadMovie(props) {
               description,
               description_eng,
               age_rating,
+              thumbnail_location,
               screen_language: value,
               captions_language,
               origin_country,
@@ -701,6 +754,7 @@ export default function UploadMovie(props) {
               description,
               description_eng,
               age_rating,
+              thumbnail_location,
               screen_language,
               captions_language: value,
               origin_country,
@@ -746,6 +800,7 @@ export default function UploadMovie(props) {
               description,
               description_eng,
               age_rating,
+              thumbnail_location,
               screen_language,
               captions_language,
               origin_country: value,
@@ -786,6 +841,7 @@ export default function UploadMovie(props) {
               description,
               description_eng,
               age_rating,
+              thumbnail_location,
               screen_language,
               captions_language,
               origin_country,
@@ -825,6 +881,7 @@ export default function UploadMovie(props) {
               description,
               description_eng,
               age_rating,
+              thumbnail_location,
               screen_language,
               captions_language,
               origin_country,
@@ -857,6 +914,7 @@ export default function UploadMovie(props) {
               description,
               description_eng,
               age_rating,
+              thumbnail_location,
               screen_language,
               captions_language,
               origin_country,

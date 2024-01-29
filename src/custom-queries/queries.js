@@ -177,7 +177,7 @@ export const getMoviesMain = `
         created_year
         origin_country
         length
-        photo_location
+        thumbnail_location
         MovieTeam {
           PersonMovieTeams {
             items {

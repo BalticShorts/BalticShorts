@@ -28,6 +28,7 @@ export declare type UploadMovieInputValues = {
     description?: string;
     description_eng?: string;
     age_rating?: number;
+    thumbnail_location?: string;
     screen_language?: string;
     captions_language?: string;
     origin_country?: string;
@@ -42,6 +43,7 @@ export declare type UploadMovieValidationValues = {
     description?: ValidationFunction<string>;
     description_eng?: ValidationFunction<string>;
     age_rating?: ValidationFunction<number>;
+    thumbnail_location?: ValidationFunction<string>;
     screen_language?: ValidationFunction<string>;
     captions_language?: ValidationFunction<string>;
     origin_country?: ValidationFunction<string>;
@@ -58,6 +60,7 @@ export declare type UploadMovieOverridesProps = {
     description?: PrimitiveOverrideProps<TextAreaFieldProps>;
     description_eng?: PrimitiveOverrideProps<TextAreaFieldProps>;
     age_rating?: PrimitiveOverrideProps<TextFieldProps>;
+    thumbnail_location?: PrimitiveOverrideProps<TextFieldProps>;
     screen_language?: PrimitiveOverrideProps<AutocompleteProps>;
     captions_language?: PrimitiveOverrideProps<AutocompleteProps>;
     origin_country?: PrimitiveOverrideProps<AutocompleteProps>;

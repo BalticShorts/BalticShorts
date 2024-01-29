@@ -18,6 +18,7 @@ const Upload = () => {
     const [guid, setGuid] = useState('');
     const [upload, setUpload] = useState(false);
     const [photoLoc, setPhotoLoc] = useState([]);
+    const [thumbnail, setThumbnail] = useState([]);
     
     const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -40,9 +41,11 @@ const Upload = () => {
         movie.uploaded_at = moment().format();
         const photoL = await getPhotoLocation();
         const movId = await guidGotten();
+        const thumbLoc = await getThumbnailLocation();
 
         movie.guid = movId;
         movie.photo_location = photoL;
+        movie.thumbnail_location = thumbLoc;
         delete movie.createdAt;
         delete movie.updatedAt;
         delete movie.MovieInPlaylists;
@@ -75,6 +78,19 @@ const Upload = () => {
         }
         setUpload(false);
         return photoLoc[0]
+      }
+      async function getThumbnailLocation(){
+
+        for (let index = 0; index < 10; index++) {
+          if(thumbnail.length === 0){
+            await sleep(200)
+          }else{
+            setUpload(false);
+            return thumbnail[0];
+          }
+        }
+        setUpload(false);
+        return thumbnail[0]
       }
 
     useEffect(() => {
@@ -112,6 +128,7 @@ const Upload = () => {
         setUpload(false);
         setGuid('');
         setPhotoLoc([]);
+        setThumbnail([]);
     }
 
     return(
@@ -127,6 +144,10 @@ const Upload = () => {
                 {tab === 'files' && 
                 (
                 <>
+                    <div className="flex justify-center flex-col gap-4">
+                        <h1 className="text-2xl">Upload Movie Thumbnail</h1>
+                        <PhotoUpload movie = {movie} upload = {upload} photo_type = {'thumbnail'} photoLoc = {thumbnail}/>
+                    </div>
                     <div className="flex justify-center flex-col gap-4">
                         <h1 className="text-2xl">Upload Movie Photos</h1>
                         <PhotoUpload movie = {movie} upload = {upload} photo_type = {'movies'} photoLoc = {photoLoc}/>

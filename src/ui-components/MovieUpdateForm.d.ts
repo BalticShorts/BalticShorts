@@ -39,6 +39,7 @@ export declare type MovieUpdateFormInputValues = {
     times_watched?: number;
     MovieType?: any;
     photo_location?: string;
+    thumbnail_location?: string;
     age_rating?: number;
 };
 export declare type MovieUpdateFormValidationValues = {
@@ -59,6 +60,7 @@ export declare type MovieUpdateFormValidationValues = {
     times_watched?: ValidationFunction<number>;
     MovieType?: ValidationFunction<any>;
     photo_location?: ValidationFunction<string>;
+    thumbnail_location?: ValidationFunction<string>;
     age_rating?: ValidationFunction<number>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
@@ -81,6 +83,7 @@ export declare type MovieUpdateFormOverridesProps = {
     times_watched?: PrimitiveOverrideProps<TextFieldProps>;
     MovieType?: PrimitiveOverrideProps<AutocompleteProps>;
     photo_location?: PrimitiveOverrideProps<TextFieldProps>;
+    thumbnail_location?: PrimitiveOverrideProps<TextFieldProps>;
     age_rating?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type MovieUpdateFormProps = React.PropsWithChildren<{

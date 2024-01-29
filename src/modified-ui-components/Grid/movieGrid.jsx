@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
+var AWS = require('aws-sdk');
 export function getDirectors(data) {
     const result = {};
    
@@ -8,7 +10,6 @@ export function getDirectors(data) {
         const rez = {}
         const names = []
         rez[itemId] = []
-        // console.log(item)
         if(item.MovieTeam === null)
             return;
        item.MovieTeam.PersonMovieTeams.items.forEach((person) => {
@@ -23,11 +24,56 @@ export function getDirectors(data) {
     return result;
    }
 export function MyGridMovies({data, maxRows, maxColumns}) {
+    const [photoSrc, setPhotoSrc] = useState({});
+    AWS.config.region = "eu-north-1";
+    AWS.config.credentials = new AWS.CognitoIdentityCredentials(IdentityPoolId);
+    
     const navigate = useNavigate();
-    const directors = getDirectors(data);
 
     const [rows, setRows] = useState(maxRows);
     const [columns, setColumns] = useState(maxColumns);
+    const [directors, setDirectors] = useState(maxColumns);
+
+    function getSrc(items) {
+        console.log(items)
+        const config = {
+            region: "eu-north-1",
+            credentials: new AWS.CognitoIdentityCredentials({
+              IdentityPoolId: IdentityPoolId,
+            }),
+            bucketName : "balticshortsphotos",
+        };
+        var myBucket = new AWS.S3(config);
+        items.forEach((item) => {
+            if(item.thumbnail_location){
+                const split = item.thumbnail_location.split("/");
+                const key = split.pop()
+                const bucketLoc = split.join("/");
+                console.log(bucketLoc)
+                console.log(key)
+                var params = {
+                    Bucket: bucketLoc, 
+                    Key: key
+                };
+                myBucket.getObject(params, function(err, data) {
+                    if (err) console.log(err, err.stack);
+                    else {
+                    photoSrc[item.id] = URL.createObjectURL(new Blob([data.Body], { type: data.ContentType }));
+                    }
+                });      
+            }else{
+                photoSrc[item.id] = require("../../assets/images/no_image_1.jpg");
+                // "https://via.placeholder.com/350x144"
+            }
+        });
+        
+    }
+    useEffect(() => {
+        setRows(maxRows);
+        setColumns(maxColumns);
+        setDirectors(data);
+        getSrc(data);
+    }, [])
 
     const checkRow = (idx) => {    
         if((idx + 1) / columns > rows)
@@ -41,10 +87,11 @@ export function MyGridMovies({data, maxRows, maxColumns}) {
             <div className={`grid grid-cols-3 items-center`}>
                 {data.map((item, idx) => (
                     <>
+                    {console.log(photoSrc)}
                     {checkRow(idx) && (
                         <div key={item.id} className="p-4 h-full">
                             <div className="SarakstsInLists m-auto w-80 h-48 relative" onClick={() => navigate('/movie/'+item.id)} >
-                                <img className="Thumb w-80 h-36 left-0 top-0 relative" src="https://via.placeholder.com/350x144" />
+                                <img className="Thumb w-80 h-36 left-0 top-0 relative" src={photoSrc[item.id]} />
                                 <div className="w-80 h-48 left-0 top-0 absolute bg-white bg-opacity-0 border border-black" />
                                 <div className="w-80 h-10 relative ml-4 items-center justify-center">
                                 <div>
