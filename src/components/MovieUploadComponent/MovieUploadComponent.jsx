@@ -7,19 +7,13 @@ export const MovieUploadComponent = (props) => {
 
   const processFile = async ({ file }) => {
     const fileExtension = file.name.split('.').pop();
-  
-    return file
-      .arrayBuffer()
-      .then((filebuffer) => window.crypto.subtle.digest('SHA-1', filebuffer))
-      .then((hashBuffer) => {
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const currentDate = moment().valueOf();
-        const hashHex = hashArray
-          .map((a) => a.toString(16).padStart(2, '0'))
-          .join('');
-        // console.log(`${hashHex}.${fileExtension}`)
-        return { file, key: `${hashHex}${currentDate}.${fileExtension}` };
-      });
+    const hashArray = Array.from(new Uint8Array(file.name));
+    const currentDate = moment().valueOf();
+    const hashHex = hashArray
+      .map((a) => a.toString(16).padStart(2, '0'))
+      .join('');
+    const key = `${hashHex}${currentDate}.${fileExtension}`;
+    return { file, key: key };
   };
 
   return (
