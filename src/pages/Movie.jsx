@@ -80,13 +80,11 @@ function Movie() {
   useEffect(() => {
     const get = async () => {
       const movie = await fetchMovie(id);
-      await fetchVideo(movie.guid);
+      const url = await fetchVideo(movie.guid);
       const playlists = await fetchPlaylists(id);
       const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
-      // console.log(movie)
       try {     
-        // setMovieURL(data.Item.hlsUrl.S);
-        setMovieURL("");
+        setMovieURL(url.Item.hlsUrl.S);
         setMovieData(movie);
         setMovieTeamData(team);
         setPlaylists(playlists);
