@@ -72,9 +72,10 @@ type MoviePlaylist @model @auth(rules: [
   { allow: private, provider: iam, operations: [read, create, update, delete] }
 ]) {
   id: ID!
-  Creator: String!
+  creator: String!
   movies: [Movie] @manyToMany(relationName: "MovieMoviePlaylist")
-  Title: String!
+  title: String!
+  description: String!
   is_public: Boolean!
   is_recommended: Boolean
   photo_location: String

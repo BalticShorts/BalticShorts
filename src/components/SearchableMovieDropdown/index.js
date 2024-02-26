@@ -1,0 +1,1 @@
+export { SearchableMovieDropdown } from './SearchableMovieDropdown';

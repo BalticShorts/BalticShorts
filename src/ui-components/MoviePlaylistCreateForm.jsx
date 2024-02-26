@@ -194,19 +194,23 @@ export default function MoviePlaylistCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    Creator: "",
+    creator: "",
     movies: [],
-    Title: "",
+    title: "",
+    description: "",
     is_public: false,
     is_recommended: false,
     photo_location: "",
     userprofileID: undefined,
   };
-  const [Creator, setCreator] = React.useState(initialValues.Creator);
+  const [creator, setCreator] = React.useState(initialValues.creator);
   const [movies, setMovies] = React.useState(initialValues.movies);
   const [moviesLoading, setMoviesLoading] = React.useState(false);
   const [moviesRecords, setMoviesRecords] = React.useState([]);
-  const [Title, setTitle] = React.useState(initialValues.Title);
+  const [title, setTitle] = React.useState(initialValues.title);
+  const [description, setDescription] = React.useState(
+    initialValues.description
+  );
   const [is_public, setIs_public] = React.useState(initialValues.is_public);
   const [is_recommended, setIs_recommended] = React.useState(
     initialValues.is_recommended
@@ -224,11 +228,12 @@ export default function MoviePlaylistCreateForm(props) {
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setCreator(initialValues.Creator);
+    setCreator(initialValues.creator);
     setMovies(initialValues.movies);
     setCurrentMoviesValue(undefined);
     setCurrentMoviesDisplayValue("");
-    setTitle(initialValues.Title);
+    setTitle(initialValues.title);
+    setDescription(initialValues.description);
     setIs_public(initialValues.is_public);
     setIs_recommended(initialValues.is_recommended);
     setPhoto_location(initialValues.photo_location);
@@ -261,9 +266,10 @@ export default function MoviePlaylistCreateForm(props) {
     userprofileID: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
   };
   const validations = {
-    Creator: [{ type: "Required" }],
+    creator: [{ type: "Required" }],
     movies: [],
-    Title: [{ type: "Required" }],
+    title: [{ type: "Required" }],
+    description: [{ type: "Required" }],
     is_public: [{ type: "Required" }],
     is_recommended: [],
     photo_location: [],
@@ -355,9 +361,10 @@ export default function MoviePlaylistCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          Creator,
+          creator,
           movies,
-          Title,
+          title,
+          description,
           is_public,
           is_recommended,
           photo_location,
@@ -400,8 +407,9 @@ export default function MoviePlaylistCreateForm(props) {
             }
           });
           const modelFieldsToSave = {
-            Creator: modelFields.Creator,
-            Title: modelFields.Title,
+            creator: modelFields.creator,
+            title: modelFields.title,
+            description: modelFields.description,
             is_public: modelFields.is_public,
             is_recommended: modelFields.is_recommended,
             photo_location: modelFields.photo_location,
@@ -455,40 +463,42 @@ export default function MoviePlaylistCreateForm(props) {
         label="Creator"
         isRequired={true}
         isReadOnly={false}
-        value={Creator}
+        value={creator}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Creator: value,
+              creator: value,
               movies,
-              Title,
+              title,
+              description,
               is_public,
               is_recommended,
               photo_location,
               userprofileID,
             };
             const result = onChange(modelFields);
-            value = result?.Creator ?? value;
+            value = result?.creator ?? value;
           }
-          if (errors.Creator?.hasError) {
-            runValidationTasks("Creator", value);
+          if (errors.creator?.hasError) {
+            runValidationTasks("creator", value);
           }
           setCreator(value);
         }}
-        onBlur={() => runValidationTasks("Creator", Creator)}
-        errorMessage={errors.Creator?.errorMessage}
-        hasError={errors.Creator?.hasError}
-        {...getOverrideProps(overrides, "Creator")}
+        onBlur={() => runValidationTasks("creator", creator)}
+        errorMessage={errors.creator?.errorMessage}
+        hasError={errors.creator?.hasError}
+        {...getOverrideProps(overrides, "creator")}
       ></TextField>
       <ArrayField
         onChange={async (items) => {
           let values = items;
           if (onChange) {
             const modelFields = {
-              Creator,
+              creator,
               movies: values,
-              Title,
+              title,
+              description,
               is_public,
               is_recommended,
               photo_location,
@@ -565,31 +575,63 @@ export default function MoviePlaylistCreateForm(props) {
         label="Title"
         isRequired={true}
         isReadOnly={false}
-        value={Title}
+        value={title}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Creator,
+              creator,
               movies,
-              Title: value,
+              title: value,
+              description,
               is_public,
               is_recommended,
               photo_location,
               userprofileID,
             };
             const result = onChange(modelFields);
-            value = result?.Title ?? value;
+            value = result?.title ?? value;
           }
-          if (errors.Title?.hasError) {
-            runValidationTasks("Title", value);
+          if (errors.title?.hasError) {
+            runValidationTasks("title", value);
           }
           setTitle(value);
         }}
-        onBlur={() => runValidationTasks("Title", Title)}
-        errorMessage={errors.Title?.errorMessage}
-        hasError={errors.Title?.hasError}
-        {...getOverrideProps(overrides, "Title")}
+        onBlur={() => runValidationTasks("title", title)}
+        errorMessage={errors.title?.errorMessage}
+        hasError={errors.title?.hasError}
+        {...getOverrideProps(overrides, "title")}
+      ></TextField>
+      <TextField
+        label="Description"
+        isRequired={true}
+        isReadOnly={false}
+        value={description}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              creator,
+              movies,
+              title,
+              description: value,
+              is_public,
+              is_recommended,
+              photo_location,
+              userprofileID,
+            };
+            const result = onChange(modelFields);
+            value = result?.description ?? value;
+          }
+          if (errors.description?.hasError) {
+            runValidationTasks("description", value);
+          }
+          setDescription(value);
+        }}
+        onBlur={() => runValidationTasks("description", description)}
+        errorMessage={errors.description?.errorMessage}
+        hasError={errors.description?.hasError}
+        {...getOverrideProps(overrides, "description")}
       ></TextField>
       <SwitchField
         label="Is public"
@@ -600,9 +642,10 @@ export default function MoviePlaylistCreateForm(props) {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
-              Creator,
+              creator,
               movies,
-              Title,
+              title,
+              description,
               is_public: value,
               is_recommended,
               photo_location,
@@ -630,9 +673,10 @@ export default function MoviePlaylistCreateForm(props) {
           let value = e.target.checked;
           if (onChange) {
             const modelFields = {
-              Creator,
+              creator,
               movies,
-              Title,
+              title,
+              description,
               is_public,
               is_recommended: value,
               photo_location,
@@ -660,9 +704,10 @@ export default function MoviePlaylistCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              Creator,
+              creator,
               movies,
-              Title,
+              title,
+              description,
               is_public,
               is_recommended,
               photo_location: value,
@@ -687,9 +732,10 @@ export default function MoviePlaylistCreateForm(props) {
           let value = items[0];
           if (onChange) {
             const modelFields = {
-              Creator,
+              creator,
               movies,
-              Title,
+              title,
+              description,
               is_public,
               is_recommended,
               photo_location,

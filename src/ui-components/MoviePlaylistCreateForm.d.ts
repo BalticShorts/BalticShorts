@@ -22,18 +22,20 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type MoviePlaylistCreateFormInputValues = {
-    Creator?: string;
+    creator?: string;
     movies?: any[];
-    Title?: string;
+    title?: string;
+    description?: string;
     is_public?: boolean;
     is_recommended?: boolean;
     photo_location?: string;
     userprofileID?: string;
 };
 export declare type MoviePlaylistCreateFormValidationValues = {
-    Creator?: ValidationFunction<string>;
+    creator?: ValidationFunction<string>;
     movies?: ValidationFunction<any>;
-    Title?: ValidationFunction<string>;
+    title?: ValidationFunction<string>;
+    description?: ValidationFunction<string>;
     is_public?: ValidationFunction<boolean>;
     is_recommended?: ValidationFunction<boolean>;
     photo_location?: ValidationFunction<string>;
@@ -42,9 +44,10 @@ export declare type MoviePlaylistCreateFormValidationValues = {
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MoviePlaylistCreateFormOverridesProps = {
     MoviePlaylistCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
-    Creator?: PrimitiveOverrideProps<TextFieldProps>;
+    creator?: PrimitiveOverrideProps<TextFieldProps>;
     movies?: PrimitiveOverrideProps<AutocompleteProps>;
-    Title?: PrimitiveOverrideProps<TextFieldProps>;
+    title?: PrimitiveOverrideProps<TextFieldProps>;
+    description?: PrimitiveOverrideProps<TextFieldProps>;
     is_public?: PrimitiveOverrideProps<SwitchFieldProps>;
     is_recommended?: PrimitiveOverrideProps<SwitchFieldProps>;
     photo_location?: PrimitiveOverrideProps<TextFieldProps>;

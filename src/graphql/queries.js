@@ -16,8 +16,9 @@ export const getUserProfile = /* GraphQL */ `
       MoviePlaylists {
         items {
           id
-          Creator
-          Title
+          creator
+          title
+          description
           is_public
           is_recommended
           photo_location
@@ -562,7 +563,7 @@ export const getMoviePlaylist = /* GraphQL */ `
   query GetMoviePlaylist($id: ID!) {
     getMoviePlaylist(id: $id) {
       id
-      Creator
+      creator
       movies {
         items {
           id
@@ -575,7 +576,8 @@ export const getMoviePlaylist = /* GraphQL */ `
         nextToken
         __typename
       }
-      Title
+      title
+      description
       is_public
       is_recommended
       photo_location
@@ -595,12 +597,13 @@ export const listMoviePlaylists = /* GraphQL */ `
     listMoviePlaylists(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        Creator
+        creator
         movies {
           nextToken
           __typename
         }
-        Title
+        title
+        description
         is_public
         is_recommended
         photo_location
@@ -631,12 +634,13 @@ export const moviePlaylistsByUserprofileID = /* GraphQL */ `
     ) {
       items {
         id
-        Creator
+        creator
         movies {
           nextToken
           __typename
         }
-        Title
+        title
+        description
         is_public
         is_recommended
         photo_location
@@ -944,12 +948,13 @@ export const getMovieMoviePlaylist = /* GraphQL */ `
       movieId
       moviePlaylist {
         id
-        Creator
+        creator
         movies {
           nextToken
           __typename
         }
-        Title
+        title
+        description
         is_public
         is_recommended
         photo_location
@@ -1024,8 +1029,9 @@ export const listMovieMoviePlaylists = /* GraphQL */ `
         movieId
         moviePlaylist {
           id
-          Creator
-          Title
+          creator
+          title
+          description
           is_public
           is_recommended
           photo_location
@@ -1088,8 +1094,9 @@ export const movieMoviePlaylistsByMoviePlaylistId = /* GraphQL */ `
         movieId
         moviePlaylist {
           id
-          Creator
-          Title
+          creator
+          title
+          description
           is_public
           is_recommended
           photo_location
@@ -1152,8 +1159,9 @@ export const movieMoviePlaylistsByMovieId = /* GraphQL */ `
         movieId
         moviePlaylist {
           id
-          Creator
-          Title
+          creator
+          title
+          description
           is_public
           is_recommended
           photo_location

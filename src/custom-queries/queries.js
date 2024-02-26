@@ -159,6 +159,7 @@ query MyQuery($email: String!) {
       user_id
       is_member
       member_untill
+      is_admin
       createdAt
       updatedAt
       __typename
@@ -196,3 +197,31 @@ export const getMoviesMain = `
   }
   `
 ;
+
+export const getMoviePlaylistWithMovie = /* GraphQL */ `
+  query GetMoviePlaylist($id: ID!) {
+    getMoviePlaylist(id: $id) {
+      id
+      creator
+      movies {
+      items {
+        movie {
+          id
+          created_year
+          name
+          name_eng
+        }
+      }
+    }
+      title
+      description
+      is_public
+      is_recommended
+      photo_location
+      userprofileID
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;

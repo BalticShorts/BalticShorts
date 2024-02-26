@@ -391,7 +391,7 @@ export default function MovieUpdateForm(props) {
   );
   const getDisplayValue = {
     MovieTeam: (r) => `${r?.MovieName ? r?.MovieName + " - " : ""}${r?.id}`,
-    MovieInPlaylists: (r) => `${r?.Creator ? r?.Creator + " - " : ""}${r?.id}`,
+    MovieInPlaylists: (r) => `${r?.creator ? r?.creator + " - " : ""}${r?.id}`,
     MovieType: (r) => `${r?.type ? r?.type + " - " : ""}${r?.id}`,
   };
   const validations = {
@@ -469,7 +469,7 @@ export default function MovieUpdateForm(props) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ Creator: { contains: value } }, { id: { contains: value } }],
+          or: [{ creator: { contains: value } }, { id: { contains: value } }],
         },
       };
       if (newNext) {

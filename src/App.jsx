@@ -7,6 +7,8 @@ import About from "./pages/About";
 import Profile from "./pages/Profile";
 import Search from "./pages/Search";
 import Catalogue from "./pages/Catalogue";
+import Playlist from "./pages/Playlist";
+import PlaylistUpload from "./pages/PlaylistUpload";
 import React, {useEffect, useState } from "react";
 import { API, Amplify, Auth } from "aws-amplify";
 import awsExports from './aws-exports';
@@ -21,6 +23,7 @@ export default function App() {
   const [loggedIn, setLoggedIn ] = useState(false);
   const [loggedInModal, setLoggedInModal ] = useState(false);
   const [currentUser, setCurrentUser ] = useState({});
+  const [admin, setAdmin] = useState(false);
   
   const assessLoggedInState = async () => {
     // try {
@@ -34,7 +37,8 @@ export default function App() {
         console.log('logged in');
         setLoggedIn(true);
         getUser(sess).then(user => {
-          if(user != currentUser)
+          setAdmin(user.is_admin);
+          if(user !== currentUser)
             setCurrentUser(user);
         });
       })
@@ -85,6 +89,14 @@ export default function App() {
                 <Route path="search/:query?" element={<Search />} />
                 <Route path="catalogue/:givenTab?" element={<Catalogue />} />
                 <Route path="upload" element={<Upload />} />
+                {admin ? (
+                  <>
+                    <Route path="playlists" element={<Playlist />} />
+                    <Route path="addPlaylist/:id?" element={<PlaylistUpload />} />
+                  </>
+                ):(
+                  <Route path="*" element={<Home/>} />
+                )}
               </>
             ) : (
               <>

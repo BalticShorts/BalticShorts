@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-export function MyGridPlaylists({data, maxRows, maxColumns}) {
-    const navigate = useNavigate();
+export function PlaylistEditGrid({data, maxRows, maxColumns, modalOpen}) {
     const [rows, setRows] = useState(maxRows);
     const [columns, setColumns] = useState(maxColumns);
     console.log(data)
@@ -15,22 +13,21 @@ export function MyGridPlaylists({data, maxRows, maxColumns}) {
 
     return (
         
-        <div className='left-[15%] w-[75%] h-fit gap-6 flex flex-col items-center relative justify-center '>
+        <div className='left-[15%] w-[75%] h-fit gap-6 flex flex-col items-center relative justify-center my-10'>
             <div className={`grid grid-cols-3 items-center`}>
                 {data.map((item, idx) => (
                     <>
                     {checkRow(idx) && (
-                        <div key={item.id} className="p-4 h-full">
-                            <div className="SarakstsInLists m-auto w-80 h-48 relative" onClick={() => navigate('/playlist/'+item.id)} >
+                        <div key={item.id} className="p-4 h-fit w-fit">
+                            <div className="SarakstsInLists m-auto w-fit h-fit relative" onClick={() => modalOpen(item.id)} >
                                 <img className="Thumb w-80 h-24 left-0 top-0 relative" src="https://via.placeholder.com/350x100" />
                                 <div className="w-80 h-48 left-0 top-0 absolute bg-white bg-opacity-0 border border-black" />
                                 <div className="w-80 h-10 relative mt-1 ml-4 items-center justify-center">
-                                <div>
+                                <div className="justify-center">
                                     <span className="text-black text-base font-bold font-['SchoolBook']">{item?.title}<br/></span>
                                     <span className="text-black text-sm font-normal font-['SchoolBook']">by {item?.creator}</span>
                                 </div>
                                 </div>
-                                <div className="w-80 h-2.5 left-[15.09px] top-[172.45px] absolute text-black text-xs font-normal font-['Arial'] tracking-wide">FILMAS  {item?.length}  |  SEKOTĀJI  10</div>
                             </div>
                         </div>
                     )}

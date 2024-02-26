@@ -280,7 +280,7 @@ export default function UserProfileUpdateForm(props) {
       : getIDValue.MoviePlaylists?.(MoviePlaylists)
   );
   const getDisplayValue = {
-    MoviePlaylists: (r) => `${r?.Creator ? r?.Creator + " - " : ""}${r?.id}`,
+    MoviePlaylists: (r) => `${r?.creator ? r?.creator + " - " : ""}${r?.id}`,
   };
   const validations = {
     name: [],
@@ -335,7 +335,7 @@ export default function UserProfileUpdateForm(props) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ Creator: { contains: value } }, { id: { contains: value } }],
+          or: [{ creator: { contains: value } }, { id: { contains: value } }],
         },
       };
       if (newNext) {

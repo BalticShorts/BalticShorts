@@ -19,8 +19,9 @@ export const createUserProfile = /* GraphQL */ `
       MoviePlaylists {
         items {
           id
-          Creator
-          Title
+          creator
+          title
+          description
           is_public
           is_recommended
           photo_location
@@ -56,8 +57,9 @@ export const updateUserProfile = /* GraphQL */ `
       MoviePlaylists {
         items {
           id
-          Creator
-          Title
+          creator
+          title
+          description
           is_public
           is_recommended
           photo_location
@@ -93,8 +95,9 @@ export const deleteUserProfile = /* GraphQL */ `
       MoviePlaylists {
         items {
           id
-          Creator
-          Title
+          creator
+          title
+          description
           is_public
           is_recommended
           photo_location
@@ -629,7 +632,7 @@ export const createMoviePlaylist = /* GraphQL */ `
   ) {
     createMoviePlaylist(input: $input, condition: $condition) {
       id
-      Creator
+      creator
       movies {
         items {
           id
@@ -642,7 +645,8 @@ export const createMoviePlaylist = /* GraphQL */ `
         nextToken
         __typename
       }
-      Title
+      title
+      description
       is_public
       is_recommended
       photo_location
@@ -660,7 +664,7 @@ export const updateMoviePlaylist = /* GraphQL */ `
   ) {
     updateMoviePlaylist(input: $input, condition: $condition) {
       id
-      Creator
+      creator
       movies {
         items {
           id
@@ -673,7 +677,8 @@ export const updateMoviePlaylist = /* GraphQL */ `
         nextToken
         __typename
       }
-      Title
+      title
+      description
       is_public
       is_recommended
       photo_location
@@ -691,7 +696,7 @@ export const deleteMoviePlaylist = /* GraphQL */ `
   ) {
     deleteMoviePlaylist(input: $input, condition: $condition) {
       id
-      Creator
+      creator
       movies {
         items {
           id
@@ -704,7 +709,8 @@ export const deleteMoviePlaylist = /* GraphQL */ `
         nextToken
         __typename
       }
-      Title
+      title
+      description
       is_public
       is_recommended
       photo_location
@@ -1242,12 +1248,13 @@ export const createMovieMoviePlaylist = /* GraphQL */ `
       movieId
       moviePlaylist {
         id
-        Creator
+        creator
         movies {
           nextToken
           __typename
         }
-        Title
+        title
+        description
         is_public
         is_recommended
         photo_location
@@ -1316,12 +1323,13 @@ export const updateMovieMoviePlaylist = /* GraphQL */ `
       movieId
       moviePlaylist {
         id
-        Creator
+        creator
         movies {
           nextToken
           __typename
         }
-        Title
+        title
+        description
         is_public
         is_recommended
         photo_location
@@ -1390,12 +1398,13 @@ export const deleteMovieMoviePlaylist = /* GraphQL */ `
       movieId
       moviePlaylist {
         id
-        Creator
+        creator
         movies {
           nextToken
           __typename
         }
-        Title
+        title
+        description
         is_public
         is_recommended
         photo_location

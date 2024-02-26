@@ -32,10 +32,9 @@ export function MyGridMovies({data, maxRows, maxColumns}) {
 
     const [rows, setRows] = useState(maxRows);
     const [columns, setColumns] = useState(maxColumns);
-    const [directors, setDirectors] = useState(maxColumns);
+    const [directors, setDirectors] = useState(getDirectors(data));
 
-    function getSrc(items) {
-        console.log(items)
+    async function getSrc(items) {
         const config = {
             region: "eu-north-1",
             credentials: new AWS.CognitoIdentityCredentials({
@@ -49,8 +48,6 @@ export function MyGridMovies({data, maxRows, maxColumns}) {
                 const split = item.thumbnail_location.split("/");
                 const key = split.pop()
                 const bucketLoc = split.join("/");
-                console.log(bucketLoc)
-                console.log(key)
                 var params = {
                     Bucket: bucketLoc, 
                     Key: key
@@ -58,22 +55,27 @@ export function MyGridMovies({data, maxRows, maxColumns}) {
                 myBucket.getObject(params, function(err, data) {
                     if (err) console.log(err, err.stack);
                     else {
-                    photoSrc[item.id] = URL.createObjectURL(new Blob([data.Body], { type: data.ContentType }));
+                        photoSrc[item.id] = URL.createObjectURL(new Blob([data.Body], { type: 'image/png' }));
                     }
                 });      
             }else{
                 photoSrc[item.id] = require("../../assets/images/no_image_1.jpg");
                 // "https://via.placeholder.com/350x144"
             }
-        });
-        
+        });    
+        console.log(photoSrc)
     }
-    useEffect(() => {
+
+    useEffect(async() => {
+        await getSrc(data);
         setRows(maxRows);
         setColumns(maxColumns);
-        setDirectors(data);
-        getSrc(data);
+        setDirectors(getDirectors(data));
     }, [])
+
+    useEffect(() => {
+        // fix photo loading
+    }, [photoSrc])
 
     const checkRow = (idx) => {    
         if((idx + 1) / columns > rows)
@@ -87,7 +89,6 @@ export function MyGridMovies({data, maxRows, maxColumns}) {
             <div className={`grid grid-cols-3 items-center`}>
                 {data.map((item, idx) => (
                     <>
-                    {console.log(photoSrc)}
                     {checkRow(idx) && (
                         <div key={item.id} className="p-4 h-full">
                             <div className="SarakstsInLists m-auto w-80 h-48 relative" onClick={() => navigate('/movie/'+item.id)} >
