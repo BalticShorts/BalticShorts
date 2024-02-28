@@ -287,10 +287,10 @@ export function CreateMovieTeam(props) {
                 Add a row
               </button>
             </div>
-            <div>
-              <Button className='left-0 mr-auto' onClick={() => {setIsNewPersonMode(true); clearNewPerson();}}>Create new person</Button>
+            <div className='m-auto w-full flex'>
+              <Button className='m-auto p-2 text-black bg-slate-300' onClick={() => {setIsNewPersonMode(true); clearNewPerson();}}>Create new person</Button>
               {/* <Button onClick={() => props.changeState('movie')}>Back</Button> */}
-              <Button onClick={handleSubmit} color="blue">
+              <Button className='m-auto p-2 text-black' onClick={handleSubmit} color="blue">
                 Submit
               </Button>
             </div>

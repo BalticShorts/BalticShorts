@@ -25,15 +25,15 @@ const Home = () => {
 
   useEffect(() => {
     updateAWSConfigAndGetClient(IdentityPoolId, "eu-north-1")
-    const mov = async () => {
-    try {
-      await fetchMovies();
-      await fetchPlaylists()
-    } catch (error) {
-      
+    async function mov () {
+      try {
+        await fetchMovies();
+        await fetchPlaylists()
+      } catch (error) {
+        
+      }
     }
-  }
-   mov() 
+   mov();
   }, []);
   function updateAWSConfigAndGetClient(cognitoIdentityCredentials, region) {
     if (cognitoIdentityCredentials != null) {

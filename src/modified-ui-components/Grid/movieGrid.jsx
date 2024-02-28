@@ -43,7 +43,7 @@ export function MyGridMovies({data, maxRows, maxColumns}) {
             bucketName : "balticshortsphotos",
         };
         var myBucket = new AWS.S3(config);
-        items.forEach((item) => {
+        await Promise.all(items.map(async (item) => {
             if(item.thumbnail_location){
                 const split = item.thumbnail_location.split("/");
                 const key = split.pop()
@@ -52,30 +52,30 @@ export function MyGridMovies({data, maxRows, maxColumns}) {
                     Bucket: bucketLoc, 
                     Key: key
                 };
-                myBucket.getObject(params, function(err, data) {
-                    if (err) console.log(err, err.stack);
-                    else {
-                        photoSrc[item.id] = URL.createObjectURL(new Blob([data.Body], { type: 'image/png' }));
-                    }
-                });      
+                try{
+                    const data = await myBucket.getObject(params).promise();
+                    photoSrc[item.id] = URL.createObjectURL(new Blob([data.Body], { type: 'image/png' }));
+                  }
+                  catch (error) {
+                    console.error('Error fetching data:', error);
+                  }      
             }else{
                 photoSrc[item.id] = require("../../assets/images/no_image_1.jpg");
                 // "https://via.placeholder.com/350x144"
             }
-        });    
+        }));    
         console.log(photoSrc)
     }
 
-    useEffect(async() => {
-        await getSrc(data);
-        setRows(maxRows);
-        setColumns(maxColumns);
-        setDirectors(getDirectors(data));
-    }, [])
-
     useEffect(() => {
-        // fix photo loading
-    }, [photoSrc])
+        async function fetchData() {
+            await getSrc(data);
+            setRows(maxRows);
+            setColumns(maxColumns);
+            setDirectors(getDirectors(data));
+        }
+        fetchData();
+    }, [])
 
     const checkRow = (idx) => {    
         if((idx + 1) / columns > rows)
