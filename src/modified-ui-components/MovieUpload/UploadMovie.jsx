@@ -294,12 +294,12 @@ export default function UploadMovie(props) {
   const validations = {
     name: [{ type: "Required" }],
     name_eng: [{ type: "Required" }],
-    genre: [{ type: "Required" }],
+    genre: [],
     description: [{ type: "Required" }],
     description_eng: [{ type: "Required" }],
-    age_rating: [{ type: "Required" }],
+    age_rating: [],
     screen_language: [{ type: "Required" }],
-    captions_language: [{ type: "Required" }],
+    captions_language: [],
     origin_country: [{ type: "Required" }],
     length: [{ type: "Required" }],
     created_year: [{ type: "Required" }],
@@ -557,7 +557,7 @@ export default function UploadMovie(props) {
       ></TextField>
       <TextField
         label="Genre"
-        isRequired={true}
+        isRequired={false}
         isReadOnly={false}
         value={genre}
         onChange={(e) => {
@@ -660,7 +660,7 @@ export default function UploadMovie(props) {
       ></TextAreaField>
       <TextField
         label="Age rating"
-        isRequired={true}
+        isRequired={false}
         isReadOnly={false}
         type="number"
         step="any"
@@ -747,7 +747,7 @@ export default function UploadMovie(props) {
       ></Autocomplete>
       <Autocomplete
         label="Captions language"
-        isRequired={true}
+        isRequired={false}
         isReadOnly={false}
         value={currentCaptionsLanguageDisplayValue}
         options={countryCodeRecords
