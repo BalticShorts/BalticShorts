@@ -116,6 +116,7 @@ type Movie @model @auth(rules: [
   photo_location: String
   thumbnail_location: String
   age_rating: Int
+  subtitles_location: String
 }
 
 type CountryCode @model @auth(rules: [

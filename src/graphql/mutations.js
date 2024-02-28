@@ -191,6 +191,7 @@ export const createPersonMovieTeam = /* GraphQL */ `
           photo_location
           thumbnail_location
           age_rating
+          subtitles_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -279,6 +280,7 @@ export const updatePersonMovieTeam = /* GraphQL */ `
           photo_location
           thumbnail_location
           age_rating
+          subtitles_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -367,6 +369,7 @@ export const deletePersonMovieTeam = /* GraphQL */ `
           photo_location
           thumbnail_location
           age_rating
+          subtitles_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -779,6 +782,7 @@ export const createMovieTeam = /* GraphQL */ `
         photo_location
         thumbnail_location
         age_rating
+        subtitles_location
         createdAt
         updatedAt
         movieMovieTeamId
@@ -850,6 +854,7 @@ export const updateMovieTeam = /* GraphQL */ `
         photo_location
         thumbnail_location
         age_rating
+        subtitles_location
         createdAt
         updatedAt
         movieMovieTeamId
@@ -921,6 +926,7 @@ export const deleteMovieTeam = /* GraphQL */ `
         photo_location
         thumbnail_location
         age_rating
+        subtitles_location
         createdAt
         updatedAt
         movieMovieTeamId
@@ -978,6 +984,7 @@ export const createMovie = /* GraphQL */ `
           photo_location
           thumbnail_location
           age_rating
+          subtitles_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1012,6 +1019,7 @@ export const createMovie = /* GraphQL */ `
       photo_location
       thumbnail_location
       age_rating
+      subtitles_location
       createdAt
       updatedAt
       movieMovieTeamId
@@ -1064,6 +1072,7 @@ export const updateMovie = /* GraphQL */ `
           photo_location
           thumbnail_location
           age_rating
+          subtitles_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1098,6 +1107,7 @@ export const updateMovie = /* GraphQL */ `
       photo_location
       thumbnail_location
       age_rating
+      subtitles_location
       createdAt
       updatedAt
       movieMovieTeamId
@@ -1150,6 +1160,7 @@ export const deleteMovie = /* GraphQL */ `
           photo_location
           thumbnail_location
           age_rating
+          subtitles_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1184,6 +1195,7 @@ export const deleteMovie = /* GraphQL */ `
       photo_location
       thumbnail_location
       age_rating
+      subtitles_location
       createdAt
       updatedAt
       movieMovieTeamId
@@ -1300,6 +1312,7 @@ export const createMovieMoviePlaylist = /* GraphQL */ `
         photo_location
         thumbnail_location
         age_rating
+        subtitles_location
         createdAt
         updatedAt
         movieMovieTeamId
@@ -1375,6 +1388,7 @@ export const updateMovieMoviePlaylist = /* GraphQL */ `
         photo_location
         thumbnail_location
         age_rating
+        subtitles_location
         createdAt
         updatedAt
         movieMovieTeamId
@@ -1450,6 +1464,7 @@ export const deleteMovieMoviePlaylist = /* GraphQL */ `
         photo_location
         thumbnail_location
         age_rating
+        subtitles_location
         createdAt
         updatedAt
         movieMovieTeamId

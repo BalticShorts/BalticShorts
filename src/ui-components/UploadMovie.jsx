@@ -204,6 +204,7 @@ export default function UploadMovie(props) {
     length: "",
     created_year: "",
     MovieType: undefined,
+    subtitles_location: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
@@ -234,6 +235,9 @@ export default function UploadMovie(props) {
   const [MovieType, setMovieType] = React.useState(initialValues.MovieType);
   const [MovieTypeLoading, setMovieTypeLoading] = React.useState(false);
   const [movieTypeRecords, setMovieTypeRecords] = React.useState([]);
+  const [subtitles_location, setSubtitles_location] = React.useState(
+    initialValues.subtitles_location
+  );
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -252,6 +256,7 @@ export default function UploadMovie(props) {
     setMovieType(initialValues.MovieType);
     setCurrentMovieTypeValue(undefined);
     setCurrentMovieTypeDisplayValue("");
+    setSubtitles_location(initialValues.subtitles_location);
     setErrors({});
   };
   const [currentMovieTypeDisplayValue, setCurrentMovieTypeDisplayValue] =
@@ -286,6 +291,7 @@ export default function UploadMovie(props) {
     MovieType: [
       { type: "Required", validationMessage: "MovieType is required." },
     ],
+    subtitles_location: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -356,6 +362,7 @@ export default function UploadMovie(props) {
           length,
           created_year,
           MovieType,
+          subtitles_location,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -407,6 +414,7 @@ export default function UploadMovie(props) {
             length: modelFields.length,
             created_year: modelFields.created_year,
             movieMovieTypeId: modelFields?.MovieType?.id,
+            subtitles_location: modelFields.subtitles_location,
           };
           await API.graphql({
             query: createMovie.replaceAll("__typename", ""),
@@ -454,6 +462,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -490,6 +499,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.name_eng ?? value;
@@ -526,6 +536,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.genre ?? value;
@@ -561,6 +572,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -596,6 +608,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.description_eng ?? value;
@@ -636,6 +649,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.age_rating ?? value;
@@ -672,6 +686,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.thumbnail_location ?? value;
@@ -717,6 +732,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.screen_language ?? value;
@@ -761,6 +777,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.captions_language ?? value;
@@ -807,6 +824,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.origin_country ?? value;
@@ -848,6 +866,7 @@ export default function UploadMovie(props) {
               length: value,
               created_year,
               MovieType,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.length ?? value;
@@ -888,6 +907,7 @@ export default function UploadMovie(props) {
               length,
               created_year: value,
               MovieType,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.created_year ?? value;
@@ -921,6 +941,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType: value,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.MovieType ?? value;
@@ -993,6 +1014,45 @@ export default function UploadMovie(props) {
           {...getOverrideProps(overrides, "MovieType")}
         ></Autocomplete>
       </ArrayField>
+      <TextField
+        label="Subtitles location"
+        isRequired={false}
+        isReadOnly={false}
+        value={subtitles_location}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              age_rating,
+              thumbnail_location,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieType,
+              subtitles_location: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.subtitles_location ?? value;
+          }
+          if (errors.subtitles_location?.hasError) {
+            runValidationTasks("subtitles_location", value);
+          }
+          setSubtitles_location(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("subtitles_location", subtitles_location)
+        }
+        errorMessage={errors.subtitles_location?.errorMessage}
+        hasError={errors.subtitles_location?.hasError}
+        {...getOverrideProps(overrides, "subtitles_location")}
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

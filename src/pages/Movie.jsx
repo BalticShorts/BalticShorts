@@ -10,6 +10,8 @@ import { getMovieQuery } from '../custom-queries/queries';
 import { Footer } from '../modified-ui-components/Footer';
 
 Amplify.configure(awsExports);
+const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
+var AWS = require('aws-sdk');
 
 const movieTeamKeyOrder = ['Director', 'Actor', 'Executive producer', 'Operator', 'Costume artist', 'Producer', 'Author of the scenario', 'Makeup artist', 'Production company', 'Editing director', 'Film artist', 'Sound director', 'Composer']
 const fetchMovie = async id => {
@@ -66,6 +68,8 @@ const fetchPlaylists = async id => {
 
 function Movie() {
   const navigate = useNavigate();
+  AWS.config.region = "eu-north-1";
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials(IdentityPoolId);
 
   const { id } = useParams();
   const [movieURL, setMovieURL] = useState('');
@@ -74,15 +78,18 @@ function Movie() {
   const [textOnMovie, setTextOnMovie] = useState(true);
   const [playlists, setPlaylists] = useState([]);
   const [playlistRows, setPlaylistRows] = useState(1);
+  const [subtitles, setSubtitles] = useState([]);
 
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   useEffect(() => {
-    const get = async () => {
+    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+    async function get() {
       const movie = await fetchMovie(id);
       const url = await fetchVideo(movie.guid);
       const playlists = await fetchPlaylists(id);
       const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
+      await getSrc(movie.subtitles_location);
       try {     
         setMovieURL(url.Item.hlsUrl.S);
         setMovieData(movie);
@@ -93,7 +100,62 @@ function Movie() {
       }
     }
     get();
+    return () => {};
   }, [id]);
+
+  async function getSrc(location) {
+    console.log(location)
+  
+    const config = {
+        region: "eu-north-1",
+        credentials: new AWS.CognitoIdentityCredentials({
+          IdentityPoolId: IdentityPoolId,
+        }),
+        bucketName : "balticshortsphotos",
+    };
+    var myBucket = new AWS.S3(config);
+    if(location != null && location !== ''){
+      const split = location.split("/");
+      const key = split.pop()
+      const bucketLoc = split.join("/");
+      const extension = key.split(".").pop();
+      var params = {
+          Bucket: bucketLoc, 
+          Key: key
+      };
+      try{
+        const data = await myBucket.getObject(params).promise();
+        const type = extension === 'vtt' ? 'text/vtt' : 'text/plain';
+        var dataBlob = new Blob([data.Body], { type: type });
+        if (extension !== 'vtt'){
+          var srtText = await readBlobAsSrtText(dataBlob);
+          var srtRegex = /(.*\n)?(\d\d:\d\d:\d\d),(\d\d\d --> \d\d:\d\d:\d\d),(\d\d\d)/g;
+          var vttText = 'WEBVTT\n\n' + srtText.replace(srtRegex, '$1$2.$3.$4');
+          dataBlob = new Blob([vttText], { type: 'text/vtt' });
+        }
+        var blobURL = URL.createObjectURL(dataBlob);
+        setSubtitles(blobURL);
+      }
+      catch (error) {
+        console.error('Error fetching data:', error);
+      }  
+    }
+    return () => {};
+  }
+
+  const readBlobAsSrtText = async (blob) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const srtText = reader.result;
+        resolve(srtText);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+      reader.readAsText(blob);
+    });
+  };
 
   function removeText() {
     const elements = document.getElementById('textOnMovie')
@@ -133,7 +195,7 @@ function Movie() {
     <div className="FilmasSkats w-full relative bg-beige rounded-3xl">
       <div className='MovieContainer max-h-[80vh]' >
         <div onClick={() => removeText()} className='MovieContainer max-h-[80vh]' >
-          <VideoPlayer movieURL={movieURL} />
+          <VideoPlayer movieURL={movieURL} subtitles={subtitles} thumbnail={''} />
         </div>
         <div id='textOnMovie' className='max-h-[80vh] h-full'>
         <div className="Rectangle3 w-full h-52 left-0 top-[0]  absolute mix-blend-multiply bg-gradient-to-b from-slate-500 to-zinc-300" />

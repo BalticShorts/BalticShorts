@@ -222,6 +222,7 @@ export default function MovieUpdateForm(props) {
     photo_location: "",
     thumbnail_location: "",
     age_rating: "",
+    subtitles_location: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
@@ -273,6 +274,9 @@ export default function MovieUpdateForm(props) {
     initialValues.thumbnail_location
   );
   const [age_rating, setAge_rating] = React.useState(initialValues.age_rating);
+  const [subtitles_location, setSubtitles_location] = React.useState(
+    initialValues.subtitles_location
+  );
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -310,6 +314,7 @@ export default function MovieUpdateForm(props) {
     setPhoto_location(cleanValues.photo_location);
     setThumbnail_location(cleanValues.thumbnail_location);
     setAge_rating(cleanValues.age_rating);
+    setSubtitles_location(cleanValues.subtitles_location);
     setErrors({});
   };
   const [movieRecord, setMovieRecord] = React.useState(movieModelProp);
@@ -414,6 +419,7 @@ export default function MovieUpdateForm(props) {
     photo_location: [],
     thumbnail_location: [],
     age_rating: [],
+    subtitles_location: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -553,6 +559,7 @@ export default function MovieUpdateForm(props) {
           photo_location: photo_location ?? null,
           thumbnail_location: thumbnail_location ?? null,
           age_rating: age_rating ?? null,
+          subtitles_location: subtitles_location ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -743,6 +750,7 @@ export default function MovieUpdateForm(props) {
             photo_location: modelFields.photo_location ?? null,
             thumbnail_location: modelFields.thumbnail_location ?? null,
             age_rating: modelFields.age_rating ?? null,
+            subtitles_location: modelFields.subtitles_location ?? null,
           };
           promises.push(
             API.graphql({
@@ -797,6 +805,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -839,6 +848,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.name_eng ?? value;
@@ -881,6 +891,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.genre ?? value;
@@ -923,6 +934,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -965,6 +977,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.description_eng ?? value;
@@ -1007,6 +1020,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.screen_language ?? value;
@@ -1049,6 +1063,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.captions_language ?? value;
@@ -1093,6 +1108,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.origin_country ?? value;
@@ -1139,6 +1155,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.length ?? value;
@@ -1185,6 +1202,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.created_year ?? value;
@@ -1227,6 +1245,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.uploaded_at ?? value;
@@ -1269,6 +1288,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.guid ?? value;
@@ -1308,6 +1328,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.MovieTeam ?? value;
@@ -1405,6 +1426,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             values = result?.MovieInPlaylists ?? values;
@@ -1513,6 +1535,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.times_watched ?? value;
@@ -1552,6 +1575,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.MovieType ?? value;
@@ -1653,6 +1677,7 @@ export default function MovieUpdateForm(props) {
               photo_location: value,
               thumbnail_location,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.photo_location ?? value;
@@ -1695,6 +1720,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location: value,
               age_rating,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.thumbnail_location ?? value;
@@ -1743,6 +1769,7 @@ export default function MovieUpdateForm(props) {
               photo_location,
               thumbnail_location,
               age_rating: value,
+              subtitles_location,
             };
             const result = onChange(modelFields);
             value = result?.age_rating ?? value;
@@ -1756,6 +1783,51 @@ export default function MovieUpdateForm(props) {
         errorMessage={errors.age_rating?.errorMessage}
         hasError={errors.age_rating?.hasError}
         {...getOverrideProps(overrides, "age_rating")}
+      ></TextField>
+      <TextField
+        label="Subtitles location"
+        isRequired={false}
+        isReadOnly={false}
+        value={subtitles_location}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              uploaded_at,
+              guid,
+              MovieTeam,
+              MovieInPlaylists,
+              times_watched,
+              MovieType,
+              photo_location,
+              thumbnail_location,
+              age_rating,
+              subtitles_location: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.subtitles_location ?? value;
+          }
+          if (errors.subtitles_location?.hasError) {
+            runValidationTasks("subtitles_location", value);
+          }
+          setSubtitles_location(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("subtitles_location", subtitles_location)
+        }
+        errorMessage={errors.subtitles_location?.errorMessage}
+        hasError={errors.subtitles_location?.hasError}
+        {...getOverrideProps(overrides, "subtitles_location")}
       ></TextField>
       <Flex
         justifyContent="space-between"

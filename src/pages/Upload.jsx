@@ -8,6 +8,7 @@ import { API } from "aws-amplify";
 import { updateMovie } from "../graphql/mutations";
 import moment from 'moment'
 import { useNavigate } from "react-router-dom";
+import { SubtitleUpload } from "../components/SubtitleUpload";
 
 const Upload = () => {
     const navigate = useNavigate();
@@ -155,6 +156,10 @@ const Upload = () => {
                     <div className="flex justify-center flex-col gap-4">
                         <h1 className="text-2xl">Upload Movie Video file</h1>
                         <MovieUploadComponent movie = {movie} setMovieFile = {setMovieFile}/>
+                    </div>
+                    <div className="flex justify-center flex-col gap-4">
+                        <h1 className="text-2xl">Upload Movie Subtitle file</h1>
+                        <SubtitleUpload movie = {movie} upload = {upload}/>
                     </div>
                     <div className="flex justify-center gap-4 p-5">
                         {/* <button className="button rounded-xl border w-fit p-2" onClick={() => changeState('team')}>Back</button> */}

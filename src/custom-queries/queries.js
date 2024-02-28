@@ -75,6 +75,7 @@ export const getProfile = `
       screen_language
       times_watched
       guid
+      subtitles_location
     }
   }
 `;

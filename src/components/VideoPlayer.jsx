@@ -4,14 +4,12 @@ import 'video.js/dist/video-js.css';
 import 'videojs-contrib-quality-levels';
 import 'videojs-hls-quality-selector';
 
-const VideoPlayer = ({ movieURL }) => {
+const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
 
   const videoNode = useRef(null);
   const player = useRef(null);
 
   useEffect(() => {
-    // Make sure videojs does not initialize automatically
-    // maybe need to comment out
     videojs.options.autoSetup = false;
 
     // Setup the player
@@ -21,13 +19,15 @@ const VideoPlayer = ({ movieURL }) => {
         autoplay: false,
         preload: "auto",
         controls: true,
-        poster: "",
+        poster: thumbnail,
         sources: [
           {
             src: movieURL,
             type: "application/x-mpegURL"
+            
           }
-        ]
+        ],
+        tracks: [{src: subtitles, kind:'captions', srclang: 'en', label: 'English'}]
       };
     
 
