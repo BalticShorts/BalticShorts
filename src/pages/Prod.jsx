@@ -7,7 +7,9 @@ const Prod = () => {
     <>
     <div className="flex flex-col justify-center items-center h-screen">
       <div className="w-full h-screen overflow-hidden brightness-75">
-        <video className='videoTag w-full h-screen overflow-hidden object-cover -z-10' autoPlay loop muted src={video_src} />
+        <video className='videoTag w-full h-screen overflow-hidden object-cover -z-10' autoPlay loop muted>
+          <source src={video_src} type="video/mp4" />
+        </video>
       </div>
       <div className="absolute top-4 py-5">
         <div className="flex justify-center items-center">
