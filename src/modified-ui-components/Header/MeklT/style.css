@@ -1,0 +1,59 @@
+.mekl-t {
+  height: 19px;
+  position: relative;
+  width: 144px;
+}
+
+.mekl-t .aizv-rt {
+  color: #000000;
+  font-family: "SchoolBook-Regular", Helvetica;
+  font-size: 16px;
+  font-weight: 400;
+  left: 24px;
+  letter-spacing: 0.32px;
+  line-height: normal;
+  position: absolute;
+  top: -1px;
+  white-space: nowrap;
+  width: 113px;
+}
+
+.mekl-t .group {
+  height: 16px;
+  left: 1px;
+  position: absolute;
+  top: 2px;
+  width: 16px;
+}
+
+.mekl-t .overlap-group {
+  height: 16px;
+  position: relative;
+}
+
+.mekl-t .img {
+  height: 6px;
+  left: 10px;
+  position: absolute;
+  top: 10px;
+  width: 6px;
+}
+
+.mekl-t .ellipse {
+  border: 1px solid;
+  border-color: #000000;
+  border-radius: 6px;
+  height: 12px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 12px;
+}
+
+.mekl-t .group-2 {
+  height: 15px;
+  left: 2px;
+  position: absolute;
+  top: 3px;
+  width: 15px;
+}

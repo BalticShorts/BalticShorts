@@ -1,0 +1,1 @@
+export { MovieUploadComponent } from './MovieUploadComponent';

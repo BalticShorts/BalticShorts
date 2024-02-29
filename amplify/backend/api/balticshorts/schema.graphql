@@ -1,0 +1,127 @@
+type UserProfile @model @auth(rules: [
+  { allow: public, provider: iam, operations: [read] },
+  { allow: private, provider: iam, operations: [read, create, update, delete] }
+]) {
+  id: ID!
+  name: String
+  surname: String
+  is_member: Boolean
+  member_untill: AWSDateTime
+  is_admin: Boolean
+  email: AWSEmail
+  user_id: String
+  photo_location: String
+  MoviePlaylists: [MoviePlaylist] @hasMany(indexName: "byUserProfile", fields: ["id"])
+}
+
+type MovieType @model @auth(rules: [
+  { allow: public, provider: iam, operations: [read] },
+  { allow: private, provider: iam, operations: [read, create, update, delete] }
+]) {
+  id: ID!
+  type: String!
+}
+
+type PersonMovieTeam @model @auth(rules: [
+  { allow: public, provider: iam, operations: [read] },
+  { allow: private, provider: iam, operations: [read, create, update, delete] }
+]) {
+  id: ID!
+  movieteamID: ID! @index(name: "byMovieTeam")
+  personID: ID! @index(name: "byPerson")
+  MovieTeam: MovieTeam @belongsTo(fields: ["movieteamID"])
+  Person: Person @belongsTo(fields: ["personID"])
+  roleID: ID! @index(name: "byRole")
+  Role: Role @belongsTo(fields: ["roleID"])
+}
+
+type Role @model @auth(rules: [
+  { allow: public, provider: iam, operations: [read] },
+  { allow: private, provider: iam, operations: [read, create, update, delete] }
+]) {
+  id: ID!
+  name: String!
+  PersonMovieTeam: [PersonMovieTeam] @hasMany(indexName: "byRole", fields: ["id"])
+  name_eng: String
+}
+
+type Person @model @auth(rules: [
+  { allow: public, provider: iam, operations: [read] },
+  { allow: private, provider: iam, operations: [read, create, update, delete] }
+]) {
+  id: ID!
+  name: String!
+  surname: String!
+  role: String
+  description: String
+  Instagram: AWSURL
+  Facebook: AWSURL
+  IMBD: AWSURL
+  email: AWSEmail
+  PersonMovieTeams: [PersonMovieTeam] @hasMany(indexName: "byPerson", fields: ["id"])
+  user_id: String
+  is_public: Boolean
+  completed_setup: Boolean
+  photo_location: String
+  description_confirmed: Boolean
+  photo_confirmed: Boolean
+}
+
+type MoviePlaylist @model @auth(rules: [
+  { allow: public, provider: iam, operations: [read] },
+  { allow: private, provider: iam, operations: [read, create, update, delete] }
+]) {
+  id: ID!
+  Creator: String!
+  movies: [Movie] @manyToMany(relationName: "MovieMoviePlaylist")
+  Title: String!
+  is_public: Boolean!
+  is_recommended: Boolean
+  photo_location: String
+  userprofileID: ID @index(name: "byUserProfile")
+}
+
+type MovieTeam @model @auth(rules: [
+  { allow: public, provider: iam, operations: [read] },
+  { allow: private, provider: iam, operations: [read, create, update, delete] }
+]) {
+  id: ID!
+  MovieName: String
+  PersonMovieTeams: [PersonMovieTeam] @hasMany(indexName: "byMovieTeam", fields: ["id"])
+  Movie: Movie @belongsTo
+}
+
+type Movie @model @auth(rules: [
+  { allow: public, provider: iam, operations: [read] },
+  { allow: private, provider: iam, operations: [read, create, update, delete] }
+]) {
+  id: ID!
+  name: String
+  name_eng: String
+  genre: String
+  description: String
+  description_eng: String
+  screen_language: String
+  captions_language: String
+  origin_country: String
+  length: Int
+  created_year: Int
+  uploaded_at: String
+  guid: ID
+  MovieTeam: MovieTeam @hasOne
+  MovieInPlaylists: [MoviePlaylist] @manyToMany(relationName: "MovieMoviePlaylist")
+  times_watched: Int
+  MovieType: MovieType @hasOne
+  photo_location: String
+  thumbnail_location: String
+  age_rating: Int
+}
+
+type CountryCode @model @auth(rules: [
+  { allow: public, provider: iam, operations: [read] },
+  { allow: private, provider: iam, operations: [read, create, update, delete] }
+]) {
+  id: ID!
+  Country: String!
+  Code: String!
+}
