@@ -99,7 +99,7 @@ const Upload = () => {
     useEffect(() => {
         // scroll to top on page load
         window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
-        setTab('team');
+        setTab('movie');
       }, []);
     
     const guidGotten = async (type) => {

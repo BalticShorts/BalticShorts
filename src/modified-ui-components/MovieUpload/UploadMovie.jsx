@@ -203,6 +203,7 @@ export default function UploadMovie(props) {
     length: "",
     created_year: "",
     MovieType: undefined,
+    creators_comment: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
@@ -227,6 +228,9 @@ export default function UploadMovie(props) {
   const [created_year, setCreated_year] = React.useState(
     initialValues.created_year
   );
+  const [creators_comment, setCreators_comment] = React.useState(
+    initialValues.creators_comment
+  );
   const [MovieType, setMovieType] = React.useState(initialValues.MovieType);
   const [MovieTypeLoading, setMovieTypeLoading] = React.useState(false);
   const [movieTypeRecords, setMovieTypeRecords] = React.useState([]);
@@ -250,6 +254,7 @@ export default function UploadMovie(props) {
     setMovieType(initialValues.MovieType);
     setCurrentMovieTypeValue(undefined);
     setCurrentMovieTypeDisplayValue("");
+    setCreators_comment(initialValues.creators_comment);
     setErrors({});
   };
   const [currentMovieTypeDisplayValue, setCurrentMovieTypeDisplayValue] =
@@ -306,6 +311,7 @@ export default function UploadMovie(props) {
     MovieType: [
       { type: "Required", validationMessage: "MovieType is required." },
     ],
+    creators_comment: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -406,6 +412,7 @@ export default function UploadMovie(props) {
           length,
           created_year,
           MovieType,
+          creators_comment,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -456,6 +463,7 @@ export default function UploadMovie(props) {
             length: modelFields.length,
             created_year: modelFields.created_year,
             movieMovieTypeId: modelFields?.MovieType?.id,
+            creators_comment: modelFields.creators_comment,
           };
           const movie = (
             await API.graphql({
@@ -506,6 +514,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              creators_comment,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -541,6 +550,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              creators_comment,
             };
             const result = onChange(modelFields);
             value = result?.name_eng ?? value;
@@ -576,6 +586,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              creators_comment,
             };
             const result = onChange(modelFields);
             value = result?.genre ?? value;
@@ -610,6 +621,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              creators_comment,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -644,6 +656,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              creators_comment,
             };
             const result = onChange(modelFields);
             value = result?.description_eng ?? value;
@@ -657,6 +670,42 @@ export default function UploadMovie(props) {
         errorMessage={errors.description_eng?.errorMessage}
         hasError={errors.description_eng?.hasError}
         {...getOverrideProps(overrides, "description_eng")}
+      ></TextAreaField>
+      <TextAreaField
+        label="Creators comment"
+        isRequired={false}
+        isReadOnly={false}
+        value={creators_comment}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng: value,
+              age_rating,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieType,
+              creators_comment: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.creators_comment ?? value;
+          }
+          if (errors.creators_comment?.hasError) {
+            runValidationTasks("creators_comment", value);
+          }
+          setCreators_comment(value);
+        }}
+        onBlur={() => runValidationTasks("creators_comment", creators_comment)}
+        errorMessage={errors.creators_comment?.errorMessage}
+        hasError={errors.creators_comment?.hasError}
+        {...getOverrideProps(overrides, "creators_comment")}
       ></TextAreaField>
       <TextField
         label="Age rating"
@@ -683,6 +732,7 @@ export default function UploadMovie(props) {
               length,
               created_year,
               MovieType,
+              creators_comment,
             };
             const result = onChange(modelFields);
             value = result?.age_rating ?? value;
@@ -868,6 +918,7 @@ export default function UploadMovie(props) {
               length: value,
               created_year,
               MovieType,
+              creators_comment,
             };
             const result = onChange(modelFields);
             value = result?.length ?? value;
@@ -907,6 +958,7 @@ export default function UploadMovie(props) {
               length,
               created_year: value,
               MovieType,
+              creators_comment,
             };
             const result = onChange(modelFields);
             value = result?.created_year ?? value;
