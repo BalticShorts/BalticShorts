@@ -43,6 +43,8 @@ export declare type MovieCreateFormInputValues = {
     thumbnail_location?: string;
     age_rating?: number;
     subtitles_location?: string;
+    creators_comment?: string;
+    trailerGuid?: string;
 };
 export declare type MovieCreateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -65,6 +67,8 @@ export declare type MovieCreateFormValidationValues = {
     thumbnail_location?: ValidationFunction<string>;
     age_rating?: ValidationFunction<number>;
     subtitles_location?: ValidationFunction<string>;
+    creators_comment?: ValidationFunction<string>;
+    trailerGuid?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MovieCreateFormOverridesProps = {
@@ -89,6 +93,8 @@ export declare type MovieCreateFormOverridesProps = {
     thumbnail_location?: PrimitiveOverrideProps<TextFieldProps>;
     age_rating?: PrimitiveOverrideProps<TextFieldProps>;
     subtitles_location?: PrimitiveOverrideProps<TextFieldProps>;
+    creators_comment?: PrimitiveOverrideProps<TextFieldProps>;
+    trailerGuid?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type MovieCreateFormProps = React.PropsWithChildren<{
     overrides?: MovieCreateFormOverridesProps | undefined | null;

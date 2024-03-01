@@ -128,6 +128,8 @@ export const getPersonMovieTeam = /* GraphQL */ `
           thumbnail_location
           age_rating
           subtitles_location
+          creators_comment
+          trailerGuid
           createdAt
           updatedAt
           movieMovieTeamId
@@ -159,6 +161,8 @@ export const getPersonMovieTeam = /* GraphQL */ `
         photo_location
         description_confirmed
         photo_confirmed
+        is_entity
+        nationality
         createdAt
         updatedAt
         __typename
@@ -221,6 +225,8 @@ export const listPersonMovieTeams = /* GraphQL */ `
           photo_location
           description_confirmed
           photo_confirmed
+          is_entity
+          nationality
           createdAt
           updatedAt
           __typename
@@ -286,6 +292,8 @@ export const personMovieTeamsByMovieteamID = /* GraphQL */ `
           photo_location
           description_confirmed
           photo_confirmed
+          is_entity
+          nationality
           createdAt
           updatedAt
           __typename
@@ -351,6 +359,8 @@ export const personMovieTeamsByPersonID = /* GraphQL */ `
           photo_location
           description_confirmed
           photo_confirmed
+          is_entity
+          nationality
           createdAt
           updatedAt
           __typename
@@ -416,6 +426,8 @@ export const personMovieTeamsByRoleID = /* GraphQL */ `
           photo_location
           description_confirmed
           photo_confirmed
+          is_entity
+          nationality
           createdAt
           updatedAt
           __typename
@@ -518,6 +530,8 @@ export const getPerson = /* GraphQL */ `
       photo_location
       description_confirmed
       photo_confirmed
+      is_entity
+      nationality
       createdAt
       updatedAt
       __typename
@@ -551,6 +565,8 @@ export const listPeople = /* GraphQL */ `
         photo_location
         description_confirmed
         photo_confirmed
+        is_entity
+        nationality
         createdAt
         updatedAt
         __typename
@@ -711,6 +727,8 @@ export const getMovieTeam = /* GraphQL */ `
         thumbnail_location
         age_rating
         subtitles_location
+        creators_comment
+        trailerGuid
         createdAt
         updatedAt
         movieMovieTeamId
@@ -757,6 +775,8 @@ export const listMovieTeams = /* GraphQL */ `
           thumbnail_location
           age_rating
           subtitles_location
+          creators_comment
+          trailerGuid
           createdAt
           updatedAt
           movieMovieTeamId
@@ -815,6 +835,8 @@ export const getMovie = /* GraphQL */ `
           thumbnail_location
           age_rating
           subtitles_location
+          creators_comment
+          trailerGuid
           createdAt
           updatedAt
           movieMovieTeamId
@@ -850,6 +872,8 @@ export const getMovie = /* GraphQL */ `
       thumbnail_location
       age_rating
       subtitles_location
+      creators_comment
+      trailerGuid
       createdAt
       updatedAt
       movieMovieTeamId
@@ -903,6 +927,8 @@ export const listMovies = /* GraphQL */ `
         thumbnail_location
         age_rating
         subtitles_location
+        creators_comment
+        trailerGuid
         createdAt
         updatedAt
         movieMovieTeamId
@@ -1007,6 +1033,8 @@ export const getMovieMoviePlaylist = /* GraphQL */ `
         thumbnail_location
         age_rating
         subtitles_location
+        creators_comment
+        trailerGuid
         createdAt
         updatedAt
         movieMovieTeamId
@@ -1066,6 +1094,8 @@ export const listMovieMoviePlaylists = /* GraphQL */ `
           thumbnail_location
           age_rating
           subtitles_location
+          creators_comment
+          trailerGuid
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1132,6 +1162,8 @@ export const movieMoviePlaylistsByMoviePlaylistId = /* GraphQL */ `
           thumbnail_location
           age_rating
           subtitles_location
+          creators_comment
+          trailerGuid
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1198,6 +1230,8 @@ export const movieMoviePlaylistsByMovieId = /* GraphQL */ `
           thumbnail_location
           age_rating
           subtitles_location
+          creators_comment
+          trailerGuid
           createdAt
           updatedAt
           movieMovieTeamId

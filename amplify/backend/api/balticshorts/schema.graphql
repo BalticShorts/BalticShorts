@@ -51,7 +51,7 @@ type Person @model @auth(rules: [
 ]) {
   id: ID!
   name: String!
-  surname: String!
+  surname: String
   role: String
   description: String
   Instagram: AWSURL
@@ -65,6 +65,8 @@ type Person @model @auth(rules: [
   photo_location: String
   description_confirmed: Boolean
   photo_confirmed: Boolean
+  is_entity: Boolean
+  nationality: String
 }
 
 type MoviePlaylist @model @auth(rules: [
@@ -117,6 +119,8 @@ type Movie @model @auth(rules: [
   thumbnail_location: String
   age_rating: Int
   subtitles_location: String
+  creators_comment: String
+  trailerGuid: ID
 }
 
 type CountryCode @model @auth(rules: [

@@ -205,6 +205,8 @@ export default function UploadMovie(props) {
     created_year: "",
     MovieType: undefined,
     subtitles_location: "",
+    creators_comment: "",
+    trailerGuid: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
@@ -238,6 +240,12 @@ export default function UploadMovie(props) {
   const [subtitles_location, setSubtitles_location] = React.useState(
     initialValues.subtitles_location
   );
+  const [creators_comment, setCreators_comment] = React.useState(
+    initialValues.creators_comment
+  );
+  const [trailerGuid, setTrailerGuid] = React.useState(
+    initialValues.trailerGuid
+  );
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -257,6 +265,8 @@ export default function UploadMovie(props) {
     setCurrentMovieTypeValue(undefined);
     setCurrentMovieTypeDisplayValue("");
     setSubtitles_location(initialValues.subtitles_location);
+    setCreators_comment(initialValues.creators_comment);
+    setTrailerGuid(initialValues.trailerGuid);
     setErrors({});
   };
   const [currentMovieTypeDisplayValue, setCurrentMovieTypeDisplayValue] =
@@ -292,6 +302,8 @@ export default function UploadMovie(props) {
       { type: "Required", validationMessage: "MovieType is required." },
     ],
     subtitles_location: [],
+    creators_comment: [],
+    trailerGuid: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -363,6 +375,8 @@ export default function UploadMovie(props) {
           created_year,
           MovieType,
           subtitles_location,
+          creators_comment,
+          trailerGuid,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -415,6 +429,8 @@ export default function UploadMovie(props) {
             created_year: modelFields.created_year,
             movieMovieTypeId: modelFields?.MovieType?.id,
             subtitles_location: modelFields.subtitles_location,
+            creators_comment: modelFields.creators_comment,
+            trailerGuid: modelFields.trailerGuid,
           };
           await API.graphql({
             query: createMovie.replaceAll("__typename", ""),
@@ -463,6 +479,8 @@ export default function UploadMovie(props) {
               created_year,
               MovieType,
               subtitles_location,
+              creators_comment,
+              trailerGuid,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -500,6 +518,8 @@ export default function UploadMovie(props) {
               created_year,
               MovieType,
               subtitles_location,
+              creators_comment,
+              trailerGuid,
             };
             const result = onChange(modelFields);
             value = result?.name_eng ?? value;
@@ -537,6 +557,8 @@ export default function UploadMovie(props) {
               created_year,
               MovieType,
               subtitles_location,
+              creators_comment,
+              trailerGuid,
             };
             const result = onChange(modelFields);
             value = result?.genre ?? value;
@@ -573,6 +595,8 @@ export default function UploadMovie(props) {
               created_year,
               MovieType,
               subtitles_location,
+              creators_comment,
+              trailerGuid,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -609,6 +633,8 @@ export default function UploadMovie(props) {
               created_year,
               MovieType,
               subtitles_location,
+              creators_comment,
+              trailerGuid,
             };
             const result = onChange(modelFields);
             value = result?.description_eng ?? value;
@@ -650,6 +676,8 @@ export default function UploadMovie(props) {
               created_year,
               MovieType,
               subtitles_location,
+              creators_comment,
+              trailerGuid,
             };
             const result = onChange(modelFields);
             value = result?.age_rating ?? value;
@@ -687,6 +715,8 @@ export default function UploadMovie(props) {
               created_year,
               MovieType,
               subtitles_location,
+              creators_comment,
+              trailerGuid,
             };
             const result = onChange(modelFields);
             value = result?.thumbnail_location ?? value;
@@ -733,6 +763,8 @@ export default function UploadMovie(props) {
               created_year,
               MovieType,
               subtitles_location,
+              creators_comment,
+              trailerGuid,
             };
             const result = onChange(modelFields);
             value = result?.screen_language ?? value;
@@ -778,6 +810,8 @@ export default function UploadMovie(props) {
               created_year,
               MovieType,
               subtitles_location,
+              creators_comment,
+              trailerGuid,
             };
             const result = onChange(modelFields);
             value = result?.captions_language ?? value;
@@ -825,6 +859,8 @@ export default function UploadMovie(props) {
               created_year,
               MovieType,
               subtitles_location,
+              creators_comment,
+              trailerGuid,
             };
             const result = onChange(modelFields);
             value = result?.origin_country ?? value;
@@ -867,6 +903,8 @@ export default function UploadMovie(props) {
               created_year,
               MovieType,
               subtitles_location,
+              creators_comment,
+              trailerGuid,
             };
             const result = onChange(modelFields);
             value = result?.length ?? value;
@@ -908,6 +946,8 @@ export default function UploadMovie(props) {
               created_year: value,
               MovieType,
               subtitles_location,
+              creators_comment,
+              trailerGuid,
             };
             const result = onChange(modelFields);
             value = result?.created_year ?? value;
@@ -942,6 +982,8 @@ export default function UploadMovie(props) {
               created_year,
               MovieType: value,
               subtitles_location,
+              creators_comment,
+              trailerGuid,
             };
             const result = onChange(modelFields);
             value = result?.MovieType ?? value;
@@ -1037,6 +1079,8 @@ export default function UploadMovie(props) {
               created_year,
               MovieType,
               subtitles_location: value,
+              creators_comment,
+              trailerGuid,
             };
             const result = onChange(modelFields);
             value = result?.subtitles_location ?? value;
@@ -1052,6 +1096,84 @@ export default function UploadMovie(props) {
         errorMessage={errors.subtitles_location?.errorMessage}
         hasError={errors.subtitles_location?.hasError}
         {...getOverrideProps(overrides, "subtitles_location")}
+      ></TextField>
+      <TextField
+        label="Creators comment"
+        isRequired={false}
+        isReadOnly={false}
+        value={creators_comment}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              age_rating,
+              thumbnail_location,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieType,
+              subtitles_location,
+              creators_comment: value,
+              trailerGuid,
+            };
+            const result = onChange(modelFields);
+            value = result?.creators_comment ?? value;
+          }
+          if (errors.creators_comment?.hasError) {
+            runValidationTasks("creators_comment", value);
+          }
+          setCreators_comment(value);
+        }}
+        onBlur={() => runValidationTasks("creators_comment", creators_comment)}
+        errorMessage={errors.creators_comment?.errorMessage}
+        hasError={errors.creators_comment?.hasError}
+        {...getOverrideProps(overrides, "creators_comment")}
+      ></TextField>
+      <TextField
+        label="Trailer guid"
+        isRequired={false}
+        isReadOnly={false}
+        value={trailerGuid}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              age_rating,
+              thumbnail_location,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieType,
+              subtitles_location,
+              creators_comment,
+              trailerGuid: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.trailerGuid ?? value;
+          }
+          if (errors.trailerGuid?.hasError) {
+            runValidationTasks("trailerGuid", value);
+          }
+          setTrailerGuid(value);
+        }}
+        onBlur={() => runValidationTasks("trailerGuid", trailerGuid)}
+        errorMessage={errors.trailerGuid?.errorMessage}
+        hasError={errors.trailerGuid?.hasError}
+        {...getOverrideProps(overrides, "trailerGuid")}
       ></TextField>
       <Flex
         justifyContent="space-between"

@@ -42,6 +42,8 @@ export declare type MovieUpdateFormInputValues = {
     thumbnail_location?: string;
     age_rating?: number;
     subtitles_location?: string;
+    creators_comment?: string;
+    trailerGuid?: string;
 };
 export declare type MovieUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -64,6 +66,8 @@ export declare type MovieUpdateFormValidationValues = {
     thumbnail_location?: ValidationFunction<string>;
     age_rating?: ValidationFunction<number>;
     subtitles_location?: ValidationFunction<string>;
+    creators_comment?: ValidationFunction<string>;
+    trailerGuid?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MovieUpdateFormOverridesProps = {
@@ -88,6 +92,8 @@ export declare type MovieUpdateFormOverridesProps = {
     thumbnail_location?: PrimitiveOverrideProps<TextFieldProps>;
     age_rating?: PrimitiveOverrideProps<TextFieldProps>;
     subtitles_location?: PrimitiveOverrideProps<TextFieldProps>;
+    creators_comment?: PrimitiveOverrideProps<TextFieldProps>;
+    trailerGuid?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type MovieUpdateFormProps = React.PropsWithChildren<{
     overrides?: MovieUpdateFormOverridesProps | undefined | null;

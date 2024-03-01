@@ -207,6 +207,8 @@ export default function PersonUpdateForm(props) {
     photo_location: "",
     description_confirmed: false,
     photo_confirmed: false,
+    is_entity: false,
+    nationality: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [surname, setSurname] = React.useState(initialValues.surname);
@@ -240,6 +242,10 @@ export default function PersonUpdateForm(props) {
   const [photo_confirmed, setPhoto_confirmed] = React.useState(
     initialValues.photo_confirmed
   );
+  const [is_entity, setIs_entity] = React.useState(initialValues.is_entity);
+  const [nationality, setNationality] = React.useState(
+    initialValues.nationality
+  );
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -267,6 +273,8 @@ export default function PersonUpdateForm(props) {
     setPhoto_location(cleanValues.photo_location);
     setDescription_confirmed(cleanValues.description_confirmed);
     setPhoto_confirmed(cleanValues.photo_confirmed);
+    setIs_entity(cleanValues.is_entity);
+    setNationality(cleanValues.nationality);
     setErrors({});
   };
   const [personRecord, setPersonRecord] = React.useState(personModelProp);
@@ -311,7 +319,7 @@ export default function PersonUpdateForm(props) {
   };
   const validations = {
     name: [{ type: "Required" }],
-    surname: [{ type: "Required" }],
+    surname: [],
     role: [],
     description: [],
     Instagram: [{ type: "URL" }],
@@ -325,6 +333,8 @@ export default function PersonUpdateForm(props) {
     photo_location: [],
     description_confirmed: [],
     photo_confirmed: [],
+    is_entity: [],
+    nationality: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -384,7 +394,7 @@ export default function PersonUpdateForm(props) {
         event.preventDefault();
         let modelFields = {
           name,
-          surname,
+          surname: surname ?? null,
           role: role ?? null,
           description: description ?? null,
           Instagram: Instagram ?? null,
@@ -398,6 +408,8 @@ export default function PersonUpdateForm(props) {
           photo_location: photo_location ?? null,
           description_confirmed: description_confirmed ?? null,
           photo_confirmed: photo_confirmed ?? null,
+          is_entity: is_entity ?? null,
+          nationality: nationality ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -489,7 +501,7 @@ export default function PersonUpdateForm(props) {
           });
           const modelFieldsToSave = {
             name: modelFields.name,
-            surname: modelFields.surname,
+            surname: modelFields.surname ?? null,
             role: modelFields.role ?? null,
             description: modelFields.description ?? null,
             Instagram: modelFields.Instagram ?? null,
@@ -502,6 +514,8 @@ export default function PersonUpdateForm(props) {
             photo_location: modelFields.photo_location ?? null,
             description_confirmed: modelFields.description_confirmed ?? null,
             photo_confirmed: modelFields.photo_confirmed ?? null,
+            is_entity: modelFields.is_entity ?? null,
+            nationality: modelFields.nationality ?? null,
           };
           promises.push(
             API.graphql({
@@ -552,6 +566,8 @@ export default function PersonUpdateForm(props) {
               photo_location,
               description_confirmed,
               photo_confirmed,
+              is_entity,
+              nationality,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -568,7 +584,7 @@ export default function PersonUpdateForm(props) {
       ></TextField>
       <TextField
         label="Surname"
-        isRequired={true}
+        isRequired={false}
         isReadOnly={false}
         value={surname}
         onChange={(e) => {
@@ -590,6 +606,8 @@ export default function PersonUpdateForm(props) {
               photo_location,
               description_confirmed,
               photo_confirmed,
+              is_entity,
+              nationality,
             };
             const result = onChange(modelFields);
             value = result?.surname ?? value;
@@ -628,6 +646,8 @@ export default function PersonUpdateForm(props) {
               photo_location,
               description_confirmed,
               photo_confirmed,
+              is_entity,
+              nationality,
             };
             const result = onChange(modelFields);
             value = result?.role ?? value;
@@ -666,6 +686,8 @@ export default function PersonUpdateForm(props) {
               photo_location,
               description_confirmed,
               photo_confirmed,
+              is_entity,
+              nationality,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -704,6 +726,8 @@ export default function PersonUpdateForm(props) {
               photo_location,
               description_confirmed,
               photo_confirmed,
+              is_entity,
+              nationality,
             };
             const result = onChange(modelFields);
             value = result?.Instagram ?? value;
@@ -742,6 +766,8 @@ export default function PersonUpdateForm(props) {
               photo_location,
               description_confirmed,
               photo_confirmed,
+              is_entity,
+              nationality,
             };
             const result = onChange(modelFields);
             value = result?.Facebook ?? value;
@@ -780,6 +806,8 @@ export default function PersonUpdateForm(props) {
               photo_location,
               description_confirmed,
               photo_confirmed,
+              is_entity,
+              nationality,
             };
             const result = onChange(modelFields);
             value = result?.IMBD ?? value;
@@ -818,6 +846,8 @@ export default function PersonUpdateForm(props) {
               photo_location,
               description_confirmed,
               photo_confirmed,
+              is_entity,
+              nationality,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -852,6 +882,8 @@ export default function PersonUpdateForm(props) {
               photo_location,
               description_confirmed,
               photo_confirmed,
+              is_entity,
+              nationality,
             };
             const result = onChange(modelFields);
             values = result?.PersonMovieTeams ?? values;
@@ -952,6 +984,8 @@ export default function PersonUpdateForm(props) {
               photo_location,
               description_confirmed,
               photo_confirmed,
+              is_entity,
+              nationality,
             };
             const result = onChange(modelFields);
             value = result?.user_id ?? value;
@@ -990,6 +1024,8 @@ export default function PersonUpdateForm(props) {
               photo_location,
               description_confirmed,
               photo_confirmed,
+              is_entity,
+              nationality,
             };
             const result = onChange(modelFields);
             value = result?.is_public ?? value;
@@ -1028,6 +1064,8 @@ export default function PersonUpdateForm(props) {
               photo_location,
               description_confirmed,
               photo_confirmed,
+              is_entity,
+              nationality,
             };
             const result = onChange(modelFields);
             value = result?.completed_setup ?? value;
@@ -1066,6 +1104,8 @@ export default function PersonUpdateForm(props) {
               photo_location: value,
               description_confirmed,
               photo_confirmed,
+              is_entity,
+              nationality,
             };
             const result = onChange(modelFields);
             value = result?.photo_location ?? value;
@@ -1104,6 +1144,8 @@ export default function PersonUpdateForm(props) {
               photo_location,
               description_confirmed: value,
               photo_confirmed,
+              is_entity,
+              nationality,
             };
             const result = onChange(modelFields);
             value = result?.description_confirmed ?? value;
@@ -1144,6 +1186,8 @@ export default function PersonUpdateForm(props) {
               photo_location,
               description_confirmed,
               photo_confirmed: value,
+              is_entity,
+              nationality,
             };
             const result = onChange(modelFields);
             value = result?.photo_confirmed ?? value;
@@ -1158,6 +1202,86 @@ export default function PersonUpdateForm(props) {
         hasError={errors.photo_confirmed?.hasError}
         {...getOverrideProps(overrides, "photo_confirmed")}
       ></SwitchField>
+      <SwitchField
+        label="Is entity"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={is_entity}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              role,
+              description,
+              Instagram,
+              Facebook,
+              IMBD,
+              email,
+              PersonMovieTeams,
+              user_id,
+              is_public,
+              completed_setup,
+              photo_location,
+              description_confirmed,
+              photo_confirmed,
+              is_entity: value,
+              nationality,
+            };
+            const result = onChange(modelFields);
+            value = result?.is_entity ?? value;
+          }
+          if (errors.is_entity?.hasError) {
+            runValidationTasks("is_entity", value);
+          }
+          setIs_entity(value);
+        }}
+        onBlur={() => runValidationTasks("is_entity", is_entity)}
+        errorMessage={errors.is_entity?.errorMessage}
+        hasError={errors.is_entity?.hasError}
+        {...getOverrideProps(overrides, "is_entity")}
+      ></SwitchField>
+      <TextField
+        label="Nationality"
+        isRequired={false}
+        isReadOnly={false}
+        value={nationality}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              role,
+              description,
+              Instagram,
+              Facebook,
+              IMBD,
+              email,
+              PersonMovieTeams,
+              user_id,
+              is_public,
+              completed_setup,
+              photo_location,
+              description_confirmed,
+              photo_confirmed,
+              is_entity,
+              nationality: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.nationality ?? value;
+          }
+          if (errors.nationality?.hasError) {
+            runValidationTasks("nationality", value);
+          }
+          setNationality(value);
+        }}
+        onBlur={() => runValidationTasks("nationality", nationality)}
+        errorMessage={errors.nationality?.errorMessage}
+        hasError={errors.nationality?.hasError}
+        {...getOverrideProps(overrides, "nationality")}
+      ></TextField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
