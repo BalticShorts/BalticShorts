@@ -76,6 +76,7 @@ export const getProfile = `
       times_watched
       guid
       subtitles_location
+      trailerGuid
     }
   }
 `;

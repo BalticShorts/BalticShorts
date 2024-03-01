@@ -36,6 +36,8 @@ export declare type UploadMovieInputValues = {
     created_year?: number;
     MovieType?: any;
     subtitles_location?: string;
+    creators_comment?: string;
+    trailerGuid?: string;
 };
 export declare type UploadMovieValidationValues = {
     name?: ValidationFunction<string>;
@@ -52,6 +54,8 @@ export declare type UploadMovieValidationValues = {
     created_year?: ValidationFunction<number>;
     MovieType?: ValidationFunction<any>;
     subtitles_location?: ValidationFunction<string>;
+    creators_comment?: ValidationFunction<string>;
+    trailerGuid?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type UploadMovieOverridesProps = {
@@ -70,6 +74,8 @@ export declare type UploadMovieOverridesProps = {
     created_year?: PrimitiveOverrideProps<TextFieldProps>;
     MovieType?: PrimitiveOverrideProps<AutocompleteProps>;
     subtitles_location?: PrimitiveOverrideProps<TextFieldProps>;
+    creators_comment?: PrimitiveOverrideProps<TextFieldProps>;
+    trailerGuid?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type UploadMovieProps = React.PropsWithChildren<{
     overrides?: UploadMovieOverridesProps | undefined | null;

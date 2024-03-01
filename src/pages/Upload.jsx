@@ -20,6 +20,7 @@ const Upload = () => {
     const [upload, setUpload] = useState(false);
     const [photoLoc, setPhotoLoc] = useState([]);
     const [thumbnail, setThumbnail] = useState([]);
+    const [trailerFile, setTrailerFile] = useState('');
     
     const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -41,12 +42,14 @@ const Upload = () => {
         changeState('done')
         movie.uploaded_at = moment().format();
         const photoL = await getPhotoLocation();
-        const movId = await guidGotten();
+        const movId = await guidGotten('movie');
+        const trailerId = await guidGotten('trailer');
         const thumbLoc = await getThumbnailLocation();
 
         movie.guid = movId;
         movie.photo_location = photoL;
         movie.thumbnail_location = thumbLoc;
+        movie.trailerGuid = trailerId;
         delete movie.createdAt;
         delete movie.updatedAt;
         delete movie.MovieInPlaylists;
@@ -64,7 +67,6 @@ const Upload = () => {
         clearState();
         sleep(2000);
         navigate('/');
-   
     }
     async function getPhotoLocation(){
 
@@ -97,20 +99,20 @@ const Upload = () => {
     useEffect(() => {
         // scroll to top on page load
         window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
-        setTab('movie');
+        setTab('team');
       }, []);
     
-    const guidGotten = async () => {
+    const guidGotten = async (type) => {
         var g = guid;
-
         const requestOptions = {
             method: 'POST',
         };
+        const addOn = type === 'movie' ? movieFile : trailerFile
         for (let index = 0; index < 10; index++) {
             if(g === ''){
                 await sleep(2000);
                 const data = await fetch(
-                    'https://uwmvm4vk6a.execute-api.eu-north-1.amazonaws.com/Dev/uploadFile/' + movieFile,
+                    'https://uwmvm4vk6a.execute-api.eu-north-1.amazonaws.com/Dev/uploadFile/' + addOn ,
                     requestOptions
                 ).then((response) => response.json());
                 if(data.Items.length > 0){
@@ -160,6 +162,10 @@ const Upload = () => {
                     <div className="flex justify-center flex-col gap-4">
                         <h1 className="text-2xl">Upload Movie Subtitle file</h1>
                         <SubtitleUpload movie = {movie} upload = {upload}/>
+                    </div>
+                    <div className="flex justify-center flex-col gap-4">
+                        <h1 className="text-2xl">Upload Movie Trailer file</h1>
+                        <MovieUploadComponent movie = {movie} setMovieFile = {setTrailerFile}/>
                     </div>
                     <div className="flex justify-center gap-4 p-5">
                         {/* <button className="button rounded-xl border w-fit p-2" onClick={() => changeState('team')}>Back</button> */}
