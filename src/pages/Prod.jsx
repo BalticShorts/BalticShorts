@@ -18,7 +18,7 @@ const Prod = () => {
 
   return (
     <>
-      <div className="flex flex-col justify-center items-center h-screen">
+      <div className="flex flex-col justify-center items-center h-screen font-['SchoolBook']">
         <div className="w-full h-screen overflow-hidden brightness-75">
           {isMobile ? (
             <img src={mobileBackground} alt="Mobile Background" className="w-full h-screen object-cover -z-10" />
@@ -35,12 +35,12 @@ const Prod = () => {
         </div>
         <div className="absolute justify-center items-center h-screen flex flex-col select-none">
           <div className="py-5 text-center">
-            <div className={`font-bold text-white ${isMobile ? 'text-3xl' : 'text-4xl'} uppercase font-['SchoolBook']`}>
+            <div className={`font-bold text-white uppercase font-['SchoolBook'] ${isMobile ? 'text-3xl' : 'text-4xl'}`}>
               Šeit no jauna top{isMobile && <br/>} Baltijas īsfilmu<br/></div>
-            <div className={`font-bold text-white ${isMobile ? 'text-3xl' : 'text-4xl'} uppercase font-['SchoolBook']`}>
+            <div className={`font-bold text-white uppercase font-['SchoolBook'] ${isMobile ? 'text-3xl' : 'text-4xl'}`}>
               straumēšanas{isMobile && <br/>} platforma</div>
           </div>
-          <div className={`text-center text-white ${isMobile ? 'text-lg' : 'text-xl'} p-2 font-['SchoolBook']`}>
+          <div className={`text-center text-white p-2 font-['SchoolBook'] ${isMobile ? 'text-lg' : 'text-xl'}`}>
             A streaming platform for Baltic short films{isMobile && <br/>} is going to be here soon
           </div>
         </div>
