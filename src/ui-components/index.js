@@ -35,5 +35,7 @@ export { default as StillsGallery } from "./StillsGallery";
 export { default as UploadMovie } from "./UploadMovie";
 export { default as UserProfileCreateForm } from "./UserProfileCreateForm";
 export { default as UserProfileUpdateForm } from "./UserProfileUpdateForm";
+export { default as WaitlistEmailCreateForm } from "./WaitlistEmailCreateForm";
+export { default as WaitlistEmailUpdateForm } from "./WaitlistEmailUpdateForm";
 export { default as Watchlaterbutton } from "./Watchlaterbutton";
 export { default as studioTheme } from "./studioTheme";

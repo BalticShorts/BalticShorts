@@ -1231,6 +1231,48 @@ export const deleteCountryCode = /* GraphQL */ `
     }
   }
 `;
+export const createWaitlistEmail = /* GraphQL */ `
+  mutation CreateWaitlistEmail(
+    $input: CreateWaitlistEmailInput!
+    $condition: ModelWaitlistEmailConditionInput
+  ) {
+    createWaitlistEmail(input: $input, condition: $condition) {
+      id
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateWaitlistEmail = /* GraphQL */ `
+  mutation UpdateWaitlistEmail(
+    $input: UpdateWaitlistEmailInput!
+    $condition: ModelWaitlistEmailConditionInput
+  ) {
+    updateWaitlistEmail(input: $input, condition: $condition) {
+      id
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteWaitlistEmail = /* GraphQL */ `
+  mutation DeleteWaitlistEmail(
+    $input: DeleteWaitlistEmailInput!
+    $condition: ModelWaitlistEmailConditionInput
+  ) {
+    deleteWaitlistEmail(input: $input, condition: $condition) {
+      id
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const createMovieMoviePlaylist = /* GraphQL */ `
   mutation CreateMovieMoviePlaylist(
     $input: CreateMovieMoviePlaylistInput!

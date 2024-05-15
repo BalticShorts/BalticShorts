@@ -6,6 +6,7 @@
 
 import * as React from "react";
 import { AutocompleteProps, GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { StorageManagerProps } from "@aws-amplify/ui-react-storage";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -23,32 +24,26 @@ export declare type ValidationResponse = {
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type MoviePlaylistUpdateFormInputValues = {
     Creator?: string;
-    movies?: any[];
     Title?: string;
-    is_public?: boolean;
+    movies?: any[];
     is_recommended?: boolean;
-    photo_location?: string;
-    userprofileID?: string;
+    Field0?: string;
 };
 export declare type MoviePlaylistUpdateFormValidationValues = {
     Creator?: ValidationFunction<string>;
-    movies?: ValidationFunction<any>;
     Title?: ValidationFunction<string>;
-    is_public?: ValidationFunction<boolean>;
+    movies?: ValidationFunction<any>;
     is_recommended?: ValidationFunction<boolean>;
-    photo_location?: ValidationFunction<string>;
-    userprofileID?: ValidationFunction<string>;
+    Field0?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MoviePlaylistUpdateFormOverridesProps = {
     MoviePlaylistUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     Creator?: PrimitiveOverrideProps<TextFieldProps>;
-    movies?: PrimitiveOverrideProps<AutocompleteProps>;
     Title?: PrimitiveOverrideProps<TextFieldProps>;
-    is_public?: PrimitiveOverrideProps<SwitchFieldProps>;
+    movies?: PrimitiveOverrideProps<AutocompleteProps>;
     is_recommended?: PrimitiveOverrideProps<SwitchFieldProps>;
-    photo_location?: PrimitiveOverrideProps<TextFieldProps>;
-    userprofileID?: PrimitiveOverrideProps<AutocompleteProps>;
+    Field0?: PrimitiveOverrideProps<StorageManagerProps>;
 } & EscapeHatchProps;
 export declare type MoviePlaylistUpdateFormProps = React.PropsWithChildren<{
     overrides?: MoviePlaylistUpdateFormOverridesProps | undefined | null;
