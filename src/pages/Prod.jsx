@@ -8,7 +8,8 @@ import { createWaitlistEmail } from "../graphql/mutations";
 import { waitlistEmailByEmail } from "../graphql/queries";
 
 const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-
+const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
+var AWS = require('aws-sdk');
 Amplify.configure(awsExports);
 
 const Prod = () => {
@@ -17,6 +18,7 @@ const Prod = () => {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
+    updateAWSConfigAndGetClient(IdentityPoolId, "eu-north-1")
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -24,6 +26,13 @@ const Prod = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  function updateAWSConfigAndGetClient(cognitoIdentityCredentials, region) {
+    if (cognitoIdentityCredentials != null) {
+      AWS.config.region = region;
+      AWS.config.credentials = new AWS.CognitoIdentityCredentials(cognitoIdentityCredentials);
+    }
+}
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
