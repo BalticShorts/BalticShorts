@@ -45,12 +45,9 @@ const signVideo = async url => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Credentials': 'include',
     },
-    withCredentials: true,
+    credentials: 'include',
     body: JSON.stringify({ }),
-
-    // body: JSON.stringify({ 'url': url }),
   };
   const data = await fetch(
     config.aws_api_gateway + 'signLink',
