@@ -31,7 +31,13 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
             
           }
         ],
-        tracks: [{src: subtitles, kind:'captions', srclang: 'en', label: 'English'}]
+        tracks: [{src: subtitles, kind:'captions', srclang: 'en', label: 'English'}],
+        html5: {
+          hls: {
+              withCredentials: true,
+              overrideNative: true
+          }
+        }
       };
     
 
