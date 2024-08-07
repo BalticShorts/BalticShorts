@@ -91,12 +91,12 @@ exports.handler = async (event) => {
         // Replace index.m3u8 with *
         url = replaceM3U8WithWildcard(url);
         console.log('Modified Resource URL:', url);
-        const cookieDomain = 'balticshorts.com';
+        const cookieDomain = '.balticshorts.com';
         // 
         const signedCookies = await generateSignedCookies(url);
         const cookieHeaders = Object.entries(signedCookies).map(([name, value]) => ({
             name,
-            value: `${name}=${value}; Path=/; Domain: ${cookieDomain}; HttpOnly; Secure; SameSite=None`
+            value: `${name}=${value}; Path=/; Domain: ${cookieDomain}; HttpOnly; Secure; SameSite=Lax`
         }));
 
         return {

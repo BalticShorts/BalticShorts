@@ -18,13 +18,13 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail, cookies }) => {
     const cookieHeader = Object.keys(cookies).map(key => `${key}=${cookies[key]}`).join('; ');
     // console.log(cookieHeader);
 
-    // const setCookies = (cookies) => {
-    //   for (const [name, value] of Object.entries(cookies)) {
-    //     console.log(name, value);
-    //     Cookies.set(name, value, { path: '/', domain: '.balticshorts.com', sameSite: 'None' });
-    //   }
-    // };
-    // setCookies(cookies);
+    const setCookies = (cookies) => {
+      for (const [name, value] of Object.entries(cookies)) {
+        console.log(name, value);
+        Cookies.set(name, value, { path: '/', domain: '.balticshorts.com', sameSite: 'None' });
+      }
+    };
+    setCookies(cookies);
 
 
     // Create an axios instance with custom headers
