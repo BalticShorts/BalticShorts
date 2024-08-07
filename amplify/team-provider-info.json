@@ -24,10 +24,20 @@
         "balticshorts397b1215": {
           "bucketName": "balticshortsprod-source71e471f1-1x9aicwn54xig",
           "region": "eu-north-1"
+        },
+        "balticshorts7ee72368": {
+          "bucketName": "balticshortsstack-source71e471f1-aacfeq17yzau",
+          "region": "eu-north-1"
         }
       },
       "api": {
         "balticshorts": {}
+      },
+      "function": {
+        "VODSignedLinks": {
+          "deploymentBucketName": "amplify-balticshorts-dev-193002-deployment",
+          "s3Key": "amplify-builds/VODSignedLinks-586d4b7669375a656e5a-build.zip"
+        }
       }
     }
   }

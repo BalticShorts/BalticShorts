@@ -1240,6 +1240,45 @@ export const onDeleteCountryCode = /* GraphQL */ `
     }
   }
 `;
+export const onCreateWaitlistEmail = /* GraphQL */ `
+  subscription OnCreateWaitlistEmail(
+    $filter: ModelSubscriptionWaitlistEmailFilterInput
+  ) {
+    onCreateWaitlistEmail(filter: $filter) {
+      id
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateWaitlistEmail = /* GraphQL */ `
+  subscription OnUpdateWaitlistEmail(
+    $filter: ModelSubscriptionWaitlistEmailFilterInput
+  ) {
+    onUpdateWaitlistEmail(filter: $filter) {
+      id
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteWaitlistEmail = /* GraphQL */ `
+  subscription OnDeleteWaitlistEmail(
+    $filter: ModelSubscriptionWaitlistEmailFilterInput
+  ) {
+    onDeleteWaitlistEmail(filter: $filter) {
+      id
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
 export const onCreateMovieMoviePlaylist = /* GraphQL */ `
   subscription OnCreateMovieMoviePlaylist(
     $filter: ModelSubscriptionMovieMoviePlaylistFilterInput

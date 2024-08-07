@@ -8,6 +8,7 @@ import { isVideoPlaying } from '../components/VideoPlayer';
 import { useNavigate } from "react-router-dom";
 import { getMovieQuery } from '../custom-queries/queries';
 import { Footer } from '../modified-ui-components/Footer';
+import config from '../config';
 
 Amplify.configure(awsExports);
 const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
@@ -31,10 +32,75 @@ const fetchVideo = async guid => {
     method: 'POST',
   };
   const data = await fetch(
-    'https://uwmvm4vk6a.execute-api.eu-north-1.amazonaws.com/Dev/movies/' + guid,
+    config.aws_api_gateway + 'movies/' + guid,
     requestOptions
   ).then((response) => response.json());
-  return data;
+  return data.Item.egressEndpoints?.M.HLS.S;
+}
+
+const signVideo = async url => {
+  console.log(url)
+  // const a = url.replace(/index\.m3u8$/, '*');
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Credentials': 'include',
+    },
+    body: JSON.stringify({ }),
+
+    // body: JSON.stringify({ 'url': url }),
+  };
+  const data = await fetch(
+    config.aws_api_gateway + 'signLink',
+    requestOptions
+  ).then((response) => response.json());
+  console.log(data.body)
+  // const s = data.body.map(item => item.value);
+  // console.log(s)
+
+  // const signedCookies = JSON.parse(data.body);
+
+  return data.body;
+  // return data.body ? data.body.replace(/['"]/g, '') : '';
+}
+async function fetchManifest(url) {
+  try {
+    
+      const response = await fetch(url);
+      const reader = response.body.getReader();
+      let result = '';
+      const decoder = new TextDecoder();
+
+      while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          result += decoder.decode(value);
+      }
+
+      console.log(result);
+      const cred = url.split('?')[1];
+      const lines = result.split('\n');
+      console.log(lines);
+      const rewrittenLines = await Promise.all(lines.map(async (line) => {
+        console.log(line)
+        if (line.endsWith('.m3u8') || line.endsWith('.ts')) {
+            const signedUrl = line + '?' + cred
+            return signedUrl;
+        }
+        return line;
+    }));
+    console.log(rewrittenLines);
+    const newfile = rewrittenLines.join('\n');
+    console.log(newfile);
+    const blob = new Blob([newfile], { type: 'application/x-mpegURL' });
+    const blobUrl = URL.createObjectURL(blob);
+    console.log(blobUrl);
+    return blobUrl;
+  } catch (err) {
+      console.error('Error fetching manifest:', err);
+      throw err;
+  }
 }
 
 const fetchPlaylists = async id => {
@@ -74,6 +140,7 @@ function Movie() {
   const { id } = useParams();
   const [movieURL, setMovieURL] = useState('');
   const [movieData, setMovieData] = useState({});
+  const [cookies, setCokies] = useState({});
   const [movieTeamData, setMovieTeamData] = useState({});
   const [textOnMovie, setTextOnMovie] = useState(true);
   const [playlists, setPlaylists] = useState([]);
@@ -89,9 +156,12 @@ function Movie() {
       const url = await fetchVideo(movie.guid);
       const playlists = await fetchPlaylists(id);
       const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
+      const signedUrl = await signVideo(url);
+      console.log(signedUrl)
       await getSrc(movie.subtitles_location);
       try {     
-        setMovieURL(url.Item.hlsUrl.S);
+        setCokies(signedUrl);
+        setMovieURL(url);
         setMovieData(movie);
         setMovieTeamData(team);
         setPlaylists(playlists);
@@ -104,7 +174,6 @@ function Movie() {
   }, [id]);
 
   async function getSrc(location) {
-    console.log(location)
   
     const config = {
         region: "eu-north-1",
@@ -195,7 +264,7 @@ function Movie() {
     <div className="FilmasSkats w-full relative bg-beige rounded-3xl">
       <div className='MovieContainer max-h-[80vh]' >
         <div onClick={() => removeText()} className='MovieContainer max-h-[80vh]' >
-          <VideoPlayer movieURL={movieURL} subtitles={subtitles} thumbnail={''} />
+          <VideoPlayer secretName = {'bs/prod/video/access'} movieURL={movieURL} subtitles={subtitles} thumbnail={''} cookies={cookies} />
         </div>
         <div id='textOnMovie' className='max-h-[80vh] h-full'>
         <div className="Rectangle3 w-full h-52 left-0 top-[0]  absolute mix-blend-multiply bg-gradient-to-b from-slate-500 to-zinc-300" />

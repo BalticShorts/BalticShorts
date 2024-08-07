@@ -972,6 +972,63 @@ export const listCountryCodes = /* GraphQL */ `
     }
   }
 `;
+export const getWaitlistEmail = /* GraphQL */ `
+  query GetWaitlistEmail($id: ID!) {
+    getWaitlistEmail(id: $id) {
+      id
+      email
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listWaitlistEmails = /* GraphQL */ `
+  query ListWaitlistEmails(
+    $filter: ModelWaitlistEmailFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listWaitlistEmails(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        email
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const waitlistEmailByEmail = /* GraphQL */ `
+  query WaitlistEmailByEmail(
+    $email: AWSEmail!
+    $sortDirection: ModelSortDirection
+    $filter: ModelWaitlistEmailFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    waitlistEmailByEmail(
+      email: $email
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
 export const getMovieMoviePlaylist = /* GraphQL */ `
   query GetMovieMoviePlaylist($id: ID!) {
     getMovieMoviePlaylist(id: $id) {
