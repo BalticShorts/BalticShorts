@@ -34,10 +34,11 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail, cookies }) => {
       },
       withCredentials: true
     });
+    const url = movieURL.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com');
 
     const fetchManifest = async () => {
       try {
-        const response = await axiosInstance.get(movieURL);
+        const response = await axiosInstance.get(url);
 
         if (response.status !== 200) {
           throw new Error('Failed to fetch HLS manifest');
