@@ -13,14 +13,6 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail, cookies }) => {
 
   useEffect(() => {
     videojs.options.autoSetup = false;
-
-    const setCookies = (cookies) => {
-      for (const [name, value] of Object.entries(cookies)) {
-        console.log(name, value);
-        Cookies.set(name, value, { path: '/', domain: '.balticshorts.com', sameSite: 'Lax' });
-      }
-    };
-    setCookies(cookies);
     const url = movieURL.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com');
 
 

@@ -53,12 +53,20 @@ const signVideo = async url => {
     config.aws_api_gateway + 'signLink',
     requestOptions
   ).then((response) => response.json());
+
+  const setData = (cookies) => {
+    for (const [name, value] of Object.entries(cookies)) {
+      console.log(name, value);
+      Cookies.set(name, value, { path: '/*', domain: '.balticshorts.com', sameSite: 'Strict' });
+    }
+  };
+
   console.log(data.body)
   // const s = data.body.map(item => item.value);
   // console.log(s)
 
   // const signedCookies = JSON.parse(data.body);
-
+  setData(data.body);
   return data.body;
   // return data.body ? data.body.replace(/['"]/g, '') : '';
 }
