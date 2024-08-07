@@ -66,7 +66,7 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail, cookies }) => {
         poster: thumbnail,
         sources: [
           {
-            src: URL.createObjectURL(new Blob([manifestContent], { type: 'application/vnd.apple.mpegurl' })),
+            src: url,
             type: 'application/x-mpegURL',
           },
         ],
