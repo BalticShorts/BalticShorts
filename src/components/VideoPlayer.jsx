@@ -15,7 +15,7 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail, cookies }) => {
 
   useEffect(() => {
     videojs.options.autoSetup = false;
-    // const cookieHeader = Object.keys(cookies).map(key => `${key}=${cookies[key]}`).join('; ');
+    const cookieHeader = Object.keys(cookies).map(key => `${key}=${cookies[key]}`).join('; ');
     // console.log(cookieHeader);
 
     // const setCookies = (cookies) => {
