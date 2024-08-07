@@ -6,7 +6,7 @@ import 'videojs-hls-quality-selector';
 import axios from 'axios';
 
 
-const VideoPlayer = ({ movieURL, subtitles, thumbnail, cookies }) => {
+const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
 
   const videoNode = useRef(null);
   const player = useRef(null);

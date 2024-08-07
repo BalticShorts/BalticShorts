@@ -58,7 +58,7 @@ const signVideo = async url => {
   const setData = (cookies) => {
     for (const [name, value] of Object.entries(cookies)) {
       console.log(name, value);
-      Cookies.set(name, value, { path: '/*', domain: '.balticshorts.com', sameSite: 'Strict' });
+      Cookies.set(name, value, { path: '/*', domain: '.balticshorts.com', sameSite: 'Lax' });
     }
   };
 
