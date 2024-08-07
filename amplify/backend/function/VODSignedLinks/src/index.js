@@ -106,7 +106,7 @@ exports.handler = async (event) => {
                 't2': cookieHeaders[1].value,
                 't3': cookieHeaders[2].value,
                 'Set-Cookie': cookieHeaders.map(cookie => cookie.value),
-                'Access-Control-Allow-Origin': ['*'], // Enable CORS if needed
+                'Access-Control-Allow-Origin': ['https://testdev.balticshorts.com', 'http://localhost'], // Enable CORS if needed
                 'Content-Type': ['application/json']
             },
             body: signedCookies,
@@ -117,7 +117,7 @@ exports.handler = async (event) => {
         return {
             statusCode: 500,
             multiValueHeaders: {
-                'Access-Control-Allow-Origin': ['*'], // Enable CORS if needed
+                'Access-Control-Allow-Origin': ['https://testdev.balticshorts.com', 'http://localhost'], // Enable CORS if needed
                 'Content-Type': ['application/json']
             },
             body: JSON.stringify('Error generating signed cookies'),
