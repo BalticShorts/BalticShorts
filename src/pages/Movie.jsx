@@ -47,6 +47,7 @@ const signVideo = async url => {
       'Content-Type': 'application/json',
       'Credentials': 'include',
     },
+    withCredentials: true,
     body: JSON.stringify({ }),
 
     // body: JSON.stringify({ 'url': url }),

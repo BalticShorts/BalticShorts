@@ -21,7 +21,7 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail, cookies }) => {
     // const setCookies = (cookies) => {
     //   for (const [name, value] of Object.entries(cookies)) {
     //     console.log(name, value);
-    //     Cookies.set(name, value, { path: '/', domain: '.balticshorts.com', secure: true, sameSite: 'Lax' });
+    //     Cookies.set(name, value, { path: '/', domain: '.balticshorts.com', sameSite: 'None' });
     //   }
     // };
     // setCookies(cookies);
