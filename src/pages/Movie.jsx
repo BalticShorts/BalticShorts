@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { getMovieQuery } from '../custom-queries/queries';
 import { Footer } from '../modified-ui-components/Footer';
 import config from '../config';
+import Cookies from 'js-cookie';
 
 Amplify.configure(awsExports);
 const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";

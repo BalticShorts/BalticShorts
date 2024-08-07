@@ -4,7 +4,7 @@ import 'video.js/dist/video-js.css';
 import 'videojs-contrib-quality-levels';
 import 'videojs-hls-quality-selector';
 import axios from 'axios';
-import Cookies from 'js-cookie';
+
 
 const VideoPlayer = ({ movieURL, subtitles, thumbnail, cookies }) => {
 
