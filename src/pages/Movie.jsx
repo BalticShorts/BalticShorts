@@ -55,7 +55,7 @@ const signVideo = async url => {
     requestOptions
   ).then((response) => response.json());
 
-  const setData = (cookies) => {
+  const setData = async (cookies) => {
     for (const [name, value] of Object.entries(cookies)) {
       console.log(name, value);
       Cookies.set(name, value, { path: '/', domain: '.balticshorts.com', sameSite: 'Lax' });
@@ -67,7 +67,7 @@ const signVideo = async url => {
   // console.log(s)
 
   // const signedCookies = JSON.parse(data.body);
-  setData(data.body);
+  await setData(data.body);
   return data.body;
   // return data.body ? data.body.replace(/['"]/g, '') : '';
 }
