@@ -3,8 +3,6 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import 'videojs-contrib-quality-levels';
 import 'videojs-hls-quality-selector';
-import axios from 'axios';
-
 
 const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
 
@@ -15,10 +13,7 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
     videojs.options.autoSetup = false;
     const url = movieURL.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com');
 
-
-    // Setup the player
     if (url !== '') {
-      // Setup the player
       const videoJsOptions = {
         autoplay: false,
         preload: "auto",
@@ -27,8 +22,7 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
         sources: [
           {
             src: url,
-            type: "application/x-mpegURL"
-            
+            type: "application/dash+xml"  
           }
         ],
         tracks: [{src: subtitles, kind:'captions', srclang: 'en', label: 'English'}],
@@ -40,10 +34,7 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
         }
       };
     
-
       player.current = videojs(videoNode.current, videoJsOptions, function onPlayerReady() {
-        // console.log('Player is ready');
-        // console.log(videoNode.current)
         this.qualityLevels();
         this.hlsQualitySelector({ displayCurrentQuality: true });
       });

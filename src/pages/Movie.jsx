@@ -36,7 +36,7 @@ const fetchVideo = async guid => {
     config.aws_api_gateway + 'movies/' + guid,
     requestOptions
   ).then((response) => response.json());
-  return data.Item.egressEndpoints?.M.HLS.S;
+  return data.Item.egressEndpoints?.M.DASH.S;
 }
 
 const signVideo = async url => {
@@ -164,7 +164,6 @@ function Movie() {
       const playlists = await fetchPlaylists(id);
       const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
       const signedUrl = await signVideo(url);
-      console.log(signedUrl)
       await getSrc(movie.subtitles_location);
       try {     
         setCokies(signedUrl);
