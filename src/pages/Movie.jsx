@@ -10,6 +10,7 @@ import { getMovieQuery } from '../custom-queries/queries';
 import { Footer } from '../modified-ui-components/Footer';
 import config from '../config';
 import Cookies from 'js-cookie';
+import {isMobile} from 'react-device-detect';
 
 Amplify.configure(awsExports);
 const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
@@ -57,7 +58,7 @@ const signVideo = async url => {
 
   const setData = async (cookies) => {
     for (const [name, value] of Object.entries(cookies)) {
-      console.log(name, value);
+      // console.log(name, value);
       Cookies.set(name, value, { path: '/', domain: '.balticshorts.com', sameSite: 'Lax' });
     }
   };
@@ -268,10 +269,11 @@ function Movie() {
   return (
     <>
     <div className="FilmasSkats w-full relative bg-beige rounded-3xl">
-      <div className='MovieContainer max-h-[80vh]' >
+      <div className='MovieContainer max-h-[80vh] w-full' >
         <div onClick={() => removeText()} className='MovieContainer max-h-[80vh]' >
-          <VideoPlayer secretName = {'bs/prod/video/access'} movieURL={movieURL} subtitles={subtitles} thumbnail={''} cookies={cookies} />
+          <VideoPlayer movieURL={movieURL} subtitles={subtitles} thumbnail={''} />
         </div>
+        {!isMobile && 
         <div id='textOnMovie' className='max-h-[80vh] h-full'>
         <div className="Rectangle3 w-full h-52 left-0 top-[0]  absolute mix-blend-multiply bg-gradient-to-b from-slate-500 to-zinc-300" />
           <div className='w-full top-0 absolute py-4 flex flex-col items-center justify-center gap-6 mt-12'>
@@ -294,6 +296,7 @@ function Movie() {
 
           </div>
         </div>
+        }
       </div>
       {/* <div className="FilmasKadri w-full h-5 left-[305px] top-[1531px] absolute text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">FILMAS KADRI</div>
       <div className="SarakstiKurosFilmaIrIekAuta w-full h-5 left-[305px] top-[2288px] absolute text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">Saraksti, kuros filma ir iekļauta</div>

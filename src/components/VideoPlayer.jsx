@@ -11,9 +11,9 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
 
   useEffect(() => {
     videojs.options.autoSetup = false;
-    const url = movieURL.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com');
+    const url = movieURL && movieURL.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com');
 
-    if (url !== '') {
+    if (url !== '' && url !== undefined) {
       const videoJsOptions = {
         autoplay: false,
         preload: "auto",
