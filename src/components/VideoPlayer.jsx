@@ -112,6 +112,12 @@ const SimpleBitmovinPlayer = ({ movieURL, subtitles, thumbnail }) => {
           playback: {
             muted: false,
             autoplay: false,
+          },
+          options: {
+            withCredentials: true,
+            manifestWithCredentials: true,
+            hlsWithCredentials: true,
+            dashWithCredentials: true,
           }
         };
 
@@ -129,11 +135,7 @@ const SimpleBitmovinPlayer = ({ movieURL, subtitles, thumbnail }) => {
             label: 'English',
             srclang: 'en'
           } : undefined,
-          options: {
-            manifestWithCredentials: true,
-            hlsWithCredentials: true,
-            dashWithCredentials: true,
-          },
+
         };
 
         player.load(source).then(() => {
