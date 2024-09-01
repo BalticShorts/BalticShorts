@@ -37,8 +37,7 @@ const fetchVideo = async guid => {
     config.aws_api_gateway + 'movies/' + guid,
     requestOptions
   ).then((response) => response.json());
-  return data.Item.dashUrl?.S;
-  // .replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com')
+  return data.Item.dashUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com');
 }
 
 const signVideo = async url => {
