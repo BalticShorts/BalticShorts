@@ -130,7 +130,6 @@ const SimpleBitmovinPlayer = ({ movieURL, subtitles, thumbnail }) => {
             srclang: 'en'
           } : undefined,
           options: {
-            withCredentials: true,
             manifestWithCredentials: true,
             hlsWithCredentials: true,
             dashWithCredentials: true,
