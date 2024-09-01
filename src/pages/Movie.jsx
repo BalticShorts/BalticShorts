@@ -64,7 +64,7 @@ const signVideo = async url => {
   };
 
   // console.log(data.body);
-  await setData(data.body);
+  // await setData(data.body);
   return data.body;
 }
 
