@@ -82,9 +82,9 @@ exports.handler = async (event) => {
         let url;
         if (event.httpMethod === 'POST') {
             const body = JSON.parse(event.body);
-            url = 'https://vod.balticshorts.com/out/*'; // body.url || Use wildcard if URL is not provided
+            url = 'https://vod.balticshorts.com/*'; // body.url || Use wildcard if URL is not provided
         } else {
-            url = 'https://vod.balticshorts.com/out/*'; // event.queryStringParameters?.url ||  For GET requests
+            url = 'https://vod.balticshorts.com/*'; // event.queryStringParameters?.url ||  For GET requests
         }
         console.log('Original URL:', url);
 

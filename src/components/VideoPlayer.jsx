@@ -29,6 +29,9 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
           hls: {
               withCredentials: true,
               overrideNative: true
+          },
+          dash: {
+            setXHRWithCredentialsForType: ['MPD', true],
           }
         }
       };

@@ -63,52 +63,9 @@ const signVideo = async url => {
     }
   };
 
-  console.log(data.body)
-  // const s = data.body.map(item => item.value);
-  // console.log(s)
-
-  // const signedCookies = JSON.parse(data.body);
-  await setData(data.body);
+  // console.log(data.body);
+  // await setData(data.body);
   return data.body;
-  // return data.body ? data.body.replace(/['"]/g, '') : '';
-}
-async function fetchManifest(url) {
-  try {
-    
-      const response = await fetch(url);
-      const reader = response.body.getReader();
-      let result = '';
-      const decoder = new TextDecoder();
-
-      while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          result += decoder.decode(value);
-      }
-
-      console.log(result);
-      const cred = url.split('?')[1];
-      const lines = result.split('\n');
-      console.log(lines);
-      const rewrittenLines = await Promise.all(lines.map(async (line) => {
-        console.log(line)
-        if (line.endsWith('.m3u8') || line.endsWith('.ts')) {
-            const signedUrl = line + '?' + cred
-            return signedUrl;
-        }
-        return line;
-    }));
-    console.log(rewrittenLines);
-    const newfile = rewrittenLines.join('\n');
-    console.log(newfile);
-    const blob = new Blob([newfile], { type: 'application/x-mpegURL' });
-    const blobUrl = URL.createObjectURL(blob);
-    console.log(blobUrl);
-    return blobUrl;
-  } catch (err) {
-      console.error('Error fetching manifest:', err);
-      throw err;
-  }
 }
 
 const fetchPlaylists = async id => {
