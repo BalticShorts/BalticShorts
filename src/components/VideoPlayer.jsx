@@ -130,7 +130,10 @@ const SimpleBitmovinPlayer = ({ movieURL, subtitles, thumbnail }) => {
             srclang: 'en'
           } : undefined,
           options: {
-            withCredentials: true
+            withCredentials: true,
+            manifestWithCredentials: true,
+            hlsWithCredentials: true,
+            dashWithCredentials: true,
           },
         };
 
@@ -158,7 +161,7 @@ const SimpleBitmovinPlayer = ({ movieURL, subtitles, thumbnail }) => {
     <div className="relative w-full max-h-[80vh]">
       <div
         ref={playerRef}
-        className="absolute top-0 left-0 w-full h-full"
+        className="absolute top-0 left-0 w-full max-h-[80vh]"
       ></div>
     </div>
   );
