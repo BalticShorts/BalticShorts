@@ -37,8 +37,8 @@ const fetchVideo = async guid => {
     config.aws_api_gateway + 'movies/' + guid,
     requestOptions
   ).then((response) => response.json());
-  const resp = isSafari ? data.Item.hlsUrl?.S : data.Item.dashUrl?.S
-  return resp.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com');
+  const resp = !isSafari ? data.Item.hlsUrl?.S : data.Item.dashUrl?.S
+  return resp !== undefined ? resp.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com') : '';
 }
 
 const signVideo = async url => {
