@@ -39,6 +39,12 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
       player.current = videojs(videoNode.current, videoJsOptions, function onPlayerReady() {
         this.qualityLevels();
         this.hlsQualitySelector({ displayCurrentQuality: true });
+        this.$video.ready(() => {
+          //tell videojs that all the other kinds of requests it'll make need to have cookies
+          ['GET', 'MediaSegment', 'InitializationSegment', 'IndexSegment', 'other'].forEach((credential) => {
+            this.$video.dash.mediaPlayer.setXHRWithCredentialsForType(credential, true);
+          });
+        });
       });
     }
     return () => {
