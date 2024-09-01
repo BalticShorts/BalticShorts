@@ -34,7 +34,7 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
           }
         }
       };
-      if(isSafari){
+      if(!isSafari){
         videojs.Html5DashJS.hook('beforeinitialize', function(player, media_player) {
           function loader() {
             var load = this.parent.load
