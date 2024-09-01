@@ -3,6 +3,7 @@ import videojs from 'video.js';
 import 'video.js/dist/video-js.css';
 import 'videojs-contrib-quality-levels';
 import 'videojs-hls-quality-selector';
+import 'videojs-contrib-dash';
 
 const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
 
@@ -37,15 +38,28 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
         }
       };
     
+      videojs.Html5DashJS.hook('beforeinitialize', function(player, media_player) {
+        console.log('beforeinitialize') 
+        function loader() {
+          var load = this.parent.load
+          return {
+            load: function(req) {
+              req.withCredentials = true
+              load(req)
+          }}
+        }
+        media_player.extend('XHRLoader', loader, true)
+        media_player.setXHRWithCredentialsForType('GET',true)
+        media_player.setXHRWithCredentialsForType('MPD',true)
+        media_player.setXHRWithCredentialsForType('MediaSegment',true)
+        media_player.setXHRWithCredentialsForType('InitializationSegment',true)
+        media_player.setXHRWithCredentialsForType('IndexSegment',true)
+        media_player.setXHRWithCredentialsForType('other',true)
+      })
+
       player.current = videojs(videoNode.current, videoJsOptions, function onPlayerReady() {
         this.qualityLevels();
         this.hlsQualitySelector({ displayCurrentQuality: true });
-        this.$video.ready(() => {
-          //tell videojs that all the other kinds of requests it'll make need to have cookies
-          ['GET', 'MediaSegment', 'InitializationSegment', 'IndexSegment', 'other'].forEach((credential) => {
-            this.$video.dash.mediaPlayer.setXHRWithCredentialsForType(credential, true);
-          });
-        });
       });
     }
     return () => {
