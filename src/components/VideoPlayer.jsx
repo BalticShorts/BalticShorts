@@ -4,6 +4,7 @@ import 'video.js/dist/video-js.css';
 import 'videojs-contrib-quality-levels';
 import 'videojs-hls-quality-selector';
 import 'videojs-contrib-dash';
+import {isSafari} from 'react-device-detect';
 
 const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
 
@@ -22,7 +23,7 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
         sources: [
           {
             src: movieURL,
-            type: "application/dash+xml"  
+            type: isSafari ? "application/x-mpegURL" : "application/dash+xml"  
           }
         ],
         tracks: [{src: subtitles, kind:'captions', srclang: 'en', label: 'English'}],
@@ -30,32 +31,28 @@ const VideoPlayer = ({ movieURL, subtitles, thumbnail }) => {
           vhs: {
             withCredentials: true,
             overrideNative: true
-          },
-          dash: {
-            withCredentials: true,
-            overrideNative: true
           }
         }
       };
-    
-      videojs.Html5DashJS.hook('beforeinitialize', function(player, media_player) {
-        console.log('beforeinitialize') 
-        function loader() {
-          var load = this.parent.load
-          return {
-            load: function(req) {
-              req.withCredentials = true
-              load(req)
-          }}
-        }
-        media_player.extend('XHRLoader', loader, true)
-        media_player.setXHRWithCredentialsForType('GET',true)
-        media_player.setXHRWithCredentialsForType('MPD',true)
-        media_player.setXHRWithCredentialsForType('MediaSegment',true)
-        media_player.setXHRWithCredentialsForType('InitializationSegment',true)
-        media_player.setXHRWithCredentialsForType('IndexSegment',true)
-        media_player.setXHRWithCredentialsForType('other',true)
-      })
+      if(isSafari){
+        videojs.Html5DashJS.hook('beforeinitialize', function(player, media_player) {
+          function loader() {
+            var load = this.parent.load
+            return {
+              load: function(req) {
+                req.withCredentials = true
+                load(req)
+            }}
+          }
+          media_player.extend('XHRLoader', loader, true)
+          media_player.setXHRWithCredentialsForType('GET',true)
+          media_player.setXHRWithCredentialsForType('MPD',true)
+          media_player.setXHRWithCredentialsForType('MediaSegment',true)
+          media_player.setXHRWithCredentialsForType('InitializationSegment',true)
+          media_player.setXHRWithCredentialsForType('IndexSegment',true)
+          media_player.setXHRWithCredentialsForType('other',true)
+        })
+      }
 
       player.current = videojs(videoNode.current, videoJsOptions, function onPlayerReady() {
         this.qualityLevels();

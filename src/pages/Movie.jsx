@@ -10,7 +10,7 @@ import { getMovieQuery } from '../custom-queries/queries';
 import { Footer } from '../modified-ui-components/Footer';
 import config from '../config';
 import Cookies from 'js-cookie';
-import {isMobile} from 'react-device-detect';
+import {isMobile, isSafari} from 'react-device-detect';
 
 Amplify.configure(awsExports);
 const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
@@ -37,11 +37,11 @@ const fetchVideo = async guid => {
     config.aws_api_gateway + 'movies/' + guid,
     requestOptions
   ).then((response) => response.json());
-  return data.Item.dashUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com');
+  const resp = isSafari ? data.Item.hlsUrl?.S : data.Item.dashUrl?.S
+  return resp.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com');
 }
 
 const signVideo = async url => {
-  console.log(url)
   // const a = url.replace(/index\.m3u8$/, '*');
   const requestOptions = {
     method: 'POST',
