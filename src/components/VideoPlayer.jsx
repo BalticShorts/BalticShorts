@@ -112,6 +112,19 @@ const SimpleBitmovinPlayer = ({ movieURL, subtitles, thumbnail }) => {
           playback: {
             muted: false,
             autoplay: false,
+          },
+          network: {
+            preprocessHttpRequest: function(type, request) {
+              console.log(type)
+              //  if (type === bitmovin.player.HttpRequestType.MEDIA_VIDEO ||
+                // type === bitmovin.player.HttpRequestType.MEDIA_AUDIO) {
+                  request.withCredentials = true;
+                  request.url += '?token='
+                  console.log(request)
+                  // return request;
+              // }
+              return Promise.resolve(request);
+            }
           }
         };
 

@@ -101,6 +101,7 @@ exports.handler = async (event) => {
 
         return {
             statusCode: 200,
+            cookies: cookieHeaders.map(cookie => cookie.value),
             multiValueHeaders: {
                 't1': cookieHeaders[0].value,
                 't2': cookieHeaders[1].value,
