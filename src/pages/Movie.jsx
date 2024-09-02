@@ -105,7 +105,7 @@ function Movie() {
   const { id } = useParams();
   const [movieURL, setMovieURL] = useState('');
   const [movieData, setMovieData] = useState({});
-  const [cookies, setCokies] = useState({});
+  const [urlAddon, setUrlAddon] = useState('');
   const [movieTeamData, setMovieTeamData] = useState({});
   const [textOnMovie, setTextOnMovie] = useState(true);
   const [playlists, setPlaylists] = useState([]);
@@ -121,10 +121,10 @@ function Movie() {
       const url = await fetchVideo(movie.guid);
       const playlists = await fetchPlaylists(id);
       const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
-      const signedUrl = await signVideo(url);
+      const signedUrlAddon = await signVideo(url);
       await getSrc(movie.subtitles_location);
       try {     
-        setCokies(signedUrl);
+        setUrlAddon(signedUrlAddon);
         setMovieURL(url);
         setMovieData(movie);
         setMovieTeamData(team);
@@ -228,7 +228,7 @@ function Movie() {
     <div className="FilmasSkats w-full relative bg-beige rounded-3xl">
       <div className='MovieContainer max-h-[80vh] w-full' >
         <div onClick={() => removeText()} className='MovieContainer max-h-[80vh]' >
-          <VideoPlayer movieURL={movieURL} subtitles={subtitles} thumbnail={''} />
+          <VideoPlayer movieURL={movieURL} urlAddon={urlAddon} subtitles={subtitles} thumbnail={''} />
         </div>
         {!isMobile && 
         <div id='textOnMovie' className='max-h-[80vh] h-full'>

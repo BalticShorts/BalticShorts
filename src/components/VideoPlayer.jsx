@@ -80,7 +80,7 @@
 
 import React, { useEffect, useRef } from 'react';
 
-const SimpleBitmovinPlayer = ({ movieURL, subtitles, thumbnail }) => {
+const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
   const playerRef = useRef(null);
 
   useEffect(() => {
@@ -119,7 +119,7 @@ const SimpleBitmovinPlayer = ({ movieURL, subtitles, thumbnail }) => {
               //  if (type === bitmovin.player.HttpRequestType.MEDIA_VIDEO ||
                 // type === bitmovin.player.HttpRequestType.MEDIA_AUDIO) {
                   request.withCredentials = true;
-                  request.url += '?token='
+                  request.url += urlAddon
                   console.log(request)
                   // return request;
               // }
