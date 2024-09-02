@@ -122,7 +122,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
                   console.log(request.url)
                   console.log(urlAddon)
                   request.withCredentials = true;
-                  request.url += '' + urlAddon;
+                  request.url += urlAddon;
                   console.log(request)
                   // return request;
               // }

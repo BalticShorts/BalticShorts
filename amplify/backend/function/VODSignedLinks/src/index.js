@@ -118,7 +118,7 @@ async function generateSignedUrlComponents(url) {
         console.log('Signed Policy', signedPolicy);
     
         const paramDelimiter = (url.indexOf('?') === -1) ? '?' : '&';
-        const cfSignedUrlAddon = `${paramDelimiter}Policy=${encodedPolicy}&Signature=${signedPolicy}&Key-Pair-Id=${key}`;
+        const cfSignedUrlAddon = `?Policy=${encodedPolicy}&Signature=${signedPolicy}&Key-Pair-Id=${key}`;
     
         console.log('Signed URL Components:', cfSignedUrlAddon);
         return cfSignedUrlAddon;
@@ -233,7 +233,7 @@ exports.handler = async (event) => {
                 'Access-Control-Allow-Origin': 'https://testdev.balticshorts.com', // Enable CORS if needed
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(cfSignedUrlAddon),
+            body: cfSignedUrlAddon,
         };
     } catch (err) {
         console.error('Lambda execution error:', err);
