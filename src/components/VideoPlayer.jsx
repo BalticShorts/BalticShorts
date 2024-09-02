@@ -115,17 +115,8 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           },
           network: {
             preprocessHttpRequest: function(type, request) {
-              console.log(type)
-              //  if (type === bitmovin.player.HttpRequestType.MEDIA_VIDEO ||
-                // type === bitmovin.player.HttpRequestType.MEDIA_AUDIO) {
-                  console.log('URL')
-                  console.log(request.url)
-                  console.log(urlAddon)
                   request.withCredentials = true;
                   request.url += urlAddon;
-                  console.log(request)
-                  // return request;
-              // }
               return Promise.resolve(request);
             }
           }
