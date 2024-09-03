@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import {isSafari} from 'react-device-detect';
+import {isSafari, isChrome, isAndroid} from 'react-device-detect';
 
 const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
   const playerRef = useRef(null);
@@ -48,7 +48,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
 
         // Load the source
         const source = {
-          ...(isSafari ? {} : { dash: movieURL.dash }),
+          ...(isSafari || (isChrome && isAndroid) ? {} : { dash: movieURL.dash }),
           ...(isSafari ? { hls: movieURL.hls } : {}),
           poster: thumbnail,
           subtitle: subtitles ? {
