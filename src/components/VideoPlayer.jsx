@@ -83,7 +83,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
     };
 
     loadPlayer();
-  }, [movieURL, subtitles, thumbnail]); // Add dependencies to reinitialize player on prop changes
+  }, [movieURL, urlAddon, subtitles, thumbnail]); // Add dependencies to reinitialize player on prop changes
 
   return (
     <div className="relative w-full max-h-[80vh]">
