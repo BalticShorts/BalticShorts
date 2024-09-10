@@ -48,8 +48,8 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
 
         // Load the source
         const source = {
-          ...(!isSafari ? { dash: movieURL.dash } : {}),
-          ...(isSafari || isIOS ? { hls: movieURL.hls } : {}),
+          ...((!isSafari || !isIOS || !isMacOs) ? { dash: movieURL.dash } : {}),
+          hls: movieURL.hls,
           poster: thumbnail,
           subtitle: subtitles ? {
             url: subtitles,
