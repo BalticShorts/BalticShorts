@@ -6,6 +6,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
 
   useEffect(() => {
     const loadPlayer = async () => {
+      // if(movieURL.dash == undefined) return;
       try {
         // Dynamically import the Bitmovin Player script
         await new Promise((resolve, reject) => {
@@ -49,6 +50,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
         // Load the source
           // ...((!isSafari || !isIOS || !isMacOs) ? { dash: movieURL.dash } : {}),
         // 
+        console.log(movieURL)
         const source = {
           dash: movieURL.dash,
           hls: movieURL.hls,
