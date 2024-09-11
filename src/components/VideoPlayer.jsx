@@ -42,6 +42,9 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
               return Promise.resolve(request);
             }
           }
+          tweaks: {
+            native_hls_parsing: true,
+          }
         };
 
         // Create the player instance
