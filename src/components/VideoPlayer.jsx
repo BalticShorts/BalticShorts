@@ -41,7 +41,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
                   request.url += urlAddon;
               return Promise.resolve(request);
             }
-          }
+          },
           tweaks: {
             native_hls_parsing: true,
           }
