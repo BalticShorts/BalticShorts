@@ -6,6 +6,15 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
 
   useEffect(() => {
     const loadPlayer = async () => {
+      const keyValuePairs = urlAddon.substring(1).split("&");
+      const params = {};
+      keyValuePairs.forEach(pair => {
+          const [key, value] = pair.split("=");
+          params[key] = decodeURIComponent(value);
+      });
+
+      console.log(params);
+
       if(movieURL == undefined || (movieURL?.dash == undefined && movieURL?.hls == undefined)) return;
       try {
         // Dynamically import the Bitmovin Player script
@@ -44,6 +53,11 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           },
           tweaks: {
             native_hls_parsing: true,
+            query_parameters :{
+              'Policy' : params.Policy,
+              'Signature' : params.Signature,
+              'Key-Pair-Id' : params.KeyPairId
+            },
           }
         };
 
