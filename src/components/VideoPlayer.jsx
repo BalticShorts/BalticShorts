@@ -56,7 +56,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
             query_parameters :{
               'Policy' : params.Policy,
               'Signature' : params.Signature,
-              'Key-Pair-Id' : params.KeyPairId
+              'Key-Pair-Id' : params['Key-Pair-Id']
             },
           }
         };
