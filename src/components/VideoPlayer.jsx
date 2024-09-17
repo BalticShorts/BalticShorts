@@ -54,14 +54,14 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           },
           tweaks: {
             native_hls_parsing: false,
-            
+            query_parameters :{
+              'Policy' : params.Policy,
+              'Signature' : params.Signature,
+              'Key-Pair-Id' : params['Key-Pair-Id']
+            },
           }
         };
-        // query_parameters :{
-        //   'Policy' : params.Policy,
-        //   'Signature' : params.Signature,
-        //   'Key-Pair-Id' : params['Key-Pair-Id']
-        // },
+
         // Create the player instance
         const player = new window.bitmovin.player.Player(playerRef.current, config);
 
