@@ -14,7 +14,13 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
       });
 
       console.log(params);
-
+      // network: {
+      //   preprocessHttpRequest: function(type, request) {
+      //         request.withCredentials = true;
+      //         request.url += urlAddon;
+      //     return Promise.resolve(request);
+      //   }
+      // },
 
       if(movieURL == undefined || (movieURL?.dash == undefined && movieURL?.hls == undefined)) return;
       try {
@@ -45,13 +51,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
             muted: false,
             autoplay: false,
           },
-          network: {
-            preprocessHttpRequest: function(type, request) {
-                  request.withCredentials = true;
-                  request.url += urlAddon;
-              return Promise.resolve(request);
-            }
-          },
+
           tweaks: {
             native_hls_parsing: false,
             query_parameters :{
