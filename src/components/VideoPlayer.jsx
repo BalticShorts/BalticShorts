@@ -35,7 +35,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
 
         // Configure the player
         const config = {
-          key: '6b174f8e-e685-43f0-9e76-fee7d8ec1260',
+          key: '867559f7-7053-4c81-915b-ac6ec374d4d4',
           ui: {
             playbackSpeedSelector: true,
             qualitySelector: true,
