@@ -69,7 +69,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           poster: thumbnail,
           drm: {
             widevine: {
-                LA_URL: 'https://drm-widevine-licensing.axprod.net/AcquireLicense',
+                LA_URL: 'https://e40ff278.drm-widevine-licensing.axprod.net/AcquireLicense',
                 headers: {'X-AxDRM-Message': 'X-AxDRM-Message token',},
             },
           },
@@ -85,13 +85,13 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
             hlsWithCredentials: true,
             dashWithCredentials: true,
           },
-          network: {
-            preprocessHttpRequest: function(type, request) {
-                  request.withCredentials = true;
-                  request.url += urlAddon;
-              return Promise.resolve(request);
-            }
-          },
+          // network: {
+          //   preprocessHttpRequest: function(type, request) {
+          //         request.withCredentials = true;
+          //         request.url += urlAddon;
+          //     return Promise.resolve(request);
+          //   }
+          // },
         };
 
         player.load(source).then(() => {
