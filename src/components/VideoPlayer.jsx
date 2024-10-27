@@ -79,19 +79,6 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
             label: 'English',
             srclang: 'en'
           } : undefined,
-          options: {
-            withCredentials: true,
-            manifestWithCredentials: true,
-            hlsWithCredentials: true,
-            dashWithCredentials: true,
-          },
-          // network: {
-          //   preprocessHttpRequest: function(type, request) {
-          //         request.withCredentials = true;
-          //         request.url += urlAddon;
-          //     return Promise.resolve(request);
-          //   }
-          // },
         };
 
         player.load(source).then(() => {
@@ -126,3 +113,17 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
 
 export default SimpleBitmovinPlayer;
 export const isVideoPlaying = video => !!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2);
+
+// options: {
+//   withCredentials: true,
+//   manifestWithCredentials: true,
+//   hlsWithCredentials: true,
+//   dashWithCredentials: true,
+// },
+// network: {
+//   preprocessHttpRequest: function(type, request) {
+//         request.withCredentials = true;
+//         request.url += urlAddon;
+//     return Promise.resolve(request);
+//   }
+// },
