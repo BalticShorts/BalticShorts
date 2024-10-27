@@ -45,15 +45,6 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
             muted: false,
             autoplay: false,
           },
-
-          tweaks: {
-            native_hls_parsing: false,
-            query_parameters :{
-              'Policy' : params.Policy,
-              'Signature' : params.Signature,
-              'Key-Pair-Id' : params['Key-Pair-Id']
-            },
-          }
         };
 
         // Create the player instance
@@ -127,3 +118,11 @@ export const isVideoPlaying = video => !!(video.currentTime > 0 && !video.paused
 //     return Promise.resolve(request);
 //   }
 // },
+// tweaks: {
+//   native_hls_parsing: false,
+//   query_parameters :{
+//     'Policy' : params.Policy,
+//     'Signature' : params.Signature,
+//     'Key-Pair-Id' : params['Key-Pair-Id']
+//   },
+// }
