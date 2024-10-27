@@ -67,6 +67,12 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           dash: movieURL.dash,
           hls: movieURL.hls,
           poster: thumbnail,
+          drm: {
+            widevine: {
+                LA_URL: 'https://drm-widevine-licensing.axprod.net/AcquireLicense',
+                headers: {'X-AxDRM-Message': 'X-AxDRM-Message token',},
+            },
+          },
           subtitle: subtitles ? {
             url: subtitles,
             kind: 'subtitles',
