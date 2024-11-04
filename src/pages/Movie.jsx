@@ -41,7 +41,7 @@ const fetchVideo = async guid => {
   return resp !== undefined ? resp : '';
 }
 
-const signVideo = async url => {
+const signVideo = async keyId => {
   // const a = url.replace(/index\.m3u8$/, '*');
   const requestOptions = {
     method: 'POST',
@@ -49,7 +49,7 @@ const signVideo = async url => {
       'Content-Type': 'application/json',
     },
     credentials: 'include',
-    body: JSON.stringify({ }),
+    body: JSON.stringify({'keyId': keyId}),
   };
   const data = await fetch(
     config.aws_api_gateway + 'signLink',
@@ -121,7 +121,7 @@ function Movie() {
       const url = await fetchVideo(movie.guid);
       const playlists = await fetchPlaylists(id);
       const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
-      const signedUrlAddon = await signVideo(url);
+      const signedUrlAddon = await signVideo(movie.keyID);
       await getSrc(movie.subtitles_location);
       try {     
         setUrlAddon(signedUrlAddon);
@@ -228,7 +228,7 @@ function Movie() {
     <div className="FilmasSkats w-full relative bg-beige rounded-3xl">
       <div className='MovieContainer max-h-[80vh] w-full' >
         <div onClick={() => removeText()} className='MovieContainer max-h-[80vh]' >
-          <VideoPlayer movieURL={movieURL} urlAddon={urlAddon} subtitles={subtitles} thumbnail={''} />
+          <VideoPlayer movieURL={movieURL} urlAddon={urlAddon} subtitles={subtitles} thumbnail={''} keyID={movieData.keyId} resourceId={movieData.resourceId} />
         </div>
         {!isMobile && 
         <div id='textOnMovie' className='max-h-[80vh] h-full'>

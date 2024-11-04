@@ -9,18 +9,10 @@
       "UnauthRoleName": "amplify-balticshorts-dev-193002-unauthRole",
       "StackName": "amplify-balticshorts-dev-193002",
       "StackId": "arn:aws:cloudformation:eu-north-1:052035778887:stack/amplify-balticshorts-dev-193002/80d7f640-2fbf-11ee-b6ae-0a437ae9840a",
-      "AmplifyAppId": "depuvux0wr1ch",
-      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-balticshorts-dev-193002-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+      "AmplifyAppId": "depuvux0wr1ch"
     },
     "categories": {
-      "auth": {
-        "balticshorts1752ef18": {},
-        "balticshorts": {}
-      },
       "storage": {
-        "balticshortsb7e77977": {},
-        "test": {},
-        "MovieBucket": {},
         "balticshorts397b1215": {
           "bucketName": "balticshortsprod-source71e471f1-1x9aicwn54xig",
           "region": "eu-north-1"
@@ -30,14 +22,17 @@
           "region": "eu-north-1"
         }
       },
-      "api": {
+      "auth": {
         "balticshorts": {}
       },
       "function": {
         "VODSignedLinks": {
           "deploymentBucketName": "amplify-balticshorts-dev-193002-deployment",
-          "s3Key": "amplify-builds/VODSignedLinks-54456468325068316f4f-build.zip"
+          "s3Key": "amplify-builds/VODSignedLinks-4b464c67476b582b5775-build.zip"
         }
+      },
+      "api": {
+        "balticshorts": {}
       }
     }
   }

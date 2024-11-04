@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import {isSafari, isChrome, isAndroid, isIOS, isMacOs} from 'react-device-detect';
 
-const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
+const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail, keyId, resourceId }) => {
   const playerRef = useRef(null);
 
   useEffect(() => {
