@@ -43,6 +43,7 @@ const fetchVideo = async guid => {
 
 const signVideo = async keyId => {
   // const a = url.replace(/index\.m3u8$/, '*');
+  console.log(keyId)
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -121,6 +122,7 @@ function Movie() {
       const url = await fetchVideo(movie.guid);
       const playlists = await fetchPlaylists(id);
       const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
+      console.log(movie)
       const signedUrlAddon = await signVideo(movie.keyID);
       await getSrc(movie.subtitles_location);
       try {     
