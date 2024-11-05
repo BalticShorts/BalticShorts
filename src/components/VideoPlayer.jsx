@@ -48,11 +48,6 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
             muted: false,
             autoplay: false,
           },
-          network: {
-            preprocessHttpRequest: function (requestType, requestConfig) {
-                requestConfig.url = requestConfig.url + "?AxDrmMessage="+urlAddon;
-            }
-          },
         };
 
         // Create the player instance
@@ -134,3 +129,8 @@ export const isVideoPlaying = video => !!(video.currentTime > 0 && !video.paused
 //     'Key-Pair-Id' : params['Key-Pair-Id']
 //   },
 // }
+// network: {
+//   preprocessHttpRequest: function (requestType, requestConfig) {
+//       requestConfig.url = requestConfig.url + "?AxDrmMessage="+urlAddon;
+//   }
+// },
