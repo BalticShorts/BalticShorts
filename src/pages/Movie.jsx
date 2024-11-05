@@ -58,14 +58,18 @@ const signVideo = async (keyId, resourceId) => {
     requestOptions
   ).then((response) => response.json());
 
-  const setData = async (cookies) => {
-    for (const [name, value] of Object.entries(cookies)) {
-      // console.log(name, value);
-      Cookies.set(name, value, { path: '/', domain: '.balticshorts.com', sameSite: 'Lax' });
-    }
-  };
+  // const setData = async (cookies) => {
+  //   for (const [name, value] of Object.entries(cookies)) {
+  //     // console.log(name, value);
+  //     Cookies.set(name, value, { path: '/', domain: '.balticshorts.com', sameSite: 'Lax' });
+  //   }
+  // };
 
-  // console.log(data.body);
+  console.log(data.body);
+  console.log("data")
+  console.log(data)
+  console.log("data token")
+  console.log(data.token)
   // await setData(data.body);
   return data.body;
 }
