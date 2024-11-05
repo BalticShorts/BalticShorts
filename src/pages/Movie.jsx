@@ -43,8 +43,6 @@ const fetchVideo = async guid => {
 
 const signVideo = async (keyId, resourceId) => {
   // const a = url.replace(/index\.m3u8$/, '*');
-  console.log(keyId)
-  console.log(resourceId)
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -65,14 +63,7 @@ const signVideo = async (keyId, resourceId) => {
   //   }
   // };
 
-  console.log(data.body);
-  console.log("data")
-  console.log(data)
   const body = JSON.parse(data.body); 
-  console.log("data body parsed")
-  console.log(body)
-  console.log("data token")
-  console.log(body.token)
   // await setData(data.body);
   return body.token;
 }

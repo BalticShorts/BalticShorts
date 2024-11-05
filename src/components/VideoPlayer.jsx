@@ -13,12 +13,6 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           params[key] = decodeURIComponent(value);
       });
 
-      console.log(params);
-      console.log("urlAddon");
-      console.log(urlAddon);
-      console.log(urlAddon.token);
-
-
       if(movieURL == undefined || (movieURL?.dash == undefined && movieURL?.hls == undefined)) return;
       try {
         // Dynamically import the Bitmovin Player script
