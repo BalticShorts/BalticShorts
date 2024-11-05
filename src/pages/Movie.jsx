@@ -68,8 +68,11 @@ const signVideo = async (keyId, resourceId) => {
   console.log(data.body);
   console.log("data")
   console.log(data)
+  const body = JSON.parse(data.body); 
+  console.log("data body parsed")
+  console.log(body)
   console.log("data token")
-  console.log(data.token)
+  console.log(body.token)
   // await setData(data.body);
   return data.body;
 }
