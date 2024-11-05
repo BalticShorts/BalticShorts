@@ -50,7 +50,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           },
           network: {
             preprocessHttpRequest: function (requestType, requestConfig) {
-                requestConfig.url = requestConfig.url + "?AxDrmMessage="+urlAddon.token;
+                requestConfig.url = requestConfig.url + "?AxDrmMessage="+urlAddon;
             }
           },
         };
@@ -69,7 +69,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           drm: {
             widevine: {
                 LA_URL: 'https://e40ff278.drm-widevine-licensing.axprod.net/AcquireLicense',
-                headers: {'X-AxDRM-Message': urlAddon.token},
+                headers: {'X-AxDRM-Message': urlAddon},
             },
           },
           subtitle: subtitles ? {

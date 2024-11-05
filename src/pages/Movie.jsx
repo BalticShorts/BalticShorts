@@ -74,7 +74,7 @@ const signVideo = async (keyId, resourceId) => {
   console.log("data token")
   console.log(body.token)
   // await setData(data.body);
-  return data.body;
+  return body.token;
 }
 
 const fetchPlaylists = async id => {
