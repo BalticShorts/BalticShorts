@@ -107,7 +107,7 @@ function Movie() {
   const { id } = useParams();
   const [movieURL, setMovieURL] = useState('');
   const [movieData, setMovieData] = useState({});
-  const [urlAddon, setUrlAddon] = useState('');
+  const [urlAddon, setUrlAddon] = useState({});
   const [movieTeamData, setMovieTeamData] = useState({});
   const [textOnMovie, setTextOnMovie] = useState(true);
   const [playlists, setPlaylists] = useState([]);
