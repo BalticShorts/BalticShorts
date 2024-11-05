@@ -77,8 +77,6 @@ export const getProfile = `
       guid
       subtitles_location
       trailerGuid
-      keyId
-      resourceId
     }
   }
 `;

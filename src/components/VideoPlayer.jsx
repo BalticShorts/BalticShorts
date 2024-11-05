@@ -14,6 +14,8 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
       });
 
       console.log(params);
+      console.log("urlAddon");
+      console.log(urlAddon);
 
 
       if(movieURL == undefined || (movieURL?.dash == undefined && movieURL?.hls == undefined)) return;

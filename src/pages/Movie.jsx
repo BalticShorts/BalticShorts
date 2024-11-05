@@ -37,13 +37,14 @@ const fetchVideo = async guid => {
     config.aws_api_gateway + 'movies/' + guid,
     requestOptions
   ).then((response) => response.json());
-  const resp = {"hls": data.Item.hlsUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'), "dash" : data.Item.dashUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com')};
+  const resp = {"hls": data.Item.hlsUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'), "dash" : data.Item.dashUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'), "keyId" : data.Item.keyId?.S, "resourceId" : data.Item.resourceId?.S};
   return resp !== undefined ? resp : '';
 }
 
-const signVideo = async keyId => {
+const signVideo = async (keyId, resourceId) => {
   // const a = url.replace(/index\.m3u8$/, '*');
   console.log(keyId)
+  console.log(resourceId)
   const requestOptions = {
     method: 'POST',
     headers: {
@@ -122,11 +123,10 @@ function Movie() {
       const url = await fetchVideo(movie.guid);
       const playlists = await fetchPlaylists(id);
       const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
-      console.log(movie)
-      // const signedUrlAddon = await signVideo(movie.keyID);
+      const signedUrlAddon = await signVideo(url.keyId, url.resourceId);
       await getSrc(movie.subtitles_location);
       try {     
-        // setUrlAddon(signedUrlAddon);
+        setUrlAddon(signedUrlAddon);
         setMovieURL(url);
         setMovieData(movie);
         setMovieTeamData(team);
