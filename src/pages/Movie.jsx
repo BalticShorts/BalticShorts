@@ -123,10 +123,10 @@ function Movie() {
       const playlists = await fetchPlaylists(id);
       const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
       console.log(movie)
-      const signedUrlAddon = await signVideo(movie.keyID);
+      // const signedUrlAddon = await signVideo(movie.keyID);
       await getSrc(movie.subtitles_location);
       try {     
-        setUrlAddon(signedUrlAddon);
+        // setUrlAddon(signedUrlAddon);
         setMovieURL(url);
         setMovieData(movie);
         setMovieTeamData(team);
