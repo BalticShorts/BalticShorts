@@ -228,7 +228,7 @@ function Movie() {
     <div className="FilmasSkats w-full relative bg-beige rounded-3xl">
       <div className='MovieContainer max-h-[80vh] w-full' >
         <div onClick={() => removeText()} className='MovieContainer max-h-[80vh]' >
-          <VideoPlayer movieURL={movieURL} urlAddon={urlAddon} subtitles={subtitles} thumbnail={''} keyID={movieData.keyId} resourceId={movieData.resourceId} />
+          <VideoPlayer movieURL={movieURL} urlAddon={urlAddon} subtitles={subtitles} thumbnail={''} />
         </div>
         {!isMobile && 
         <div id='textOnMovie' className='max-h-[80vh] h-full'>
