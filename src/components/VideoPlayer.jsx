@@ -47,6 +47,11 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
             muted: false,
             autoplay: false,
           },
+          network: {
+            preprocessHttpRequest: function (requestType, requestConfig) {
+                requestConfig.url = requestConfig.url + "?AxDrmMessage="+urlAddon.token;
+            }
+          },
         };
 
         // Create the player instance
