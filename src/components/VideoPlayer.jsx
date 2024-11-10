@@ -64,11 +64,19 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
               LA_URL: 'https://e40ff278.drm-fairplay-licensing.axprod.net/AcquireLicense',
               certificateURL: 'https://vtb.axinom.com/FPScert/fairplay.cer',
               headers: {
-                  'X-AxDRM-Message': urlAddon,
-                  },
-              prepareContentId: (uri) => {
-                  return uri.substring(uri.indexOf("skd"));
-                  },
+                'X-AxDRM-Message': urlAddon,
+                'content-type': 'application/octet-stream'
+              },
+              prepareContentId: (contentId) => {
+                const uri = contentId;
+                let uriParts = uri.split('://', 1);
+                const protocol = uriParts[0].slice(-3);
+                uriParts = uri.split(';', 2);
+                contentId = uriParts.length > 1 ? uriParts[1] : '';
+                uriParts = contentId.split('?', 2);
+                contentId = uriParts.length > 1 ? uriParts[0] : contentId;
+                return protocol.toLowerCase() == 'skd' ? contentId : '';
+              },
               prepareLicenseAsync: ckc => {
                   return new Promise((resolve, reject) => {
                       const reader = new FileReader();
