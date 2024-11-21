@@ -37,7 +37,11 @@ const fetchVideo = async guid => {
     config.aws_api_gateway + 'movies/' + guid,
     requestOptions
   ).then((response) => response.json());
-  const resp = {"hls": data.Item.hlsUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'), "dash" : data.Item.dashUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'), "keyId" : data.Item.keyId?.S, "resourceId" : data.Item.resourceId?.S};
+  const resp = {"hls": data.Item.hlsUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'),
+    "dash" : data.Item.dashUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'),
+    "cmafDash" : data.Item.cmafDashUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'),
+    "cmafHls" : data.Item.cmafHlsUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'),
+    "keyId" : data.Item.keyId?.S, "resourceId" : data.Item.resourceId?.S};
   return resp !== undefined ? resp : '';
 }
 
