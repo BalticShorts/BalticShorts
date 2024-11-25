@@ -77,20 +77,29 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
               LA_URL: 'https://e40ff278.drm-fairplay-licensing.axprod.net/AcquireLicense',
               certificateURL: 'https://vtb.axinom.com/FPScert/fairplay.cer',
               headers: {
-                'X-AxDRM-Message': urlAddon
+                'X-AxDRM-Message': urlAddon,
+                'Content-type': 'application/octet-stream'
               },
               prepareContentId: (uri) => {
-                  return uri.substring(uri.indexOf("skd"));
-                  },
-              prepareLicenseAsync: ckc => {
-                  return new Promise((resolve, reject) => {
-                      const reader = new FileReader();
-                      reader.addEventListener('loadend', () => resolve(new Uint8Array(reader.result)));
-                      reader.addEventListener('error', () => reject(reader.error));
-                      reader.readAsArrayBuffer(ckc);
-                      });
-                  },
-              prepareMessage: event => new Blob([event.message], {type: 'application/octet-binary'}),
+                console.log("prepareContentId: ", uri);
+
+                return uri.substring(uri.indexOf("skd"));
+              },
+              prepareLicenseAsync: (ckc) => {
+                console.log("prepareLicense: ", ckc);
+
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.addEventListener('loadend', () => resolve(new Uint8Array(reader.result)));
+                    reader.addEventListener('error', () => reject(reader.error));
+                    reader.readAsArrayBuffer(ckc);
+                });
+              },
+              prepareMessage: (event) => {
+                console.log("prepareMessage: ", event);
+
+                return new Blob([event.message], { type: 'application/octet-binary' });
+              },
               useUint16InitData: true,
               licenseResponseType: 'blob'
             },
