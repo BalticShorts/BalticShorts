@@ -1,9 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import {isSafari, isChrome, isAndroid, isIOS, isMacOs} from 'react-device-detect';
-
 const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
   const playerRef = useRef(null);
-
   useEffect(() => {
     const loadPlayer = async () => {
       // const keyValuePairs = urlAddon.substring(1).split("&");
@@ -12,6 +10,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
       //     const [key, value] = pair.split("=");
       //     params[key] = decodeURIComponent(value);
       // });
+      console.log(urlAddon)
 
       if(movieURL == undefined || (movieURL?.dash == undefined && movieURL?.hls == undefined)) return;
       try {
@@ -24,12 +23,10 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           script.onerror = reject;
           document.body.appendChild(script);
         });
-
         // Ensure Bitmovin Player script has loaded
         if (!window.bitmovin || !window.bitmovin.player) {
           throw new Error('Bitmovin Player library not loaded');
         }
-
         // Configure the player
         const config = {
           key: '43d906bf-4318-4a73-9465-177331135a1d',
@@ -45,21 +42,9 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           logs: {
             level: 'debug'  // Enable verbose logging
           },
-          adaptation: {
-            desktop: {
-              preload: false
-            },
-            mobile: {
-              preload: false
-            }
-          },
-          tweaks: {
-            native_hls_parsing: false
-          },
-          };
+        };
         // Create the player instance
         const player = new window.bitmovin.player.Player(playerRef.current, config);
-
         // Load the source
           // ...((!isSafari || !isIOS || !isMacOs) ? { dash: movieURL.dash } : {}),
         // 
@@ -77,32 +62,23 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
               LA_URL: 'https://e40ff278.drm-fairplay-licensing.axprod.net/AcquireLicense',
               certificateURL: 'https://vtb.axinom.com/FPScert/fairplay.cer',
               headers: {
-                'X-AxDRM-Message': urlAddon,
-                'Content-type': 'application/octet-stream'
+                'X-AxDRM-Message': urlAddon
               },
               prepareContentId: (uri) => {
-                console.log("prepareContentId: ", uri);
-
-                return uri.substring(uri.indexOf("skd"));
-              },
-              prepareLicenseAsync: (ckc) => {
-                console.log("prepareLicense: ", ckc);
-
-                return new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.addEventListener('loadend', () => resolve(new Uint8Array(reader.result)));
-                    reader.addEventListener('error', () => reject(reader.error));
-                    reader.readAsArrayBuffer(ckc);
-                });
-              },
-              prepareMessage: (event) => {
-                console.log("prepareMessage: ", event);
-
-                return new Blob([event.message], { type: 'application/octet-binary' });
-              },
+                  return uri.substring(uri.indexOf("skd"));
+                  },
+              prepareLicenseAsync: ckc => {
+                  return new Promise((resolve, reject) => {
+                      const reader = new FileReader();
+                      reader.addEventListener('loadend', () => resolve(new Uint8Array(reader.result)));
+                      reader.addEventListener('error', () => reject(reader.error));
+                      reader.readAsArrayBuffer(ckc);
+                      });
+                  },
+              prepareMessage: event => new Blob([event.message], {type: 'application/octet-binary'}),
               useUint16InitData: true,
               licenseResponseType: 'blob'
-            },
+              },
           },
           subtitle: subtitles ? {
             url: subtitles,
@@ -111,13 +87,11 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
             srclang: 'en'
           } : undefined,
         };
-
         player.load(source).then(() => {
           console.log('Successfully loaded source');
         }).catch((error) => {
           console.error('Error loading source:', error);
         });
-
         // Clean up on unmount
         return () => {
           if (player) {
@@ -128,10 +102,8 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
         console.error('Error setting up Bitmovin Player:', error);
       }
     };
-
     loadPlayer();
   }, [movieURL, urlAddon, subtitles, thumbnail]); // Add dependencies to reinitialize player on prop changes
-
   return (
     <div className="relative w-full max-h-[80vh]">
       <div
@@ -141,7 +113,6 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
     </div>
   );
 };
-
 export default SimpleBitmovinPlayer;
 export const isVideoPlaying = video => !!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2);
 
