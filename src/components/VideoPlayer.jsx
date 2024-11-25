@@ -45,9 +45,9 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           logs: {
             level: 'debug'  // Enable verbose logging
           },
-          tweaks: {
-            native_hls_parsing: false
-          },
+          // tweaks: {
+          //   native_hls_parsing: false
+          // },
           drm: {
             widevine: {
                 LA_URL: 'https://e40ff278.drm-widevine-licensing.axprod.net/AcquireLicense',
