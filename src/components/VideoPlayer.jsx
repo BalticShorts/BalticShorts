@@ -45,6 +45,9 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           logs: {
             level: 'debug'  // Enable verbose logging
           },
+          tweaks: {
+            native_hls_parsing: false
+          },
         };
 
         // Create the player instance
