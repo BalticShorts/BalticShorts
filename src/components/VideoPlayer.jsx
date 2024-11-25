@@ -56,6 +56,18 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           tweaks: {
             native_hls_parsing: false
           },
+          };
+        // Create the player instance
+        const player = new window.bitmovin.player.Player(playerRef.current, config);
+
+        // Load the source
+          // ...((!isSafari || !isIOS || !isMacOs) ? { dash: movieURL.dash } : {}),
+        // 
+        console.log(movieURL)
+        const source = {
+          dash: movieURL.dash,
+          hls: movieURL.hls,
+          poster: thumbnail,
           drm: {
             widevine: {
                 LA_URL: 'https://e40ff278.drm-widevine-licensing.axprod.net/AcquireLicense',
@@ -81,21 +93,8 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
               prepareMessage: event => new Blob([event.message], {type: 'application/octet-binary'}),
               useUint16InitData: true,
               licenseResponseType: 'blob'
-              },
             },
-          };
-        // Create the player instance
-        const player = new window.bitmovin.player.Player(playerRef.current, config);
-
-        // Load the source
-          // ...((!isSafari || !isIOS || !isMacOs) ? { dash: movieURL.dash } : {}),
-        // 
-        console.log(movieURL)
-        const source = {
-          dash: movieURL.dash,
-          hls: movieURL.hls,
-          poster: thumbnail,
-
+          },
           subtitle: subtitles ? {
             url: subtitles,
             kind: 'subtitles',
