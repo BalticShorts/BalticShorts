@@ -37,11 +37,12 @@ const fetchVideo = async guid => {
     config.aws_api_gateway + 'movies/' + guid,
     requestOptions
   ).then((response) => response.json());
-  const resp = {"hls": data.Item.hlsUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'),
-    "dash" : data.Item.dashUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'),
-    "cmafDash" : data.Item.cmafDashUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'),
-    "cmafHls" : data.Item.cmafHlsUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'),
-    "keyId" : data.Item.keyId?.S, "resourceId" : data.Item.resourceId?.S};
+  const resp = {"hls": data.Item.hlsUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com')};
+  // ,
+  //   "dash" : data.Item.dashUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'),
+  //   "cmafDash" : data.Item.cmafDashUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'),
+  //   "cmafHls" : data.Item.cmafHlsUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'),
+  //   "keyId" : data.Item.keyId?.S, "resourceId" : data.Item.resourceId?.S
   return resp !== undefined ? resp : '';
 }
 
@@ -125,10 +126,10 @@ function Movie() {
       const url = await fetchVideo(movie.guid);
       const playlists = await fetchPlaylists(id);
       const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
-      const signedUrlAddon = await signVideo(url.keyId, url.resourceId);
+      // const signedUrlAddon = await signVideo(url.keyId, url.resourceId);
       await getSrc(movie.subtitles_location);
       try {     
-        setUrlAddon(signedUrlAddon);
+        // setUrlAddon(signedUrlAddon);
         setMovieURL(url);
         setMovieData(movie);
         setMovieTeamData(team);

@@ -58,33 +58,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           dash: movieURL.dash,
           hls: movieURL.hls,
           poster: thumbnail,
-          drm: {
-            widevine: {
-                LA_URL: 'https://e40ff278.drm-widevine-licensing.axprod.net/AcquireLicense',
-                headers: {'X-AxDRM-Message': urlAddon},
-            },
-            fairplay: {
-              LA_URL: 'https://e40ff278.drm-fairplay-licensing.axprod.net/AcquireLicense',
-              certificateURL: 'https://vtb.axinom.com/FPScert/fairplay.cer',
-              headers: {
-                'X-AxDRM-Message': urlAddon
-              },
-              prepareContentId: (uri) => {
-                  return uri.substring(uri.indexOf("skd"));
-                  },
-              prepareLicenseAsync: ckc => {
-                  return new Promise((resolve, reject) => {
-                      const reader = new FileReader();
-                      reader.addEventListener('loadend', () => resolve(new Uint8Array(reader.result)));
-                      reader.addEventListener('error', () => reject(reader.error));
-                      reader.readAsArrayBuffer(ckc);
-                      });
-                  },
-              prepareMessage: event => new Blob([event.message], {type: 'application/octet-binary'}),
-              useUint16InitData: true,
-              licenseResponseType: 'blob'
-              },
-          },
+
           subtitle: subtitles ? {
             url: subtitles,
             kind: 'subtitles',
@@ -152,4 +126,32 @@ export const isVideoPlaying = video => !!(video.currentTime > 0 && !video.paused
 //   preprocessHttpRequest: function (requestType, requestConfig) {
 //       requestConfig.url = requestConfig.url + "?AxDrmMessage="+urlAddon;
 //   }
+// },
+
+// drm: {
+//   widevine: {
+//       LA_URL: 'https://e40ff278.drm-widevine-licensing.axprod.net/AcquireLicense',
+//       headers: {'X-AxDRM-Message': urlAddon},
+//   },
+//   fairplay: {
+//     LA_URL: 'https://e40ff278.drm-fairplay-licensing.axprod.net/AcquireLicense',
+//     certificateURL: 'https://vtb.axinom.com/FPScert/fairplay.cer',
+//     headers: {
+//       'X-AxDRM-Message': urlAddon
+//     },
+//     prepareContentId: (uri) => {
+//         return uri.substring(uri.indexOf("skd"));
+//         },
+//     prepareLicenseAsync: ckc => {
+//         return new Promise((resolve, reject) => {
+//             const reader = new FileReader();
+//             reader.addEventListener('loadend', () => resolve(new Uint8Array(reader.result)));
+//             reader.addEventListener('error', () => reject(reader.error));
+//             reader.readAsArrayBuffer(ckc);
+//             });
+//         },
+//     prepareMessage: event => new Blob([event.message], {type: 'application/octet-binary'}),
+//     useUint16InitData: true,
+//     licenseResponseType: 'blob'
+//     },
 // },
