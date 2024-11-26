@@ -197,12 +197,12 @@ function Movie() {
   };
 
   function removeText() {
-    const elements = document.getElementById('textOnMovie')
-    const videoElement = document.querySelector('video');
-    sleep(3)
-    const playing = isVideoPlaying(videoElement);
-    textOnMovie ? elements.classList.add("hidden") : setTextOnMovie(textOnMovie) // elements.classList.remove("hidden")
-    setTextOnMovie(!textOnMovie)
+    // const elements = document.getElementById('textOnMovie')
+    // const videoElement = document.querySelector('video');
+    // sleep(3)
+    // const playing = isVideoPlaying(videoElement);
+    // textOnMovie ? elements.classList.add("hidden") : setTextOnMovie(textOnMovie) // elements.classList.remove("hidden")
+    // setTextOnMovie(!textOnMovie)
   }
 
   function showMorePlaylists(){
@@ -233,10 +233,10 @@ function Movie() {
     <>
     <div className="FilmasSkats w-full relative bg-beige rounded-3xl">
       <div className='MovieContainer max-h-[80vh] w-full' >
-        <div onClick={() => removeText()} className='MovieContainer max-h-[80vh]' >
+        <div onClick={() => removeText()} className='MovieContainer min-h-[80vh]' >
           <VideoPlayer movieURL={movieURL} urlAddon={urlAddon} subtitles={subtitles} thumbnail={''} />
         </div>
-        {!isMobile && 
+        {/* {!isMobile && 
         <div id='textOnMovie' className='max-h-[80vh] h-full'>
         <div className="Rectangle3 w-full h-52 left-0 top-[0]  absolute mix-blend-multiply bg-gradient-to-b from-slate-500 to-zinc-300" />
           <div className='w-full top-0 absolute py-4 flex flex-col items-center justify-center gap-6 mt-12'>
@@ -259,7 +259,7 @@ function Movie() {
 
           </div>
         </div>
-        }
+        } */}
       </div>
       {/* <div className="FilmasKadri w-full h-5 left-[305px] top-[1531px] absolute text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">FILMAS KADRI</div>
       <div className="SarakstiKurosFilmaIrIekAuta w-full h-5 left-[305px] top-[2288px] absolute text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">Saraksti, kuros filma ir iekļauta</div>

@@ -93,11 +93,12 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
 
   return (
     <div className="relative w-full max-h-[80vh]">
-      <BitmovinPlayer
-        config={playerConfig}
-        source={sourceConfig}
-        className="absolute top-0 left-0 w-full max-h-[80vh]"
-      />
+      <div className="absolute top-0 left-0 w-full max-h-[80vh] video">
+        <BitmovinPlayer
+          config={playerConfig}
+          source={sourceConfig}          
+        />
+      </div>
     </div>
   );
 };
