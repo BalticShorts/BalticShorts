@@ -53,7 +53,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
             level: 'debug', // Enable verbose logging
           },
           tweaks: {
-            native_hls_parsing: false
+            native_hls_parsing: true
           },
           adaptation: {
             desktop: {
