@@ -39,8 +39,8 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
 
   const sourceConfig = {
     dash: movieURL?.dash,
-    hls: 'https://bitmovin-a.akamaihd.net/content/dataset/multi-codec/hevc/stream_fmp4.m3u8',
-    // hls: movieURL?.hls,
+    // hls: 'https://bitmovin-a.akamaihd.net/content/dataset/multi-codec/hevc/stream_fmp4.m3u8',
+    hls: movieURL?.hls,
     poster: thumbnail,
     drm: {
       widevine: {
