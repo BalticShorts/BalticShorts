@@ -51,38 +51,38 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           "X-AxDRM-Message": add,
         },
       },
-      fairplay: {
-        LA_URL: "https://e40ff278.drm-fairplay-licensing.axprod.net/AcquireLicense",
-        certificateURL: "https://vtb.axinom.com/FPScert/fairplay.cer",
-        headers: {
-          "X-AxDRM-Message": add,
-        },
-        prepareContentId: (uri) => {
-          console.log("FairPlay prepareContentId called with URI:", uri);
-          return uri.substring(uri.indexOf("skd"));
-        },
-        prepareLicenseAsync: (ckc) => {
-          console.log("FairPlay prepareLicenseAsync called with CKC:", ckc);
-          return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.addEventListener("loadend", () => {
-              console.log("FairPlay CKC processing complete.");
-              resolve(new Uint8Array(reader.result));
-            });
-            reader.addEventListener("error", (error) => {
-              console.error("FairPlay CKC processing failed:", error);
-              reject(error);
-            });
-            reader.readAsArrayBuffer(ckc);
-          });
-        },
-        prepareMessage: (event) => {
-          console.log("FairPlay prepareMessage called with event:", event);
-          return new Blob([event.message], { type: "application/octet-binary" });
-        },
-        useUint16InitData: true,
-        licenseResponseType: "blob",
-      },
+      // fairplay: {
+      //   LA_URL: "https://e40ff278.drm-fairplay-licensing.axprod.net/AcquireLicense",
+      //   certificateURL: "https://vtb.axinom.com/FPScert/fairplay.cer",
+      //   headers: {
+      //     "X-AxDRM-Message": add,
+      //   },
+      //   prepareContentId: (uri) => {
+      //     console.log("FairPlay prepareContentId called with URI:", uri);
+      //     return uri.substring(uri.indexOf("skd"));
+      //   },
+      //   prepareLicenseAsync: (ckc) => {
+      //     console.log("FairPlay prepareLicenseAsync called with CKC:", ckc);
+      //     return new Promise((resolve, reject) => {
+      //       const reader = new FileReader();
+      //       reader.addEventListener("loadend", () => {
+      //         console.log("FairPlay CKC processing complete.");
+      //         resolve(new Uint8Array(reader.result));
+      //       });
+      //       reader.addEventListener("error", (error) => {
+      //         console.error("FairPlay CKC processing failed:", error);
+      //         reject(error);
+      //       });
+      //       reader.readAsArrayBuffer(ckc);
+      //     });
+      //   },
+      //   prepareMessage: (event) => {
+      //     console.log("FairPlay prepareMessage called with event:", event);
+      //     return new Blob([event.message], { type: "application/octet-binary" });
+      //   },
+      //   useUint16InitData: true,
+      //   licenseResponseType: "blob",
+      // },
     },
     subtitle: subtitles
       ? {
