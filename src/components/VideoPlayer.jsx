@@ -25,7 +25,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
       level: "debug", // Enable verbose logging
     },
     tweaks: {
-      native_hls_parsing: true,
+      native_hls_parsing: false,
     },
     adaptation: {
       desktop: {
@@ -39,7 +39,8 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
 
   const sourceConfig = {
     dash: movieURL?.dash,
-    hls: movieURL?.hls,
+    hls: 'https://bitmovin-a.akamaihd.net/content/dataset/multi-codec/hevc/stream_fmp4.m3u8',
+    // hls: movieURL?.hls,
     poster: thumbnail,
     drm: {
       widevine: {
