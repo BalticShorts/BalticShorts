@@ -44,7 +44,8 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
     // hls: 'https://vod.balticshorts.com/clear_cmaf_1080p_h265/manifest.m3u8',
     // hls: 'https://vod.balticshorts.com/protected_cmaf_1080p_h265_multikey/manifest.m3u8',
     // hls: 'https://vod.balticshorts.com/protected_hls_1080p_h265_singlekey/manifest.m3u8',
-    hls: movieURL?.cmafHls,
+    hls: 'https://vod.balticshorts.com/t/1732741810769.m3u8',
+    // hls: movieURL?.cmafHls,
     poster: thumbnail,
     drm: {
       widevine: {
