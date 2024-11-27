@@ -50,14 +50,14 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
       widevine: {
         LA_URL: "https://e40ff278.drm-widevine-licensing.axprod.net/AcquireLicense",
         headers: {
-          "X-AxDRM-Message": add,
+          "X-AxDRM-Message": urlAddon,
         },
       },
       fairplay: {
         LA_URL: "https://e40ff278.drm-fairplay-licensing.axprod.net/AcquireLicense",
         certificateURL: "https://vtb.axinom.com/FPScert/fairplay.cer",
         headers: {
-          "X-AxDRM-Message": add,
+          "X-AxDRM-Message": urlAddon,
         },
         prepareContentId: (uri) => {
           console.log("FairPlay prepareContentId called with URI:", uri);
