@@ -36,10 +36,10 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
     },
     adaptation: {
       desktop: {
-        preload: true,
+        preload: false,
       },
       mobile: {
-        preload: true,
+        preload: false,
       },
     },
   };
@@ -56,14 +56,14 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
     poster: thumbnail,
     drm: {
       widevine: {
-        LA_URL: "https://drm-widevine-licensing.axprod.net/AcquireLicense",
+        LA_URL: "https://e40ff278.drm-widevine-licensing.axprod.net/AcquireLicense",
         headers: {
           "X-AxDRM-Message": urlAddon,
         },
         withCredentials: true,
       },
       fairplay: {
-        LA_URL: "https://drm-fairplay-licensing.axprod.net/AcquireLicense",
+        LA_URL: "https://e40ff278.drm-fairplay-licensing.axprod.net/AcquireLicense",
         certificateURL: "https://vtb.axinom.com/FPScert/fairplay.cer",
         headers: {
           "X-AxDRM-Message": urlAddon,
