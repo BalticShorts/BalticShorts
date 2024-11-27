@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "bitmovin-player/bitmovinplayer-ui.css";
 import { BitmovinPlayer } from "bitmovin-player-react";
 
