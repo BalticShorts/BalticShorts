@@ -60,6 +60,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
         headers: {
           "X-AxDRM-Message": urlAddon,
         },
+        withCredentials: true,
       },
       fairplay: {
         LA_URL: "https://e40ff278.drm-fairplay-licensing.axprod.net/AcquireLicense",
@@ -67,6 +68,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
         headers: {
           "X-AxDRM-Message": urlAddon,
         },
+        withCredentials: true,
         prepareContentId: (uri) => {
           console.log("FairPlay prepareContentId called with URI:", uri);
           return uri.substring(uri.indexOf("skd"));
