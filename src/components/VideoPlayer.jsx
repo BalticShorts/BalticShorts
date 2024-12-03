@@ -211,7 +211,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
 
         const source = {
           dash: movieURL.dash,
-          hls: movieURL.cmafHls,
+          hls: movieURL.hls,
           poster: thumbnail,
           drm: {
             widevine: {
@@ -223,6 +223,9 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
               certificateURL: 'https://vtb.axinom.com/FPScert/fairplay.cer',
               headers: {
                 'X-AxDRM-Message': urlAddon,
+              },
+              getContentId: function (emeOptions, initData) {
+                return arrayToString(initData).replace(/^.*:\/\//, '');
               },
               prepareContentId: (uri) => {
                 console.log('FairPlay prepareContentId called with URI:', uri);
