@@ -225,7 +225,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
                 'X-AxDRM-Message': urlAddon,
               },
               getContentId: function (emeOptions, initData) {
-                return arrayToString(initData).replace(/^.*:\/\//, '');
+                return String.fromCharCode(...new Uint8Array(initData)).replace(/^.*:\/\//, '');
               },
               prepareContentId: (uri) => {
                 console.log('FairPlay prepareContentId called with URI:', uri);
