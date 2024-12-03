@@ -50,20 +50,23 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
     // hls: 'https://vod.balticshorts.com/protected_cmaf_1080p_h265_multikey/manifest.m3u8',
     // hls: 'https://vod.balticshorts.com/protected_hls_1080p_h265_singlekey/manifest.m3u8',
     // hls: 'https://vod.balticshorts.com/t/1732741810769.m3u8',
+    // LA_URL: "https://e40ff278.drm-fairplay-licensing.axprod.net/AcquireLicense",
+    // LA_URL: "https://e40ff278.drm-widevine-licensing.axprod.net/AcquireLicense",
+
   const sourceConfig = {
     dash: movieURL?.dash,
     hls: movieURL?.cmafHls,
     poster: thumbnail,
     drm: {
       widevine: {
-        LA_URL: "https://e40ff278.drm-widevine-licensing.axprod.net/AcquireLicense",
+        LA_URL: "https://73053fd9.drm-widevine-licensing.axprod.net/AcquireLicense",
         headers: {
           "X-AxDRM-Message": urlAddon,
         },
         withCredentials: true,
       },
       fairplay: {
-        LA_URL: "https://e40ff278.drm-fairplay-licensing.axprod.net/AcquireLicense",
+        LA_URL: "https://73053fd9.drm-fairplay-licensing.axprod.net/AcquireLicense",
         certificateURL: "https://vtb.axinom.com/FPScert/fairplay.cer",
         headers: {
           "X-AxDRM-Message": urlAddon,
