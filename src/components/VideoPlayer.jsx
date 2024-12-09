@@ -211,7 +211,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
 
         const source = {
           dash: movieURL.dash,
-          hls: movieURL.hls,
+          hls: movieURL.cmafHls,
           poster: thumbnail,
           drm: {
             widevine: {
