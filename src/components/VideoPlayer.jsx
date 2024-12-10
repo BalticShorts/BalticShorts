@@ -208,9 +208,10 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           // ...((!isSafari || !isIOS || !isMacOs) ? { dash: movieURL.dash } : {}),
         // 
         console.log(movieURL)
+        // dash: movieURL.cmafDash,
 
         const source = {
-          dash: movieURL.cmafDash,
+          dash: 'https://vod.balticshorts.com/a58b05a9-6fa6-4911-a45f-30da4c8f91e7/cmaf/1733849714478test.mpd',
           hls: movieURL.cmafHls,
           poster: thumbnail,
           drm: {
