@@ -281,9 +281,9 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           }
         };
   
-        const primarySource = createSource('https://vod.balticshorts.com/a58b05a9-6fa6-4911-a45f-30da4c8f91e7/cmaf/1733849714478.mpd', movieURL.hls);
+        const primarySource = createSource(movieURL.dash, movieURL.cmafHls);
         const fallbackSource = createSource(
-          'https://vod.balticshorts.com/a58b05a9-6fa6-4911-a45f-30da4c8f91e7/cmaf/1733849714478test.mpd',
+          movieURL.cmafDash.replace(/(\d+)\.mpd$/, '$1test.mpd'),
           movieURL.hls
         );
   
