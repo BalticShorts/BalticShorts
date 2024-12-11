@@ -211,8 +211,20 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
         // dash: movieURL.cmafDash,
 
         const source = {
-          dash: 'https://vod.balticshorts.com/a58b05a9-6fa6-4911-a45f-30da4c8f91e7/cmaf/1733849714478test.mpd',
-          hls: movieURL.cmafHls,
+          sources: [
+            {
+              type: 'dash',
+              url: 'https://vod.balticshorts.com/a58b05a9-6fa6-4911-a45f-30da4c8f91e7/cmaf/1733849714478.mpd',
+            },
+            {
+              type: 'dash',
+              url: 'https://vod.balticshorts.com/a58b05a9-6fa6-4911-a45f-30da4c8f91e7/cmaf/1733849714478test.mpd',
+            },
+            {
+              type: 'hls',
+              url: movieURL.cmafHls,
+            },
+          ],
           poster: thumbnail,
           drm: {
             widevine: {
