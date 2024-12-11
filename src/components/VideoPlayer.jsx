@@ -188,10 +188,10 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           },
           adaptation: {
             desktop: {
-              preload: false
+              preload: true
             },
             mobile: {
-              preload: false
+              preload: true
             }
           },
         };
@@ -200,7 +200,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
 
         // Create the player instance
         console.log('Creating Bitmovin Player instance...');
-        const player = new window.bitmovin.player.Player(playerRef.current, config);
+        // const player = new window.bitmovin.player.Player(playerRef.current, config);
 
         // Prepare the source
         console.log('Preparing source for Bitmovin Player...');
@@ -209,22 +209,11 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
         // 
         console.log(movieURL)
         // dash: movieURL.cmafDash,
+        // url: 'https://vod.balticshorts.com/a58b05a9-6fa6-4911-a45f-30da4c8f91e7/cmaf/1733849714478test.mpd',
 
-        const source = {
-          sources: [
-            {
-              type: 'dash',
-              url: 'https://vod.balticshorts.com/a58b05a9-6fa6-4911-a45f-30da4c8f91e7/cmaf/1733849714478.mpd',
-            },
-            {
-              type: 'dash',
-              url: 'https://vod.balticshorts.com/a58b05a9-6fa6-4911-a45f-30da4c8f91e7/cmaf/1733849714478test.mpd',
-            },
-            {
-              type: 'hls',
-              url: movieURL.cmafHls,
-            },
-          ],
+        const createSource = (dash, hls) => ({
+          dash,
+          hls,
           poster: thumbnail,
           drm: {
             widevine: {
@@ -268,27 +257,38 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
             },
           },
           subtitle: subtitles
-            ? {
-                url: subtitles,
-                kind: 'subtitles',
-                label: 'English',
-                srclang: 'en',
-              }
+            ? { url: subtitles, kind: 'subtitles', label: 'English', srclang: 'en' }
             : undefined,
+        });
+  
+        console.log('Creating Bitmovin Player instance...');
+        const player = new window.bitmovin.player.Player(playerRef.current, config);
+  
+        const loadSourceWithFallback = async (primarySource, fallbackSource) => {
+          try {
+            console.log('Attempting to load primary source...');
+            await player.load(primarySource);
+            console.log('Primary source loaded successfully.');
+          } catch (error) {
+            console.error('Error loading primary source:', error);
+            if (fallbackSource) {
+              console.log('Attempting to load fallback source...');
+              await player.load(fallbackSource);
+              console.log('Fallback source loaded successfully.');
+            } else {
+              console.error('No fallback source provided.');
+            }
+          }
         };
-
-        console.log('Source configuration:', source);
-
-        // Load the source
-        player.load(source)
-          .then(() => {
-            console.log('Successfully loaded source.');
-          })
-          .catch((error) => {
-            console.error('Error loading source:', error);
-          });
-
-        // Clean up on unmount
+  
+        const primarySource = createSource('https://vod.balticshorts.com/a58b05a9-6fa6-4911-a45f-30da4c8f91e7/cmaf/1733849714478.mpd', movieURL.hls);
+        const fallbackSource = createSource(
+          'https://vod.balticshorts.com/a58b05a9-6fa6-4911-a45f-30da4c8f91e7/cmaf/1733849714478test.mpd',
+          movieURL.hls
+        );
+  
+        await loadSourceWithFallback(primarySource, fallbackSource);
+  
         return () => {
           if (player) {
             console.log('Destroying Bitmovin Player instance...');
