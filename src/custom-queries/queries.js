@@ -123,14 +123,14 @@ export const getSearch = `
       }
     }
     listMoviePlaylists(
-      filter: {or: [{Creator: {contains: $searchString}}, {Title: {contains: $searchString}},
-        {Creator: {contains: $lowSearchString}}, {Title: {contains: $lowSearchString}},
-        {Creator: {contains: $firstCapitalisedSearchString}}, {Title: {contains: $firstCapitalisedSearchString}},
-        {Creator: {contains: $capitalisedSearchString}}, {Title: {contains: $capitalisedSearchString}}], is_public: {eq: true}}
+      filter: {or: [{creator: {contains: $searchString}}, {title: {contains: $searchString}},
+        {creator: {contains: $lowSearchString}}, {title: {contains: $lowSearchString}},
+        {creator: {contains: $firstCapitalisedSearchString}}, {title: {contains: $firstCapitalisedSearchString}},
+        {creator: {contains: $capitalisedSearchString}}, {title: {contains: $capitalisedSearchString}}], is_public: {eq: true}}
     ) {
       items {
-        Creator
-        Title
+        creator
+        title
         id
         is_public
       }
