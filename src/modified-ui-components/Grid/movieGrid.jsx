@@ -1,125 +1,128 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
-var AWS = require('aws-sdk');
+var AWS = require("aws-sdk");
+
 export function getDirectors(data) {
-    const result = {};
-   
-    data.forEach((item) => {
-        const itemId = item.id;
-        const rez = {}
-        const names = []
-        rez[itemId] = []
-        if(item.MovieTeam === null)
-            return;
-       item.MovieTeam.PersonMovieTeams.items.forEach((person) => {
-         if (person.Role.name === 'Režisors') {
-            names.push(
-             person.Person.name + ' ' + person.Person.surname,
-           );
-         }
-       });
-       result[itemId] = names.join(', ');
+  const result = {};
+  data.forEach((item) => {
+    const itemId = item.id;
+    const names = [];
+    if (item.MovieTeam === null) return;
+    item.MovieTeam.PersonMovieTeams.items.forEach((person) => {
+      if (person.Role.name === "Režisors") {
+        names.push(`${person.Person.name} ${person.Person.surname}`);
+      }
     });
-    return result;
-   }
-export function MyGridMovies({data, maxRows, maxColumns}) {
+    result[itemId] = names.join(", ");
+  });
+  return result;
+}
+
+export function MyGridMovies({ data, maxRows, maxColumns }) {
     const [photoSrc, setPhotoSrc] = useState({});
     AWS.config.region = "eu-north-1";
     AWS.config.credentials = new AWS.CognitoIdentityCredentials(IdentityPoolId);
-    
+  
     const navigate = useNavigate();
-
     const [rows, setRows] = useState(maxRows);
-    const [columns, setColumns] = useState(maxColumns);
     const [directors, setDirectors] = useState(getDirectors(data));
-
+  
     async function getSrc(items) {
-        const config = {
-            region: "eu-north-1",
-            credentials: new AWS.CognitoIdentityCredentials({
-              IdentityPoolId: IdentityPoolId,
-            }),
-            bucketName : "balticshortsphotos",
-        };
-        var myBucket = new AWS.S3(config);
-        await Promise.all(items.map(async (item) => {
-            if(item.thumbnail_location){
-                const split = item.thumbnail_location.split("/");
-                const key = split.pop()
-                const bucketLoc = split.join("/");
-                var params = {
-                    Bucket: bucketLoc, 
-                    Key: key
-                };
-                try{
-                    const data = await myBucket.getObject(params).promise();
-                    photoSrc[item.id] = URL.createObjectURL(new Blob([data.Body], { type: 'image/png' }));
-                  }
-                  catch (error) {
-                    console.error('Error fetching data:', error);
-                  }      
-            }else{
-                photoSrc[item.id] = require("../../assets/images/no_image_1.jpg");
-                // "https://via.placeholder.com/350x144"
+      const config = {
+        region: "eu-north-1",
+        credentials: new AWS.CognitoIdentityCredentials({
+          IdentityPoolId: IdentityPoolId,
+        }),
+        bucketName: "balticshortsphotos",
+      };
+      const myBucket = new AWS.S3(config);
+      await Promise.all(
+        items.map(async (item) => {
+          if (item.thumbnail_location) {
+            const split = item.thumbnail_location.split("/");
+            const key = split.pop();
+            const bucketLoc = split.join("/");
+            const params = {
+              Bucket: bucketLoc,
+              Key: key,
+            };
+            try {
+              const data = await myBucket.getObject(params).promise();
+              photoSrc[item.id] = URL.createObjectURL(
+                new Blob([data.Body], { type: "image/png" })
+              );
+            } catch (error) {
+              console.error("Error fetching data:", error);
             }
-        }));    
-        console.log(photoSrc)
+          } else {
+            photoSrc[item.id] = require("../../assets/images/no_image_1.jpg");
+          }
+        })
+      );
+      console.log(photoSrc);
     }
-
+  
     useEffect(() => {
-        async function fetchData() {
-            await getSrc(data);
-            setRows(maxRows);
-            setColumns(maxColumns);
-            setDirectors(getDirectors(data));
-        }
-        fetchData();
-    }, [])
-
-    const checkRow = (idx) => {    
-        if((idx + 1) / columns > rows)
-            return false
-        return true
-    }
-
+      async function fetchData() {
+        await getSrc(data);
+        setDirectors(getDirectors(data));
+      }
+      fetchData();
+    }, [data]);
+  
+    const checkRow = (idx) => {
+      if ((idx + 1) / maxColumns > rows) return false;
+      return true;
+    };
+  
     return (
-        
-        <div className='w-[75%] h-fit gap-6 flex flex-col items-center relative justify-center '>
-            <div className={`grid grid-cols-3 items-center`}>
-                {data.map((item, idx) => (
-                    <>
-                    {checkRow(idx) && (
-                        <div key={item.id} className="p-4 h-full">
-                            <div className="SarakstsInLists m-auto w-80 h-48 relative" onClick={() => navigate('/movie/'+ item.name + '/' + item.id)} >
-                                <img className="Thumb w-80 h-36 left-0 top-0 relative" src={photoSrc[item.id]} />
-                                <div className="w-80 h-48 left-0 top-0 absolute bg-white bg-opacity-0 border border-black" />
-                                <div className="w-80 h-10 relative ml-4 items-center justify-center">
-                                <div>
-                                    <span className="text-black text-base font-bold font-['SchoolBook']">{item.name}<br/></span>
-                                    <div className="flex inline-col justify-end items-end">
-                                        <span className="text-black text-start text-sm font-normal font-['SchoolBook']">{directors[item.id]}</span>
-                                        <span className="text-black text-sm font-normal font-['SchoolBook'] mx-auto">{item.length}', {item.created_year}, {item.origin_country}</span>
-                                    </div>
-
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </>
-                ))}
-                {data.length / columns > rows && (
-                    <div className={`h-24 relative flex -top-8 mb-4 col-span-3`}>
-                        <div className='w-full h-20 relative flex opacity-60'>
-                            <div className="w-full h-16 relative bg-gradient-to-b from-stone-50 to-zinc-300" />
-                        </div>
-                            <div className="w-full h-2.5 m-auto mt-12 absolute flex items-center justify-center">
-                            <div className="w-full h-2 top-[1px] relative text-black text-xs font-normal font-['Arial'] tracking-wide text-center" onClick={() => setRows(rows+1)}>Vairāk</div>
-                        </div>
+      <div className="w-full h-auto p-4 flex flex-col items-center bg-inherit">
+        <div
+          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-center w-full bg-inherit`}
+        >
+          {data.map((item, idx) => (
+            <>
+              {checkRow(idx) && (
+                <div
+                  key={item.id}
+                  className="flex flex-col shadow-md bg-inherit border border-black"
+                  onClick={() => navigate(`/movie/${item.name}/${item.id}`)}
+                >
+                  <div className="relative w-full h-full sm:h-48 overflow-hidden  bg-inherit">
+                    <img
+                      className="w-full h-full object-cover"
+                      src={photoSrc[item.id]}
+                      alt={item.name}
+                    />
+                  </div>
+                  <div className="mt-4 flex flex-col bg-inherit p-4 ">
+                    <span className="text-black text-lg font-bold">
+                      {item.name}
+                    </span>
+                    <div className="text-sm text-gray-600 mt-1">
+                      {directors[item.id]}
                     </div>
-                )}
-            </div>
+                    <div className="text-sm text-gray-500">
+                      {item.length}', {item.created_year}, {item.origin_country}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </>
+          ))}
         </div>
+        {data.length / maxColumns > rows && (
+          <div className="flex justify-center mt-6">
+            <button
+              className="px-4 py-2 text-black rounded-md shadow-md"
+              onClick={() => setRows(rows + 1)}
+            >
+              Vairāk
+            </button>
+          </div>
+        )}
+      </div>
     );
   }
+  
