@@ -7,8 +7,10 @@ const jwt = require("jsonwebtoken");
 
 exports.handler = async (event) => {
   try {
+    console.log(event)
+
     // Extract communicationKeyAsBase64 and communicationKeyId from the event
-    const {keyId}  = JSON.parse(event.body);
+    const {keyId} = event.body;
     console.log(keyId)
     const communicationKeyAsBase64 = 'YkLog67SA7Nrirzqtg8k8Yrao6LNEUiCrzN+dYQu61c='
     const communicationKeyId = '902b350e-7d86-4fda-aca0-b21300ec6517'
