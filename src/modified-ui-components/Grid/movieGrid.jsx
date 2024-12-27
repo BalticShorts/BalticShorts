@@ -91,7 +91,7 @@ export function MyGridMovies({data, maxRows, maxColumns}) {
                     <>
                     {checkRow(idx) && (
                         <div key={item.id} className="p-4 h-full">
-                            <div className="SarakstsInLists m-auto w-80 h-48 relative" onClick={() => navigate('/movie/'+item.id)} >
+                            <div className="SarakstsInLists m-auto w-80 h-48 relative" onClick={() => navigate('/movie/'+ item.name + '/' + item.id)} >
                                 <img className="Thumb w-80 h-36 left-0 top-0 relative" src={photoSrc[item.id]} />
                                 <div className="w-80 h-48 left-0 top-0 absolute bg-white bg-opacity-0 border border-black" />
                                 <div className="w-80 h-10 relative ml-4 items-center justify-center">

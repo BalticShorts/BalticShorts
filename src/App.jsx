@@ -84,7 +84,7 @@ export default function App() {
 
             {loggedIn ? (
               <>
-                <Route path="movie/:id" element={<Movie />} />
+                <Route path="movie/:name/:id" element={<Movie />} />
                 <Route path="profile/:id/:mode?" element={<Profile />} />
                 <Route path="search/:query?" element={<Search />} />
                 <Route path="catalogue/:givenTab?" element={<Catalogue />} />
