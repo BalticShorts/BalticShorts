@@ -6,10 +6,10 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
   useEffect(() => {
     const loadPlayer = async () => {
 
-      if (!movieURL || (!movieURL.dash && !movieURL.hls)) {
-        console.error('Missing movieURL or its properties (dash/hls).', { movieURL });
-        return;
-      }
+      // if (!movieURL || (!movieURL.dash && !movieURL.hls)) {
+      //   console.error('Missing movieURL or its properties (dash/hls).', { movieURL });
+      //   return;
+      // }
 
       try {
         // Dynamically import the Bitmovin Player script
