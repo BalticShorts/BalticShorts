@@ -126,10 +126,15 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           }
         };
   
-        const primarySource = createSource(movieURL.dash, movieURL.cmafHls);
+        // const primarySource = createSource(movieURL.dash, movieURL.cmafHls);
+        // const fallbackSource = createSource(
+        //   movieURL.cmafDash,
+        //   movieURL.hls
+        // );
+        const primarySource = createSource(movieURL.cmafDash, movieURL.cmafHls);
         const fallbackSource = createSource(
           movieURL.cmafDash,
-          movieURL.hls
+          movieURL.cmafHls
         );
   
         await loadSourceWithFallback(primarySource, fallbackSource);
