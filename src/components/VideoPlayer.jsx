@@ -132,7 +132,8 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
         //   movieURL.cmafDash,
         //   movieURL.hls
         // );
-        var hlsUrl = isSafari ? movieURL.hls : movieURL.cmafHls
+        // var hlsUrl = isSafari ? movieURL.hls : movieURL.cmafHls
+        var hlsUrl = isSafari ? movieURL.hls : movieURL.hls
         const primarySource = createSource('', hlsUrl);
         const fallbackSource = createSource('', hlsUrl);
   
