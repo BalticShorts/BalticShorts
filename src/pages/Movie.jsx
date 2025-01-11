@@ -119,8 +119,8 @@ function Movie() {
       const url = await fetchVideo(movie.guid);
       const playlists = await fetchPlaylists(id);
       const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
-      // const signedUrlAddon = await signVideo(url.keyId, url.resourceId);
-      const signedUrlAddon = '';
+      const signedUrlAddon = await signVideo(url.keyId, url.resourceId);
+      // const signedUrlAddon = '';
       await getSrc(movie.subtitles_location);
       try {     
         setUrlAddon(signedUrlAddon);
