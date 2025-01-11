@@ -164,5 +164,5 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
 
 export default SimpleBitmovinPlayer;
 
-export const isVideoPlaying = (video) =>
-  !!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2);
+// export const isVideoPlaying = (video) =>
+//   !!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2);

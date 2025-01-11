@@ -4,7 +4,7 @@ import VideoPlayer from '../components/VideoPlayer';
 import { movieMoviePlaylistsByMovieId } from '../graphql/queries.js'
 import { Amplify, API  } from 'aws-amplify';
 import awsExports from '../aws-exports';
-import { isVideoPlaying } from '../components/VideoPlayer';
+// import { isVideoPlaying } from '../components/VideoPlayer';
 import { useNavigate } from "react-router-dom";
 import { getMovieQuery } from '../custom-queries/queries';
 import { Footer } from '../modified-ui-components/Footer';
@@ -119,8 +119,8 @@ function Movie() {
       const url = await fetchVideo(movie.guid);
       const playlists = await fetchPlaylists(id);
       const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
-      const signedUrlAddon = await signVideo(url.keyId, url.resourceId);
-      // const signedUrlAddon = '';
+      // const signedUrlAddon = await signVideo(url.keyId, url.resourceId);
+      const signedUrlAddon = '';
       await getSrc(movie.subtitles_location);
       try {     
         setUrlAddon(signedUrlAddon);
@@ -193,7 +193,7 @@ function Movie() {
     const elements = document.getElementById('textOnMovie')
     const videoElement = document.querySelector('video');
     sleep(3)
-    const playing = isVideoPlaying(videoElement);
+    // const playing = isVideoPlaying(videoElement);
     textOnMovie ? elements.classList.add("hidden") : setTextOnMovie(textOnMovie) // elements.classList.remove("hidden")
     setTextOnMovie(!textOnMovie)
   }
