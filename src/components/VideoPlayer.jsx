@@ -132,8 +132,8 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
         //   movieURL.cmafDash,
         //   movieURL.hls
         // );
-        // var hlsUrl = isSafari ? movieURL.hls : movieURL.cmafHls
-        var hlsUrl = isSafari ? movieURL.hls : movieURL.hls
+        var hlsUrl = isSafari ? movieURL.hls : movieURL.cmafHls
+        // var hlsUrl = 'https://drmexample.s3.eu-north-1.amazonaws.com/t_1_11/cmaf/1736621800121.m3u8'
         const primarySource = createSource('', hlsUrl);
         const fallbackSource = createSource('', hlsUrl);
   
