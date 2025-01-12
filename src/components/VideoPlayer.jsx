@@ -61,47 +61,47 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           dash,
           hls,
           poster: thumbnail,
-          // drm: {
-          //   widevine: {
-          //     LA_URL: 'https://e40ff278.drm-widevine-licensing.axprod.net/AcquireLicense',
-          //     headers: { 'X-AxDRM-Message': urlAddon },
-          //   },
-          //   fairplay: {
-          //     LA_URL: 'https://e40ff278.drm-fairplay-licensing.axprod.net/AcquireLicense',
-          //     certificateURL: 'https://vtb.axinom.com/FPScert/fairplay.cer',
-          //     headers: {
-          //       'X-AxDRM-Message': urlAddon,
-          //     },
-          //     getContentId: function (emeOptions, initData) {
-          //       return String.fromCharCode(...new Uint8Array(initData)).replace(/^.*:\/\//, '');
-          //     },
-          //     prepareContentId: (uri) => {
-          //       console.log('FairPlay prepareContentId called with URI:', uri);
-          //       return uri.substring(uri.indexOf('skd'));
-          //     },
-          //     prepareLicenseAsync: (ckc) => {
-          //       console.log('FairPlay prepareLicenseAsync called with CKC:', ckc);
-          //       return new Promise((resolve, reject) => {
-          //         const reader = new FileReader();
-          //         reader.addEventListener('loadend', () => {
-          //           console.log('FairPlay CKC processing complete.');
-          //           resolve(new Uint8Array(reader.result));
-          //         });
-          //         reader.addEventListener('error', (error) => {
-          //           console.error('FairPlay CKC processing failed:', error);
-          //           reject(error);
-          //         });
-          //         reader.readAsArrayBuffer(ckc);
-          //       });
-          //     },
-          //     prepareMessage: (event) => {
-          //       console.log('FairPlay prepareMessage called with event:', event);
-          //       return new Blob([event.message], { type: 'application/octet-binary' });
-          //     },
-          //     useUint16InitData: true,
-          //     licenseResponseType: 'blob',
-          //   },
-          // },
+          drm: {
+            widevine: {
+              LA_URL: 'https://e40ff278.drm-widevine-licensing.axprod.net/AcquireLicense',
+              headers: { 'X-AxDRM-Message': urlAddon },
+            },
+            fairplay: {
+              LA_URL: 'https://e40ff278.drm-fairplay-licensing.axprod.net/AcquireLicense',
+              certificateURL: 'https://vtb.axinom.com/FPScert/fairplay.cer',
+              headers: {
+                'X-AxDRM-Message': urlAddon,
+              },
+              getContentId: function (emeOptions, initData) {
+                return String.fromCharCode(...new Uint8Array(initData)).replace(/^.*:\/\//, '');
+              },
+              prepareContentId: (uri) => {
+                console.log('FairPlay prepareContentId called with URI:', uri);
+                return uri.substring(uri.indexOf('skd'));
+              },
+              prepareLicenseAsync: (ckc) => {
+                console.log('FairPlay prepareLicenseAsync called with CKC:', ckc);
+                return new Promise((resolve, reject) => {
+                  const reader = new FileReader();
+                  reader.addEventListener('loadend', () => {
+                    console.log('FairPlay CKC processing complete.');
+                    resolve(new Uint8Array(reader.result));
+                  });
+                  reader.addEventListener('error', (error) => {
+                    console.error('FairPlay CKC processing failed:', error);
+                    reject(error);
+                  });
+                  reader.readAsArrayBuffer(ckc);
+                });
+              },
+              prepareMessage: (event) => {
+                console.log('FairPlay prepareMessage called with event:', event);
+                return new Blob([event.message], { type: 'application/octet-binary' });
+              },
+              useUint16InitData: true,
+              licenseResponseType: 'blob',
+            },
+          },
           subtitle: subtitles
             ? { url: subtitles, kind: 'subtitles', label: 'English', srclang: 'en' }
             : undefined,
@@ -132,7 +132,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
         //   movieURL.cmafDash,
         //   movieURL.hls
         // );
-        var hlsUrl = isSafari ? movieURL.hls : movieURL.cmafHls
+        var hlsUrl = isSafari ? movieURL.hls : movieURL.hls
         // var hlsUrl = 'https://drmexample.s3.eu-north-1.amazonaws.com/t_1_11/cmaf/1736621800121.m3u8'
         const primarySource = createSource('', hlsUrl);
         const fallbackSource = createSource('', hlsUrl);
