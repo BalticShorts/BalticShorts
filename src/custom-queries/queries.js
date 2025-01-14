@@ -120,6 +120,7 @@ export const getSearch = `
         surname
         role
         id
+        nationality
       }
     }
     listMoviePlaylists(
@@ -227,3 +228,40 @@ export const getMoviePlaylistWithMovie = /* GraphQL */ `
     }
   }
 `;
+
+export const ListMoviesByPerson = `
+  query ListMoviesByPerson($personID: ID!) {
+    listPersonMovieTeams(filter: { personID: { eq: $personID } }) {
+      items {
+        MovieTeam {
+          Movie {
+            id
+            name
+            genre
+            created_year
+            length
+            origin_country
+            thumbnail_location
+            MovieTeam {
+              id
+              MovieName
+              PersonMovieTeams {
+                items {
+                  Person {
+                    id
+                    name
+                    surname
+                  }
+                  Role {
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+;

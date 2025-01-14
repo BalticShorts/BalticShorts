@@ -6,10 +6,11 @@ var AWS = require("aws-sdk");
 export function getDirectors(data) {
   const result = {};
   data.forEach((item) => {
+    if (item === null) return;
     const itemId = item.id;
     const names = [];
     if (item.MovieTeam === null) return;
-    item.MovieTeam.PersonMovieTeams.items.forEach((person) => {
+    item.MovieTeam?.PersonMovieTeams.items.forEach((person) => {
       if (person.Role.name === "Režisors") {
         names.push(`${person.Person.name} ${person.Person.surname}`);
       }
@@ -39,6 +40,7 @@ export function MyGridMovies({ data, maxRows, maxColumns }) {
       const myBucket = new AWS.S3(config);
       await Promise.all(
         items.map(async (item) => {
+          if (item === null) return;
           if (item.thumbnail_location) {
             const split = item.thumbnail_location.split("/");
             const key = split.pop();
@@ -84,19 +86,21 @@ export function MyGridMovies({ data, maxRows, maxColumns }) {
           {data.map((item, idx) => (
             <>
               {checkRow(idx) && (
+                <>
+                {item !== null && (
                 <div
                   key={item.id}
-                  className="flex flex-col shadow-md bg-inherit border border-black"
+                  className="flex flex-col shadow-md bg-inherit border border-black max-h-[292px] sm:min-h-[292px] overflow-hidden"
                   onClick={() => navigate(`/movie/${item.name}/${item.id}`)}
                 >
-                  <div className="relative w-full h-full sm:h-48 overflow-hidden  bg-inherit">
+                  <div className="relative w-full h-full sm:h-48 sm:min-h-[192px] overflow-hidden bg-inherit">
                     <img
                       className="w-full h-full object-cover"
                       src={photoSrc[item.id]}
                       alt={item.name}
                     />
                   </div>
-                  <div className="mt-4 flex flex-col bg-inherit p-4 ">
+                  <div className="mt-2 flex flex-col bg-inherit p-4 ">
                     <span className="text-black text-lg font-bold">
                       {item.name}
                     </span>
@@ -109,6 +113,8 @@ export function MyGridMovies({ data, maxRows, maxColumns }) {
                   </div>
                 </div>
               )}
+              </>
+            )}
             </>
           ))}
         </div>
