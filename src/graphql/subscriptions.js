@@ -772,6 +772,10 @@ export const onCreateMovieTeam = /* GraphQL */ `
         subtitles_location
         creators_comment
         trailerGuid
+        awards {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         movieMovieTeamId
@@ -845,6 +849,10 @@ export const onUpdateMovieTeam = /* GraphQL */ `
         subtitles_location
         creators_comment
         trailerGuid
+        awards {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         movieMovieTeamId
@@ -918,6 +926,10 @@ export const onDeleteMovieTeam = /* GraphQL */ `
         subtitles_location
         creators_comment
         trailerGuid
+        awards {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         movieMovieTeamId
@@ -927,6 +939,201 @@ export const onDeleteMovieTeam = /* GraphQL */ `
       createdAt
       updatedAt
       movieTeamMovieId
+      __typename
+    }
+  }
+`;
+export const onCreateAward = /* GraphQL */ `
+  subscription OnCreateAward($filter: ModelSubscriptionAwardFilterInput) {
+    onCreateAward(filter: $filter) {
+      id
+      name
+      year
+      category
+      comment
+      movieID
+      movie {
+        id
+        name
+        name_eng
+        genre
+        description
+        description_eng
+        screen_language
+        captions_language
+        origin_country
+        length
+        created_year
+        uploaded_at
+        guid
+        MovieTeam {
+          id
+          MovieName
+          createdAt
+          updatedAt
+          movieTeamMovieId
+          __typename
+        }
+        MovieInPlaylists {
+          nextToken
+          __typename
+        }
+        times_watched
+        MovieType {
+          id
+          type
+          createdAt
+          updatedAt
+          __typename
+        }
+        photo_location
+        thumbnail_location
+        age_rating
+        subtitles_location
+        creators_comment
+        trailerGuid
+        awards {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        movieMovieTeamId
+        movieMovieTypeId
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateAward = /* GraphQL */ `
+  subscription OnUpdateAward($filter: ModelSubscriptionAwardFilterInput) {
+    onUpdateAward(filter: $filter) {
+      id
+      name
+      year
+      category
+      comment
+      movieID
+      movie {
+        id
+        name
+        name_eng
+        genre
+        description
+        description_eng
+        screen_language
+        captions_language
+        origin_country
+        length
+        created_year
+        uploaded_at
+        guid
+        MovieTeam {
+          id
+          MovieName
+          createdAt
+          updatedAt
+          movieTeamMovieId
+          __typename
+        }
+        MovieInPlaylists {
+          nextToken
+          __typename
+        }
+        times_watched
+        MovieType {
+          id
+          type
+          createdAt
+          updatedAt
+          __typename
+        }
+        photo_location
+        thumbnail_location
+        age_rating
+        subtitles_location
+        creators_comment
+        trailerGuid
+        awards {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        movieMovieTeamId
+        movieMovieTypeId
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteAward = /* GraphQL */ `
+  subscription OnDeleteAward($filter: ModelSubscriptionAwardFilterInput) {
+    onDeleteAward(filter: $filter) {
+      id
+      name
+      year
+      category
+      comment
+      movieID
+      movie {
+        id
+        name
+        name_eng
+        genre
+        description
+        description_eng
+        screen_language
+        captions_language
+        origin_country
+        length
+        created_year
+        uploaded_at
+        guid
+        MovieTeam {
+          id
+          MovieName
+          createdAt
+          updatedAt
+          movieTeamMovieId
+          __typename
+        }
+        MovieInPlaylists {
+          nextToken
+          __typename
+        }
+        times_watched
+        MovieType {
+          id
+          type
+          createdAt
+          updatedAt
+          __typename
+        }
+        photo_location
+        thumbnail_location
+        age_rating
+        subtitles_location
+        creators_comment
+        trailerGuid
+        awards {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        movieMovieTeamId
+        movieMovieTypeId
+        __typename
+      }
+      createdAt
+      updatedAt
       __typename
     }
   }
@@ -1012,6 +1219,21 @@ export const onCreateMovie = /* GraphQL */ `
       subtitles_location
       creators_comment
       trailerGuid
+      awards {
+        items {
+          id
+          name
+          year
+          category
+          comment
+          movieID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       movieMovieTeamId
@@ -1101,6 +1323,21 @@ export const onUpdateMovie = /* GraphQL */ `
       subtitles_location
       creators_comment
       trailerGuid
+      awards {
+        items {
+          id
+          name
+          year
+          category
+          comment
+          movieID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       movieMovieTeamId
@@ -1190,6 +1427,21 @@ export const onDeleteMovie = /* GraphQL */ `
       subtitles_location
       creators_comment
       trailerGuid
+      awards {
+        items {
+          id
+          name
+          year
+          category
+          comment
+          movieID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       movieMovieTeamId
@@ -1344,6 +1596,10 @@ export const onCreateMovieMoviePlaylist = /* GraphQL */ `
         subtitles_location
         creators_comment
         trailerGuid
+        awards {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         movieMovieTeamId
@@ -1421,6 +1677,10 @@ export const onUpdateMovieMoviePlaylist = /* GraphQL */ `
         subtitles_location
         creators_comment
         trailerGuid
+        awards {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         movieMovieTeamId
@@ -1498,6 +1758,10 @@ export const onDeleteMovieMoviePlaylist = /* GraphQL */ `
         subtitles_location
         creators_comment
         trailerGuid
+        awards {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         movieMovieTeamId

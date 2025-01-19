@@ -7,6 +7,8 @@
 export { default as Addtolist } from "./Addtolist";
 export { default as Addtolistbutton } from "./Addtolistbutton";
 export { default as Arrow } from "./Arrow";
+export { default as AwardCreateForm } from "./AwardCreateForm";
+export { default as AwardUpdateForm } from "./AwardUpdateForm";
 export { default as BUTTONHOMEPAGE } from "./BUTTONHOMEPAGE";
 export { default as Component1 } from "./Component1";
 export { default as CountryCodeCreateForm } from "./CountryCodeCreateForm";

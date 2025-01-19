@@ -77,6 +77,17 @@ export const getProfile = `
       guid
       subtitles_location
       trailerGuid
+      thumbnail_location
+      creators_comment
+      photo_location
+      awards {
+        items {
+          name
+          year
+          category
+          comment
+        }
+      }
     }
   }
 `;

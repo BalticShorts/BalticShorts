@@ -94,6 +94,19 @@ type MovieTeam @model @auth(rules: [
   Movie: Movie @belongsTo
 }
 
+type Award @model @auth(rules: [
+  { allow: public, provider: iam, operations: [read] },
+  { allow: private, provider: iam, operations: [read, create, update, delete] }
+]) {
+  id: ID!
+  name: String!
+  year: Int!
+  category: String!
+  comment: String
+  movieID: ID! @index(name: "byMovie")
+  movie: Movie @belongsTo(fields: ["movieID"])
+}
+
 type Movie @model @auth(rules: [
   { allow: public, provider: iam, operations: [read] },
   { allow: private, provider: iam, operations: [read, create, update, delete] }
@@ -121,6 +134,7 @@ type Movie @model @auth(rules: [
   subtitles_location: String
   creators_comment: String
   trailerGuid: ID
+  awards: [Award] @hasMany(indexName: "byMovie", fields: ["id"])
 }
 
 type CountryCode @model @auth(rules: [

@@ -9,6 +9,7 @@ import { updateMovie } from "../graphql/mutations";
 import moment from 'moment'
 import { useNavigate } from "react-router-dom";
 import { SubtitleUpload } from "../components/SubtitleUpload";
+import { CreateAwards } from "../components/CreateAwards";
 
 const Upload = () => {
     const navigate = useNavigate();
@@ -55,6 +56,7 @@ const Upload = () => {
         delete movie.MovieInPlaylists;
         delete movie.MovieTeam;
         delete movie.MovieType;
+        delete movie.awards;
         
         const response = await API.graphql({
             query: updateMovie.replaceAll("__typename", ""),
@@ -138,8 +140,9 @@ const Upload = () => {
         <>
         <div className="w-full h-fit relative bg-beige">
             <div className="py-10 w-full h-full relative">
-                {tab ==='movie' && <MovieUpload tab = {tab} changeState = {changeState}/>}
-                {tab === 'team' && (
+            {tab ==='movie' && <MovieUpload tab = {tab} changeState = {changeState}/>}
+            {tab ==='awards' && <CreateAwards tab = {tab} changeState = {changeState} movie = {movie}/>}
+            {tab === 'team' && (
                 <>
                     <CreateMovieTeam changeState = {changeState} movie = {movie}/>
                 </>

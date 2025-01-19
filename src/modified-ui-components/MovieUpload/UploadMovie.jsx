@@ -482,7 +482,7 @@ export default function UploadMovie(props) {
           if (clearOnSuccess) {
             resetStateValues();
           }
-          props.changeState('team', movie);
+          props.changeState('awards', movie);
         } catch (err) {
           if (onError) {
             const messages = err.errors.map((e) => e.message).join("\n");

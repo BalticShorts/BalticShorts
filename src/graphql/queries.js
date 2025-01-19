@@ -729,6 +729,10 @@ export const getMovieTeam = /* GraphQL */ `
         subtitles_location
         creators_comment
         trailerGuid
+        awards {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         movieMovieTeamId
@@ -786,6 +790,179 @@ export const listMovieTeams = /* GraphQL */ `
         createdAt
         updatedAt
         movieTeamMovieId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getAward = /* GraphQL */ `
+  query GetAward($id: ID!) {
+    getAward(id: $id) {
+      id
+      name
+      year
+      category
+      comment
+      movieID
+      movie {
+        id
+        name
+        name_eng
+        genre
+        description
+        description_eng
+        screen_language
+        captions_language
+        origin_country
+        length
+        created_year
+        uploaded_at
+        guid
+        MovieTeam {
+          id
+          MovieName
+          createdAt
+          updatedAt
+          movieTeamMovieId
+          __typename
+        }
+        MovieInPlaylists {
+          nextToken
+          __typename
+        }
+        times_watched
+        MovieType {
+          id
+          type
+          createdAt
+          updatedAt
+          __typename
+        }
+        photo_location
+        thumbnail_location
+        age_rating
+        subtitles_location
+        creators_comment
+        trailerGuid
+        awards {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        movieMovieTeamId
+        movieMovieTypeId
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listAwards = /* GraphQL */ `
+  query ListAwards(
+    $filter: ModelAwardFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAwards(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        year
+        category
+        comment
+        movieID
+        movie {
+          id
+          name
+          name_eng
+          genre
+          description
+          description_eng
+          screen_language
+          captions_language
+          origin_country
+          length
+          created_year
+          uploaded_at
+          guid
+          times_watched
+          photo_location
+          thumbnail_location
+          age_rating
+          subtitles_location
+          creators_comment
+          trailerGuid
+          createdAt
+          updatedAt
+          movieMovieTeamId
+          movieMovieTypeId
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const awardsByMovieID = /* GraphQL */ `
+  query AwardsByMovieID(
+    $movieID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelAwardFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    awardsByMovieID(
+      movieID: $movieID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        name
+        year
+        category
+        comment
+        movieID
+        movie {
+          id
+          name
+          name_eng
+          genre
+          description
+          description_eng
+          screen_language
+          captions_language
+          origin_country
+          length
+          created_year
+          uploaded_at
+          guid
+          times_watched
+          photo_location
+          thumbnail_location
+          age_rating
+          subtitles_location
+          creators_comment
+          trailerGuid
+          createdAt
+          updatedAt
+          movieMovieTeamId
+          movieMovieTypeId
+          __typename
+        }
+        createdAt
+        updatedAt
         __typename
       }
       nextToken
@@ -874,6 +1051,21 @@ export const getMovie = /* GraphQL */ `
       subtitles_location
       creators_comment
       trailerGuid
+      awards {
+        items {
+          id
+          name
+          year
+          category
+          comment
+          movieID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       movieMovieTeamId
@@ -929,6 +1121,10 @@ export const listMovies = /* GraphQL */ `
         subtitles_location
         creators_comment
         trailerGuid
+        awards {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         movieMovieTeamId
@@ -1092,6 +1288,10 @@ export const getMovieMoviePlaylist = /* GraphQL */ `
         subtitles_location
         creators_comment
         trailerGuid
+        awards {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         movieMovieTeamId
