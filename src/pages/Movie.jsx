@@ -161,11 +161,13 @@ function Movie() {
         var dataBlob = new Blob([data.Body], { type: type });
         if (extension !== 'vtt'){
           var srtText = await readBlobAsSrtText(dataBlob);
-          var srtRegex = /(.*\n)?(\d\d:\d\d:\d\d),(\d\d\d --> \d\d:\d\d:\d\d),(\d\d\d)/g;
-          var vttText = 'WEBVTT\n\n' + srtText.replace(srtRegex, '$1$2.$3.$4');
+          const srtRegex = /(\d+)\n(\d{2}:\d{2}:\d{2}),(\d{3}) --> (\d{2}:\d{2}:\d{2}),(\d{3})/g;
+          const vttText = 'WEBVTT\n\n' + srtText.replace(srtRegex, '$1\n$2.$3 --> $4.$5');
           dataBlob = new Blob([vttText], { type: 'text/vtt' });
         }
         var blobURL = URL.createObjectURL(dataBlob);
+        console.log("blobURL")
+        console.log(blobURL)
         setSubtitles(blobURL);
       }
       catch (error) {

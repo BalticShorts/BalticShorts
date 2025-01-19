@@ -138,6 +138,12 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
         const fallbackSource = createSource(movieURL.dash, movieURL.hls);
   
         await loadSourceWithFallback(primarySource, fallbackSource);
+
+        const availableSubtitleTracks = player.getAvailableSubtitles();
+        if (availableSubtitleTracks.length > 0) {
+          console.log('Enabling subtitles:', availableSubtitleTracks[0]);
+          player.setSubtitle(availableSubtitleTracks[0].id);
+        }
   
         return () => {
           if (player) {
