@@ -102,13 +102,11 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
               licenseResponseType: 'blob',
             },
           },
-          subtitle: subtitles
-            ? { url: subtitles, kind: 'subtitles', label: 'English', srclang: 'en' }
-            : undefined,
         });
   
         console.log('Creating Bitmovin Player instance...');
         const player = new window.bitmovin.player.Player(playerRef.current, config);
+        const subtitle = subtitles ? { url: subtitles, kind: 'subtitles', label: 'English', lang: 'en', id: "sub1" } : undefined
   
         const loadSourceWithFallback = async (primarySource, fallbackSource) => {
           try {
@@ -125,6 +123,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
               console.error('No fallback source provided.');
             }
           }
+          player.subtitles.add(subtitle)
         };
   
         // const primarySource = createSource(movieURL.dash, movieURL.cmafHls);
@@ -138,12 +137,6 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
         const fallbackSource = createSource(movieURL.dash, movieURL.hls);
   
         await loadSourceWithFallback(primarySource, fallbackSource);
-
-        const availableSubtitleTracks = player.getAvailableSubtitles();
-        if (availableSubtitleTracks.length > 0) {
-          console.log('Enabling subtitles:', availableSubtitleTracks[0]);
-          player.setSubtitle(availableSubtitleTracks[0].id);
-        }
   
         return () => {
           if (player) {
