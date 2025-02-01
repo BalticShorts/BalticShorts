@@ -216,6 +216,7 @@ export default function MoviePlaylistUpdateForm(props) {
     creator: "",
     title: "",
     description: "",
+    size: "",
   };
   const [Creator, setCreator] = React.useState(initialValues.Creator);
   const [Title, setTitle] = React.useState(initialValues.Title);
@@ -231,6 +232,7 @@ export default function MoviePlaylistUpdateForm(props) {
   const [description, setDescription] = React.useState(
     initialValues.description
   );
+  const [size, setSize] = React.useState(initialValues.size);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -247,6 +249,7 @@ export default function MoviePlaylistUpdateForm(props) {
     setCreator1(cleanValues.creator);
     setTitle1(cleanValues.title);
     setDescription(cleanValues.description);
+    setSize(cleanValues.size);
     setErrors({});
   };
   const [moviePlaylistRecord, setMoviePlaylistRecord] = React.useState(
@@ -307,6 +310,7 @@ export default function MoviePlaylistUpdateForm(props) {
     creator: [{ type: "Required" }],
     title: [{ type: "Required" }],
     description: [{ type: "Required" }],
+    size: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -374,6 +378,7 @@ export default function MoviePlaylistUpdateForm(props) {
           creator: creator1,
           title: title1,
           description,
+          size: size ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -501,6 +506,7 @@ export default function MoviePlaylistUpdateForm(props) {
             creator: modelFields.creator,
             title: modelFields.title,
             description: modelFields.description,
+            size: modelFields.size ?? null,
           };
           promises.push(
             API.graphql({
@@ -542,6 +548,7 @@ export default function MoviePlaylistUpdateForm(props) {
               creator: creator1,
               title: title1,
               description,
+              size,
             };
             const result = onChange(modelFields);
             value = result?.Creator ?? value;
@@ -571,6 +578,7 @@ export default function MoviePlaylistUpdateForm(props) {
               creator: creator1,
               title: title1,
               description,
+              size,
             };
             const result = onChange(modelFields);
             value = result?.Title ?? value;
@@ -598,6 +606,7 @@ export default function MoviePlaylistUpdateForm(props) {
               creator: creator1,
               title: title1,
               description,
+              size,
             };
             const result = onChange(modelFields);
             values = result?.movies ?? values;
@@ -683,6 +692,7 @@ export default function MoviePlaylistUpdateForm(props) {
               creator: creator1,
               title: title1,
               description,
+              size,
             };
             const result = onChange(modelFields);
             value = result?.is_recommended ?? value;
@@ -718,6 +728,7 @@ export default function MoviePlaylistUpdateForm(props) {
                     creator: creator1,
                     title: title1,
                     description,
+                    size,
                   };
                   const result = onChange(modelFields);
                   value = result?.Field0 ?? value;
@@ -738,6 +749,7 @@ export default function MoviePlaylistUpdateForm(props) {
                     creator: creator1,
                     title: title1,
                     description,
+                    size,
                   };
                   const result = onChange(modelFields);
                   value = result?.Field0 ?? value;
@@ -772,6 +784,7 @@ export default function MoviePlaylistUpdateForm(props) {
               creator: value,
               title: title1,
               description,
+              size,
             };
             const result = onChange(modelFields);
             value = result?.creator ?? value;
@@ -803,6 +816,7 @@ export default function MoviePlaylistUpdateForm(props) {
               creator: creator1,
               title: value,
               description,
+              size,
             };
             const result = onChange(modelFields);
             value = result?.title ?? value;
@@ -834,6 +848,7 @@ export default function MoviePlaylistUpdateForm(props) {
               creator: creator1,
               title: title1,
               description: value,
+              size,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -847,6 +862,42 @@ export default function MoviePlaylistUpdateForm(props) {
         errorMessage={errors.description?.errorMessage}
         hasError={errors.description?.hasError}
         {...getOverrideProps(overrides, "description")}
+      ></TextField>
+      <TextField
+        label="Size"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={size}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              Creator,
+              Title,
+              movies,
+              is_recommended,
+              Field0,
+              creator: creator1,
+              title: title1,
+              description,
+              size: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.size ?? value;
+          }
+          if (errors.size?.hasError) {
+            runValidationTasks("size", value);
+          }
+          setSize(value);
+        }}
+        onBlur={() => runValidationTasks("size", size)}
+        errorMessage={errors.size?.errorMessage}
+        hasError={errors.size?.hasError}
+        {...getOverrideProps(overrides, "size")}
       ></TextField>
       <Flex
         justifyContent="space-between"

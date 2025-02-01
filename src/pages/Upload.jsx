@@ -65,7 +65,6 @@ const Upload = () => {
             },
             authMode: 'AWS_IAM'
         });
-        console.log(response) 
         clearState();
         sleep(2000);
         navigate('/');
@@ -73,7 +72,6 @@ const Upload = () => {
     async function getPhotoLocation(){
 
         for (let index = 0; index < 10; index++) {
-            console.log(photoLoc)
           if(photoLoc.length === 0){
             await sleep(200)
           }else{

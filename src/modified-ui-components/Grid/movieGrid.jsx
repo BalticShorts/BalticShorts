@@ -62,7 +62,6 @@ export function MyGridMovies({ data, maxRows, maxColumns }) {
           }
         })
       );
-      console.log(photoSrc);
     }
   
     useEffect(() => {

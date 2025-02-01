@@ -81,6 +81,7 @@ type MoviePlaylist @model @auth(rules: [
   is_public: Boolean!
   is_recommended: Boolean
   photo_location: String
+  size: Int
   userprofileID: ID @index(name: "byUserProfile")
 }
 

@@ -1,52 +1,111 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import AWS from "aws-sdk";
 
-export function MyGridPlaylists({data, maxRows, maxColumns}) {
-    const navigate = useNavigate();
-    const [rows, setRows] = useState(maxRows);
-    const [columns, setColumns] = useState(maxColumns);
-    console.log(data)
+const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
 
-    const checkRow = (idx) => {    
-        if((idx + 1) / columns > rows)
-            return false
-        return true
-    }
+export function MyGridPlaylists({ data, maxRows, maxColumns }) {
+  const [photoSrc, setPhotoSrc] = useState({});
+  const [columns, setColumns] = useState(maxColumns);
 
-    return (
-        
-        <div className='left-[15%] w-[75%] h-fit gap-6 flex flex-col items-center relative justify-center '>
-            <div className={`grid grid-cols-3 items-center`}>
-                {data.map((item, idx) => (
-                    <>
-                    {checkRow(idx) && (
-                        <div key={item.id} className="p-4 h-full">
-                            <div className="SarakstsInLists m-auto w-80 h-48 relative" onClick={() => navigate('/playlist/'+item.id)} >
-                                <img className="Thumb w-80 h-24 left-0 top-0 relative" src="https://via.placeholder.com/350x100" />
-                                <div className="w-80 h-48 left-0 top-0 absolute bg-white bg-opacity-0 border border-black" />
-                                <div className="w-80 h-10 relative mt-1 ml-4 items-center justify-center">
-                                <div>
-                                    <span className="text-black text-base font-bold font-['SchoolBook']">{item?.title}<br/></span>
-                                    <span className="text-black text-sm font-normal font-['SchoolBook']">by {item?.creator}</span>
-                                </div>
-                                </div>
-                                <div className="w-80 h-2.5 left-[15.09px] top-[172.45px] absolute text-black text-xs font-normal font-['Arial'] tracking-wide">FILMAS  {item?.length}  |  SEKOTĀJI  10</div>
-                            </div>
-                        </div>
-                    )}
-                    </>
-                ))}
-                {data.length / columns > rows && (
-                    <div className={`h-24 relative flex -top-8 mb-4 col-span-3`}>
-                        <div className='w-full h-20 relative flex opacity-60'>
-                            <div className="w-full h-16 relative bg-gradient-to-b from-stone-50 to-zinc-300" />
-                        </div>
-                            <div className="w-full h-2.5 m-auto mt-12 absolute flex items-center justify-center">
-                            <div className="w-full h-2 top-[1px] relative text-black text-xs font-normal font-['Arial'] tracking-wide text-center" onClick={() => setRows(rows+1)}>Vairāk</div>
-                        </div>
-                    </div>
-                )}
-            </div>
-        </div>
+  AWS.config.region = "eu-north-1";
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials({ IdentityPoolId });
+
+  const navigate = useNavigate();
+  const [rows, setRows] = useState(maxRows);
+
+  async function getSrc(items) {
+    const config = {
+      region: "eu-north-1",
+      credentials: new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: IdentityPoolId,
+      }),
+      bucketName: "balticshortsphotos",
+    };
+    const myBucket = new AWS.S3(config);
+    await Promise.all(
+      items.map(async (item) => {
+        if (item === null) return;
+        if (item.thumbnail_location) {
+          const split = item.thumbnail_location.split("/");
+          const key = split.pop();
+          const bucketLoc = split.join("/");
+          const params = {
+            Bucket: bucketLoc,
+            Key: key,
+          };
+          try {
+            const data = await myBucket.getObject(params).promise();
+            photoSrc[item.id] = URL.createObjectURL(
+              new Blob([data.Body], { type: "image/png" })
+            );
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          }
+        } else {
+          photoSrc[item.id] = require("../../assets/images/no_image_1.jpg");
+        }
+      })
     );
+    setPhotoSrc({ ...photoSrc });
   }
+
+  useEffect(() => {
+    async function fetchData() {
+      await getSrc(data);
+    }
+    fetchData();
+  }, [data]);
+
+  const checkRow = (idx) => {
+    if ((idx + 1) / columns > rows) return false;
+    return true;
+  };
+
+  return (
+    <div className="left-[15%] w-[75%] h-fit gap-6 flex flex-col items-center relative justify-center">
+      <div className={`grid grid-cols-${columns} gap-4`}>
+        {data.map((item, idx) => (
+          <>
+            {checkRow(idx) && item !== null && (
+              <div
+                key={item.id}
+                className="flex flex-col shadow-md bg-inherit border border-black max-h-[292px] sm:min-h-[292px] overflow-hidden"
+                onClick={() => navigate(`/playlist/${item.id}`)}
+              >
+                <div className="relative w-full h-full sm:h-48 sm:min-h-[192px] overflow-hidden bg-inherit">
+                  <img
+                    className="w-full h-full object-cover"
+                    src={photoSrc[item.id] || "https://via.placeholder.com/350x100"}
+                    alt={item.title}
+                  />
+                </div>
+                <div className="mt-2 flex flex-col bg-inherit p-4">
+                  <span className="text-black text-lg font-bold">
+                    {item.title}
+                  </span>
+                  <div className="text-sm text-gray-600 mt-1">
+                    by {item.creator}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    FILMAS {item.size} | SEKOTĀJI 10
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        ))}
+      </div>
+      {data.length / columns > rows && (
+        <div className="flex justify-center mt-6">
+          <button
+            className="px-4 py-2 text-black rounded-md shadow-md"
+            onClick={() => setRows(rows + 1)}
+          >
+            Vairāk
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}

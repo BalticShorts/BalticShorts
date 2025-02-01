@@ -145,6 +145,7 @@ export const getSearch = `
         title
         id
         is_public
+        size
       }
     }
   }
@@ -193,6 +194,7 @@ export const getMoviesMain = `
         origin_country
         length
         thumbnail_location
+        createdAt
         MovieTeam {
           PersonMovieTeams {
             items {

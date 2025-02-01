@@ -15,6 +15,7 @@ import awsExports from './aws-exports';
 import Subscribe from "./pages/Subscribe";
 import { getPersonByEmail } from "./custom-queries/queries";
 import Upload from "./pages/Upload";
+import UserProfile from "./pages/UserProfile";
 
 Amplify.configure(awsExports);
 export const GlobalContext = React.createContext();
@@ -89,6 +90,7 @@ export default function App() {
                 <Route path="search/:query?" element={<Search />} />
                 <Route path="catalogue/:givenTab?" element={<Catalogue />} />
                 <Route path="upload" element={<Upload />} />
+                <Route path="user/:id" element={<UserProfile />} />
                 {admin ? (
                   <>
                     <Route path="playlists" element={<Playlist />} />

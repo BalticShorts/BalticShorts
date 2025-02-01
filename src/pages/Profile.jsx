@@ -32,10 +32,8 @@ function Profile () {
             if (id === undefined)
                 return;
             const profileData = await fetchProfile(id);
-            console.log(profileData)
           try {     
             setProfile(profileData);
-
           } catch (error) {
             console.log('Error on fetching: ', error);
           }

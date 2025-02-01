@@ -64,7 +64,6 @@ const Search = () => {
         }
         setSearchResult({"movies": [], "persons": [], "playlists": []})
         search();
-        console.log(searchResult)
       }, [inputText]);
 
       

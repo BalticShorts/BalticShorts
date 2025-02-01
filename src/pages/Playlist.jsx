@@ -18,7 +18,6 @@ const Playlist = () => {
 
     const handleModalClose = (changes_made) => {
         setShowModal(false);
-        console.log('changes made', changes_made);
         if (changes_made) fetchPlaylists();
     };
 
@@ -50,16 +49,12 @@ const Playlist = () => {
         setHighPlaylists([]);
         setOtherPlaylists([]);
         playlists.map( (item) => {
-            console.log(item)
-            console.log(item.is_recommended)
             if(item.is_recommended){
                 setHighPlaylists(prev => [...prev, item]);
             } else {
                 setOtherPlaylists(prev => [...prev, item]);
             }
         })
-        console.log(highlightedPlaylists)
-        console.log(otherPlaylists)
     }
 
     useEffect(() => {

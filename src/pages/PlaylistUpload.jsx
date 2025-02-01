@@ -7,6 +7,9 @@ import { SearchableMovieDropdown } from "../components/SearchableMovieDropdown";
 import { getMoviePlaylistWithMovie } from "../custom-queries/queries";
 import { createMovieMoviePlaylist, createMoviePlaylist, deleteMovieMoviePlaylist, deleteMoviePlaylist, updateMoviePlaylist } from "../graphql/mutations";
 import { GlobalContext } from "../App";
+import AWS from "aws-sdk";
+
+const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
 
 const PlaylistUpload = ({onClose, id, recommendedCount}) => {
     const context = useContext(GlobalContext)
@@ -14,6 +17,7 @@ const PlaylistUpload = ({onClose, id, recommendedCount}) => {
     const [playlist, setPlaylist] = useState({})
     const [upload, setUpload] = useState(false);
     const [thumbnail, setThumbnail] = useState([]);
+    const [photoSrc, setPhotoSrc] = useState("");
 
     const [listTitle, setListTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -25,8 +29,8 @@ const PlaylistUpload = ({onClose, id, recommendedCount}) => {
 
     const handleSave = async () => {
         setUpload(true);
-        setMessage('Playlist is saving... Please wait...');
         const thumbLoc = await getThumbnailLocation();
+        setMessage('Playlist is saving... Please wait...');
         var response = null;
         var variables = {
             input : {
@@ -34,7 +38,8 @@ const PlaylistUpload = ({onClose, id, recommendedCount}) => {
                 description: description,
                 is_public: availability === 'Publisks',
                 is_recommended: recommended,
-                photo_location: thumbLoc
+                photo_location: thumbLoc,
+                size: selectedMovies.length
             }
         }
 
@@ -68,7 +73,7 @@ const PlaylistUpload = ({onClose, id, recommendedCount}) => {
             });
         })
 
-        movies.map(async (movie) => {
+        selectedMovies.map(async (movie) => {
             const res = await API.graphql({
                 query: createMovieMoviePlaylist.replaceAll("__typename", ""),
                 variables : {
@@ -114,8 +119,6 @@ const PlaylistUpload = ({onClose, id, recommendedCount}) => {
     }
 
     async function getThumbnailLocation(){
-        console.log("thumbnail")
-        console.log(thumbnail)
         for (let index = 0; index < 10; index++) {
             if(thumbnail.length === 0){
                 await sleep(200)
@@ -136,15 +139,12 @@ const PlaylistUpload = ({onClose, id, recommendedCount}) => {
             query: listMovies,
             authMode: 'AWS_IAM'
         }).then(res => {
-            console.log(res)
             setMovies(res.data.listMovies.items);
         })
       }, []);
     useEffect(() => {
         // scroll to top on page load
         if(id !== ''){
-            console.log("id")
-            console.log(id)
             API.graphql({
                 query: getMoviePlaylistWithMovie,
                 variables: {
@@ -159,15 +159,48 @@ const PlaylistUpload = ({onClose, id, recommendedCount}) => {
                 setRecommended(res.data.getMoviePlaylist.is_recommended);
                 setPlaylist(res.data.getMoviePlaylist);
                 setThumbnail(res.data.getMoviePlaylist.photo_location ? [res.data.getMoviePlaylist.photo_location] : []);
+                fetchPhoto(res.data.getMoviePlaylist.photo_location);
             })
         }
       }, [id]);
+
+    async function fetchPhoto(thumbnail_location) {
+        if (thumbnail_location) {
+            const config = {
+                region: "eu-north-1",
+                credentials: new AWS.CognitoIdentityCredentials({ IdentityPoolId }),
+                bucketName: "balticshortsphotos",
+            };
+            const myBucket = new AWS.S3(config);
+            const split = thumbnail_location.split("/");
+            const key = split.pop();
+            const bucketLoc = split.join("/");
+            const params = {
+                Bucket: bucketLoc,
+                Key: key,
+            };
+            try {
+                const data = await myBucket.getObject(params).promise();
+                setPhotoSrc(URL.createObjectURL(new Blob([data.Body], { type: "image/png" })));
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                setPhotoSrc(require("../assets/images/no_image_1.jpg"));
+            }
+        } else {
+            setPhotoSrc(require("../assets/images/no_image_1.jpg"));
+        }
+    }
 
     async function clearState(){
         setPlaylist({});
         setUpload(false);
         setThumbnail([]);
     }
+
+    const handleRemoveThumbnail = () => {
+        setThumbnail([]);
+        setPhotoSrc("");
+    };
 
     return(
         <>
@@ -244,6 +277,18 @@ const PlaylistUpload = ({onClose, id, recommendedCount}) => {
                     <div className="flex justify-center flex-col gap-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Thumbnail">THUMBNAIL</label>
                         <PhotoUpload upload = {upload} photo_type = {'thumbnail'} photoLoc = {thumbnail}/>
+                        {thumbnail.length > 0 && (
+                            photoSrc && <img className="w-full h-auto mt-4" src={photoSrc} alt="Thumbnail Preview" />
+                        )}
+                        {(thumbnail.length > 0) && (
+                            <button
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline mt-4"
+                                type="button"
+                                onClick={handleRemoveThumbnail}
+                            >
+                                Noņemt attēlu
+                            </button>
+                        )}
                     </div>
                 </div>
                 <div className="flex items-center justify-between">

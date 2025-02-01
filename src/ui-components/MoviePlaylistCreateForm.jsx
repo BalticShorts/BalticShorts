@@ -201,6 +201,7 @@ export default function MoviePlaylistCreateForm(props) {
     is_public: false,
     is_recommended: false,
     photo_location: "",
+    size: "",
     userprofileID: undefined,
   };
   const [creator, setCreator] = React.useState(initialValues.creator);
@@ -218,6 +219,7 @@ export default function MoviePlaylistCreateForm(props) {
   const [photo_location, setPhoto_location] = React.useState(
     initialValues.photo_location
   );
+  const [size, setSize] = React.useState(initialValues.size);
   const [userprofileID, setUserprofileID] = React.useState(
     initialValues.userprofileID
   );
@@ -237,6 +239,7 @@ export default function MoviePlaylistCreateForm(props) {
     setIs_public(initialValues.is_public);
     setIs_recommended(initialValues.is_recommended);
     setPhoto_location(initialValues.photo_location);
+    setSize(initialValues.size);
     setUserprofileID(initialValues.userprofileID);
     setCurrentUserprofileIDValue(undefined);
     setCurrentUserprofileIDDisplayValue("");
@@ -273,6 +276,7 @@ export default function MoviePlaylistCreateForm(props) {
     is_public: [{ type: "Required" }],
     is_recommended: [],
     photo_location: [],
+    size: [],
     userprofileID: [],
   };
   const runValidationTasks = async (
@@ -368,6 +372,7 @@ export default function MoviePlaylistCreateForm(props) {
           is_public,
           is_recommended,
           photo_location,
+          size,
           userprofileID,
         };
         const validationResponses = await Promise.all(
@@ -413,6 +418,7 @@ export default function MoviePlaylistCreateForm(props) {
             is_public: modelFields.is_public,
             is_recommended: modelFields.is_recommended,
             photo_location: modelFields.photo_location,
+            size: modelFields.size,
             userprofileID: modelFields.userprofileID,
           };
           const moviePlaylist = (
@@ -475,6 +481,7 @@ export default function MoviePlaylistCreateForm(props) {
               is_public,
               is_recommended,
               photo_location,
+              size,
               userprofileID,
             };
             const result = onChange(modelFields);
@@ -502,6 +509,7 @@ export default function MoviePlaylistCreateForm(props) {
               is_public,
               is_recommended,
               photo_location,
+              size,
               userprofileID,
             };
             const result = onChange(modelFields);
@@ -587,6 +595,7 @@ export default function MoviePlaylistCreateForm(props) {
               is_public,
               is_recommended,
               photo_location,
+              size,
               userprofileID,
             };
             const result = onChange(modelFields);
@@ -618,6 +627,7 @@ export default function MoviePlaylistCreateForm(props) {
               is_public,
               is_recommended,
               photo_location,
+              size,
               userprofileID,
             };
             const result = onChange(modelFields);
@@ -649,6 +659,7 @@ export default function MoviePlaylistCreateForm(props) {
               is_public: value,
               is_recommended,
               photo_location,
+              size,
               userprofileID,
             };
             const result = onChange(modelFields);
@@ -680,6 +691,7 @@ export default function MoviePlaylistCreateForm(props) {
               is_public,
               is_recommended: value,
               photo_location,
+              size,
               userprofileID,
             };
             const result = onChange(modelFields);
@@ -711,6 +723,7 @@ export default function MoviePlaylistCreateForm(props) {
               is_public,
               is_recommended,
               photo_location: value,
+              size,
               userprofileID,
             };
             const result = onChange(modelFields);
@@ -726,6 +739,42 @@ export default function MoviePlaylistCreateForm(props) {
         hasError={errors.photo_location?.hasError}
         {...getOverrideProps(overrides, "photo_location")}
       ></TextField>
+      <TextField
+        label="Size"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={size}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              creator,
+              movies,
+              title,
+              description,
+              is_public,
+              is_recommended,
+              photo_location,
+              size: value,
+              userprofileID,
+            };
+            const result = onChange(modelFields);
+            value = result?.size ?? value;
+          }
+          if (errors.size?.hasError) {
+            runValidationTasks("size", value);
+          }
+          setSize(value);
+        }}
+        onBlur={() => runValidationTasks("size", size)}
+        errorMessage={errors.size?.errorMessage}
+        hasError={errors.size?.hasError}
+        {...getOverrideProps(overrides, "size")}
+      ></TextField>
       <ArrayField
         lengthLimit={1}
         onChange={async (items) => {
@@ -739,6 +788,7 @@ export default function MoviePlaylistCreateForm(props) {
               is_public,
               is_recommended,
               photo_location,
+              size,
               userprofileID: value,
             };
             const result = onChange(modelFields);

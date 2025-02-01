@@ -22,9 +22,9 @@ export const Dropdown = () => {
               <div className="h-full w-full flex-col justify-center items-start gap-3.5 flex">
                 {context.loggedIn && (
                   <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide">
-                    {/* <a href={"/profile/" + context.currentUser.id}> */}
+                    <a href={"/user/" + context.currentUser.id}>
                       MANS PROFILS
-                    {/* </a> */}
+                    </a>
                   </div>
                 )}
                 <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide">
@@ -39,9 +39,9 @@ export const Dropdown = () => {
                 </div>
                 {context.loggedIn && (
                   <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide">
-                    {/* <a href={"/profile/" + context.currentUser.id + "/settings"}> */}
+                    <a href={"/user/" + context.currentUser.id}>
                       UZSTĀDĪJUMI
-                    {/* </a> */}
+                    </a>
                   </div>
                 )}
                 <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide">

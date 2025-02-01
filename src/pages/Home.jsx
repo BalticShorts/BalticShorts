@@ -22,6 +22,7 @@ const Home = () => {
 
   const [movies, setMovies] = useState([]);
   const [playlists, setPlaylists] = useState([]);
+  const [recomendedPlaylists, setRecomendedPlaylists] = useState([]);
 
   useEffect(() => {
     updateAWSConfigAndGetClient(IdentityPoolId, "eu-north-1")
@@ -68,11 +69,11 @@ const Home = () => {
         },
         authMode: 'AWS_IAM'
       });
-      const playlistInfo = playlistData.data;
-      // setPlaylists(playlistInfo);
-      console.log(playlistInfo)
+      const playlistInfo = playlistData.data.listMoviePlaylists.items;
+      const recommendedPlaylists = playlistInfo.filter(playlist => playlist.is_recommended);
+      setRecomendedPlaylists(recommendedPlaylists);
     } catch (error) {
-      console.log('Error on fetchnig playlists', error);
+      console.log('Error on fetching playlists', error);
     }
   }
 
@@ -126,7 +127,7 @@ const Home = () => {
           <div className="my-5 w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative">
             BALTIC SHORTS IESAKA
           </div>
-          <DisplayedPlaylistGroup elementsShown = {3}/>
+          <DisplayedPlaylistGroup elementsShown={recomendedPlaylists.length} playlists={recomendedPlaylists} />
           {/* Need to list the highlighted playlists and give the data */}
       
           {movies.items?.length > 0 &&

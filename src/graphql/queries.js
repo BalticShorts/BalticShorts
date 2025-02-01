@@ -22,6 +22,7 @@ export const getUserProfile = /* GraphQL */ `
           is_public
           is_recommended
           photo_location
+          size
           userprofileID
           createdAt
           updatedAt
@@ -598,6 +599,7 @@ export const getMoviePlaylist = /* GraphQL */ `
       is_public
       is_recommended
       photo_location
+      size
       userprofileID
       createdAt
       updatedAt
@@ -624,6 +626,7 @@ export const listMoviePlaylists = /* GraphQL */ `
         is_public
         is_recommended
         photo_location
+        size
         userprofileID
         createdAt
         updatedAt
@@ -661,6 +664,7 @@ export const moviePlaylistsByUserprofileID = /* GraphQL */ `
         is_public
         is_recommended
         photo_location
+        size
         userprofileID
         createdAt
         updatedAt
@@ -1243,6 +1247,7 @@ export const getMovieMoviePlaylist = /* GraphQL */ `
         is_public
         is_recommended
         photo_location
+        size
         userprofileID
         createdAt
         updatedAt
@@ -1327,6 +1332,7 @@ export const listMovieMoviePlaylists = /* GraphQL */ `
           is_public
           is_recommended
           photo_location
+          size
           userprofileID
           createdAt
           updatedAt
@@ -1395,6 +1401,7 @@ export const movieMoviePlaylistsByMoviePlaylistId = /* GraphQL */ `
           is_public
           is_recommended
           photo_location
+          size
           userprofileID
           createdAt
           updatedAt
@@ -1463,6 +1470,7 @@ export const movieMoviePlaylistsByMovieId = /* GraphQL */ `
           is_public
           is_recommended
           photo_location
+          size
           userprofileID
           createdAt
           updatedAt

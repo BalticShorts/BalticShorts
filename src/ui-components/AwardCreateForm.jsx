@@ -6,178 +6,10 @@
 
 /* eslint-disable */
 import * as React from "react";
-import {
-  Autocomplete,
-  Badge,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  Icon,
-  ScrollView,
-  Text,
-  TextField,
-  useTheme,
-} from "@aws-amplify/ui-react";
+import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { listMovies } from "../graphql/queries";
 import { createAward } from "../graphql/mutations";
-function ArrayField({
-  items = [],
-  onChange,
-  label,
-  inputFieldRef,
-  children,
-  hasError,
-  setFieldValue,
-  currentFieldValue,
-  defaultFieldValue,
-  lengthLimit,
-  getBadgeText,
-  runValidationTasks,
-  errorMessage,
-}) {
-  const labelElement = <Text>{label}</Text>;
-  const {
-    tokens: {
-      components: {
-        fieldmessages: { error: errorStyles },
-      },
-    },
-  } = useTheme();
-  const [selectedBadgeIndex, setSelectedBadgeIndex] = React.useState();
-  const [isEditing, setIsEditing] = React.useState();
-  React.useEffect(() => {
-    if (isEditing) {
-      inputFieldRef?.current?.focus();
-    }
-  }, [isEditing]);
-  const removeItem = async (removeIndex) => {
-    const newItems = items.filter((value, index) => index !== removeIndex);
-    await onChange(newItems);
-    setSelectedBadgeIndex(undefined);
-  };
-  const addItem = async () => {
-    const { hasError } = runValidationTasks();
-    if (
-      currentFieldValue !== undefined &&
-      currentFieldValue !== null &&
-      currentFieldValue !== "" &&
-      !hasError
-    ) {
-      const newItems = [...items];
-      if (selectedBadgeIndex !== undefined) {
-        newItems[selectedBadgeIndex] = currentFieldValue;
-        setSelectedBadgeIndex(undefined);
-      } else {
-        newItems.push(currentFieldValue);
-      }
-      await onChange(newItems);
-      setIsEditing(false);
-    }
-  };
-  const arraySection = (
-    <React.Fragment>
-      {!!items?.length && (
-        <ScrollView height="inherit" width="inherit" maxHeight={"7rem"}>
-          {items.map((value, index) => {
-            return (
-              <Badge
-                key={index}
-                style={{
-                  cursor: "pointer",
-                  alignItems: "center",
-                  marginRight: 3,
-                  marginTop: 3,
-                  backgroundColor:
-                    index === selectedBadgeIndex ? "#B8CEF9" : "",
-                }}
-                onClick={() => {
-                  setSelectedBadgeIndex(index);
-                  setFieldValue(items[index]);
-                  setIsEditing(true);
-                }}
-              >
-                {getBadgeText ? getBadgeText(value) : value.toString()}
-                <Icon
-                  style={{
-                    cursor: "pointer",
-                    paddingLeft: 3,
-                    width: 20,
-                    height: 20,
-                  }}
-                  viewBox={{ width: 20, height: 20 }}
-                  paths={[
-                    {
-                      d: "M10 10l5.09-5.09L10 10l5.09 5.09L10 10zm0 0L4.91 4.91 10 10l-5.09 5.09L10 10z",
-                      stroke: "black",
-                    },
-                  ]}
-                  ariaLabel="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    removeItem(index);
-                  }}
-                />
-              </Badge>
-            );
-          })}
-        </ScrollView>
-      )}
-      <Divider orientation="horizontal" marginTop={5} />
-    </React.Fragment>
-  );
-  if (lengthLimit !== undefined && items.length >= lengthLimit && !isEditing) {
-    return (
-      <React.Fragment>
-        {labelElement}
-        {arraySection}
-      </React.Fragment>
-    );
-  }
-  return (
-    <React.Fragment>
-      {labelElement}
-      {isEditing && children}
-      {!isEditing ? (
-        <>
-          <Button
-            onClick={() => {
-              setIsEditing(true);
-            }}
-          >
-            Add item
-          </Button>
-          {errorMessage && hasError && (
-            <Text color={errorStyles.color} fontSize={errorStyles.fontSize}>
-              {errorMessage}
-            </Text>
-          )}
-        </>
-      ) : (
-        <Flex justifyContent="flex-end">
-          {(currentFieldValue || isEditing) && (
-            <Button
-              children="Cancel"
-              type="button"
-              size="small"
-              onClick={() => {
-                setFieldValue(defaultFieldValue);
-                setIsEditing(false);
-                setSelectedBadgeIndex(undefined);
-              }}
-            ></Button>
-          )}
-          <Button size="small" variation="link" onClick={addItem}>
-            {selectedBadgeIndex !== undefined ? "Save" : "Add"}
-          </Button>
-        </Flex>
-      )}
-      {arraySection}
-    </React.Fragment>
-  );
-}
 export default function AwardCreateForm(props) {
   const {
     clearOnSuccess = true,
@@ -194,48 +26,24 @@ export default function AwardCreateForm(props) {
     year: "",
     category: "",
     comment: "",
-    movie: undefined,
   };
   const [name, setName] = React.useState(initialValues.name);
   const [year, setYear] = React.useState(initialValues.year);
   const [category, setCategory] = React.useState(initialValues.category);
   const [comment, setComment] = React.useState(initialValues.comment);
-  const [movie, setMovie] = React.useState(initialValues.movie);
-  const [movieLoading, setMovieLoading] = React.useState(false);
-  const [movieRecords, setMovieRecords] = React.useState([]);
-  const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setName(initialValues.name);
     setYear(initialValues.year);
     setCategory(initialValues.category);
     setComment(initialValues.comment);
-    setMovie(initialValues.movie);
-    setCurrentMovieValue(undefined);
-    setCurrentMovieDisplayValue("");
     setErrors({});
-  };
-  const [currentMovieDisplayValue, setCurrentMovieDisplayValue] =
-    React.useState("");
-  const [currentMovieValue, setCurrentMovieValue] = React.useState(undefined);
-  const movieRef = React.createRef();
-  const getIDValue = {
-    movie: (r) => JSON.stringify({ id: r?.id }),
-  };
-  const movieIdSet = new Set(
-    Array.isArray(movie)
-      ? movie.map((r) => getIDValue.movie?.(r))
-      : getIDValue.movie?.(movie)
-  );
-  const getDisplayValue = {
-    movie: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
   };
   const validations = {
     name: [{ type: "Required" }],
     year: [{ type: "Required" }],
     category: [{ type: "Required" }],
     comment: [],
-    movie: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -254,38 +62,6 @@ export default function AwardCreateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const fetchMovieRecords = async (value) => {
-    setMovieLoading(true);
-    const newOptions = [];
-    let newNext = "";
-    while (newOptions.length < autocompleteLength && newNext != null) {
-      const variables = {
-        limit: autocompleteLength * 5,
-        filter: {
-          or: [{ name: { contains: value } }, { id: { contains: value } }],
-        },
-      };
-      if (newNext) {
-        variables["nextToken"] = newNext;
-      }
-      const result = (
-        await API.graphql({
-          query: listMovies.replaceAll("__typename", ""),
-          variables,
-        })
-      )?.data?.listMovies?.items;
-      var loaded = result.filter(
-        (item) => !movieIdSet.has(getIDValue.movie?.(item))
-      );
-      newOptions.push(...loaded);
-      newNext = result.nextToken;
-    }
-    setMovieRecords(newOptions.slice(0, autocompleteLength));
-    setMovieLoading(false);
-  };
-  React.useEffect(() => {
-    fetchMovieRecords("");
-  }, []);
   return (
     <Grid
       as="form"
@@ -299,28 +75,19 @@ export default function AwardCreateForm(props) {
           year,
           category,
           comment,
-          movie,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
             if (Array.isArray(modelFields[fieldName])) {
               promises.push(
                 ...modelFields[fieldName].map((item) =>
-                  runValidationTasks(
-                    fieldName,
-                    item,
-                    getDisplayValue[fieldName]
-                  )
+                  runValidationTasks(fieldName, item)
                 )
               );
               return promises;
             }
             promises.push(
-              runValidationTasks(
-                fieldName,
-                modelFields[fieldName],
-                getDisplayValue[fieldName]
-              )
+              runValidationTasks(fieldName, modelFields[fieldName])
             );
             return promises;
           }, [])
@@ -337,18 +104,11 @@ export default function AwardCreateForm(props) {
               modelFields[key] = null;
             }
           });
-          const modelFieldsToSave = {
-            name: modelFields.name,
-            year: modelFields.year,
-            category: modelFields.category,
-            comment: modelFields.comment,
-            movieID: modelFields?.movie?.id,
-          };
           await API.graphql({
             query: createAward.replaceAll("__typename", ""),
             variables: {
               input: {
-                ...modelFieldsToSave,
+                ...modelFields,
               },
             },
           });
@@ -381,7 +141,6 @@ export default function AwardCreateForm(props) {
               year,
               category,
               comment,
-              movie,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -413,7 +172,6 @@ export default function AwardCreateForm(props) {
               year: value,
               category,
               comment,
-              movie,
             };
             const result = onChange(modelFields);
             value = result?.year ?? value;
@@ -441,7 +199,6 @@ export default function AwardCreateForm(props) {
               year,
               category: value,
               comment,
-              movie,
             };
             const result = onChange(modelFields);
             value = result?.category ?? value;
@@ -469,7 +226,6 @@ export default function AwardCreateForm(props) {
               year,
               category,
               comment: value,
-              movie,
             };
             const result = onChange(modelFields);
             value = result?.comment ?? value;
@@ -484,87 +240,6 @@ export default function AwardCreateForm(props) {
         hasError={errors.comment?.hasError}
         {...getOverrideProps(overrides, "comment")}
       ></TextField>
-      <ArrayField
-        lengthLimit={1}
-        onChange={async (items) => {
-          let value = items[0];
-          if (onChange) {
-            const modelFields = {
-              name,
-              year,
-              category,
-              comment,
-              movie: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.movie ?? value;
-          }
-          setMovie(value);
-          setCurrentMovieValue(undefined);
-          setCurrentMovieDisplayValue("");
-        }}
-        currentFieldValue={currentMovieValue}
-        label={"Movie"}
-        items={movie ? [movie] : []}
-        hasError={errors?.movie?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks("movie", currentMovieValue)
-        }
-        errorMessage={errors?.movie?.errorMessage}
-        getBadgeText={getDisplayValue.movie}
-        setFieldValue={(model) => {
-          setCurrentMovieDisplayValue(
-            model ? getDisplayValue.movie(model) : ""
-          );
-          setCurrentMovieValue(model);
-        }}
-        inputFieldRef={movieRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Movie"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search Movie"
-          value={currentMovieDisplayValue}
-          options={movieRecords
-            .filter((r) => !movieIdSet.has(getIDValue.movie?.(r)))
-            .map((r) => ({
-              id: getIDValue.movie?.(r),
-              label: getDisplayValue.movie?.(r),
-            }))}
-          isLoading={movieLoading}
-          onSelect={({ id, label }) => {
-            setCurrentMovieValue(
-              movieRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentMovieDisplayValue(label);
-            runValidationTasks("movie", label);
-          }}
-          onClear={() => {
-            setCurrentMovieDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchMovieRecords(value);
-            if (errors.movie?.hasError) {
-              runValidationTasks("movie", value);
-            }
-            setCurrentMovieDisplayValue(value);
-            setCurrentMovieValue(undefined);
-          }}
-          onBlur={() => runValidationTasks("movie", currentMovieDisplayValue)}
-          errorMessage={errors.movie?.errorMessage}
-          hasError={errors.movie?.hasError}
-          ref={movieRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "movie")}
-        ></Autocomplete>
-      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}
