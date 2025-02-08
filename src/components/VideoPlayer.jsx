@@ -31,7 +31,12 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
         }
 
         const config = {
-          key: '5039b2ed-5709-480f-80c4-bff1076a3e31',
+          key: '0049f29f-17e2-4bea-b372-f28a42205046',
+          analyticsConfig: {
+            key: '6c55b090-eb7f-4eb1-b593-114f5d88a197',
+            randomizeUserId: false,
+            adTrackingDisabled: false,
+          },
           ui: {
             playbackSpeedSelector: true,
             qualitySelector: true,
