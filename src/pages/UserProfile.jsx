@@ -1,27 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { API, Auth } from "aws-amplify";
-import { Footer } from "../modified-ui-components/Footer";
 import { getUserProfile } from "../graphql/queries";
 import { updateUserProfile } from "../graphql/mutations";
-import { FaCog } from "react-icons/fa";
+import { Footer } from "../modified-ui-components/Footer";
+import { useRef } from "react";
+import { useContext } from "react";
+import { GlobalContext } from "../App";
 
 const fetchProfile = async (id) => {
-  const profileData = await API.graphql({
-    query: getUserProfile,
-    variables: { id },
-    authMode: "AWS_IAM",
-  });
-  return profileData.data.getUserProfile;
+  try {
+    const profileData = await API.graphql({
+      query: getUserProfile,
+      variables: { id },
+      authMode: "AWS_IAM",
+    });
+    return profileData.data.getUserProfile;
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    return null;
+  }
 };
 
 function UserProfile() {
   const { id } = useParams();
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(true);
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [showEmailSection, setShowEmailSection] = useState(false);
-  const [showPasswordSection, setShowPasswordSection] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [confirmNewEmail, setConfirmNewEmail] = useState("");
   const [emailMessage, setEmailMessage] = useState("");
@@ -30,12 +34,30 @@ function UserProfile() {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
 
+  const profileRef = useRef(null);
+  const abonetRef = useRef(null);
+
+  const scrollToSection = (ref) => {
+    ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  const context = useContext(GlobalContext);
+
+  const signOut = async () => {
+    try {
+      await context.auth.signOut();
+      context.setLoggedIn(false);
+    } catch (error) {
+      console.log("error on logging out: " + error);
+    }
+  };
+
   useEffect(() => {
     const getProfileData = async () => {
       if (!id) return;
       try {
         const data = await fetchProfile(id);
         setProfile(data);
+        console.log("Profile data:", data);
       } catch (error) {
         console.error("Error fetching profile:", error);
       } finally {
@@ -100,172 +122,69 @@ function UserProfile() {
   };
 
   if (loading) {
-    return <div className="bg-beige p-4">Loading...</div>;
+    return <div className="bg-gray-100 p-4">Loading...</div>;
   }
 
   return (
-    <>
-      <div className="bg-beige w-full min-h-screen p-4 relative">
-        <button
-          onClick={() => setShowSettingsModal(true)}
-          className="absolute top-4 right-4 text-black"
-        >
-          <FaCog size={28} />
-        </button>
+    <div className="flex flex-col h-screen">
+      <div className="min-h-screen bg-beige text-black flex">
+        {/* Sidebar */}
+        <aside className="w-1/6 p-6 border-r border-gray-300">
+          <h2 className="text-lg font-bold mb-4">UZSTĀDĪJUMI</h2>
+          <ul className="space-y-2">
+            <li className="text-gray-700 hover:text-black cursor-pointer" onClick={() => scrollToSection(profileRef)}>Profils</li>
+            <li className="text-gray-700 hover:text-black cursor-pointer" onClick={() => scrollToSection(abonetRef)}>Abonements</li>
+            {/* <li className="text-gray-600">Skatīšanās uzstādījumi</li>
+            <li className="text-gray-600">Pievienotās filmas</li>
+            <li className="text-gray-600">Baltic Shorts vēstkopā</li> */}
+            <li className="text-gray-700 hover:text-black cursor-pointer" onClick={signOut}>Iziet</li>
+          </ul>
+        </aside>
 
-        <div className="w-5/6 mx-auto mb-8 text-center">
-          <h1 className="text-3xl font-bold mb-4">Mans Profils</h1>
-          <div className="p-4">
-            <p className="text-xl">
-              <strong>Vārds:</strong> {profile.name}
-            </p>
-            <p className="text-xl">
-              <strong>Uzvards:</strong> {profile.surname}
-            </p>
-            <p className="text-xl">
-              <strong>E-pasts:</strong> {profile.email}
-            </p>
+        <main className="flex-1 p-8">
+          <div className="flex justify-between items-center">
           </div>
-        </div>
 
-        <div className="w-5/6 mx-auto mb-8 text-center">
-          <h2 className="text-2xl font-bold mb-4">Abonements</h2>
-          {profile.is_member ? (
-            <div>
-                <p className="text-green-700 font-bold">Abonements aktīvs!</p>
-                <p className="text-green-700 font-bold">Abonets līdz {profile.member_untill}</p>
-            </div>
-        ) : (
-            <div>
-                <p className="text-green-700 font-bold">Abonēt!</p>
-                <button
-                onClick={handleSubscribe}
-                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-                >
-                Subscribe
-                </button>
-            </div>
-          )}
-        </div>
+          <section className="mb-8" ref={profileRef}>
+            <h2 className="text-lg font-bold">INFORMĀCIJA</h2>
+            <p className="mt-2">Vārds: {profile.name}</p>
+            <p>Uzvārds: {profile.surname}</p>
+            <p>Bio: {profile.bio || "Nav apraksta"}</p>
+          </section>
+
+          <hr />
+
+          <section className="mt-8 pb-10">
+            <h2 className="text-lg font-bold">MAINĪT E-PASTU</h2>
+            <input type="email" className="border w-full p-2 mt-1 bg-beige" placeholder="Jaunais e-pasts" onChange={(e) => setNewEmail(e.target.value)} />
+            <input type="email" className="border w-full p-2 mt-1 bg-beige" placeholder="Apstiprināt jauno e-pastu" onChange={(e) => setConfirmNewEmail(e.target.value)} />
+            <button onClick={handleEmailUpdate} className="mt-4 px-4 py-2 bg-neutral-600 text-white ">Atjaunot e-pastu</button>
+            {emailMessage && <p className="text-red-500 mt-2">{emailMessage}</p>}
+          </section>
+
+          <hr />
+
+          <section className="mt-8 pb-10">
+            <h2 className="text-lg font-bold">MAINĪT PAROLI</h2>
+            <input type="password" className="border w-full p-2 mt-1 bg-beige" placeholder="Vecā parole" onChange={(e) => setOldPassword(e.target.value)} />
+            <input type="password" className="border w-full p-2 mt-1 bg-beige" placeholder="Jaunā parole" onChange={(e) => setNewPassword(e.target.value)} />
+            <input type="password" className="border w-full p-2 mt-1 bg-beige" placeholder="Apstiprināt jauno paroli" onChange={(e) => setConfirmNewPassword(e.target.value)} />
+            <button onClick={handlePasswordUpdate} className="mt-4 px-4 py-2 bg-neutral-600 text-white">Mainīt paroli</button>
+            {passwordMessage && <p className="text-red-500 mt-2">{passwordMessage}</p>}
+          </section>
+
+          <hr />
+
+          <section className="mt-8 pb-10" ref={abonetRef}>
+            <h2 className="text-lg font-bold">ABONET</h2>
+            <button onClick={handleSubscribe} className="mt-6 px-6 py-2 bg-green-600 text-white rounded">Abonēt</button>
+          </section>
+        </main>
       </div>
-
-      {showSettingsModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded shadow-lg max-w-md w-full relative">
-            <button
-              onClick={() => setShowSettingsModal(false)}
-              className="absolute top-2 right-2 text-red-500 text-xl"
-            >
-              &times;
-            </button>
-            <h2 className="text-xl font-bold mb-4">Settings</h2>
-
-            <div className="mb-6">
-              <div
-                onClick={() => setShowEmailSection(!showEmailSection)}
-                className="cursor-pointer text-blue-500 underline text-lg mb-2"
-              >
-                Change Email
-              </div>
-              {showEmailSection && (
-                <form onSubmit={handleEmailUpdate}>
-                  <div className="mb-4">
-                    <label className="block text-lg mb-1" htmlFor="modalNewEmail">
-                      New Email
-                    </label>
-                    <input
-                      id="modalNewEmail"
-                      type="email"
-                      value={newEmail}
-                      onChange={(e) => setNewEmail(e.target.value)}
-                      className="w-full p-2"
-                      placeholder="Enter new email"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-lg mb-1" htmlFor="modalConfirmNewEmail">
-                      Confirm New Email
-                    </label>
-                    <input
-                      id="modalConfirmNewEmail"
-                      type="email"
-                      value={confirmNewEmail}
-                      onChange={(e) => setConfirmNewEmail(e.target.value)}
-                      className="w-full p-2"
-                      placeholder="Confirm new email"
-                    />
-                  </div>
-                  {emailMessage && <p className="text-red-600 mb-2">{emailMessage}</p>}
-                  <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-                    Update Email
-                  </button>
-                </form>
-              )}
-            </div>
-
-            <div>
-              <div
-                onClick={() => setShowPasswordSection(!showPasswordSection)}
-                className="cursor-pointer text-blue-500 underline text-lg mb-2"
-              >
-                Change Password
-              </div>
-              {showPasswordSection && (
-                <form onSubmit={handlePasswordUpdate}>
-                  <div className="mb-4">
-                    <label className="block text-lg mb-1" htmlFor="oldPassword">
-                      Old Password
-                    </label>
-                    <input
-                      id="oldPassword"
-                      type="password"
-                      value={oldPassword}
-                      onChange={(e) => setOldPassword(e.target.value)}
-                      className="w-full p-2"
-                      placeholder="Enter old password"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-lg mb-1" htmlFor="modalNewPassword">
-                      New Password
-                    </label>
-                    <input
-                      id="modalNewPassword"
-                      type="password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full p-2"
-                      placeholder="Enter new password"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-lg mb-1" htmlFor="modalConfirmNewPassword">
-                      Confirm New Password
-                    </label>
-                    <input
-                      id="modalConfirmNewPassword"
-                      type="password"
-                      value={confirmNewPassword}
-                      onChange={(e) => setConfirmNewPassword(e.target.value)}
-                      className="w-full p-2"
-                      placeholder="Confirm new password"
-                    />
-                  </div>
-                  {passwordMessage && (
-                    <p className="text-red-600 mb-2">{passwordMessage}</p>
-                  )}
-                  <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-                    Update Password
-                  </button>
-                </form>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      <Footer />
-    </>
+      <div id="footer" className="relative w-full">
+        <Footer />
+      </div>
+    </div>
   );
 }
 

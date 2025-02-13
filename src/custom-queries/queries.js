@@ -195,6 +195,12 @@ export const getMoviesMain = `
         length
         thumbnail_location
         createdAt
+        genre
+        screen_language
+        captions_language
+        MovieType {
+          type
+        }
         MovieTeam {
           PersonMovieTeams {
             items {

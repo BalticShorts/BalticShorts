@@ -45,7 +45,9 @@ export const Dropdown = () => {
                   </div>
                 )}
                 <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide">
-                  palīdzība
+                  <a href={"/faq"}>
+                    palīdzība
+                  </a>
                 </div>
                 {context.loggedIn && (
                   <div
