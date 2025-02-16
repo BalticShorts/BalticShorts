@@ -107,6 +107,7 @@ export const getSearch = `
         created_year
         origin_country
         length
+        thumbnail_location
         MovieTeam {
           PersonMovieTeams {
             items {
@@ -284,3 +285,48 @@ export const ListMoviesByPerson = `
   }
 `
 ;
+
+export const getUserPlaylists = `
+query GetUserProfile($id: ID!) {
+  getUserProfile(id: $id) {
+    id
+    name
+    surname
+    is_member
+    member_untill
+    is_admin
+    email
+    user_id
+    photo_location
+    MoviePlaylists {
+      items {
+        id
+        creator
+        title
+        description
+        is_public
+        is_recommended
+        photo_location
+        size
+        userprofileID
+        createdAt
+        updatedAt
+        __typename
+        movies {
+          items {
+            id
+            movie {
+              id
+            }
+          }
+        }
+      }
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+`;

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import CloseIcon from '@mui/icons-material/Close';
 import { GlobalContext } from "../../App";
-import { createUserProfile } from "../../graphql/mutations";
+import { createMoviePlaylist, createUserProfile } from "../../graphql/mutations";
 import { API } from "aws-amplify";
 import { checkPersonExists } from "../../custom-queries/queries";
 
@@ -124,8 +124,6 @@ export const LoginPopup = () => {
             const surname = Auth.user.attributes.family_name;
             const email = Auth.user.attributes.email;
             const id = Auth.user.username;
-            // console.log(id)
-            // need to add a new field for login username or id !!!
             const exists = await API.graphql({
                 query: checkPersonExists,
                 variables : {
@@ -134,7 +132,7 @@ export const LoginPopup = () => {
                 authMode: 'AWS_IAM'
             });
             if(exists.data.listUserProfiles.items.length === 0){
-                await API.graphql({
+                const userId = await API.graphql({
                     query : createUserProfile,
                     variables : {
                     input : {
@@ -145,6 +143,20 @@ export const LoginPopup = () => {
                         is_member: false,
                         is_admin: false,
                     }},
+                    authMode: 'AWS_IAM'
+                });
+                await API.graphql({
+                    query: createMoviePlaylist.replaceAll("__typename", ""),
+                    variables: {
+                    input: {
+                        creator: name + " " + surname,
+                        title: "Watch Later",
+                        description: "Watch Later playlist",
+                        is_public: false,
+                        userprofileID: userId.data.createUserProfile.id,
+                        size: 0
+                    }
+                    },
                     authMode: 'AWS_IAM'
                 });
             }
