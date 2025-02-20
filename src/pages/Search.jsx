@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Footer } from "../modified-ui-components/Footer";
 import { getSearch } from "../custom-queries/queries";
 import { API } from "aws-amplify";
 import { MyGridMovies, MyGridPersons, MyGridPlaylists } from "../modified-ui-components/Grid";
@@ -104,9 +103,6 @@ const Search = () => {
                     <MyGridPlaylists data = {searchResult.playlists !== undefined ? searchResult.playlists : []} maxRows={2} maxColumns={3}></MyGridPlaylists>
                   </div>
                 }
-              </div>
-              <div id="footer" className="mt-10 min-h-fit" >
-                <Footer/>
               </div>
             </div>
             

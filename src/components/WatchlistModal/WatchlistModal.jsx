@@ -56,7 +56,8 @@ const WatchlistModal = ({ isOpen, onClose, movieId }) => {
   const saveChanges = async () => {
     try {
       for (const list of lists) {
-        if (list.selected) {
+        const movieInList = list.movies.items.find((movie) => movie.movie.id === movieId);
+        if (list.selected && !movieInList) {
           await API.graphql({
             query: createMovieMoviePlaylist,
             variables: { input: { moviePlaylistId: list.id, movieId: movieId } },
@@ -67,21 +68,17 @@ const WatchlistModal = ({ isOpen, onClose, movieId }) => {
             variables: { input: { id: list.id, size: list.size + 1 } },
             authMode: 'AWS_IAM'
           });
-        } else {
-          const movieInList = list.movies.items.find((movie) => movie.movie.id === movieId);
-          console.log(movieInList.movie);
-          if (movieInList) {
-            await API.graphql({
-              query: deleteMovieMoviePlaylist,
-              variables: { input: { id: movieInList.id } },
-              authMode: 'AWS_IAM'
-            });
-            await API.graphql({
-              query: updateMoviePlaylist,
-              variables: { input: { id: list.id, size: list.size - 1 } },
-              authMode: 'AWS_IAM'
-            });
-          }
+        } else if (!list.selected && movieInList) {
+          await API.graphql({
+            query: deleteMovieMoviePlaylist,
+            variables: { input: { id: movieInList.id } },
+            authMode: 'AWS_IAM'
+          });
+          await API.graphql({
+            query: updateMoviePlaylist,
+            variables: { input: { id: list.id, size: list.size - 1 } },
+            authMode: 'AWS_IAM'
+          });
         }
       }
       onClose();

@@ -7,7 +7,6 @@ import awsExports from '../aws-exports';
 // import { isVideoPlaying } from '../components/VideoPlayer';
 import { useNavigate } from "react-router-dom";
 import { getMovieQuery } from '../custom-queries/queries';
-import { Footer } from '../modified-ui-components/Footer';
 import config from '../config';
 import {isMobile} from 'react-device-detect';
 import { Carousel } from "react-responsive-carousel";
@@ -489,7 +488,6 @@ function Movie() {
       <div className='MoreWorks w-[75%] pt-8 flex flex-col'>
         <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">SAISTĪTI DARBI</div>
       </div>
-    <Footer />
     </div>
     </>
   );

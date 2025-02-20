@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getProfile } from "../custom-queries/queries";
-import { API, graphqlOperation  } from 'aws-amplify';
-import { Footer } from "../modified-ui-components/Footer";
+import { API } from 'aws-amplify';
 
 const fetchProfile = async id => {
     const profileData = await API.graphql({
@@ -69,7 +68,6 @@ function Profile () {
                     </div>
                 </div>
             </div>
-            <Footer />
         </div>
     )
 }

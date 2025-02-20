@@ -1,30 +1,23 @@
 import React from 'react';
-import { HashLink } from 'react-router-hash-link';
 
-export const Footer = () => {
-  const filePath = "./static/img/"
-  return(
-    <div className="w-[100%] h-[4vh] absolute bottom-0 bg-beige">
-      <div className="Rectangle1 w-full h-48 left-0 top-0 absolute bg-beige border-t border-black" />
-      <div className="Group45 w-44 h-24 left-[12.5%] top-[35px] absolute">
-        <div className="Group w-40 h-20 left-[0] top-[8.53px] absolute">
-          <img id='footer-logo'
-            alt="Group"
-            src= {require(filePath+"group-45.png")}
-          />
+const Footer = () => {
+  return (
+    <footer className="border-t border-black py-4 px-4 sm:px-8 text-sm bg-beige mt-auto">
+      <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center sm:items-start">
+        <div className="flex space-x-6 mb-2 sm:mb-0">
+          <span>©2024</span>
+          <a href="/about" className="hover:underline">Par projektu</a>
+          <a href="/about#contact" className="hover:underline">Kontakti</a>
+          <a href="/faq" className="hover:underline">Palīdzība</a>
+        </div>
+
+        <div className="flex space-x-6">
+          <a href="https://www.instagram.com" className="hover:underline">Instagram</a>
+          <a href="https://www.facebook.com" className="hover:underline">Facebook</a>
         </div>
       </div>
-      <div className="2023 w-80 left-[12.5%] top-[147px] absolute text-black text-xl font-normal font-['SchoolBook']">©️ 2023</div>
-      <div className="Frame18 w-80 h-16 left-[35%] top-[44px] absolute flex-col justify-start items-start inline-flex">
-        <div className="ParProjektu py-1 w-80 text-black text-xl font-normal font-['SchoolBook']"><a href='/about'>Par projektu</a></div>
-        <div className="Katalogs py-1 w-80 text-black text-xl font-normal font-['SchoolBook']"><a href='/about'>Katalogs</a></div>
-        <div className="Kontakti py-1 w-80 text-black text-xl font-normal font-['SchoolBook']"><a href='/about#contact'>Kontakti</a></div>
-        {/* <div className="Kontakti py-1 w-80 text-black text-xl font-normal font-['SchoolBook']"><HashLink smooth to='/about#contact'>Kontakti</HashLink></div> */}
-      </div>
-      <div className="Frame19 w-80 h-16 left-[65%] top-[44px] absolute flex-col justify-start items-start inline-flex">
-        <div className="Instagram py-2 w-80 text-black text-xl font-normal font-['SchoolBook']"><a href='/about'>Instagram</a></div>
-        <div className="Facebook py-2 w-80 text-black text-xl font-normal font-['SchoolBook']"><a href='/about'>Facebook</a></div>
-      </div>
-    </div>
-  )
-}
+    </footer>
+  );
+};
+
+export default Footer;

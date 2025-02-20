@@ -7,7 +7,7 @@ import About from "./pages/About";
 import Profile from "./pages/Profile";
 import Search from "./pages/Search";
 import Catalogue from "./pages/Catalogue";
-import Playlist from "./pages/Playlist";
+import AdminPlaylist from "./pages/AdminPlaylists";
 import PlaylistUpload from "./pages/PlaylistUpload";
 import React, {useEffect, useState } from "react";
 import { API, Amplify, Auth } from "aws-amplify";
@@ -15,8 +15,10 @@ import awsExports from './aws-exports';
 import Subscribe from "./pages/Subscribe";
 import { getPersonByEmail } from "./custom-queries/queries";
 import Upload from "./pages/Upload";
-import UserProfile from "./pages/UserProfile";
 import Buj from "./pages/Buj";
+import Playlist from "./pages/Playlists";
+import UserProfilePage from "./pages/UserProfile";
+import SettingsPage from "./pages/Settings";
 
 Amplify.configure(awsExports);
 export const GlobalContext = React.createContext();
@@ -91,11 +93,13 @@ export default function App() {
                 <Route path="search/:query?" element={<Search />} />
                 <Route path="catalogue/:givenTab?" element={<Catalogue />} />
                 <Route path="upload" element={<Upload />} />
-                <Route path="user/:id" element={<UserProfile />} />
+                <Route path="user/:id" element={<UserProfilePage />} />
+                <Route path="settings/:id" element={<SettingsPage />} />
                 <Route path="faq" element={<Buj />} />
+                <Route path="playlist/:id" element={<Playlist />} />
                 {admin ? (
                   <>
-                    <Route path="playlists" element={<Playlist />} />
+                    <Route path="admin/playlists" element={<AdminPlaylist />} />
                     <Route path="addPlaylist/:id?" element={<PlaylistUpload />} />
                   </>
                 ):(

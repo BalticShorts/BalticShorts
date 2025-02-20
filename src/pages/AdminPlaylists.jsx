@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
-import { Footer } from "../modified-ui-components/Footer";
 import { API } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
 import { listMoviePlaylists } from "../graphql/queries";
-import { MyGridPlaylists } from "../modified-ui-components/Grid";
 import { PlaylistEditGrid } from "../modified-ui-components/Grid/playlistEditGrid";
 import PlaylistUpload from "./PlaylistUpload";
 
-const Playlist = () => {
+const AdminPlaylist = () => {
     const navigate = useNavigate();
     const sleep = ms => new Promise(r => setTimeout(r, ms));
     const [allPlaylists, setAllPlaylists] = useState([]);
@@ -91,12 +89,10 @@ const Playlist = () => {
                 </>
                 )
             }
-
-                <Footer/>
             </div>
         </>
     );
 }
 
 
-export default Playlist;
+export default AdminPlaylist;

@@ -40,7 +40,7 @@ export const DisplayedPlaylist = ({ photoPosition, playlist }) => {
     return(
         <>
         {position === 'left' ? (
-        <div className="w-fit h-fit border border-black border-opacity-40 justify-center items-center flex flex-row my-6">
+        <div className="w-fit h-fit border border-black border-opacity-40 justify-center items-center flex flex-row my-6" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
             <div className="relative w-[750px] h-[360px] border-r border-black border-opacity-40">
                 <img className="w-[750px] h-[360px] object-cover" src={photoSrc} alt={playlist.title} />
                 <div className="pl-2 absolute bottom-0 w-4/5 text-stone-50 text-3xl font-bold font-['SchoolBook'] leading-loose">{playlist.title}</div>
@@ -52,7 +52,7 @@ export const DisplayedPlaylist = ({ photoPosition, playlist }) => {
             </div>
         </div>
         ) : (
-        <div className="w-fit h-fit border border-black border-opacity-40 justify-center items-center flex flex-row">
+        <div className="w-fit h-fit border border-black border-opacity-40 justify-center items-center flex flex-row" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
             <div className="w-80 max-h-[360px] p-7 flex-col justify-between items-start inline-flex ">
                 <div></div>
                 <div className="m-auto w-72 h-60 text-black text-base font-normal font-['SchoolBook'] break-words">{playlist.description}</div>

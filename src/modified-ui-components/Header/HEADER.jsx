@@ -69,7 +69,7 @@ export const Navbar = () => {
           <div className="flex flex-row gap-4 sm:gap-20">
             <div className="relative m-auto pt-1 flex flex-row cursor-pointer">
               {context.loggedIn ? (
-                <div className="m-auto relative mr-4">{context.currentUser?.name}</div>
+                <div className="m-auto relative mr-4"><a href={"/user/" + context.currentUser?.id}>{context.currentUser?.name}</a></div>
               ) : (
                 <div
                   className="cursor-pointer m-auto pt-1 text-black text-lg font-normal font-['SchoolBook'] mr-4"

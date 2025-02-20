@@ -1,4 +1,3 @@
-
 export const getProfile = `
     query MyQuery($id: ID!) {
         getPerson(id: $id) {
@@ -317,6 +316,119 @@ query GetUserProfile($id: ID!) {
             id
             movie {
               id
+            }
+          }
+        }
+      }
+      nextToken
+      __typename
+    }
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+`;
+
+export const getMoviesByPlaylistId = /* GraphQL */ `
+  query GetMoviesByPlaylistId($id: ID!) {
+    getMoviePlaylist(id: $id) {
+      id
+      title
+      creator
+      photo_location
+      movies {
+        items {
+          movie {
+            id
+            name
+            name_eng
+            created_year
+            origin_country
+            length
+            thumbnail_location
+            genre
+            screen_language
+            captions_language
+            MovieType {
+              type
+            }
+            MovieTeam {
+              PersonMovieTeams {
+                items {
+                  Role {
+                    name
+                  }
+                  Person {
+                    name
+                    surname
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const getUserPlaylistsFull = `
+query GetUserProfile($id: ID!) {
+  getUserProfile(id: $id) {
+    id
+    name
+    surname
+    is_member
+    member_untill
+    is_admin
+    email
+    user_id
+    photo_location
+    MoviePlaylists {
+      items {
+        id
+        creator
+        title
+        description
+        is_public
+        is_recommended
+        photo_location
+        size
+        userprofileID
+        createdAt
+        updatedAt
+        __typename
+        movies {
+          items {
+            id
+            movie {
+              id
+              name
+              name_eng
+              created_year
+              origin_country
+              length
+              thumbnail_location
+              genre
+              screen_language
+              captions_language
+              MovieType {
+                type
+              }
+              MovieTeam {
+                PersonMovieTeams {
+                  items {
+                    Role {
+                      name
+                    }
+                    Person {
+                      name
+                      surname
+                    }
+                  }
+                }
+              }
             }
           }
         }

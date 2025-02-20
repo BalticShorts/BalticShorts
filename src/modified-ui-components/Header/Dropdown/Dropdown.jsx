@@ -39,7 +39,7 @@ export const Dropdown = () => {
                 </div>
                 {context.loggedIn && (
                   <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide">
-                    <a href={"/user/" + context.currentUser.id}>
+                    <a href={"/settings/" + context.currentUser.id}>
                       UZSTĀDĪJUMI
                     </a>
                   </div>

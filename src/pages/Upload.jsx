@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Footer } from "../modified-ui-components/Footer";
 import { MovieUpload } from "../modified-ui-components/MovieUpload";
 import { PhotoUpload } from "../components/PhotoUpload";
 import { CreateMovieTeam } from "../components/CreateMovieTeam";
@@ -183,7 +182,6 @@ const Upload = () => {
                 }
 
             </div>
-            <Footer/>
         </div>
         </>
     );

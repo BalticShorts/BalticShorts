@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { Footer } from "../modified-ui-components/Footer";
 import { LoginPopup } from "../components/LoginPopup/LoginPopup";
 import { GlobalContext } from "../App";
 
@@ -22,7 +21,6 @@ const Subscribe = () => {
                 </div>
             </div>
             <LoginPopup showing={context.loggedInModal} parentSetShowModal={context.setLoggedInModal}/>
-            <Footer/>
         </div>
         </>
     );

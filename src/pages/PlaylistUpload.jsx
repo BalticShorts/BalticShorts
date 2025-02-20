@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import { Footer } from "../modified-ui-components/Footer";
 import { PhotoUpload } from "../components/PhotoUpload";
 import { API } from "aws-amplify";
 import { listMovies } from "../graphql/queries";
@@ -322,8 +321,6 @@ const PlaylistUpload = ({onClose, id, recommendedCount}) => {
                     </>
                 )}
             </div>
-
-            <Footer/>
         </div>
         
         </>

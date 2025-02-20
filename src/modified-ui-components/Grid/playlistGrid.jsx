@@ -15,88 +15,74 @@ export function MyGridPlaylists({ data, maxRows, maxColumns }) {
   const [rows, setRows] = useState(maxRows);
 
   async function getSrc(items) {
-    const config = {
-      region: "eu-north-1",
-      credentials: new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: IdentityPoolId,
-      }),
-      bucketName: "balticshortsphotos",
-    };
-    const myBucket = new AWS.S3(config);
-    await Promise.all(
-      items.map(async (item) => {
-        if (item === null) return;
-        if (item.thumbnail_location) {
-          const split = item.thumbnail_location.split("/");
-          const key = split.pop();
-          const bucketLoc = split.join("/");
-          const params = {
-            Bucket: bucketLoc,
-            Key: key,
-          };
-          try {
-            const data = await myBucket.getObject(params).promise();
-            photoSrc[item.id] = URL.createObjectURL(
-              new Blob([data.Body], { type: "image/png" })
-            );
-          } catch (error) {
-            console.error("Error fetching data:", error);
-          }
-        } else {
-          photoSrc[item.id] = require("../../assets/images/no_image_1.jpg");
-        }
-      })
-    );
-    setPhotoSrc({ ...photoSrc });
+    try {
+      const newPhotoSrc = {};
+      items.forEach((item) => {
+        if (item.photo_location && item.photo_location !== null && item.photo_location !== undefined)
+          newPhotoSrc[item.id] = `https://balticshortsphotos.s3.eu-north-1.amazonaws.com/${item.photo_location.replace("balticshortsphotos/", "")}`;
+        else
+          newPhotoSrc[item.id] = require("../../assets/images/no_image_1.jpg");
+      });
+      setPhotoSrc(newPhotoSrc);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   }
 
   useEffect(() => {
     async function fetchData() {
+      if (data.length === 0) return;
       await getSrc(data);
     }
     fetchData();
   }, [data]);
 
   const checkRow = (idx) => {
-    if ((idx + 1) / columns > rows) return false;
+    if ((idx + 1) / maxColumns > rows) return false;
     return true;
   };
 
   return (
-    <div className="left-[15%] w-[75%] h-fit gap-6 flex flex-col items-center relative justify-center">
-      <div className={`grid grid-cols-${columns} gap-4`}>
+    <div className="w-full h-auto p-4 flex flex-col items-center bg-inherit">
+      <div
+        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-center w-full bg-inherit`}
+      >
         {data.map((item, idx) => (
           <>
-            {checkRow(idx) && item !== null && (
-              <div
-                key={item.id}
-                className="flex flex-col shadow-md bg-inherit border border-black max-h-[292px] sm:min-h-[292px] overflow-hidden"
-                onClick={() => navigate(`/playlist/${item.id}`)}
-              >
-                <div className="relative w-full h-full sm:h-48 sm:min-h-[192px] overflow-hidden bg-inherit">
-                  <img
-                    className="w-full h-full object-cover"
-                    src={photoSrc[item.id] || "https://via.placeholder.com/350x100"}
-                    alt={item.title}
-                  />
-                </div>
-                <div className="mt-2 flex flex-col bg-inherit p-4">
-                  <span className="text-black text-lg font-bold">
-                    {item.title}
-                  </span>
-                  <div className="text-sm text-gray-600 mt-1">
-                    by {item.creator}
+            {checkRow(idx) && (
+              <>
+                {item !== null && (
+                  <div
+                    key={item.id}
+                    className="relative flex flex-col shadow-md bg-inherit border border-black max-h-[292px] sm:min-h-[292px] overflow-hidden"
+                    onClick={() => navigate(`/playlist/${item.id}`)}
+                  >
+                    <div className="relative w-full h-full sm:h-48 sm:min-h-[192px] overflow-hidden bg-inherit">
+                      <img
+                        className="w-full h-full object-cover"
+                        src={photoSrc[item.id]}
+                        alt={item.title}
+                      />
+                    </div>
+                    <div className="mt-2 flex flex-col bg-inherit p-4 ">
+                      <span className="text-black text-lg font-bold">
+                        {item.title}
+                      </span>
+                      <div className="text-sm text-gray-600 mt-1">
+                        by {item.creator}
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        FILMAS {item.size} | SEKOTĀJI 10
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-sm text-gray-500">
-                    FILMAS {item.size} | SEKOTĀJI 10
-                  </div>
-                </div>
-              </div>
+                )}
+              </>
             )}
           </>
         ))}
       </div>
-      {data.length / columns > rows && (
+      {data.length / maxColumns > rows && (
         <div className="flex justify-center mt-6">
           <button
             className="px-4 py-2 text-black rounded-md shadow-md"

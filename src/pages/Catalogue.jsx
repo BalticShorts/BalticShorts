@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Footer } from "../modified-ui-components/Footer";
 import { useParams } from "react-router-dom";
 import { API } from "aws-amplify";
 import { getSearch, getMoviesMain } from "../custom-queries/queries";
@@ -139,15 +138,6 @@ const Catalogue = () => {
     changeTab();
   }, [tab]);
 
-  useEffect(() => {
-    const footer = document.getElementById("footer");
-    const offsetHeight = document.getElementById("container")?.offsetHeight;
-    // console.log(document.getElementById("container"));
-    // console.log(offsetHeight);
-    // if (offsetHeight < 400)
-    //   footer?.classList.remove('relative')
-  }, [data])
-
   const handleSortChange = (e) => {
     const option = e.target.value;
     setSortOption(option);
@@ -167,6 +157,7 @@ const Catalogue = () => {
     } else if (tab[0] === 'Persons') {
       sortedItems = [...data.persons];
     }
+    console.log(sortedItems)
 
     switch (option) {
       case 'date':
@@ -550,9 +541,6 @@ const Catalogue = () => {
               )}
             </>
           )}
-        </div>
-        <div id="footer" className="relative mt-10 min-h-fit">
-          <Footer />
         </div>
       </div>
     </>

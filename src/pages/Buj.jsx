@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import { Footer } from "../modified-ui-components/Footer";
 import { useContext } from "react";
 import { GlobalContext } from "../App";
 import TermsOfService from "../components/TermsOfService/TOS";
@@ -98,10 +97,6 @@ const Buj = () => {
             </ol>
           </section>
         </main>
-    
-      </div>
-      <div id="footer" className="relative w-full">
-        <Footer />
       </div>
     </div>
   );

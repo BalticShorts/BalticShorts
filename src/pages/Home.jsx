@@ -7,7 +7,6 @@ import { listMoviePlaylists } from '../graphql/queries.js'
 import { useEffect, useState } from 'react';
 import awsExports from '../aws-exports';
 import { useNavigate } from "react-router-dom";
-import { Footer } from "../modified-ui-components/Footer";
 import { MyGridMovies } from "../modified-ui-components/Grid/movieGrid.jsx";
 import { getMoviesMain } from "../custom-queries/queries.js";
 import { DisplayedPlaylistGroup } from "../components/DisplayedPlaylistGroup/DisplayedPlaylistGroup.jsx";
@@ -77,15 +76,6 @@ const Home = () => {
     }
   }
 
-  useEffect(() => {
-    const footer = document.getElementById("footer");
-    const offsetHeight = document.getElementById("container")?.offsetHeight;
-    if (offsetHeight > 500)
-      footer?.classList.add('relative')
-    else
-      footer?.classList.remove('relative')
-  }, [playlists])
-
   return (
     <>
       <div className="w-full" id="container">
@@ -151,9 +141,6 @@ const Home = () => {
           <div className="m-auto w-3/5 text-black text-lg font-normal font-['SchoolBook'] my-10">Baltic Shorts ir digitāla straumēšanas platforma, kas fokusējas uz Baltijas valstīs (Latvija, Lietuva, Igaunija) radītu īsfilmu izrādīšanu. Projekta mērķis ir radīt un uzturēt ērti lietojamu plaša satura mājaslapu, kas attīsta īsfilmu formas pieejamību un to autoru atpazīstamību plašākā tirgū.</div>
           <div className="w-fit px-5 m-auto grow shrink basis-0 text-center text-black text-base font-normal font-['SchoolBook'] border border-black cursor-pointer" onClick={() => navigate('/about')}>Uzzināt vairāk</div>
         </div>
-      </div>
-      <div id="footer" className="mt-10 min-h-fit" >
-        <Footer/>
       </div>
     </>
   );

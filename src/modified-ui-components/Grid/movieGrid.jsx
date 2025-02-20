@@ -3,9 +3,6 @@ import { useNavigate } from "react-router-dom";
 import WatchlistModal from "../../components/WatchlistModal/WatchlistModal";
 import { MdFormatListBulleted } from "react-icons/md";
 
-const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
-var AWS = require("aws-sdk");
-
 export function getDirectors(data) {
   const result = {};
   data.forEach((item) => {
@@ -27,50 +24,32 @@ export function MyGridMovies({ data, maxRows, maxColumns }) {
   const [photoSrc, setPhotoSrc] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedMovieId, setSelectedMovieId] = useState(null);
-  AWS.config.region = "eu-north-1";
-  AWS.config.credentials = new AWS.CognitoIdentityCredentials(IdentityPoolId);
+  const [fetched, setFetched] = useState(false);
 
   const navigate = useNavigate();
   const [rows, setRows] = useState(maxRows);
   const [directors, setDirectors] = useState(getDirectors(data));
 
   async function getSrc(items) {
-    const config = {
-      region: "eu-north-1",
-      credentials: new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: IdentityPoolId,
-      }),
-      bucketName: "balticshortsphotos",
-    };
-    const myBucket = new AWS.S3(config);
-    await Promise.all(
-      items.map(async (item) => {
-        if (item === null) return;
-        if (item.thumbnail_location) {
-          const split = item.thumbnail_location.split("/");
-          const key = split.pop();
-          const bucketLoc = split.join("/");
-          const params = {
-            Bucket: bucketLoc,
-            Key: key,
-          };
-          try {
-            const data = await myBucket.getObject(params).promise();
-            photoSrc[item.id] = URL.createObjectURL(
-              new Blob([data.Body], { type: "image/png" })
-            );
-          } catch (error) {
-            console.error("Error fetching data:", error);
-          }
-        } else {
-          photoSrc[item.id] = require("../../assets/images/no_image_1.jpg");
-        }
-      })
-    );
+    try {
+      setFetched(true);
+      const newPhotoSrc = {};
+      items.forEach((item) => {
+        if(item.thumbnail_location && item.thumbnail_location !== null && item.thumbnail_location !== undefined)
+          newPhotoSrc[item.id] = `https://balticshortsphotos.s3.eu-north-1.amazonaws.com/${item.thumbnail_location.replace("balticshortsphotos/", "")}`;
+        else
+          newPhotoSrc[item.id] = require("../../assets/images/no_image_1.jpg");
+      });
+      setPhotoSrc(newPhotoSrc);
+      
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   }
 
   useEffect(() => {
     async function fetchData() {
+      if (data.length === 0) return;
       await getSrc(data);
       setDirectors(getDirectors(data));
     }
@@ -97,7 +76,7 @@ export function MyGridMovies({ data, maxRows, maxColumns }) {
                     className="relative flex flex-col shadow-md bg-inherit border border-black max-h-[292px] sm:min-h-[292px] overflow-hidden"
                     onClick={() => navigate('/movie/'+encodeURIComponent(item.name) + '/' + encodeURIComponent(item.id))}
                   >
-                    <div className="relative w-full h-full sm:h-48 sm:min-h-[192px] overflow-hidden bg-inherit">
+                    <div className="relative w-full h-full h-20 sm:h-36 lg:h-48 lg:min-h-[192px] overflow-hidden bg-inherit">
                       <img
                         className="w-full h-full object-cover"
                         src={photoSrc[item.id]}
@@ -114,8 +93,8 @@ export function MyGridMovies({ data, maxRows, maxColumns }) {
                         <MdFormatListBulleted size={20} />
                       </button>
                     </div>
-                    <div className="mt-2 flex flex-col bg-inherit p-4 ">
-                      <span className="text-black text-lg font-bold">
+                    <div className="mt-1 lg:mt-2 flex flex-col bg-inherit lg:px-4 px-2">
+                      <span className="text-black text-sm lg:text-lg font-bold">
                         {item.name}
                       </span>
                       <div className="text-sm text-gray-600 mt-1">
