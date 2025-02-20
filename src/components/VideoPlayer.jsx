@@ -73,8 +73,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
             },
             fairplay: {
               LA_URL: 'https://e40ff278.drm-fairplay-licensing.axprod.net/AcquireLicense',
-              // certificateURL: 'https://portal.axinom.com/api/testing-certificates/e40ff278-e8d5-4f31-99b2-336908907f62_a9f81500-f1d7-45fb-a0a4-b28a012597cd.cer',
-              certificateURL: 'https://vtb.axinom.com/FPScert/fairplay.cer',
+              certificateURL: 'https://portal.axinom.com/api/testing-certificates/e40ff278-e8d5-4f31-99b2-336908907f62_a9f81500-f1d7-45fb-a0a4-b28a012597cd.cer',
               headers: {
                 'X-AxDRM-Message': urlAddon,
               },
