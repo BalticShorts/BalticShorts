@@ -2,12 +2,14 @@ import { useRef } from "react";
 import { useContext } from "react";
 import { GlobalContext } from "../App";
 import TermsOfService from "../components/TermsOfService/TOS";
+import Agreement from "../components/Agreement/Agreement";
 
 const Buj = () => {
   const faqRef = useRef(null);
   const contactRef = useRef(null);
   const termsRef = useRef(null);
   const privacyRef = useRef(null);
+  const agreementRef = useRef(null);
 
   const scrollToSection = (ref) => {
     ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -30,12 +32,12 @@ const Buj = () => {
           <nav>
             <ul className="space-y-2">
               <li className="font-bold">PALĪDZĪBA</li>
-              <li
+              {/* <li
                 className="text-gray-700 hover:text-black cursor-pointer"
                 onClick={() => scrollToSection(faqRef)}
               >
                 Bieži uzdotie jautājumi
-              </li>
+              </li> */}
               <li
                 className="text-gray-700 hover:text-black cursor-pointer"
                 onClick={() => scrollToSection(contactRef)}
@@ -56,6 +58,12 @@ const Buj = () => {
               </li>
               <li
                 className="text-gray-700 hover:text-black cursor-pointer"
+                onClick={() => scrollToSection(agreementRef)}
+              >
+                Distances līgums
+              </li>
+              <li
+                className="text-gray-700 hover:text-black cursor-pointer"
                 onClick={() => signOut()}
               >
                 Iziet
@@ -66,14 +74,14 @@ const Buj = () => {
     
         
         <main className="flex-1 p-6">
-          <section ref={faqRef} className="mb-12">
+          {/* <section ref={faqRef} className="mb-12">
             <h2 className="text-xl font-semibold">BIEŽI UZDOTIE JAUTĀJUMI</h2>
             <ul className="space-y-2 mt-4">
               <li className="border-b pb-2 font-medium">► Lorem ipsum dolor sit amet?</li>
               <li className="border-b pb-2 font-medium">► Nunc molestie felis velit?</li>
               <li className="border-b pb-2 font-medium">► Integer pellentesque metus?</li>
             </ul>
-          </section>
+          </section> */}
     
           <section ref={contactRef} className="mb-12">
             <h2 className="text-xl font-semibold">SAZIŅA</h2>
@@ -95,6 +103,9 @@ const Buj = () => {
               <li>Klienta dati tiek izmantoti tikai tādā apjomā, kāds nepieciešams Pakalpojuma sniegšanai un uzlabošanai, kā arī lai nodrošinātu personalizētu lietošanas pieredzi.</li>
               <li>Klientiem ir tiesības atteikties no komerciālo paziņojumu saņemšanas e-pastā, izmantojot atteikšanās saiti katrā paziņojumā.</li>
             </ol>
+          </section>
+          <section className="mb-12" ref={agreementRef}>
+            <Agreement />
           </section>
         </main>
       </div>

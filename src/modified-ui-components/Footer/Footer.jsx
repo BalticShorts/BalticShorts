@@ -8,7 +8,7 @@ const Footer = () => {
           <span>©2024</span>
           <a href="/about" className="hover:underline">Par projektu</a>
           <a href="/about#contact" className="hover:underline">Kontakti</a>
-          <a href="/faq" className="hover:underline">Palīdzība</a>
+          <a href="/faq" className="hover:underline">Lietošanas noteikumi</a>
         </div>
 
         <div className="flex space-x-6">
