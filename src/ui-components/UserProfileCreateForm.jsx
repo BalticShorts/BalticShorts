@@ -194,7 +194,9 @@ export default function UserProfileCreateForm(props) {
     name: "",
     surname: "",
     is_member: false,
-    member_untill: "",
+    member_until: "",
+    klixToken: "",
+    monthsSubscribed: "",
     is_admin: false,
     email: "",
     user_id: "",
@@ -204,8 +206,12 @@ export default function UserProfileCreateForm(props) {
   const [name, setName] = React.useState(initialValues.name);
   const [surname, setSurname] = React.useState(initialValues.surname);
   const [is_member, setIs_member] = React.useState(initialValues.is_member);
-  const [member_untill, setMember_untill] = React.useState(
-    initialValues.member_untill
+  const [member_until, setMember_until] = React.useState(
+    initialValues.member_until
+  );
+  const [klixToken, setKlixToken] = React.useState(initialValues.klixToken);
+  const [monthsSubscribed, setMonthsSubscribed] = React.useState(
+    initialValues.monthsSubscribed
   );
   const [is_admin, setIs_admin] = React.useState(initialValues.is_admin);
   const [email, setEmail] = React.useState(initialValues.email);
@@ -225,7 +231,9 @@ export default function UserProfileCreateForm(props) {
     setName(initialValues.name);
     setSurname(initialValues.surname);
     setIs_member(initialValues.is_member);
-    setMember_untill(initialValues.member_untill);
+    setMember_until(initialValues.member_until);
+    setKlixToken(initialValues.klixToken);
+    setMonthsSubscribed(initialValues.monthsSubscribed);
     setIs_admin(initialValues.is_admin);
     setEmail(initialValues.email);
     setUser_id(initialValues.user_id);
@@ -257,7 +265,9 @@ export default function UserProfileCreateForm(props) {
     name: [],
     surname: [],
     is_member: [],
-    member_untill: [],
+    member_until: [],
+    klixToken: [],
+    monthsSubscribed: [],
     is_admin: [],
     email: [{ type: "Email" }],
     user_id: [],
@@ -342,7 +352,9 @@ export default function UserProfileCreateForm(props) {
           name,
           surname,
           is_member,
-          member_untill,
+          member_until,
+          klixToken,
+          monthsSubscribed,
           is_admin,
           email,
           user_id,
@@ -389,7 +401,9 @@ export default function UserProfileCreateForm(props) {
             name: modelFields.name,
             surname: modelFields.surname,
             is_member: modelFields.is_member,
-            member_untill: modelFields.member_untill,
+            member_until: modelFields.member_until,
+            klixToken: modelFields.klixToken,
+            monthsSubscribed: modelFields.monthsSubscribed,
             is_admin: modelFields.is_admin,
             email: modelFields.email,
             user_id: modelFields.user_id,
@@ -451,7 +465,9 @@ export default function UserProfileCreateForm(props) {
               name: value,
               surname,
               is_member,
-              member_untill,
+              member_until,
+              klixToken,
+              monthsSubscribed,
               is_admin,
               email,
               user_id,
@@ -483,7 +499,9 @@ export default function UserProfileCreateForm(props) {
               name,
               surname: value,
               is_member,
-              member_untill,
+              member_until,
+              klixToken,
+              monthsSubscribed,
               is_admin,
               email,
               user_id,
@@ -515,7 +533,9 @@ export default function UserProfileCreateForm(props) {
               name,
               surname,
               is_member: value,
-              member_untill,
+              member_until,
+              klixToken,
+              monthsSubscribed,
               is_admin,
               email,
               user_id,
@@ -536,11 +556,11 @@ export default function UserProfileCreateForm(props) {
         {...getOverrideProps(overrides, "is_member")}
       ></SwitchField>
       <TextField
-        label="Member untill"
+        label="Member until"
         isRequired={false}
         isReadOnly={false}
         type="datetime-local"
-        value={member_untill && convertToLocal(new Date(member_untill))}
+        value={member_until && convertToLocal(new Date(member_until))}
         onChange={(e) => {
           let value =
             e.target.value === "" ? "" : new Date(e.target.value).toISOString();
@@ -549,7 +569,9 @@ export default function UserProfileCreateForm(props) {
               name,
               surname,
               is_member,
-              member_untill: value,
+              member_until: value,
+              klixToken,
+              monthsSubscribed,
               is_admin,
               email,
               user_id,
@@ -557,17 +579,89 @@ export default function UserProfileCreateForm(props) {
               MoviePlaylists,
             };
             const result = onChange(modelFields);
-            value = result?.member_untill ?? value;
+            value = result?.member_until ?? value;
           }
-          if (errors.member_untill?.hasError) {
-            runValidationTasks("member_untill", value);
+          if (errors.member_until?.hasError) {
+            runValidationTasks("member_until", value);
           }
-          setMember_untill(value);
+          setMember_until(value);
         }}
-        onBlur={() => runValidationTasks("member_untill", member_untill)}
-        errorMessage={errors.member_untill?.errorMessage}
-        hasError={errors.member_untill?.hasError}
-        {...getOverrideProps(overrides, "member_untill")}
+        onBlur={() => runValidationTasks("member_until", member_until)}
+        errorMessage={errors.member_until?.errorMessage}
+        hasError={errors.member_until?.hasError}
+        {...getOverrideProps(overrides, "member_until")}
+      ></TextField>
+      <TextField
+        label="Klix token"
+        isRequired={false}
+        isReadOnly={false}
+        value={klixToken}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              is_member,
+              member_until,
+              klixToken: value,
+              monthsSubscribed,
+              is_admin,
+              email,
+              user_id,
+              photo_location,
+              MoviePlaylists,
+            };
+            const result = onChange(modelFields);
+            value = result?.klixToken ?? value;
+          }
+          if (errors.klixToken?.hasError) {
+            runValidationTasks("klixToken", value);
+          }
+          setKlixToken(value);
+        }}
+        onBlur={() => runValidationTasks("klixToken", klixToken)}
+        errorMessage={errors.klixToken?.errorMessage}
+        hasError={errors.klixToken?.hasError}
+        {...getOverrideProps(overrides, "klixToken")}
+      ></TextField>
+      <TextField
+        label="Months subscribed"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={monthsSubscribed}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              is_member,
+              member_until,
+              klixToken,
+              monthsSubscribed: value,
+              is_admin,
+              email,
+              user_id,
+              photo_location,
+              MoviePlaylists,
+            };
+            const result = onChange(modelFields);
+            value = result?.monthsSubscribed ?? value;
+          }
+          if (errors.monthsSubscribed?.hasError) {
+            runValidationTasks("monthsSubscribed", value);
+          }
+          setMonthsSubscribed(value);
+        }}
+        onBlur={() => runValidationTasks("monthsSubscribed", monthsSubscribed)}
+        errorMessage={errors.monthsSubscribed?.errorMessage}
+        hasError={errors.monthsSubscribed?.hasError}
+        {...getOverrideProps(overrides, "monthsSubscribed")}
       ></TextField>
       <SwitchField
         label="Is admin"
@@ -581,7 +675,9 @@ export default function UserProfileCreateForm(props) {
               name,
               surname,
               is_member,
-              member_untill,
+              member_until,
+              klixToken,
+              monthsSubscribed,
               is_admin: value,
               email,
               user_id,
@@ -613,7 +709,9 @@ export default function UserProfileCreateForm(props) {
               name,
               surname,
               is_member,
-              member_untill,
+              member_until,
+              klixToken,
+              monthsSubscribed,
               is_admin,
               email: value,
               user_id,
@@ -645,7 +743,9 @@ export default function UserProfileCreateForm(props) {
               name,
               surname,
               is_member,
-              member_untill,
+              member_until,
+              klixToken,
+              monthsSubscribed,
               is_admin,
               email,
               user_id: value,
@@ -677,7 +777,9 @@ export default function UserProfileCreateForm(props) {
               name,
               surname,
               is_member,
-              member_untill,
+              member_until,
+              klixToken,
+              monthsSubscribed,
               is_admin,
               email,
               user_id,
@@ -705,7 +807,9 @@ export default function UserProfileCreateForm(props) {
               name,
               surname,
               is_member,
-              member_untill,
+              member_until,
+              klixToken,
+              monthsSubscribed,
               is_admin,
               email,
               user_id,

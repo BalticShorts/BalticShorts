@@ -11,7 +11,9 @@ export const createUserProfile = /* GraphQL */ `
       name
       surname
       is_member
-      member_untill
+      member_until
+      klixToken
+      monthsSubscribed
       is_admin
       email
       user_id
@@ -50,7 +52,9 @@ export const updateUserProfile = /* GraphQL */ `
       name
       surname
       is_member
-      member_untill
+      member_until
+      klixToken
+      monthsSubscribed
       is_admin
       email
       user_id
@@ -89,7 +93,9 @@ export const deleteUserProfile = /* GraphQL */ `
       name
       surname
       is_member
-      member_untill
+      member_until
+      klixToken
+      monthsSubscribed
       is_admin
       email
       user_id

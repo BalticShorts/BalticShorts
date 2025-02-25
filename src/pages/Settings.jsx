@@ -110,7 +110,7 @@ function SettingsPage() {
       const updated = await API.graphql({
         query: updateUserProfile,
         variables: {
-          input: { id: profile.id, is_member: true, member_untill: oneMonthFromNow },
+          input: { id: profile.id, is_member: true, member_until: oneMonthFromNow },
         },
         authMode: "AWS_IAM",
       });

@@ -25,7 +25,9 @@ export declare type UserProfileUpdateFormInputValues = {
     name?: string;
     surname?: string;
     is_member?: boolean;
-    member_untill?: string;
+    member_until?: string;
+    klixToken?: string;
+    monthsSubscribed?: number;
     is_admin?: boolean;
     email?: string;
     user_id?: string;
@@ -36,7 +38,9 @@ export declare type UserProfileUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
     surname?: ValidationFunction<string>;
     is_member?: ValidationFunction<boolean>;
-    member_untill?: ValidationFunction<string>;
+    member_until?: ValidationFunction<string>;
+    klixToken?: ValidationFunction<string>;
+    monthsSubscribed?: ValidationFunction<number>;
     is_admin?: ValidationFunction<boolean>;
     email?: ValidationFunction<string>;
     user_id?: ValidationFunction<string>;
@@ -49,7 +53,9 @@ export declare type UserProfileUpdateFormOverridesProps = {
     name?: PrimitiveOverrideProps<TextFieldProps>;
     surname?: PrimitiveOverrideProps<TextFieldProps>;
     is_member?: PrimitiveOverrideProps<SwitchFieldProps>;
-    member_untill?: PrimitiveOverrideProps<TextFieldProps>;
+    member_until?: PrimitiveOverrideProps<TextFieldProps>;
+    klixToken?: PrimitiveOverrideProps<TextFieldProps>;
+    monthsSubscribed?: PrimitiveOverrideProps<TextFieldProps>;
     is_admin?: PrimitiveOverrideProps<SwitchFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
     user_id?: PrimitiveOverrideProps<TextFieldProps>;

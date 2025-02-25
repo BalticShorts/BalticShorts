@@ -173,7 +173,7 @@ query MyQuery($email: String!) {
       email
       user_id
       is_member
-      member_untill
+      member_until
       is_admin
       createdAt
       updatedAt
@@ -292,7 +292,7 @@ query GetUserProfile($id: ID!) {
     name
     surname
     is_member
-    member_untill
+    member_until
     is_admin
     email
     user_id
@@ -380,7 +380,7 @@ query GetUserProfile($id: ID!) {
     name
     surname
     is_member
-    member_untill
+    member_until
     is_admin
     email
     user_id
