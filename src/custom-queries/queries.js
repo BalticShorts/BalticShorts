@@ -198,6 +198,9 @@ export const getMoviesMain = `
         genre
         screen_language
         captions_language
+        is_highlighted
+        description
+        trailer_location
         MovieType {
           type
         }

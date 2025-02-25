@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { MyGridMovies } from "../modified-ui-components/Grid/movieGrid.jsx";
 import { getMoviesMain } from "../custom-queries/queries.js";
 import { DisplayedPlaylistGroup } from "../components/DisplayedPlaylistGroup/DisplayedPlaylistGroup.jsx";
+import MainMovie from "../components/MainMovie/MainMovie.jsx";
 // https://mui.com/material-ui/material-icons/
 
 
@@ -20,6 +21,7 @@ const Home = () => {
     var AWS = require('aws-sdk');
 
   const [movies, setMovies] = useState([]);
+  const [highlightedMovie, setHighlightedMovie] = useState(null);
   const [playlists, setPlaylists] = useState([]);
   const [recomendedPlaylists, setRecomendedPlaylists] = useState([]);
 
@@ -49,6 +51,8 @@ const Home = () => {
         });
         const movieList = movieData.data.listMovies;
         setMovies(movieList);
+        const highlighted = movieList.items.find(movie => movie.is_highlighted);
+        setHighlightedMovie(highlighted);
 
     }catch (error) {
       console.log('Error on fetchnig movies', error);
@@ -79,10 +83,7 @@ const Home = () => {
   return (
     <>
       <div className="w-full" id="container">
-        <div id="nedelasIsfilma"  className="w-full relative h-fit">
-          <img className="w-full h-fit max-h-[920px]" src={require("./static/ad_2.jpg")} alt="Changed to highlighted movie" />
-          {/* will be changed to a highlighted moovie */}
-        </div>
+        {highlightedMovie && <MainMovie movie={highlightedMovie} />}
         <div className="flex flex-row w-4/5 my-10 m-auto items-center justify-center gap-6">
           <div className="w-80 h-48 relative border border-black flex flex-col items-center justify-center m-auto gap-10 cursor-pointer" onClick={() => navigate('/catalogue/Movies')}>
             <div className="w-80 h-3 relative text-center text-black text-opacity-80 text-xl font-bold font-['Arial'] uppercase tracking-wide">

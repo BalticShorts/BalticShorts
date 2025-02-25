@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { StorageManagerProps } from "@aws-amplify/ui-react-storage";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
@@ -44,7 +44,8 @@ export declare type MovieCreateFormInputValues = {
     age_rating?: number;
     subtitles_location?: string;
     creators_comment?: string;
-    trailerGuid?: string;
+    is_highlighted?: boolean;
+    trailer_location?: string;
     awards?: any[];
 };
 export declare type MovieCreateFormValidationValues = {
@@ -69,7 +70,8 @@ export declare type MovieCreateFormValidationValues = {
     age_rating?: ValidationFunction<number>;
     subtitles_location?: ValidationFunction<string>;
     creators_comment?: ValidationFunction<string>;
-    trailerGuid?: ValidationFunction<string>;
+    is_highlighted?: ValidationFunction<boolean>;
+    trailer_location?: ValidationFunction<string>;
     awards?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
@@ -96,7 +98,8 @@ export declare type MovieCreateFormOverridesProps = {
     age_rating?: PrimitiveOverrideProps<TextFieldProps>;
     subtitles_location?: PrimitiveOverrideProps<TextFieldProps>;
     creators_comment?: PrimitiveOverrideProps<TextFieldProps>;
-    trailerGuid?: PrimitiveOverrideProps<TextFieldProps>;
+    is_highlighted?: PrimitiveOverrideProps<SwitchFieldProps>;
+    trailer_location?: PrimitiveOverrideProps<TextFieldProps>;
     awards?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type MovieCreateFormProps = React.PropsWithChildren<{

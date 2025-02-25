@@ -202,7 +202,8 @@ export const createPersonMovieTeam = /* GraphQL */ `
           age_rating
           subtitles_location
           creators_comment
-          trailerGuid
+          is_highlighted
+          trailer_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -295,7 +296,8 @@ export const updatePersonMovieTeam = /* GraphQL */ `
           age_rating
           subtitles_location
           creators_comment
-          trailerGuid
+          is_highlighted
+          trailer_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -388,7 +390,8 @@ export const deletePersonMovieTeam = /* GraphQL */ `
           age_rating
           subtitles_location
           creators_comment
-          trailerGuid
+          is_highlighted
+          trailer_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -814,7 +817,8 @@ export const createMovieTeam = /* GraphQL */ `
         age_rating
         subtitles_location
         creators_comment
-        trailerGuid
+        is_highlighted
+        trailer_location
         awards {
           nextToken
           __typename
@@ -892,7 +896,8 @@ export const updateMovieTeam = /* GraphQL */ `
         age_rating
         subtitles_location
         creators_comment
-        trailerGuid
+        is_highlighted
+        trailer_location
         awards {
           nextToken
           __typename
@@ -970,7 +975,8 @@ export const deleteMovieTeam = /* GraphQL */ `
         age_rating
         subtitles_location
         creators_comment
-        trailerGuid
+        is_highlighted
+        trailer_location
         awards {
           nextToken
           __typename
@@ -1039,7 +1045,8 @@ export const createAward = /* GraphQL */ `
         age_rating
         subtitles_location
         creators_comment
-        trailerGuid
+        is_highlighted
+        trailer_location
         awards {
           nextToken
           __typename
@@ -1107,7 +1114,8 @@ export const updateAward = /* GraphQL */ `
         age_rating
         subtitles_location
         creators_comment
-        trailerGuid
+        is_highlighted
+        trailer_location
         awards {
           nextToken
           __typename
@@ -1175,7 +1183,8 @@ export const deleteAward = /* GraphQL */ `
         age_rating
         subtitles_location
         creators_comment
-        trailerGuid
+        is_highlighted
+        trailer_location
         awards {
           nextToken
           __typename
@@ -1238,7 +1247,8 @@ export const createMovie = /* GraphQL */ `
           age_rating
           subtitles_location
           creators_comment
-          trailerGuid
+          is_highlighted
+          trailer_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1275,7 +1285,8 @@ export const createMovie = /* GraphQL */ `
       age_rating
       subtitles_location
       creators_comment
-      trailerGuid
+      is_highlighted
+      trailer_location
       awards {
         items {
           id
@@ -1345,7 +1356,8 @@ export const updateMovie = /* GraphQL */ `
           age_rating
           subtitles_location
           creators_comment
-          trailerGuid
+          is_highlighted
+          trailer_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1382,7 +1394,8 @@ export const updateMovie = /* GraphQL */ `
       age_rating
       subtitles_location
       creators_comment
-      trailerGuid
+      is_highlighted
+      trailer_location
       awards {
         items {
           id
@@ -1452,7 +1465,8 @@ export const deleteMovie = /* GraphQL */ `
           age_rating
           subtitles_location
           creators_comment
-          trailerGuid
+          is_highlighted
+          trailer_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1489,7 +1503,8 @@ export const deleteMovie = /* GraphQL */ `
       age_rating
       subtitles_location
       creators_comment
-      trailerGuid
+      is_highlighted
+      trailer_location
       awards {
         items {
           id
@@ -1666,7 +1681,8 @@ export const createMovieMoviePlaylist = /* GraphQL */ `
         age_rating
         subtitles_location
         creators_comment
-        trailerGuid
+        is_highlighted
+        trailer_location
         awards {
           nextToken
           __typename
@@ -1749,7 +1765,8 @@ export const updateMovieMoviePlaylist = /* GraphQL */ `
         age_rating
         subtitles_location
         creators_comment
-        trailerGuid
+        is_highlighted
+        trailer_location
         awards {
           nextToken
           __typename
@@ -1832,7 +1849,8 @@ export const deleteMovieMoviePlaylist = /* GraphQL */ `
         age_rating
         subtitles_location
         creators_comment
-        trailerGuid
+        is_highlighted
+        trailer_location
         awards {
           nextToken
           __typename

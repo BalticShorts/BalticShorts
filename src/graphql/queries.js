@@ -134,7 +134,8 @@ export const getPersonMovieTeam = /* GraphQL */ `
           age_rating
           subtitles_location
           creators_comment
-          trailerGuid
+          is_highlighted
+          trailer_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -736,7 +737,8 @@ export const getMovieTeam = /* GraphQL */ `
         age_rating
         subtitles_location
         creators_comment
-        trailerGuid
+        is_highlighted
+        trailer_location
         awards {
           nextToken
           __typename
@@ -788,7 +790,8 @@ export const listMovieTeams = /* GraphQL */ `
           age_rating
           subtitles_location
           creators_comment
-          trailerGuid
+          is_highlighted
+          trailer_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -853,7 +856,8 @@ export const getAward = /* GraphQL */ `
         age_rating
         subtitles_location
         creators_comment
-        trailerGuid
+        is_highlighted
+        trailer_location
         awards {
           nextToken
           __typename
@@ -904,7 +908,8 @@ export const listAwards = /* GraphQL */ `
           age_rating
           subtitles_location
           creators_comment
-          trailerGuid
+          is_highlighted
+          trailer_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -962,7 +967,8 @@ export const awardsByMovieID = /* GraphQL */ `
           age_rating
           subtitles_location
           creators_comment
-          trailerGuid
+          is_highlighted
+          trailer_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1021,7 +1027,8 @@ export const getMovie = /* GraphQL */ `
           age_rating
           subtitles_location
           creators_comment
-          trailerGuid
+          is_highlighted
+          trailer_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1058,7 +1065,8 @@ export const getMovie = /* GraphQL */ `
       age_rating
       subtitles_location
       creators_comment
-      trailerGuid
+      is_highlighted
+      trailer_location
       awards {
         items {
           id
@@ -1128,7 +1136,8 @@ export const listMovies = /* GraphQL */ `
         age_rating
         subtitles_location
         creators_comment
-        trailerGuid
+        is_highlighted
+        trailer_location
         awards {
           nextToken
           __typename
@@ -1296,7 +1305,8 @@ export const getMovieMoviePlaylist = /* GraphQL */ `
         age_rating
         subtitles_location
         creators_comment
-        trailerGuid
+        is_highlighted
+        trailer_location
         awards {
           nextToken
           __typename
@@ -1362,7 +1372,8 @@ export const listMovieMoviePlaylists = /* GraphQL */ `
           age_rating
           subtitles_location
           creators_comment
-          trailerGuid
+          is_highlighted
+          trailer_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1431,7 +1442,8 @@ export const movieMoviePlaylistsByMoviePlaylistId = /* GraphQL */ `
           age_rating
           subtitles_location
           creators_comment
-          trailerGuid
+          is_highlighted
+          trailer_location
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1500,7 +1512,8 @@ export const movieMoviePlaylistsByMovieId = /* GraphQL */ `
           age_rating
           subtitles_location
           creators_comment
-          trailerGuid
+          is_highlighted
+          trailer_location
           createdAt
           updatedAt
           movieMovieTeamId

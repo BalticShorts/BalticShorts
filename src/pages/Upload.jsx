@@ -9,6 +9,7 @@ import moment from 'moment'
 import { useNavigate } from "react-router-dom";
 import { SubtitleUpload } from "../components/SubtitleUpload";
 import { CreateAwards } from "../components/CreateAwards";
+import { TrailerUploadComponent } from "../components/TrailerUploadComponent/TrailerUploadComponent";
 
 const Upload = () => {
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Upload = () => {
     const [upload, setUpload] = useState(false);
     const [photoLoc, setPhotoLoc] = useState([]);
     const [thumbnail, setThumbnail] = useState([]);
-    const [trailerFile, setTrailerFile] = useState('');
+    const [trailerLoc, setTrailerLoc] = useState([]);
     
     const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -43,13 +44,13 @@ const Upload = () => {
         movie.uploaded_at = moment().format();
         const photoL = await getPhotoLocation();
         const movId = await guidGotten('movie');
-        const trailerId = await guidGotten('trailer');
+        const trailerL = await getTrailerLocation();
         const thumbLoc = await getThumbnailLocation();
 
         movie.guid = movId;
         movie.photo_location = photoL;
         movie.thumbnail_location = thumbLoc;
-        movie.trailerGuid = trailerId;
+        movie.trailer_location = trailerL;
         delete movie.createdAt;
         delete movie.updatedAt;
         delete movie.MovieInPlaylists;
@@ -95,6 +96,20 @@ const Upload = () => {
         return thumbnail[0]
       }
 
+      async function getTrailerLocation(){
+
+        for (let index = 0; index < 10; index++) {
+          if(trailerLoc.length === 0){
+            await sleep(200)
+          }else{
+            setUpload(false);
+            return trailerLoc[0];
+          }
+        }
+        setUpload(false);
+        return trailerLoc[0]
+      }
+
     useEffect(() => {
         // scroll to top on page load
         window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
@@ -106,7 +121,7 @@ const Upload = () => {
         const requestOptions = {
             method: 'POST',
         };
-        const addOn = type === 'movie' ? movieFile : trailerFile
+        const addOn = type === 'movie' ? movieFile : trailerLoc
         for (let index = 0; index < 10; index++) {
             if(g === ''){
                 await sleep(2000);
@@ -131,6 +146,7 @@ const Upload = () => {
         setGuid('');
         setPhotoLoc([]);
         setThumbnail([]);
+        setTrailerLoc([]);
     }
 
     return(
@@ -165,7 +181,7 @@ const Upload = () => {
                     </div>
                     <div className="flex justify-center flex-col gap-4">
                         <h1 className="text-2xl">Upload Movie Trailer file</h1>
-                        <MovieUploadComponent movie = {movie} setMovieFile = {setTrailerFile}/>
+                        <TrailerUploadComponent movie = {movie} upload = {upload} video_type = {'trailer'} videoLoc = {trailerLoc}/>
                     </div>
                     <div className="flex justify-center gap-4 p-5">
                         {/* <button className="button rounded-xl border w-fit p-2" onClick={() => changeState('team')}>Back</button> */}

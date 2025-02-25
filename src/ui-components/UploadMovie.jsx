@@ -15,6 +15,7 @@ import {
   Grid,
   Icon,
   ScrollView,
+  SwitchField,
   Text,
   TextAreaField,
   TextField,
@@ -206,7 +207,8 @@ export default function UploadMovie(props) {
     MovieType: undefined,
     subtitles_location: "",
     creators_comment: "",
-    trailerGuid: "",
+    is_highlighted: false,
+    trailer_location: "",
     awards: [],
   };
   const [name, setName] = React.useState(initialValues.name);
@@ -244,8 +246,11 @@ export default function UploadMovie(props) {
   const [creators_comment, setCreators_comment] = React.useState(
     initialValues.creators_comment
   );
-  const [trailerGuid, setTrailerGuid] = React.useState(
-    initialValues.trailerGuid
+  const [is_highlighted, setIs_highlighted] = React.useState(
+    initialValues.is_highlighted
+  );
+  const [trailer_location, setTrailer_location] = React.useState(
+    initialValues.trailer_location
   );
   const [awards, setAwards] = React.useState(initialValues.awards);
   const [awardsLoading, setAwardsLoading] = React.useState(false);
@@ -270,7 +275,8 @@ export default function UploadMovie(props) {
     setCurrentMovieTypeDisplayValue("");
     setSubtitles_location(initialValues.subtitles_location);
     setCreators_comment(initialValues.creators_comment);
-    setTrailerGuid(initialValues.trailerGuid);
+    setIs_highlighted(initialValues.is_highlighted);
+    setTrailer_location(initialValues.trailer_location);
     setAwards(initialValues.awards);
     setCurrentAwardsValue(undefined);
     setCurrentAwardsDisplayValue("");
@@ -321,7 +327,8 @@ export default function UploadMovie(props) {
     ],
     subtitles_location: [],
     creators_comment: [],
-    trailerGuid: [],
+    is_highlighted: [],
+    trailer_location: [],
     awards: [],
   };
   const runValidationTasks = async (
@@ -425,7 +432,8 @@ export default function UploadMovie(props) {
           MovieType,
           subtitles_location,
           creators_comment,
-          trailerGuid,
+          is_highlighted,
+          trailer_location,
           awards,
         };
         const validationResponses = await Promise.all(
@@ -480,7 +488,8 @@ export default function UploadMovie(props) {
             movieMovieTypeId: modelFields?.MovieType?.id,
             subtitles_location: modelFields.subtitles_location,
             creators_comment: modelFields.creators_comment,
-            trailerGuid: modelFields.trailerGuid,
+            is_highlighted: modelFields.is_highlighted,
+            trailer_location: modelFields.trailer_location,
           };
           const movie = (
             await API.graphql({
@@ -549,7 +558,8 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -589,7 +599,8 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -629,7 +640,8 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -668,7 +680,8 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -707,7 +720,8 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -751,7 +765,8 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -791,7 +806,8 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -840,7 +856,8 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -888,7 +905,8 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -938,7 +956,8 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -983,7 +1002,8 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1027,7 +1047,8 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1064,7 +1085,8 @@ export default function UploadMovie(props) {
               MovieType: value,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1162,7 +1184,8 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location: value,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1204,7 +1227,8 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment: value,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1220,11 +1244,52 @@ export default function UploadMovie(props) {
         hasError={errors.creators_comment?.hasError}
         {...getOverrideProps(overrides, "creators_comment")}
       ></TextField>
+      <SwitchField
+        label="Is highlighted"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={is_highlighted}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              age_rating,
+              thumbnail_location,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieType,
+              subtitles_location,
+              creators_comment,
+              is_highlighted: value,
+              trailer_location,
+              awards,
+            };
+            const result = onChange(modelFields);
+            value = result?.is_highlighted ?? value;
+          }
+          if (errors.is_highlighted?.hasError) {
+            runValidationTasks("is_highlighted", value);
+          }
+          setIs_highlighted(value);
+        }}
+        onBlur={() => runValidationTasks("is_highlighted", is_highlighted)}
+        errorMessage={errors.is_highlighted?.errorMessage}
+        hasError={errors.is_highlighted?.hasError}
+        {...getOverrideProps(overrides, "is_highlighted")}
+      ></SwitchField>
       <TextField
-        label="Trailer guid"
+        label="Trailer location"
         isRequired={false}
         isReadOnly={false}
-        value={trailerGuid}
+        value={trailer_location}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -1244,21 +1309,22 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid: value,
+              is_highlighted,
+              trailer_location: value,
               awards,
             };
             const result = onChange(modelFields);
-            value = result?.trailerGuid ?? value;
+            value = result?.trailer_location ?? value;
           }
-          if (errors.trailerGuid?.hasError) {
-            runValidationTasks("trailerGuid", value);
+          if (errors.trailer_location?.hasError) {
+            runValidationTasks("trailer_location", value);
           }
-          setTrailerGuid(value);
+          setTrailer_location(value);
         }}
-        onBlur={() => runValidationTasks("trailerGuid", trailerGuid)}
-        errorMessage={errors.trailerGuid?.errorMessage}
-        hasError={errors.trailerGuid?.hasError}
-        {...getOverrideProps(overrides, "trailerGuid")}
+        onBlur={() => runValidationTasks("trailer_location", trailer_location)}
+        errorMessage={errors.trailer_location?.errorMessage}
+        hasError={errors.trailer_location?.hasError}
+        {...getOverrideProps(overrides, "trailer_location")}
       ></TextField>
       <ArrayField
         onChange={async (items) => {
@@ -1280,7 +1346,8 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards: values,
             };
             const result = onChange(modelFields);

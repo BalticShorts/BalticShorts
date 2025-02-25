@@ -136,7 +136,8 @@ type Movie @model @auth(rules: [
   age_rating: Int
   subtitles_location: String
   creators_comment: String
-  trailerGuid: ID
+  is_highlighted: Boolean
+  trailer_location: String
   awards: [Award] @hasMany(indexName: "byMovie", fields: ["id"])
 }
 

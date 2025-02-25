@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, SwitchFieldProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -37,7 +37,8 @@ export declare type UploadMovieInputValues = {
     MovieType?: any;
     subtitles_location?: string;
     creators_comment?: string;
-    trailerGuid?: string;
+    is_highlighted?: boolean;
+    trailer_location?: string;
     awards?: any[];
 };
 export declare type UploadMovieValidationValues = {
@@ -56,7 +57,8 @@ export declare type UploadMovieValidationValues = {
     MovieType?: ValidationFunction<any>;
     subtitles_location?: ValidationFunction<string>;
     creators_comment?: ValidationFunction<string>;
-    trailerGuid?: ValidationFunction<string>;
+    is_highlighted?: ValidationFunction<boolean>;
+    trailer_location?: ValidationFunction<string>;
     awards?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
@@ -77,7 +79,8 @@ export declare type UploadMovieOverridesProps = {
     MovieType?: PrimitiveOverrideProps<AutocompleteProps>;
     subtitles_location?: PrimitiveOverrideProps<TextFieldProps>;
     creators_comment?: PrimitiveOverrideProps<TextFieldProps>;
-    trailerGuid?: PrimitiveOverrideProps<TextFieldProps>;
+    is_highlighted?: PrimitiveOverrideProps<SwitchFieldProps>;
+    trailer_location?: PrimitiveOverrideProps<TextFieldProps>;
     awards?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type UploadMovieProps = React.PropsWithChildren<{

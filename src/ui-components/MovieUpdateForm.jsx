@@ -15,6 +15,7 @@ import {
   Grid,
   Icon,
   ScrollView,
+  SwitchField,
   Text,
   TextField,
   useTheme,
@@ -226,7 +227,8 @@ export default function MovieUpdateForm(props) {
     age_rating: "",
     subtitles_location: "",
     creators_comment: "",
-    trailerGuid: "",
+    is_highlighted: false,
+    trailer_location: "",
     awards: [],
   };
   const [name, setName] = React.useState(initialValues.name);
@@ -285,8 +287,11 @@ export default function MovieUpdateForm(props) {
   const [creators_comment, setCreators_comment] = React.useState(
     initialValues.creators_comment
   );
-  const [trailerGuid, setTrailerGuid] = React.useState(
-    initialValues.trailerGuid
+  const [is_highlighted, setIs_highlighted] = React.useState(
+    initialValues.is_highlighted
+  );
+  const [trailer_location, setTrailer_location] = React.useState(
+    initialValues.trailer_location
   );
   const [awards, setAwards] = React.useState(initialValues.awards);
   const [awardsLoading, setAwardsLoading] = React.useState(false);
@@ -331,7 +336,8 @@ export default function MovieUpdateForm(props) {
     setAge_rating(cleanValues.age_rating);
     setSubtitles_location(cleanValues.subtitles_location);
     setCreators_comment(cleanValues.creators_comment);
-    setTrailerGuid(cleanValues.trailerGuid);
+    setIs_highlighted(cleanValues.is_highlighted);
+    setTrailer_location(cleanValues.trailer_location);
     setAwards(cleanValues.awards ?? []);
     setCurrentAwardsValue(undefined);
     setCurrentAwardsDisplayValue("");
@@ -457,7 +463,8 @@ export default function MovieUpdateForm(props) {
     age_rating: [],
     subtitles_location: [],
     creators_comment: [],
-    trailerGuid: [],
+    is_highlighted: [],
+    trailer_location: [],
     awards: [],
   };
   const runValidationTasks = async (
@@ -630,7 +637,8 @@ export default function MovieUpdateForm(props) {
           age_rating: age_rating ?? null,
           subtitles_location: subtitles_location ?? null,
           creators_comment: creators_comment ?? null,
-          trailerGuid: trailerGuid ?? null,
+          is_highlighted: is_highlighted ?? null,
+          trailer_location: trailer_location ?? null,
           awards: awards ?? null,
         };
         const validationResponses = await Promise.all(
@@ -871,7 +879,8 @@ export default function MovieUpdateForm(props) {
             age_rating: modelFields.age_rating ?? null,
             subtitles_location: modelFields.subtitles_location ?? null,
             creators_comment: modelFields.creators_comment ?? null,
-            trailerGuid: modelFields.trailerGuid ?? null,
+            is_highlighted: modelFields.is_highlighted ?? null,
+            trailer_location: modelFields.trailer_location ?? null,
           };
           promises.push(
             API.graphql({
@@ -928,7 +937,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -974,7 +984,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1020,7 +1031,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1066,7 +1078,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1112,7 +1125,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1158,7 +1172,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1204,7 +1219,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1252,7 +1268,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1302,7 +1319,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1352,7 +1370,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1398,7 +1417,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1444,7 +1464,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1487,7 +1508,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1588,7 +1610,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1700,7 +1723,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1743,7 +1767,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1848,7 +1873,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1894,7 +1920,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1946,7 +1973,8 @@ export default function MovieUpdateForm(props) {
               age_rating: value,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -1992,7 +2020,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location: value,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -2040,7 +2069,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment: value,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards,
             };
             const result = onChange(modelFields);
@@ -2056,11 +2086,58 @@ export default function MovieUpdateForm(props) {
         hasError={errors.creators_comment?.hasError}
         {...getOverrideProps(overrides, "creators_comment")}
       ></TextField>
+      <SwitchField
+        label="Is highlighted"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={is_highlighted}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              uploaded_at,
+              guid,
+              MovieTeam,
+              MovieInPlaylists,
+              times_watched,
+              MovieType,
+              photo_location,
+              thumbnail_location,
+              age_rating,
+              subtitles_location,
+              creators_comment,
+              is_highlighted: value,
+              trailer_location,
+              awards,
+            };
+            const result = onChange(modelFields);
+            value = result?.is_highlighted ?? value;
+          }
+          if (errors.is_highlighted?.hasError) {
+            runValidationTasks("is_highlighted", value);
+          }
+          setIs_highlighted(value);
+        }}
+        onBlur={() => runValidationTasks("is_highlighted", is_highlighted)}
+        errorMessage={errors.is_highlighted?.errorMessage}
+        hasError={errors.is_highlighted?.hasError}
+        {...getOverrideProps(overrides, "is_highlighted")}
+      ></SwitchField>
       <TextField
-        label="Trailer guid"
+        label="Trailer location"
         isRequired={false}
         isReadOnly={false}
-        value={trailerGuid}
+        value={trailer_location}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -2086,21 +2163,22 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid: value,
+              is_highlighted,
+              trailer_location: value,
               awards,
             };
             const result = onChange(modelFields);
-            value = result?.trailerGuid ?? value;
+            value = result?.trailer_location ?? value;
           }
-          if (errors.trailerGuid?.hasError) {
-            runValidationTasks("trailerGuid", value);
+          if (errors.trailer_location?.hasError) {
+            runValidationTasks("trailer_location", value);
           }
-          setTrailerGuid(value);
+          setTrailer_location(value);
         }}
-        onBlur={() => runValidationTasks("trailerGuid", trailerGuid)}
-        errorMessage={errors.trailerGuid?.errorMessage}
-        hasError={errors.trailerGuid?.hasError}
-        {...getOverrideProps(overrides, "trailerGuid")}
+        onBlur={() => runValidationTasks("trailer_location", trailer_location)}
+        errorMessage={errors.trailer_location?.errorMessage}
+        hasError={errors.trailer_location?.hasError}
+        {...getOverrideProps(overrides, "trailer_location")}
       ></TextField>
       <ArrayField
         onChange={async (items) => {
@@ -2128,7 +2206,8 @@ export default function MovieUpdateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              is_highlighted,
+              trailer_location,
               awards: values,
             };
             const result = onChange(modelFields);
