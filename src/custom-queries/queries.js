@@ -75,10 +75,11 @@ export const getProfile = `
       times_watched
       guid
       subtitles_location
-      trailerGuid
+      trailer_location
       thumbnail_location
       creators_comment
       photo_location
+      age_rating
       awards {
         items {
           name

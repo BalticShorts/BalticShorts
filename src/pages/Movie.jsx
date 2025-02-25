@@ -11,6 +11,8 @@ import config from '../config';
 import {isMobile} from 'react-device-detect';
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { VideoModal } from '../components/VideoModal/VideoModal';
+import WatchlistModal from "../components/WatchlistModal/WatchlistModal";
 
 Amplify.configure(awsExports);
 const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
@@ -104,6 +106,7 @@ function Movie() {
   const { id } = useParams();
   const [movieURL, setMovieURL] = useState('');
   const [thumbnailURL, setThumbnailURL] = useState('');
+  const [movieTrailer, setMovieTrailer] = useState('');
   const [movieData, setMovieData] = useState({});
   const [urlAddon, setUrlAddon] = useState({});
   const [movieTeamData, setMovieTeamData] = useState({});
@@ -112,6 +115,9 @@ function Movie() {
   const [playlistRows, setPlaylistRows] = useState(1);
   const [subtitles, setSubtitles] = useState([]);
   const [photoURLs, setPhotoURLs] = useState([]);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [isWatchlistModalOpen, setIsWatchlistModalOpen] = useState(false);
+  const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
 
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -134,6 +140,7 @@ function Movie() {
         setMovieTeamData(team);
         setPlaylists(playlists);
         setPhotoURLs(photos);
+        setMovieTrailer('https://balticshortsphotos.s3.eu-north-1.amazonaws.com/' + movieData?.trailer_location.replace("balticshortsphotos/", ""))
       } catch (error) {
         console.log('Error on fetching: ', error);
       }
@@ -312,47 +319,68 @@ function Movie() {
   return (
     <>
     <div className="FilmasSkats w-full relative bg-beige rounded-3xl">
-      <div className="MovieContainer w-full max-h-[80vh] relative" onClick={() => removeText()}>
-        <div className="VideoWrapper w-full max-h-[80vh] relative">
-          <VideoPlayer
-            movieURL={movieURL}
-            urlAddon={urlAddon}
-            subtitles={subtitles}
-            thumbnail={thumbnailURL}
-          />
-          {!isMobile && (
-            <div
-              id="textOnMovie"
-              className="TextOverlay absolute w-full h-full flex flex-col justify-between pointer-events-none inset-0 "
-            >
-              <div className="Rectangle3 w-full h-[20%] flex items-center justify-center bg-gradient-to-b from-stone-950 to-transparent">
-                <div className="text-center relative z-10 mix-blend-normal">
-                  <div className="text-white text-sm sm:text-3xl lg:text-4xl font-bold font-['SchoolBook'] uppercase leading-10 text-opacity-90">
-                    {movieData.name}
-                  </div>
-                  <div className="text-white text-xs sm:text-sm lg:text-base font-normal font-['SchoolBook'] uppercase tracking-wider text-opacity-90">
-                    {movieData.name_eng}
-                  </div>
+    <section
+      className="MovieContainer w-full max-h-[80vh] relative"
+    >
+      <div className="VideoWrapper w-full max-h-[80vh] relative">
+        <VideoPlayer
+          movieURL={movieURL}
+          urlAddon={urlAddon}
+          subtitles={subtitles}
+          thumbnail={thumbnailURL}
+        />
+
+        {!isMobile && (
+          <div
+            id="textOnMovie"
+            className="TextOverlay absolute w-full h-full flex flex-col justify-between pointer-events-auto inset-0 z-10"
+          >
+            <div className="Rectangle3 w-full h-[20%] flex items-center justify-center bg-gradient-to-b from-stone-950 to-transparent">
+              <div className="text-center mix-blend-normal">
+                <h1 className="text-white text-sm sm:text-3xl lg:text-4xl font-bold font-['SchoolBook'] uppercase leading-10 text-opacity-90">
+                  {movieData.name}
+                </h1>
+                <p className="text-white text-xs sm:text-sm lg:text-base font-normal font-['SchoolBook'] uppercase tracking-wider text-opacity-90">
+                  {movieData.name_eng}
+                </p>
+              </div>
+            </div>
+
+            <div className="absolute inset-0 flex items-center justify-center">
+              <button className="w-14 h-14 flex items-center justify-center border border-white bg-transparent text-white hover:bg-white hover:text-black transition" onClick={() => removeText()}>
+                ▶
+              </button>
+            </div>
+
+            <div className="Rectangle4 w-full h-[20%] flex flex-col sm:flex-row items-center justify-between px-6 bg-gradient-to-t from-stone-950 to-transparent">
+              <div className="flex flex-col items-center gap-4 text-white ml-10 px-10">
+                <button className="flex items-center gap-2 border border-white px-4 py-2 hover:bg-white hover:text-black transition z-10" onClick={() => setIsVideoModalOpen(true)}>
+                  ▶ Treileris
+                </button>
+                <div className="flex items-center gap-2 text-sm">
+                  🔊 {movieData.screen_language} | 🌍 {movieData.captions_language}
                 </div>
               </div>
 
-              <div className="Rectangle4 w-full h-[20%] flex items-center justify-center bg-gradient-to-t from-stone-950 to-transparent">
-                <div className="text-center relative z-10 mix-blend-normal">
-                  <div className="text-white text-sm sm:text-lg lg:text-xl font-normal font-['SchoolBook'] uppercase text-opacity-90">
-                    Režisors {movieTeamData.Director?.map((person) => person.name).join(", ")}
-                  </div>
-                  <div className="text-white text-sm sm:text-lg lg:text-xl font-normal font-['SchoolBook'] text-opacity-90">
-                    {movieData.origin_country} | {movieData.created_year} | {movieData.length}’ | 18+
-                  </div>
-                  <div className="text-white text-opacity-90 text-sm sm:text-lg lg:text-xl font-normal font-['SchoolBook']">
-                    {movieData.genre}
-                  </div>
-                </div>
+              <div className="text-center items-center text-white text-opacity-90 text-sm sm:text-lg lg:text-xl font-normal font-['SchoolBook'] m-auto">
+                <p>Režisors {movieTeamData.Director?.map((person) => person.name).join(", ")}</p>
+                <p>{movieData.origin_country} | {movieData.created_year} | {movieData.length}’ | {movieData.age_rating}+</p>
+                <p>{movieData.genre}</p>
+              </div>
+
+              <div className="flex items-center gap-4 mr-10 px-10">
+                <button className="border border-white px-3 py-2 hover:bg-white hover:text-black transition z-10" onClick={() => setIsPlaylistModalOpen(true)}>
+                  ☰
+                </button>
+                <button className="border border-white px-3 py-2 hover:bg-white hover:text-black transition z-10" onClick={() => setIsWatchlistModalOpen(true)}>
+                  ＋
+                </button>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
+    </section>
       <div className='Description w-full pt-8 flex flex-col items-center'>
         <div className="w-full h-5 py-8 relative text-center text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">ANOTĀCIJA</div>
         <div className="w-full h-45 mt-5 py-2 relative text-justify text-black text-xl font-normal font-['SchoolBook'] max-w-3xl">{movieData.description}</div>
@@ -486,9 +514,29 @@ function Movie() {
           </div>
         ) : (<></>)}
       <div className='MoreWorks w-[75%] pt-8 flex flex-col'>
-        <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">SAISTĪTI DARBI</div>
+        <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide py-10">SAISTĪTI DARBI</div>
       </div>
     </div>
+    {isVideoModalOpen && (
+      <VideoModal
+        videoSrc={movieTrailer}
+        onClose={() => setIsVideoModalOpen(false)}
+      />
+    )}
+    {isWatchlistModalOpen && (
+      <WatchlistModal
+        isOpen={isWatchlistModalOpen}
+        onClose={() => setIsWatchlistModalOpen(false)}
+        movieId={movieData.id}
+      />
+    )}
+    {isPlaylistModalOpen && (
+      <WatchlistModal
+        isOpen={isPlaylistModalOpen}
+        onClose={() => setIsPlaylistModalOpen(false)}
+        movieId={movieData.id}
+      />
+    )}
     </>
   );
 }

@@ -206,7 +206,7 @@ export default function UploadMovie(props) {
     MovieType: undefined,
     subtitles_location: "",
     creators_comment: "",
-    trailerGuid: "",
+    trailer_location: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
@@ -243,8 +243,8 @@ export default function UploadMovie(props) {
   const [creators_comment, setCreators_comment] = React.useState(
     initialValues.creators_comment
   );
-  const [trailerGuid, setTrailerGuid] = React.useState(
-    initialValues.trailerGuid
+  const [trailer_location, settrailer_location] = React.useState(
+    initialValues.trailer_location
   );
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
@@ -266,7 +266,7 @@ export default function UploadMovie(props) {
     setCurrentMovieTypeDisplayValue("");
     setSubtitles_location(initialValues.subtitles_location);
     setCreators_comment(initialValues.creators_comment);
-    setTrailerGuid(initialValues.trailerGuid);
+    settrailer_location(initialValues.trailer_location);
     setErrors({});
   };
   const [currentMovieTypeDisplayValue, setCurrentMovieTypeDisplayValue] =
@@ -303,7 +303,7 @@ export default function UploadMovie(props) {
     ],
     subtitles_location: [],
     creators_comment: [],
-    trailerGuid: [],
+    trailer_location: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -376,7 +376,7 @@ export default function UploadMovie(props) {
           MovieType,
           subtitles_location,
           creators_comment,
-          trailerGuid,
+          trailer_location,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -430,7 +430,7 @@ export default function UploadMovie(props) {
             movieMovieTypeId: modelFields?.MovieType?.id,
             subtitles_location: modelFields.subtitles_location,
             creators_comment: modelFields.creators_comment,
-            trailerGuid: modelFields.trailerGuid,
+            trailer_location: modelFields.trailer_location,
           };
           await API.graphql({
             query: createMovie.replaceAll("__typename", ""),
@@ -480,7 +480,7 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              trailer_location,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -519,7 +519,7 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              trailer_location,
             };
             const result = onChange(modelFields);
             value = result?.name_eng ?? value;
@@ -558,7 +558,7 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              trailer_location,
             };
             const result = onChange(modelFields);
             value = result?.genre ?? value;
@@ -596,7 +596,7 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              trailer_location,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -634,7 +634,7 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              trailer_location,
             };
             const result = onChange(modelFields);
             value = result?.description_eng ?? value;
@@ -677,7 +677,7 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              trailer_location,
             };
             const result = onChange(modelFields);
             value = result?.age_rating ?? value;
@@ -716,7 +716,7 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              trailer_location,
             };
             const result = onChange(modelFields);
             value = result?.thumbnail_location ?? value;
@@ -764,7 +764,7 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              trailer_location,
             };
             const result = onChange(modelFields);
             value = result?.screen_language ?? value;
@@ -811,7 +811,7 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              trailer_location,
             };
             const result = onChange(modelFields);
             value = result?.captions_language ?? value;
@@ -860,7 +860,7 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              trailer_location,
             };
             const result = onChange(modelFields);
             value = result?.origin_country ?? value;
@@ -904,7 +904,7 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              trailer_location,
             };
             const result = onChange(modelFields);
             value = result?.length ?? value;
@@ -947,7 +947,7 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              trailer_location,
             };
             const result = onChange(modelFields);
             value = result?.created_year ?? value;
@@ -983,7 +983,7 @@ export default function UploadMovie(props) {
               MovieType: value,
               subtitles_location,
               creators_comment,
-              trailerGuid,
+              trailer_location,
             };
             const result = onChange(modelFields);
             value = result?.MovieType ?? value;
@@ -1080,7 +1080,7 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location: value,
               creators_comment,
-              trailerGuid,
+              trailer_location,
             };
             const result = onChange(modelFields);
             value = result?.subtitles_location ?? value;
@@ -1121,7 +1121,7 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment: value,
-              trailerGuid,
+              trailer_location,
             };
             const result = onChange(modelFields);
             value = result?.creators_comment ?? value;
@@ -1140,7 +1140,7 @@ export default function UploadMovie(props) {
         label="Trailer guid"
         isRequired={false}
         isReadOnly={false}
-        value={trailerGuid}
+        value={trailer_location}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -1160,20 +1160,20 @@ export default function UploadMovie(props) {
               MovieType,
               subtitles_location,
               creators_comment,
-              trailerGuid: value,
+              trailer_location: value,
             };
             const result = onChange(modelFields);
-            value = result?.trailerGuid ?? value;
+            value = result?.trailer_location ?? value;
           }
-          if (errors.trailerGuid?.hasError) {
-            runValidationTasks("trailerGuid", value);
+          if (errors.trailer_location?.hasError) {
+            runValidationTasks("trailer_location", value);
           }
-          setTrailerGuid(value);
+          settrailer_location(value);
         }}
-        onBlur={() => runValidationTasks("trailerGuid", trailerGuid)}
-        errorMessage={errors.trailerGuid?.errorMessage}
-        hasError={errors.trailerGuid?.hasError}
-        {...getOverrideProps(overrides, "trailerGuid")}
+        onBlur={() => runValidationTasks("trailer_location", trailer_location)}
+        errorMessage={errors.trailer_location?.errorMessage}
+        hasError={errors.trailer_location?.hasError}
+        {...getOverrideProps(overrides, "trailer_location")}
       ></TextField>
       <Flex
         justifyContent="space-between"
