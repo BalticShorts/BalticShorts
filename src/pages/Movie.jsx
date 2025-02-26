@@ -141,7 +141,6 @@ function Movie() {
         setMovieTeamData(team);
         setPlaylists(playlists);
         setPhotoURLs(photos);
-        setMovieTrailer('https://balticshortsphotos.s3.eu-north-1.amazonaws.com/' + movieData?.trailer_location.replace("balticshortsphotos/", ""))
       } catch (error) {
         console.log('Error on fetching: ', error);
       }
@@ -149,6 +148,13 @@ function Movie() {
     get();
     return () => {};
   }, [id]);
+
+  useEffect(() => {
+    if (movieData !== undefined && movieData.trailer_location !== undefined && movieData.trailer_location !== '') {
+      setMovieTrailer('https://balticshortsphotos.s3.eu-north-1.amazonaws.com/' + movieData.trailer_location.replace("balticshortsphotos/", ""))
+      console.log('trailer', movieTrailer)
+    }
+  }, [movieData]);
 
   async function getSrc(location) {
   
