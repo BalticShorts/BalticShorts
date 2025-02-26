@@ -28,8 +28,8 @@ const WatchlistModal = ({ isOpen, onClose, movieId }) => {
         ...list,
         selected: list.movies.items.some((movie) => movie.movie.id === movieId),
       }));
+      updatedLists.sort((a, b) => (a.title === "Watch Later" ? -1 : b.title === "Watch Later" ? 1 : 0));
       setLists(updatedLists);
-      console.log("User lists:", updatedLists);
     } catch (error) {
       console.error("Error fetching user lists:", error);
     }
