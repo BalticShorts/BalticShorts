@@ -58,7 +58,7 @@ export function PlaylistEditGrid({ data, maxRows, maxColumns, modalOpen }) {
     };
 
     return (
-        <div className="left-[15%] w-[75%] h-fit gap-6 flex flex-col items-center relative justify-center p-4">
+        <div className="left-[15%] w-3/4 h-fit gap-6 flex flex-col items-center relative justify-center p-4">
             <div className={`grid grid-cols-${columns} gap-4`}>
                 {data.map((item, idx) => (
                     <>

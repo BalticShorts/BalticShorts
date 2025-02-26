@@ -13,7 +13,7 @@ export function MyGridPersons({data, maxRows, maxColumns}) {
 
     return (
         
-        <div className='left-[15%] w-[75%] h-fit gap-6 flex flex-col items-center relative justify-center '>
+        <div className='left-[15%] w-3/4 h-fit gap-6 flex flex-col items-center relative justify-center '>
             <div className={`grid grid-cols-5 items-center`}>
                 {data.map((item, idx) => (
                     <>

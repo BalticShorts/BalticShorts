@@ -73,13 +73,13 @@ const AdminPlaylist = () => {
                         <div className="w-fit h-fit button bg-green-300 text-black px-4 py-2 rounded-md cursor-pointer" onClick={() => handleModalOpen('')}>Add Playlist</div>
                     </div>
                     <div className="w-full h-fit relative bg-beige pb-20">
-                        <div className='w-[75%] py-8 flex flex-col m-auto'>
+                        <div className='w-3/4 py-8 flex flex-col m-auto'>
                             <div className="Komanda w-full h-5 relative text-black text-xl font-bold font-['Arial'] tracking-wide">Highlighted Playlists (On main page - maximum 3)</div>
                             {highlightedPlaylists.length > 0 &&
                                 <PlaylistEditGrid data = {highlightedPlaylists !== undefined ? highlightedPlaylists : []} maxRows={1} maxColumns={3} modalOpen={handleModalOpen}></PlaylistEditGrid>
                             }
                         </div>
-                        <div className='w-[75%] py-8 flex flex-col m-auto'>
+                        <div className='w-3/4 py-8 flex flex-col m-auto'>
                             <div className="Komanda w-full h-5 relative text-black text-xl font-bold font-['Arial'] tracking-wide">Other Playlists</div>
                             {otherPlaylists.length > 0 &&
                                 <PlaylistEditGrid data = {otherPlaylists !== undefined ? otherPlaylists : []} maxRows={2} maxColumns={3} modalOpen={handleModalOpen}></PlaylistEditGrid>

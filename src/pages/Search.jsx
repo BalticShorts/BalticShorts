@@ -86,19 +86,19 @@ const Search = () => {
                     </div>
                 </div>
                 {searchResult.movies?.length > 0 &&
-                <div className='w-[75%] h-fit gap-6 my-24 flex flex-col items-center relative justify-center m-auto'>
+                <div className='w-3/4 h-fit gap-6 my-24 flex flex-col items-center relative justify-center m-auto'>
                   <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative">Filmas</div>
                   <MyGridMovies data={searchResult.movies} maxRows={2} maxColumns={3}></MyGridMovies>
                   </div>
                 }
                 {searchResult.persons?.length > 0 &&
-                  <div className='w-[75%] h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
+                  <div className='w-3/4 h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
                     <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative left-[15%]">Personas</div>
                     <MyGridPersons data={searchResult.persons} maxRows={2} maxColumns={5}></MyGridPersons>
                   </div>
                 }
                 {searchResult.playlists?.length > 0 &&
-                  <div className='w-[75%] h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
+                  <div className='w-3/4 h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
                     <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative left-[15%]">Saraksti</div>
                     <MyGridPlaylists data = {searchResult.playlists !== undefined ? searchResult.playlists : []} maxRows={2} maxColumns={3}></MyGridPlaylists>
                   </div>

@@ -524,7 +524,7 @@ const Catalogue = () => {
                       </button>
                     </div>
                   </div>
-                  <div className='w-[75%]'>
+                  <div className='w-3/4'>
                     <PersonList data = {data.persons !== undefined ? data.persons : []}></PersonList>
                   </div>
                 </>
@@ -534,7 +534,7 @@ const Catalogue = () => {
                   <div className="w-full flex justify-between items-center mb-4">
                     <div className="text-xl font-bold">{data.playlists.length} Saraksti</div>
                   </div>
-                  <div className='w-[75%] h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
+                  <div className='w-3/4 h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
                     <MyGridPlaylists data = {data.playlists !== undefined ? data.playlists : []} maxRows={2} maxColumns={3}></MyGridPlaylists>
                   </div>
                 </>

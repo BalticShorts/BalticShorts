@@ -403,7 +403,7 @@ function Movie() {
         <div className="w-full h-5 py-8 relative text-center text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">AUTORU KOMENTARS</div>
         <div className="w-full h-45 mt-5 py-2 relative text-justify text-black text-xl font-normal font-['SchoolBook'] max-w-3xl">{movieData.creators_comment}</div>
       </div>
-      <div className='Team w-[75%] pt-8 flex flex-col'>
+      <div className='Team w-3/4 pt-8 flex flex-col'>
         <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">KOMANDA</div>
           <div className="relative justify-center pt-8 gap-6 inline-flex flex-row items-center left-[15%] max-w-full min-w-fit">
 
@@ -441,7 +441,7 @@ function Movie() {
 
           
       </div>
-      <div className='Team w-[75%] py-8 flex flex-col'>
+      <div className='Team w-3/4 py-8 flex flex-col'>
         <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">KADRI</div>
         <div className="relative justify-center py-5 inline-flex flex-row items-center left-[15%] max-w-full min-w-fit">
           <div className="carousel-container w-full relative m-auto">
@@ -460,7 +460,7 @@ function Movie() {
         </div>
       </div>
       {movieData?.awards?.items.length > 0 && (
-        <div className="Team w-[75%] pt-8 flex flex-col">
+        <div className="Team w-3/4 pt-8 flex flex-col">
           <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">
             PANĀKUMI & FESTIVĀLI
           </div>
@@ -489,13 +489,13 @@ function Movie() {
       )}
 
 
-      <div className='h-fit gap-6 my-24 flex flex-col items-center relative justify-center'>
-        <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative left-[15%]">Saraksti, kuros filma ir iekļauta</div>
-          <div className='w-[75%] h-fit gap-6 flex flex-col items-center relative justify-center '>
-            <MyGridPlaylists data={playlists.flat()} maxRows={3} maxColumns={3}/>
+      <div className='h-fit gap-6 my-24 flex flex-col relative justify-center m-auto items-center'>
+        <div className="w-3/4 h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative">Saraksti, kuros filma ir iekļauta</div>
+        <div className='w-3/4 h-fit gap-6 flex flex-col items-center relative justify-center '>
+          <MyGridPlaylists data={playlists.flat()} maxRows={3} maxColumns={3}/>
         </div>
       </div>
-      {/* <div className='MoreWorks w-[75%] pt-8 flex flex-col'>
+      {/* <div className='MoreWorks w-3/4 pt-8 flex flex-col'>
         <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide py-10">SAISTĪTI DARBI</div>
       </div> */}
     </div>
