@@ -13,6 +13,7 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { VideoModal } from '../components/VideoModal/VideoModal';
 import WatchlistModal from "../components/WatchlistModal/WatchlistModal";
+import { MyGridPlaylists } from '../modified-ui-components/Grid/playlistGrid.jsx';
 
 Amplify.configure(awsExports);
 const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
@@ -203,12 +204,18 @@ function Movie() {
   };
 
   function removeText() {
-    const elements = document.getElementById('textOnMovie')
+    const elements = document.getElementById('textOnMovie');
     const videoElement = document.querySelector('video');
-    sleep(3)
-    // const playing = isVideoPlaying(videoElement);
-    textOnMovie ? elements.classList.add("hidden") : setTextOnMovie(textOnMovie) // elements.classList.remove("hidden")
-    setTextOnMovie(!textOnMovie)
+    sleep(3).then(() => {
+      if (textOnMovie) {
+        elements.classList.add("hidden");
+        videoElement.play();
+      } else {
+        elements.classList.remove("hidden");
+        videoElement.pause();
+      }
+      setTextOnMovie(!textOnMovie);
+    });
   }
 
   function showMorePlaylists(){
@@ -333,7 +340,7 @@ function Movie() {
         {!isMobile && (
           <div
             id="textOnMovie"
-            className="TextOverlay absolute w-full h-full flex flex-col justify-between pointer-events-auto inset-0 z-10"
+            className="TextOverlay absolute w-full h-full flex flex-col justify-between pointer-events-auto inset-0 z-0"
           >
             <div className="Rectangle3 w-full h-[20%] flex items-center justify-center bg-gradient-to-b from-stone-950 to-transparent">
               <div className="text-center mix-blend-normal">
@@ -369,10 +376,10 @@ function Movie() {
               </div>
 
               <div className="flex items-center gap-4 mr-10 px-10">
-                <button className="border border-white px-3 py-2 hover:bg-white hover:text-black transition z-10" onClick={() => setIsPlaylistModalOpen(true)}>
+                <button className="border border-white text-white px-3 py-2 hover:bg-white hover:text-black transition z-10" onClick={() => setIsPlaylistModalOpen(true)}>
                   ☰
                 </button>
-                <button className="border border-white px-3 py-2 hover:bg-white hover:text-black transition z-10" onClick={() => setIsWatchlistModalOpen(true)}>
+                <button className="border border-white text-white px-3 py-2 hover:bg-white hover:text-black transition z-10" onClick={() => setIsWatchlistModalOpen(true)}>
                   ＋
                 </button>
               </div>
@@ -476,46 +483,15 @@ function Movie() {
       )}
 
 
-      <div className='w-[75%] h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
+      <div className='h-fit gap-6 my-24 flex flex-col items-center relative justify-center'>
         <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative left-[15%]">Saraksti, kuros filma ir iekļauta</div>
-        {playlists?.slice(0, playlists?.length >= playlistRows ? playlistRows : playlists.length).map((row, rowIdx) => {
-          return(
-          <>
-            <div className="w-full h-44 gap-6 mt-10 flex flex-row items-center relative justify-cente left-[15%]">
-
-              {row.map( (item, itemIdx) => {
-                return(
-                  <div className="SarakstsInLists m-auto w-80 h-48 relative" onClick={ () => goPlaylist(rowIdx, itemIdx)}>
-                    <img className="Thumb w-80 h-24 left-0 top-0 relative" src="https://via.placeholder.com/350x100" />
-                    <div className="w-80 h-48 left-0 top-0 absolute bg-white bg-opacity-0 border border-black" />
-                    <div className="w-80 h-10 relative mt-1 ml-4 items-center justify-center">
-                      <div>
-                        <span className="text-black text-base font-bold font-['SchoolBook']">{item?.Title}<br/></span>
-                        <span className="text-black text-sm font-normal font-['SchoolBook']">by {item?.Creator}</span>
-                      </div>
-                    </div>
-                    <div className="w-80 h-2.5 left-[15.09px] top-[172.45px] absolute text-black text-xs font-normal font-['Arial'] tracking-wide">FILMAS  {playlists?.length}  |  SEKOTĀJI  10</div>
-                  </div>
-                )
-              })}
-            </div>
-          </>
-          )}) 
-        }
+          <div className='w-[75%] h-fit gap-6 flex flex-col items-center relative justify-center '>
+            <MyGridPlaylists data={playlists.flat()} maxRows={3} maxColumns={3}/>
+        </div>
       </div>
-      {playlists?.length > playlistRows ? (
-        <div className="w-full h-24 relative flex -top-8 mb-4">
-          <div className='w-full h-20 relative flex opacity-60'>
-            <div className="w-full h-16 relative bg-gradient-to-b from-stone-50 to-zinc-300" />
-          </div>
-            <div className="w-full h-2.5 m-auto mt-12 absolute flex items-center justify-center">
-              <div className="w-full h-2 top-[1px] relative text-black text-xs font-normal font-['Arial'] tracking-wide text-center" onClick={() => showMorePlaylists()}>Vairāk</div>
-            </div>
-          </div>
-        ) : (<></>)}
-      <div className='MoreWorks w-[75%] pt-8 flex flex-col'>
+      {/* <div className='MoreWorks w-[75%] pt-8 flex flex-col'>
         <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide py-10">SAISTĪTI DARBI</div>
-      </div>
+      </div> */}
     </div>
     {isVideoModalOpen && (
       <VideoModal

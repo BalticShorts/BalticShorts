@@ -51,7 +51,7 @@ const MainMovie = ({ movie }) => {
             </div>
           </div>
 
-          <p className="max-w-2xl sm:max-w-3xl text-sm sm:text-base text-gray-300 text-left sm:mr-20">
+          <p className="max-w-2xl sm:max-w-3xl text-sm sm:text-base text-gray-300 text-left px-20 sm:p-10">
             {movie.description}
           </p>
         </div>

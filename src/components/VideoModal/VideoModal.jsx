@@ -15,7 +15,7 @@ export function VideoModal({ videoSrc, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-200" onClick={onClose}>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10" onClick={onClose}>
       <div className="bg-white rounded-lg w-3/4 max-w-lg" onClick={(e) => e.stopPropagation()}>
         <video
           id="videoPlayer"

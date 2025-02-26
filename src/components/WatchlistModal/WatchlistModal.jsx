@@ -90,8 +90,8 @@ const WatchlistModal = ({ isOpen, onClose, movieId }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-200">
-      <div className="bg-beige border border-black p-6 w-96 shadow-lg z-200">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
+      <div className="bg-beige border border-black p-6 w-96 shadow-lg z-10">
         <div className="flex justify-between items-center border-b border-black pb-2">
           <h2 className="text-lg font-bold">Pievienot sarakstam</h2>
           <button onClick={onClose} className="text-gray-700 hover:text-black">
