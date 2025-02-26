@@ -156,6 +156,14 @@ function Movie() {
     }
   }, [movieData]);
 
+  useEffect(() => {
+    if (isVideoModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [isVideoModalOpen]);
+
   async function getSrc(location) {
   
     const config = {
