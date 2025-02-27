@@ -1,6 +1,6 @@
 export const getProfile = `
     query MyQuery($id: ID!) {
-        getPerson(id: $id) {
+      getPerson(id: $id) {
         Facebook
         IMBD
         Instagram
@@ -11,32 +11,40 @@ export const getProfile = `
         role
         surname
         PersonMovieTeams {
-            items {
-            Role {
-                name
-            }
+          items {
             MovieTeam {
-                PersonMovieTeams {
-                items {
-                    Role {
-                    name
-                    }
-                    Person {
-                    name
-                    surname
-                    }
-                }
-                }
-                Movie {
+              Movie {
+                age_rating
+                created_year
+                genre
+                id
+                length
                 name
                 origin_country
-                length
-                created_year
+                screen_language
+                subtitles_location
+                thumbnail_location
+                MovieTeam {
+                  PersonMovieTeams {
+                    items {
+                      Person {
+                        surname
+                        name
+                      }
+                      Role {
+                        name
+                      }
+                    }
+                  }
                 }
+              }
             }
+            Role {
+              name
             }
+          }
         }
-        }
+      }
     }
   `;
 

@@ -4,7 +4,7 @@ import { GlobalContext } from "../../App";
 import { createMoviePlaylist, createUserProfile } from "../../graphql/mutations";
 import { API } from "aws-amplify";
 import { checkPersonExists } from "../../custom-queries/queries";
-
+import TermsOfService from "../TermsOfService/TOS";
 
 export const LoginPopup = () => {
     const context = useContext(GlobalContext)
@@ -23,6 +23,8 @@ export const LoginPopup = () => {
     const [confirmationCode, setConfirmationCode] = useState('');
     const [forgetEmail, setForgetEmail] = useState('');
     const [restorePassword, setRestorePassword] = useState(false);
+    const [showTOS, setShowTOS] = useState(false);
+    const [tosRead, setTosRead] = useState(false);
 
     const Auth = context.auth
 
@@ -190,6 +192,13 @@ export const LoginPopup = () => {
         }
     }, [page])
 
+    const handleAcceptRulesClick = () => {
+        if (!tosRead) {
+            setError({"code": 'TOSNotRead', "message": 'Lūdzu, izlasiet noteikumus pirms piekrītat!'});
+        } else {
+            setPiekrituTicked(!piekrituTicked);
+        }
+    };
 
     return(
         <>
@@ -274,7 +283,7 @@ export const LoginPopup = () => {
                                 <input id="password" type="password" placeholder="Parole" className="bg-beige text-center border-none outline-none" onChange={e => setPassword(e.target.value)}></input>
                             </div>
                             <div className="w-96 h-5 pt-2.5 justify-between items-center inline-row py-10">
-                                <div className="text-center text-black text-xs font-normal font-['Arial'] tracking-wide "><span id="acceptRules" className="cursor-pointer" onClick={() => setPiekrituTicked(!piekrituTicked)}>{piekrituTicked ? <>[&#x2713;]</> : <>[  ]</>}</span>Piekrītu <span className="text-center flex-row font-bold cursor-pointer">noteikumiem</span></div>
+                                <div className="text-center text-black text-xs font-normal font-['Arial'] tracking-wide "><span id="acceptRules" className="cursor-pointer" onClick={handleAcceptRulesClick}>{piekrituTicked ? <>[&#x2713;]</> : <>[  ]</>}</span>Piekrītu <span className="text-center flex-row font-bold cursor-pointer" onClick={() => setShowTOS(true)}>noteikumiem</span></div>
                             </div>
                             <div className="Frame137 pt-6 flex-col justify-start items-start flex">
                                 <div className="Button h-7 px-2.5 pt-1 pb-0.5 bg-beige border border-black justify-center items-center gap-2.5 inline-flex">
@@ -367,6 +376,17 @@ export const LoginPopup = () => {
                     </div>
                 </div>
             </div>
+            )}
+            {showTOS && (
+                <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md bg-opacity-50 z-10 overscroll-auto">
+                    <div className="w-3/5 h-3/5 px-5 pt-5 bg-beige border border-black flex-col justify-start inline-flex overflow-y-auto items-center">
+                        <h1 className="text-2xl font-bold">Lietošanas noteikumi</h1>
+                        <TermsOfService />
+                        <div className="w-1/6 h-fit relative flex items-center justify-center py-5 border border-black rounded mb-5 justify-center cursor-pointer" onClick={() => { setShowTOS(false); setTosRead(true); }}>
+                            Aizvērt
+                        </div>
+                    </div>
+                </div>
             )}
         </>
     )

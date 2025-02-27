@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getProfile } from "../custom-queries/queries";
 import { API } from 'aws-amplify';
+import { MyGridMovies } from "../modified-ui-components/Grid/movieGrid";
 
 const fetchProfile = async id => {
     const profileData = await API.graphql({
@@ -15,15 +16,10 @@ const fetchProfile = async id => {
     return person;
 }
 
-function getMovies(PersonMovieTeam){
-
-} 
-
-
-
 function Profile () {
 
     const [profile, setProfile] = useState({});
+    const [movieCount, setMovieCount] = useState(0);
     const { id, mode } = useParams();
 
     useEffect(() => {
@@ -33,6 +29,8 @@ function Profile () {
             const profileData = await fetchProfile(id);
           try {     
             setProfile(profileData);
+            const uniqueMovies = new Set(profileData.PersonMovieTeams?.items.map(team => team.MovieTeam.Movie.id));
+            setMovieCount(uniqueMovies.size);
           } catch (error) {
             console.log('Error on fetching: ', error);
           }
@@ -40,38 +38,33 @@ function Profile () {
         get();
       }, [id]);
 
-    return (
-        <div className="bg-beige">
-            <div className="w-full h-12 relative">
-                <div className="w-full h-12 absolute bg-beige border-b border-black" />
-                <div className="w-full mt-1 h-6 flex items-center justify-center relative">
-                    <div className="h-5 mx-2 text-center text-black tex text-xl font-normal font-['SchoolBook'] tracking-tight inline-flex"><a href="/catalogue/Movies">Filmas</a></div>
-                    <div className="h-5 mx-6 text-center text-black text-xl font-bold font-['SchoolBook'] tracking-tight inline-flex"><a href="/catalogue/Persons">Personas</a></div>
-                    <div className="h-5 mx-2 my-auto text-center text-black text-xl font-normal font-['SchoolBook'] tracking-tight inline-flex"><a href="/catalogue/Playlists">Saraksti</a></div>
-                </div>
+      return (
+        <div className="min-h-screen bg-inherit text-gray-900">
+          <section className="w-4/5 mx-auto px-6 py-12 flex flex-row justify-between">
+            <div className="flex flex-col">
+                <h1 className="text-4xl font-bold">{profile.name} {profile.surname} <span className="text-xs">{profile.nationality}</span></h1>
+                <h2 className="text-md mt-2 font-semibold">{profile.role}</h2>
+                <h2 className="text-md mt-2 font-semibold">{movieCount} {movieCount === 1 ? "Filma" : "Filmas"}</h2>
+                <p className="text-gray-700 mt-4 max-w-3xl">
+                {profile.description}
+                </p>
             </div>
-
-            <div className="Content left-[12%] relative pt-2 my-2 h-fit w-5/6">
-                <div className="PersonalInfo flex flex-row h-full">
-                    <img className="Rectangle32 w-52 h-72 border border-black mx-4" src="https://via.placeholder.com/200x260" />
-                    <div className="flex flex-col relative ml-4 space-y-3">
-                        <div className="text-black text-4xl font-bold font-['SchoolBook'] uppercase leading-10">{profile.name} {profile.surname}</div>
-                        <div className="text-black text-xl font-normal font-['SchoolBook'] uppercase tracking-wider">{profile?.role}</div>
-                        <div className="text-black text-sm font-normal font-['Arial'] uppercase leading-tight tracking-wide felx flex-col space-y-2">
-                            <div><a>E-PASTS</a><br/></div>
-                            <div className="cursor-pointer"><a href={profile?.instagram}>INSTAGRAM</a><br/></div>
-                            <div className="cursor-pointer"><a href={profile?.IMBD}>IMDB</a><br/></div>
-                        </div>
-                        <div className="w-full text-black text-lg font-normal font-['SchoolBook']">{profile.description}</div>
-
-
-                    </div>
-                </div>
+            <div className="flex flex-col items-end">
+              <a href={`mailto:${profile.email}`} className="mb-2 text-sm text-gray-700 cursor-pointer">E-PASTS</a>
+              <a href={profile.Instagram} className="mb-2 text-sm text-gray-700 cursor-pointer">INSTAGRAM</a>
+              <a href={profile.IMBD} className="text-sm text-gray-700 cursor-pointer">IMDB</a>
             </div>
+          </section>
+    
+          {profile.PersonMovieTeams?.items.map((team, index) => (
+            <section key={index} className="w-4/5 mx-auto px-6 py-8">
+              <h3 className="text-lg font-bold mb-4">{team.Role.name}</h3>
+              <MyGridMovies data={team.MovieTeam.Movie ? [team.MovieTeam.Movie] : []} maxRows={1} maxColumns={3} />
+            </section>
+          ))}
+    
         </div>
-    )
+      );
 }
-
-
 
 export default Profile;
