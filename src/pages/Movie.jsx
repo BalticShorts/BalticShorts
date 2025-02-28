@@ -150,7 +150,7 @@ function Movie() {
   }, [id]);
 
   useEffect(() => {
-    if (movieData !== undefined && movieData.trailer_location !== undefined && movieData.trailer_location !== '') {
+    if (movieData !== undefined && movieData.trailer_location !== undefined && movieData.trailer_location !== '' && movieData.trailer_location !== null) {
       setMovieTrailer('https://balticshortsphotos.s3.eu-north-1.amazonaws.com/' + movieData.trailer_location.replace("balticshortsphotos/", ""))
       console.log('trailer', movieTrailer)
     }
