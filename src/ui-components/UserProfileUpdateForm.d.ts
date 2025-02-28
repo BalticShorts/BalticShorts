@@ -26,26 +26,28 @@ export declare type UserProfileUpdateFormInputValues = {
     surname?: string;
     is_member?: boolean;
     member_until?: string;
-    klixToken?: string;
     monthsSubscribed?: number;
     is_admin?: boolean;
     email?: string;
     user_id?: string;
     photo_location?: string;
     MoviePlaylists?: any[];
+    Payments?: any[];
+    Emails?: any[];
 };
 export declare type UserProfileUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
     surname?: ValidationFunction<string>;
     is_member?: ValidationFunction<boolean>;
     member_until?: ValidationFunction<string>;
-    klixToken?: ValidationFunction<string>;
     monthsSubscribed?: ValidationFunction<number>;
     is_admin?: ValidationFunction<boolean>;
     email?: ValidationFunction<string>;
     user_id?: ValidationFunction<string>;
     photo_location?: ValidationFunction<string>;
     MoviePlaylists?: ValidationFunction<any>;
+    Payments?: ValidationFunction<any>;
+    Emails?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type UserProfileUpdateFormOverridesProps = {
@@ -54,13 +56,14 @@ export declare type UserProfileUpdateFormOverridesProps = {
     surname?: PrimitiveOverrideProps<TextFieldProps>;
     is_member?: PrimitiveOverrideProps<SwitchFieldProps>;
     member_until?: PrimitiveOverrideProps<TextFieldProps>;
-    klixToken?: PrimitiveOverrideProps<TextFieldProps>;
     monthsSubscribed?: PrimitiveOverrideProps<TextFieldProps>;
     is_admin?: PrimitiveOverrideProps<SwitchFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
     user_id?: PrimitiveOverrideProps<TextFieldProps>;
     photo_location?: PrimitiveOverrideProps<TextFieldProps>;
     MoviePlaylists?: PrimitiveOverrideProps<AutocompleteProps>;
+    Payments?: PrimitiveOverrideProps<AutocompleteProps>;
+    Emails?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type UserProfileUpdateFormProps = React.PropsWithChildren<{
     overrides?: UserProfileUpdateFormOverridesProps | undefined | null;

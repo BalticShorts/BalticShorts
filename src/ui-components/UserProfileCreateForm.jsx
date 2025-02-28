@@ -22,8 +22,17 @@ import {
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { listMoviePlaylists } from "../graphql/queries";
-import { createUserProfile, updateMoviePlaylist } from "../graphql/mutations";
+import {
+  listEmails,
+  listMoviePlaylists,
+  listPayments,
+} from "../graphql/queries";
+import {
+  createUserProfile,
+  updateEmail,
+  updateMoviePlaylist,
+  updatePayment,
+} from "../graphql/mutations";
 function ArrayField({
   items = [],
   onChange,
@@ -195,13 +204,14 @@ export default function UserProfileCreateForm(props) {
     surname: "",
     is_member: false,
     member_until: "",
-    klixToken: "",
     monthsSubscribed: "",
     is_admin: false,
     email: "",
     user_id: "",
     photo_location: "",
     MoviePlaylists: [],
+    Payments: [],
+    Emails: [],
   };
   const [name, setName] = React.useState(initialValues.name);
   const [surname, setSurname] = React.useState(initialValues.surname);
@@ -209,7 +219,6 @@ export default function UserProfileCreateForm(props) {
   const [member_until, setMember_until] = React.useState(
     initialValues.member_until
   );
-  const [klixToken, setKlixToken] = React.useState(initialValues.klixToken);
   const [monthsSubscribed, setMonthsSubscribed] = React.useState(
     initialValues.monthsSubscribed
   );
@@ -225,6 +234,12 @@ export default function UserProfileCreateForm(props) {
   const [MoviePlaylistsLoading, setMoviePlaylistsLoading] =
     React.useState(false);
   const [moviePlaylistsRecords, setMoviePlaylistsRecords] = React.useState([]);
+  const [Payments, setPayments] = React.useState(initialValues.Payments);
+  const [PaymentsLoading, setPaymentsLoading] = React.useState(false);
+  const [paymentsRecords, setPaymentsRecords] = React.useState([]);
+  const [Emails, setEmails] = React.useState(initialValues.Emails);
+  const [EmailsLoading, setEmailsLoading] = React.useState(false);
+  const [emailsRecords, setEmailsRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -232,7 +247,6 @@ export default function UserProfileCreateForm(props) {
     setSurname(initialValues.surname);
     setIs_member(initialValues.is_member);
     setMember_until(initialValues.member_until);
-    setKlixToken(initialValues.klixToken);
     setMonthsSubscribed(initialValues.monthsSubscribed);
     setIs_admin(initialValues.is_admin);
     setEmail(initialValues.email);
@@ -241,6 +255,12 @@ export default function UserProfileCreateForm(props) {
     setMoviePlaylists(initialValues.MoviePlaylists);
     setCurrentMoviePlaylistsValue(undefined);
     setCurrentMoviePlaylistsDisplayValue("");
+    setPayments(initialValues.Payments);
+    setCurrentPaymentsValue(undefined);
+    setCurrentPaymentsDisplayValue("");
+    setEmails(initialValues.Emails);
+    setCurrentEmailsValue(undefined);
+    setCurrentEmailsDisplayValue("");
     setErrors({});
   };
   const [
@@ -250,29 +270,53 @@ export default function UserProfileCreateForm(props) {
   const [currentMoviePlaylistsValue, setCurrentMoviePlaylistsValue] =
     React.useState(undefined);
   const MoviePlaylistsRef = React.createRef();
+  const [currentPaymentsDisplayValue, setCurrentPaymentsDisplayValue] =
+    React.useState("");
+  const [currentPaymentsValue, setCurrentPaymentsValue] =
+    React.useState(undefined);
+  const PaymentsRef = React.createRef();
+  const [currentEmailsDisplayValue, setCurrentEmailsDisplayValue] =
+    React.useState("");
+  const [currentEmailsValue, setCurrentEmailsValue] = React.useState(undefined);
+  const EmailsRef = React.createRef();
   const getIDValue = {
     MoviePlaylists: (r) => JSON.stringify({ id: r?.id }),
+    Payments: (r) => JSON.stringify({ id: r?.id }),
+    Emails: (r) => JSON.stringify({ id: r?.id }),
   };
   const MoviePlaylistsIdSet = new Set(
     Array.isArray(MoviePlaylists)
       ? MoviePlaylists.map((r) => getIDValue.MoviePlaylists?.(r))
       : getIDValue.MoviePlaylists?.(MoviePlaylists)
   );
+  const PaymentsIdSet = new Set(
+    Array.isArray(Payments)
+      ? Payments.map((r) => getIDValue.Payments?.(r))
+      : getIDValue.Payments?.(Payments)
+  );
+  const EmailsIdSet = new Set(
+    Array.isArray(Emails)
+      ? Emails.map((r) => getIDValue.Emails?.(r))
+      : getIDValue.Emails?.(Emails)
+  );
   const getDisplayValue = {
     MoviePlaylists: (r) => `${r?.creator ? r?.creator + " - " : ""}${r?.id}`,
+    Payments: (r) => `${r?.reference ? r?.reference + " - " : ""}${r?.id}`,
+    Emails: (r) => `${r?.email ? r?.email + " - " : ""}${r?.id}`,
   };
   const validations = {
     name: [],
     surname: [],
     is_member: [],
     member_until: [],
-    klixToken: [],
     monthsSubscribed: [],
     is_admin: [],
     email: [{ type: "Email" }],
     user_id: [],
     photo_location: [],
     MoviePlaylists: [],
+    Payments: [],
+    Emails: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -337,8 +381,68 @@ export default function UserProfileCreateForm(props) {
     setMoviePlaylistsRecords(newOptions.slice(0, autocompleteLength));
     setMoviePlaylistsLoading(false);
   };
+  const fetchPaymentsRecords = async (value) => {
+    setPaymentsLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: {
+          or: [{ reference: { contains: value } }, { id: { contains: value } }],
+        },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await API.graphql({
+          query: listPayments.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listPayments?.items;
+      var loaded = result.filter(
+        (item) => !PaymentsIdSet.has(getIDValue.Payments?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setPaymentsRecords(newOptions.slice(0, autocompleteLength));
+    setPaymentsLoading(false);
+  };
+  const fetchEmailsRecords = async (value) => {
+    setEmailsLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: {
+          or: [{ email: { contains: value } }, { id: { contains: value } }],
+        },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await API.graphql({
+          query: listEmails.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listEmails?.items;
+      var loaded = result.filter(
+        (item) => !EmailsIdSet.has(getIDValue.Emails?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setEmailsRecords(newOptions.slice(0, autocompleteLength));
+    setEmailsLoading(false);
+  };
   React.useEffect(() => {
     fetchMoviePlaylistsRecords("");
+    fetchPaymentsRecords("");
+    fetchEmailsRecords("");
   }, []);
   return (
     <Grid
@@ -353,13 +457,14 @@ export default function UserProfileCreateForm(props) {
           surname,
           is_member,
           member_until,
-          klixToken,
           monthsSubscribed,
           is_admin,
           email,
           user_id,
           photo_location,
           MoviePlaylists,
+          Payments,
+          Emails,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -402,7 +507,6 @@ export default function UserProfileCreateForm(props) {
             surname: modelFields.surname,
             is_member: modelFields.is_member,
             member_until: modelFields.member_until,
-            klixToken: modelFields.klixToken,
             monthsSubscribed: modelFields.monthsSubscribed,
             is_admin: modelFields.is_admin,
             email: modelFields.email,
@@ -425,6 +529,38 @@ export default function UserProfileCreateForm(props) {
               promises.push(
                 API.graphql({
                   query: updateMoviePlaylist.replaceAll("__typename", ""),
+                  variables: {
+                    input: {
+                      id: original.id,
+                      userprofileID: userProfile.id,
+                    },
+                  },
+                })
+              );
+              return promises;
+            }, [])
+          );
+          promises.push(
+            ...Payments.reduce((promises, original) => {
+              promises.push(
+                API.graphql({
+                  query: updatePayment.replaceAll("__typename", ""),
+                  variables: {
+                    input: {
+                      id: original.id,
+                      userprofileID: userProfile.id,
+                    },
+                  },
+                })
+              );
+              return promises;
+            }, [])
+          );
+          promises.push(
+            ...Emails.reduce((promises, original) => {
+              promises.push(
+                API.graphql({
+                  query: updateEmail.replaceAll("__typename", ""),
                   variables: {
                     input: {
                       id: original.id,
@@ -466,13 +602,14 @@ export default function UserProfileCreateForm(props) {
               surname,
               is_member,
               member_until,
-              klixToken,
               monthsSubscribed,
               is_admin,
               email,
               user_id,
               photo_location,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -500,13 +637,14 @@ export default function UserProfileCreateForm(props) {
               surname: value,
               is_member,
               member_until,
-              klixToken,
               monthsSubscribed,
               is_admin,
               email,
               user_id,
               photo_location,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.surname ?? value;
@@ -534,13 +672,14 @@ export default function UserProfileCreateForm(props) {
               surname,
               is_member: value,
               member_until,
-              klixToken,
               monthsSubscribed,
               is_admin,
               email,
               user_id,
               photo_location,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.is_member ?? value;
@@ -570,13 +709,14 @@ export default function UserProfileCreateForm(props) {
               surname,
               is_member,
               member_until: value,
-              klixToken,
               monthsSubscribed,
               is_admin,
               email,
               user_id,
               photo_location,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.member_until ?? value;
@@ -590,40 +730,6 @@ export default function UserProfileCreateForm(props) {
         errorMessage={errors.member_until?.errorMessage}
         hasError={errors.member_until?.hasError}
         {...getOverrideProps(overrides, "member_until")}
-      ></TextField>
-      <TextField
-        label="Klix token"
-        isRequired={false}
-        isReadOnly={false}
-        value={klixToken}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              surname,
-              is_member,
-              member_until,
-              klixToken: value,
-              monthsSubscribed,
-              is_admin,
-              email,
-              user_id,
-              photo_location,
-              MoviePlaylists,
-            };
-            const result = onChange(modelFields);
-            value = result?.klixToken ?? value;
-          }
-          if (errors.klixToken?.hasError) {
-            runValidationTasks("klixToken", value);
-          }
-          setKlixToken(value);
-        }}
-        onBlur={() => runValidationTasks("klixToken", klixToken)}
-        errorMessage={errors.klixToken?.errorMessage}
-        hasError={errors.klixToken?.hasError}
-        {...getOverrideProps(overrides, "klixToken")}
       ></TextField>
       <TextField
         label="Months subscribed"
@@ -642,13 +748,14 @@ export default function UserProfileCreateForm(props) {
               surname,
               is_member,
               member_until,
-              klixToken,
               monthsSubscribed: value,
               is_admin,
               email,
               user_id,
               photo_location,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.monthsSubscribed ?? value;
@@ -676,13 +783,14 @@ export default function UserProfileCreateForm(props) {
               surname,
               is_member,
               member_until,
-              klixToken,
               monthsSubscribed,
               is_admin: value,
               email,
               user_id,
               photo_location,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.is_admin ?? value;
@@ -710,13 +818,14 @@ export default function UserProfileCreateForm(props) {
               surname,
               is_member,
               member_until,
-              klixToken,
               monthsSubscribed,
               is_admin,
               email: value,
               user_id,
               photo_location,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -744,13 +853,14 @@ export default function UserProfileCreateForm(props) {
               surname,
               is_member,
               member_until,
-              klixToken,
               monthsSubscribed,
               is_admin,
               email,
               user_id: value,
               photo_location,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.user_id ?? value;
@@ -778,13 +888,14 @@ export default function UserProfileCreateForm(props) {
               surname,
               is_member,
               member_until,
-              klixToken,
               monthsSubscribed,
               is_admin,
               email,
               user_id,
               photo_location: value,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.photo_location ?? value;
@@ -808,13 +919,14 @@ export default function UserProfileCreateForm(props) {
               surname,
               is_member,
               member_until,
-              klixToken,
               monthsSubscribed,
               is_admin,
               email,
               user_id,
               photo_location,
               MoviePlaylists: values,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             values = result?.MoviePlaylists ?? values;
@@ -890,6 +1002,182 @@ export default function UserProfileCreateForm(props) {
           ref={MoviePlaylistsRef}
           labelHidden={true}
           {...getOverrideProps(overrides, "MoviePlaylists")}
+        ></Autocomplete>
+      </ArrayField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              is_member,
+              member_until,
+              monthsSubscribed,
+              is_admin,
+              email,
+              user_id,
+              photo_location,
+              MoviePlaylists,
+              Payments: values,
+              Emails,
+            };
+            const result = onChange(modelFields);
+            values = result?.Payments ?? values;
+          }
+          setPayments(values);
+          setCurrentPaymentsValue(undefined);
+          setCurrentPaymentsDisplayValue("");
+        }}
+        currentFieldValue={currentPaymentsValue}
+        label={"Payments"}
+        items={Payments}
+        hasError={errors?.Payments?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("Payments", currentPaymentsValue)
+        }
+        errorMessage={errors?.Payments?.errorMessage}
+        getBadgeText={getDisplayValue.Payments}
+        setFieldValue={(model) => {
+          setCurrentPaymentsDisplayValue(
+            model ? getDisplayValue.Payments(model) : ""
+          );
+          setCurrentPaymentsValue(model);
+        }}
+        inputFieldRef={PaymentsRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Payments"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search Payment"
+          value={currentPaymentsDisplayValue}
+          options={paymentsRecords
+            .filter((r) => !PaymentsIdSet.has(getIDValue.Payments?.(r)))
+            .map((r) => ({
+              id: getIDValue.Payments?.(r),
+              label: getDisplayValue.Payments?.(r),
+            }))}
+          isLoading={PaymentsLoading}
+          onSelect={({ id, label }) => {
+            setCurrentPaymentsValue(
+              paymentsRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentPaymentsDisplayValue(label);
+            runValidationTasks("Payments", label);
+          }}
+          onClear={() => {
+            setCurrentPaymentsDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchPaymentsRecords(value);
+            if (errors.Payments?.hasError) {
+              runValidationTasks("Payments", value);
+            }
+            setCurrentPaymentsDisplayValue(value);
+            setCurrentPaymentsValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks("Payments", currentPaymentsDisplayValue)
+          }
+          errorMessage={errors.Payments?.errorMessage}
+          hasError={errors.Payments?.hasError}
+          ref={PaymentsRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "Payments")}
+        ></Autocomplete>
+      </ArrayField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              is_member,
+              member_until,
+              monthsSubscribed,
+              is_admin,
+              email,
+              user_id,
+              photo_location,
+              MoviePlaylists,
+              Payments,
+              Emails: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.Emails ?? values;
+          }
+          setEmails(values);
+          setCurrentEmailsValue(undefined);
+          setCurrentEmailsDisplayValue("");
+        }}
+        currentFieldValue={currentEmailsValue}
+        label={"Emails"}
+        items={Emails}
+        hasError={errors?.Emails?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("Emails", currentEmailsValue)
+        }
+        errorMessage={errors?.Emails?.errorMessage}
+        getBadgeText={getDisplayValue.Emails}
+        setFieldValue={(model) => {
+          setCurrentEmailsDisplayValue(
+            model ? getDisplayValue.Emails(model) : ""
+          );
+          setCurrentEmailsValue(model);
+        }}
+        inputFieldRef={EmailsRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Emails"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search Email"
+          value={currentEmailsDisplayValue}
+          options={emailsRecords
+            .filter((r) => !EmailsIdSet.has(getIDValue.Emails?.(r)))
+            .map((r) => ({
+              id: getIDValue.Emails?.(r),
+              label: getDisplayValue.Emails?.(r),
+            }))}
+          isLoading={EmailsLoading}
+          onSelect={({ id, label }) => {
+            setCurrentEmailsValue(
+              emailsRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentEmailsDisplayValue(label);
+            runValidationTasks("Emails", label);
+          }}
+          onClear={() => {
+            setCurrentEmailsDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchEmailsRecords(value);
+            if (errors.Emails?.hasError) {
+              runValidationTasks("Emails", value);
+            }
+            setCurrentEmailsDisplayValue(value);
+            setCurrentEmailsValue(undefined);
+          }}
+          onBlur={() => runValidationTasks("Emails", currentEmailsDisplayValue)}
+          errorMessage={errors.Emails?.errorMessage}
+          hasError={errors.Emails?.hasError}
+          ref={EmailsRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "Emails")}
         ></Autocomplete>
       </ArrayField>
       <Flex

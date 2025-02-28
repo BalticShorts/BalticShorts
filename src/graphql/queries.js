@@ -9,7 +9,6 @@ export const getUserProfile = /* GraphQL */ `
       surname
       is_member
       member_until
-      klixToken
       monthsSubscribed
       is_admin
       email
@@ -27,6 +26,38 @@ export const getUserProfile = /* GraphQL */ `
           size
           userprofileID
           createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      Payments {
+        items {
+          id
+          reference
+          email
+          amount
+          status
+          createdAt
+          klixId
+          userprofileID
+          updatedAt
+          paymentEmailId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      Emails {
+        items {
+          id
+          email
+          message
+          createdAt
+          status
+          userprofileID
+          paymentID
           updatedAt
           __typename
         }
@@ -52,13 +83,20 @@ export const listUserProfiles = /* GraphQL */ `
         surname
         is_member
         member_until
-        klixToken
         monthsSubscribed
         is_admin
         email
         user_id
         photo_location
         MoviePlaylists {
+          nextToken
+          __typename
+        }
+        Payments {
+          nextToken
+          __typename
+        }
+        Emails {
           nextToken
           __typename
         }
@@ -1234,6 +1272,214 @@ export const waitlistEmailByEmail = /* GraphQL */ `
         id
         email
         createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getPayment = /* GraphQL */ `
+  query GetPayment($id: ID!) {
+    getPayment(id: $id) {
+      id
+      reference
+      email
+      amount
+      status
+      createdAt
+      klixId
+      userprofileID
+      Email {
+        id
+        email
+        message
+        createdAt
+        status
+        userprofileID
+        paymentID
+        updatedAt
+        __typename
+      }
+      updatedAt
+      paymentEmailId
+      __typename
+    }
+  }
+`;
+export const listPayments = /* GraphQL */ `
+  query ListPayments(
+    $filter: ModelPaymentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPayments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        reference
+        email
+        amount
+        status
+        createdAt
+        klixId
+        userprofileID
+        Email {
+          id
+          email
+          message
+          createdAt
+          status
+          userprofileID
+          paymentID
+          updatedAt
+          __typename
+        }
+        updatedAt
+        paymentEmailId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const paymentsByUserProfile = /* GraphQL */ `
+  query PaymentsByUserProfile(
+    $userprofileID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPaymentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    paymentsByUserProfile(
+      userprofileID: $userprofileID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        reference
+        email
+        amount
+        status
+        createdAt
+        klixId
+        userprofileID
+        Email {
+          id
+          email
+          message
+          createdAt
+          status
+          userprofileID
+          paymentID
+          updatedAt
+          __typename
+        }
+        updatedAt
+        paymentEmailId
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getEmail = /* GraphQL */ `
+  query GetEmail($id: ID!) {
+    getEmail(id: $id) {
+      id
+      email
+      message
+      createdAt
+      status
+      userprofileID
+      paymentID
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listEmails = /* GraphQL */ `
+  query ListEmails(
+    $filter: ModelEmailFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEmails(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        email
+        message
+        createdAt
+        status
+        userprofileID
+        paymentID
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const emailsByUserProfile = /* GraphQL */ `
+  query EmailsByUserProfile(
+    $userprofileID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelEmailFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    emailsByUserProfile(
+      userprofileID: $userprofileID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        message
+        createdAt
+        status
+        userprofileID
+        paymentID
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const emailsByPayment = /* GraphQL */ `
+  query EmailsByPayment(
+    $paymentID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelEmailFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    emailsByPayment(
+      paymentID: $paymentID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        email
+        message
+        createdAt
+        status
+        userprofileID
+        paymentID
         updatedAt
         __typename
       }

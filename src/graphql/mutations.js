@@ -12,7 +12,6 @@ export const createUserProfile = /* GraphQL */ `
       surname
       is_member
       member_until
-      klixToken
       monthsSubscribed
       is_admin
       email
@@ -30,6 +29,38 @@ export const createUserProfile = /* GraphQL */ `
           size
           userprofileID
           createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      Payments {
+        items {
+          id
+          reference
+          email
+          amount
+          status
+          createdAt
+          klixId
+          userprofileID
+          updatedAt
+          paymentEmailId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      Emails {
+        items {
+          id
+          email
+          message
+          createdAt
+          status
+          userprofileID
+          paymentID
           updatedAt
           __typename
         }
@@ -53,7 +84,6 @@ export const updateUserProfile = /* GraphQL */ `
       surname
       is_member
       member_until
-      klixToken
       monthsSubscribed
       is_admin
       email
@@ -77,6 +107,38 @@ export const updateUserProfile = /* GraphQL */ `
         nextToken
         __typename
       }
+      Payments {
+        items {
+          id
+          reference
+          email
+          amount
+          status
+          createdAt
+          klixId
+          userprofileID
+          updatedAt
+          paymentEmailId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      Emails {
+        items {
+          id
+          email
+          message
+          createdAt
+          status
+          userprofileID
+          paymentID
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -94,7 +156,6 @@ export const deleteUserProfile = /* GraphQL */ `
       surname
       is_member
       member_until
-      klixToken
       monthsSubscribed
       is_admin
       email
@@ -112,6 +173,38 @@ export const deleteUserProfile = /* GraphQL */ `
           size
           userprofileID
           createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      Payments {
+        items {
+          id
+          reference
+          email
+          amount
+          status
+          createdAt
+          klixId
+          userprofileID
+          updatedAt
+          paymentEmailId
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      Emails {
+        items {
+          id
+          email
+          message
+          createdAt
+          status
+          userprofileID
+          paymentID
           updatedAt
           __typename
         }
@@ -1610,6 +1703,153 @@ export const deleteWaitlistEmail = /* GraphQL */ `
       id
       email
       createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createPayment = /* GraphQL */ `
+  mutation CreatePayment(
+    $input: CreatePaymentInput!
+    $condition: ModelPaymentConditionInput
+  ) {
+    createPayment(input: $input, condition: $condition) {
+      id
+      reference
+      email
+      amount
+      status
+      createdAt
+      klixId
+      userprofileID
+      Email {
+        id
+        email
+        message
+        createdAt
+        status
+        userprofileID
+        paymentID
+        updatedAt
+        __typename
+      }
+      updatedAt
+      paymentEmailId
+      __typename
+    }
+  }
+`;
+export const updatePayment = /* GraphQL */ `
+  mutation UpdatePayment(
+    $input: UpdatePaymentInput!
+    $condition: ModelPaymentConditionInput
+  ) {
+    updatePayment(input: $input, condition: $condition) {
+      id
+      reference
+      email
+      amount
+      status
+      createdAt
+      klixId
+      userprofileID
+      Email {
+        id
+        email
+        message
+        createdAt
+        status
+        userprofileID
+        paymentID
+        updatedAt
+        __typename
+      }
+      updatedAt
+      paymentEmailId
+      __typename
+    }
+  }
+`;
+export const deletePayment = /* GraphQL */ `
+  mutation DeletePayment(
+    $input: DeletePaymentInput!
+    $condition: ModelPaymentConditionInput
+  ) {
+    deletePayment(input: $input, condition: $condition) {
+      id
+      reference
+      email
+      amount
+      status
+      createdAt
+      klixId
+      userprofileID
+      Email {
+        id
+        email
+        message
+        createdAt
+        status
+        userprofileID
+        paymentID
+        updatedAt
+        __typename
+      }
+      updatedAt
+      paymentEmailId
+      __typename
+    }
+  }
+`;
+export const createEmail = /* GraphQL */ `
+  mutation CreateEmail(
+    $input: CreateEmailInput!
+    $condition: ModelEmailConditionInput
+  ) {
+    createEmail(input: $input, condition: $condition) {
+      id
+      email
+      message
+      createdAt
+      status
+      userprofileID
+      paymentID
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateEmail = /* GraphQL */ `
+  mutation UpdateEmail(
+    $input: UpdateEmailInput!
+    $condition: ModelEmailConditionInput
+  ) {
+    updateEmail(input: $input, condition: $condition) {
+      id
+      email
+      message
+      createdAt
+      status
+      userprofileID
+      paymentID
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteEmail = /* GraphQL */ `
+  mutation DeleteEmail(
+    $input: DeleteEmailInput!
+    $condition: ModelEmailConditionInput
+  ) {
+    deleteEmail(input: $input, condition: $condition) {
+      id
+      email
+      message
+      createdAt
+      status
+      userprofileID
+      paymentID
       updatedAt
       __typename
     }
