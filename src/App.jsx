@@ -19,6 +19,7 @@ import Buj from "./pages/Buj";
 import Playlist from "./pages/Playlists";
 import UserProfilePage from "./pages/UserProfile";
 import SettingsPage from "./pages/Settings";
+import Purchase from "./pages/Purchase";
 
 Amplify.configure(awsExports);
 export const GlobalContext = React.createContext();
@@ -86,7 +87,7 @@ export default function App() {
             <Route index element={<Home />} />
             <Route path="about" element={<About />} />
 
-            {loggedIn ? (
+            {loggedIn && currentUser.is_member? (
               <>
                 <Route path="movie/:name/:id" element={<Movie />} />
                 <Route path="profile/:id/:mode?" element={<Profile />} />
@@ -94,9 +95,10 @@ export default function App() {
                 <Route path="catalogue/:givenTab?" element={<Catalogue />} />
                 <Route path="upload" element={<Upload />} />
                 <Route path="user/:id" element={<UserProfilePage />} />
-                <Route path="settings/:id" element={<SettingsPage />} />
                 <Route path="faq" element={<Buj />} />
                 <Route path="playlist/:id" element={<Playlist />} />
+                <Route path="subscribe" element={<Purchase />} />
+                <Route path="settings/:id" element={<SettingsPage />} />
                 {admin ? (
                   <>
                     <Route path="admin/playlists" element={<AdminPlaylist />} />
@@ -108,6 +110,8 @@ export default function App() {
               </>
             ) : (
               <>
+                <Route path="settings/:id" element={<SettingsPage />} />
+                <Route path="subscribe" element={<Purchase />} />
                 <Route path="*" element={<Subscribe />} />
               </>
             )}
