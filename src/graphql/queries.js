@@ -8,6 +8,7 @@ export const getUserProfile = /* GraphQL */ `
       name
       surname
       is_member
+      continues_payment
       member_until
       monthsSubscribed
       is_admin
@@ -82,6 +83,7 @@ export const listUserProfiles = /* GraphQL */ `
         name
         surname
         is_member
+        continues_payment
         member_until
         monthsSubscribed
         is_admin

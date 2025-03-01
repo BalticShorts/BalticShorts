@@ -6,6 +6,7 @@ type UserProfile @model @auth(rules: [
   name: String
   surname: String
   is_member: Boolean
+  continues_payment: Boolean
   member_until: AWSDateTime
   monthsSubscribed: Int
   is_admin: Boolean

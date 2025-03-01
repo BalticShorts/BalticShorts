@@ -25,6 +25,7 @@ export declare type UserProfileCreateFormInputValues = {
     name?: string;
     surname?: string;
     is_member?: boolean;
+    continues_payment?: boolean;
     member_until?: string;
     monthsSubscribed?: number;
     is_admin?: boolean;
@@ -39,6 +40,7 @@ export declare type UserProfileCreateFormValidationValues = {
     name?: ValidationFunction<string>;
     surname?: ValidationFunction<string>;
     is_member?: ValidationFunction<boolean>;
+    continues_payment?: ValidationFunction<boolean>;
     member_until?: ValidationFunction<string>;
     monthsSubscribed?: ValidationFunction<number>;
     is_admin?: ValidationFunction<boolean>;
@@ -55,6 +57,7 @@ export declare type UserProfileCreateFormOverridesProps = {
     name?: PrimitiveOverrideProps<TextFieldProps>;
     surname?: PrimitiveOverrideProps<TextFieldProps>;
     is_member?: PrimitiveOverrideProps<SwitchFieldProps>;
+    continues_payment?: PrimitiveOverrideProps<SwitchFieldProps>;
     member_until?: PrimitiveOverrideProps<TextFieldProps>;
     monthsSubscribed?: PrimitiveOverrideProps<TextFieldProps>;
     is_admin?: PrimitiveOverrideProps<SwitchFieldProps>;

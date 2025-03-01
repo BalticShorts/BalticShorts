@@ -205,6 +205,7 @@ export default function UserProfileUpdateForm(props) {
     name: "",
     surname: "",
     is_member: false,
+    continues_payment: false,
     member_until: "",
     monthsSubscribed: "",
     is_admin: false,
@@ -218,6 +219,9 @@ export default function UserProfileUpdateForm(props) {
   const [name, setName] = React.useState(initialValues.name);
   const [surname, setSurname] = React.useState(initialValues.surname);
   const [is_member, setIs_member] = React.useState(initialValues.is_member);
+  const [continues_payment, setContinues_payment] = React.useState(
+    initialValues.continues_payment
+  );
   const [member_until, setMember_until] = React.useState(
     initialValues.member_until
   );
@@ -257,6 +261,7 @@ export default function UserProfileUpdateForm(props) {
     setName(cleanValues.name);
     setSurname(cleanValues.surname);
     setIs_member(cleanValues.is_member);
+    setContinues_payment(cleanValues.continues_payment);
     setMember_until(cleanValues.member_until);
     setMonthsSubscribed(cleanValues.monthsSubscribed);
     setIs_admin(cleanValues.is_admin);
@@ -353,6 +358,7 @@ export default function UserProfileUpdateForm(props) {
     name: [],
     surname: [],
     is_member: [],
+    continues_payment: [],
     member_until: [],
     monthsSubscribed: [],
     is_admin: [],
@@ -501,6 +507,7 @@ export default function UserProfileUpdateForm(props) {
           name: name ?? null,
           surname: surname ?? null,
           is_member: is_member ?? null,
+          continues_payment: continues_payment ?? null,
           member_until: member_until ?? null,
           monthsSubscribed: monthsSubscribed ?? null,
           is_admin: is_admin ?? null,
@@ -701,6 +708,7 @@ export default function UserProfileUpdateForm(props) {
             name: modelFields.name ?? null,
             surname: modelFields.surname ?? null,
             is_member: modelFields.is_member ?? null,
+            continues_payment: modelFields.continues_payment ?? null,
             member_until: modelFields.member_until ?? null,
             monthsSubscribed: modelFields.monthsSubscribed ?? null,
             is_admin: modelFields.is_admin ?? null,
@@ -745,6 +753,7 @@ export default function UserProfileUpdateForm(props) {
               name: value,
               surname,
               is_member,
+              continues_payment,
               member_until,
               monthsSubscribed,
               is_admin,
@@ -780,6 +789,7 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname: value,
               is_member,
+              continues_payment,
               member_until,
               monthsSubscribed,
               is_admin,
@@ -815,6 +825,7 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member: value,
+              continues_payment,
               member_until,
               monthsSubscribed,
               is_admin,
@@ -838,6 +849,44 @@ export default function UserProfileUpdateForm(props) {
         hasError={errors.is_member?.hasError}
         {...getOverrideProps(overrides, "is_member")}
       ></SwitchField>
+      <SwitchField
+        label="Continues payment"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={continues_payment}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              is_member,
+              continues_payment: value,
+              member_until,
+              monthsSubscribed,
+              is_admin,
+              email,
+              user_id,
+              photo_location,
+              MoviePlaylists,
+              Payments,
+              Emails,
+            };
+            const result = onChange(modelFields);
+            value = result?.continues_payment ?? value;
+          }
+          if (errors.continues_payment?.hasError) {
+            runValidationTasks("continues_payment", value);
+          }
+          setContinues_payment(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("continues_payment", continues_payment)
+        }
+        errorMessage={errors.continues_payment?.errorMessage}
+        hasError={errors.continues_payment?.hasError}
+        {...getOverrideProps(overrides, "continues_payment")}
+      ></SwitchField>
       <TextField
         label="Member until"
         isRequired={false}
@@ -852,6 +901,7 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member,
+              continues_payment,
               member_until: value,
               monthsSubscribed,
               is_admin,
@@ -891,6 +941,7 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member,
+              continues_payment,
               member_until,
               monthsSubscribed: value,
               is_admin,
@@ -926,6 +977,7 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member,
+              continues_payment,
               member_until,
               monthsSubscribed,
               is_admin: value,
@@ -961,6 +1013,7 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member,
+              continues_payment,
               member_until,
               monthsSubscribed,
               is_admin,
@@ -996,6 +1049,7 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member,
+              continues_payment,
               member_until,
               monthsSubscribed,
               is_admin,
@@ -1031,6 +1085,7 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member,
+              continues_payment,
               member_until,
               monthsSubscribed,
               is_admin,
@@ -1062,6 +1117,7 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member,
+              continues_payment,
               member_until,
               monthsSubscribed,
               is_admin,
@@ -1156,6 +1212,7 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member,
+              continues_payment,
               member_until,
               monthsSubscribed,
               is_admin,
@@ -1245,6 +1302,7 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member,
+              continues_payment,
               member_until,
               monthsSubscribed,
               is_admin,
