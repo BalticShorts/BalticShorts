@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getSearch } from "../custom-queries/queries";
 import { API } from "aws-amplify";
 import { MyGridMovies, MyGridPersons, MyGridPlaylists } from "../modified-ui-components/Grid";
+import { GlobalContext } from "../App";
 
 const Search = () => {
     const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const context = useContext(GlobalContext);
 
     const [inputText, setInputText] = useState("");
     const [searchResult, setSearchResult] = useState({"movies": [], "persons": [], "playlists": []})
@@ -88,7 +90,7 @@ const Search = () => {
                 {searchResult.movies?.length > 0 &&
                 <div className='w-3/4 h-fit gap-6 my-24 flex flex-col items-center relative justify-center m-auto'>
                   <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative">Filmas</div>
-                  <MyGridMovies data={searchResult.movies} maxRows={2} maxColumns={3}></MyGridMovies>
+                  <MyGridMovies data={searchResult.movies} maxRows={2} maxColumns={3} isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}></MyGridMovies>
                   </div>
                 }
                 {searchResult.persons?.length > 0 &&

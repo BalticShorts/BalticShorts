@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./style.css";
 import '../App.css';
 import { Amplify, API } from 'aws-amplify';
@@ -12,9 +12,11 @@ import { getMoviesMain } from "../custom-queries/queries.js";
 import { DisplayedPlaylistGroup } from "../components/DisplayedPlaylistGroup/DisplayedPlaylistGroup.jsx";
 import MainMovie from "../components/MainMovie/MainMovie.jsx";
 // https://mui.com/material-ui/material-icons/
+import { GlobalContext } from "../App";
 
 
 const Home = () => {
+    const context = useContext(GlobalContext);
     Amplify.configure(awsExports);
     const navigate = useNavigate();
     const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
@@ -83,7 +85,7 @@ const Home = () => {
   return (
     <>
       <div className="w-full" id="container">
-        {highlightedMovie && <MainMovie movie={highlightedMovie} />}
+        {highlightedMovie && <MainMovie movie={highlightedMovie} isLoggedIn = {context.currentUser && Object.keys(context.currentUser).length > 0} />}
         <div className="flex flex-row w-4/5 my-10 m-auto items-center justify-center gap-6">
           <div className="w-80 h-48 relative border border-black flex flex-col items-center justify-center m-auto gap-10 cursor-pointer" onClick={() => navigate('/catalogue/Movies')}>
             <div className="w-80 h-3 relative text-center text-black text-opacity-80 text-xl font-bold font-['Arial'] uppercase tracking-wide">
@@ -122,7 +124,7 @@ const Home = () => {
           {/* Need to list the highlighted playlists and give the data */}
       
           {movies.items?.length > 0 &&
-              <MyGridMovies data={movies.items} maxRows={2} maxColumns={3}></MyGridMovies>
+              <MyGridMovies data={movies.items} maxRows={2} maxColumns={3} isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}></MyGridMovies>
           }
         </div>
 

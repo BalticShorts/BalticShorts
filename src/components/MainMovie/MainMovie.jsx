@@ -1,7 +1,7 @@
 import React, { useState} from "react";
 import WatchlistModal from "../WatchlistModal/WatchlistModal";
 
-const MainMovie = ({ movie }) => {
+const MainMovie = ({ movie, isLoggedIn }) => {
 
     const director = movie.MovieTeam?.PersonMovieTeams.items.find(person => person.Role.name === "Režisors");
     const mov = 'https://balticshortsphotos.s3.eu-north-1.amazonaws.com/' + movie?.trailer_location.replace("balticshortsphotos/", "")
@@ -45,7 +45,7 @@ const MainMovie = ({ movie }) => {
               <button className="flex items-center px-4 py-2 border border-white bg-black text-white hover:bg-white hover:text-black transition" onClick={() => window.location.href = '/movie/'+encodeURIComponent(movie.name) + '/' + encodeURIComponent(movie.id)}>
                 ▶ Skatīties
               </button>
-              <button className="px-3 py-2 border border-white text-white bg-transparent hover:bg-white hover:text-black transition" onClick={() => setModalOpen(true)}>
+              <button className="px-3 py-2 border border-white text-white bg-transparent hover:bg-white hover:text-black transition" onClick={() => {if(isLoggedIn)setModalOpen(true)}}>
                 +
               </button>
             </div>

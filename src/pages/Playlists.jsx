@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { API } from "aws-amplify";
 import { MyGridMovies } from "../modified-ui-components/Grid";
 import { useParams } from "react-router-dom";
 import { getMoviesByPlaylistId } from "../custom-queries/queries";
 import image from "./static/H_B.jpg";
+import { GlobalContext } from "../App";
 
 const Playlist = () => {
+  const context = useContext(GlobalContext);
   const [playlist, setPlaylist] = useState(null);
   const [movies, setMovies] = useState([]);
   const [sortBy, setSortBy] = useState("date");
@@ -104,7 +106,7 @@ const Playlist = () => {
             </button>
           </div>
         </div>
-        <MyGridMovies data={movies} maxRows={3} maxColumns={4} />
+        <MyGridMovies data={movies} maxRows={3} maxColumns={4} isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}/>
       </div>
     </div>
   );

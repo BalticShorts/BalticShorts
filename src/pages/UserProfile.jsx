@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { API } from "aws-amplify";
 import { MyGridMovies, MyGridPlaylists } from "../modified-ui-components/Grid";
 import { getUserPlaylistsFull } from "../custom-queries/queries";
+import { GlobalContext } from "../App";
 
 const fetchProfile = async (id) => {
   try {
@@ -19,6 +20,7 @@ const fetchProfile = async (id) => {
 };
 
 const UserProfilePage = () => {
+  const context = useContext(GlobalContext);
   const { id } = useParams();
   const [profile, setProfile] = useState({});
   const [watchLaterMovies, setWatchLaterMovies] = useState([]);
@@ -70,7 +72,7 @@ const UserProfilePage = () => {
             <h2 className="text-xl font-semibold">SKATĪTIES VĒLĀK <sup>{watchLaterMovies.length}</sup></h2>
           </div>
 
-          <MyGridMovies data={watchLaterMovies} maxRows={3} maxColumns={3} />
+          <MyGridMovies data={watchLaterMovies} maxRows={3} maxColumns={3} isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}/>
         </section>
 
         <section>

@@ -20,7 +20,7 @@ export function getDirectors(data) {
   return result;
 }
 
-export function MyGridMovies({ data, maxRows, maxColumns }) {
+export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
   const [photoSrc, setPhotoSrc] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedMovieId, setSelectedMovieId] = useState(null);
@@ -82,6 +82,7 @@ export function MyGridMovies({ data, maxRows, maxColumns }) {
                         src={photoSrc[item.id]}
                         alt={item.name}
                       />
+                      {isLoggedIn && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -92,6 +93,7 @@ export function MyGridMovies({ data, maxRows, maxColumns }) {
                       >
                         <MdFormatListBulleted size={20} />
                       </button>
+                      )}
                     </div>
                     <div className="mt-1 lg:mt-2 flex flex-col bg-inherit lg:px-4 px-2">
                       <span className="text-black text-sm lg:text-lg font-bold">

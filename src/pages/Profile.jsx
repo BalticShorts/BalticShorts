@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { getProfile } from "../custom-queries/queries";
 import { API } from 'aws-amplify';
 import { MyGridMovies } from "../modified-ui-components/Grid/movieGrid";
+import { GlobalContext } from "../App";
 
 const fetchProfile = async id => {
     const profileData = await API.graphql({
@@ -17,7 +18,7 @@ const fetchProfile = async id => {
 }
 
 function Profile () {
-
+    const context = useContext(GlobalContext);
     const [profile, setProfile] = useState({});
     const [movieCount, setMovieCount] = useState(0);
     const { id, mode } = useParams();
@@ -59,7 +60,7 @@ function Profile () {
           {profile.PersonMovieTeams?.items.map((team, index) => (
             <section key={index} className="w-4/5 mx-auto px-6 py-8">
               <h3 className="text-lg font-bold mb-4">{team.Role.name}</h3>
-              <MyGridMovies data={team.MovieTeam.Movie ? [team.MovieTeam.Movie] : []} maxRows={1} maxColumns={3} />
+              <MyGridMovies data={team.MovieTeam.Movie ? [team.MovieTeam.Movie] : []} maxRows={1} maxColumns={3} isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}/>
             </section>
           ))}
     

@@ -13,6 +13,7 @@ import { VideoModal } from '../components/VideoModal/VideoModal';
 import WatchlistModal from "../components/WatchlistModal/WatchlistModal";
 import { MyGridPlaylists } from '../modified-ui-components/Grid/playlistGrid.jsx';
 import { GlobalContext } from "../App";
+import { LoginPopup } from "../components/LoginPopup/LoginPopup";
 
 Amplify.configure(awsExports);
 const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
@@ -102,6 +103,7 @@ function Movie() {
   const [isWatchlistModalOpen, setIsWatchlistModalOpen] = useState(false);
   const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
   const [showSubscribeModal, setShowSubscribeModal] = useState(false);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -199,24 +201,25 @@ function Movie() {
   };
 
   function removeText() {
-    if (!context.currentUser.is_member) {
+  if (!context.currentUser || Object.keys(context.currentUser).length === 0) {
+      context.setLoggedInModal(true);
+      return;
+    }  else  if (!context.currentUser.is_member) {
       setShowSubscribeModal(true);
       return;
-    }else{
-    const elements = document.getElementById('textOnMovie');
-    const videoElement = document.querySelector('video');
-    console.log(elements)
-    sleep(3).then(() => {
-      if (textOnMovie) {
-        
-        elements.classList.add("hidden");
-        videoElement.play();
-      } else {
-        elements.classList.remove("hidden");
-        videoElement.pause();
-      }
-      setTextOnMovie(!textOnMovie);
-    });
+    } else {
+      const elements = document.getElementById('textOnMovie');
+      const videoElement = document.querySelector('video');
+      sleep(3).then(() => {
+        if (textOnMovie) {
+          elements.classList.add("hidden");
+          videoElement.play();
+        } else {
+          elements.classList.remove("hidden");
+          videoElement.pause();
+        }
+        setTextOnMovie(!textOnMovie);
+      });
     }
   }
 
@@ -363,12 +366,11 @@ function Movie() {
                 <p>{movieData.origin_country} | {movieData.created_year} | {movieData.length}’ | {movieData.age_rating}+</p>
                 <p>{movieData.genre}</p>
               </div>
-
               <div className="flex items-center gap-4 mr-10 px-10">
-                <button className="border border-white text-white px-3 py-2 hover:bg-white hover:text-black transition z-10" onClick={() => setIsPlaylistModalOpen(true)}>
+                <button className="border border-white text-white px-3 py-2 hover:bg-white hover:text-black transition z-10" onClick={() => {if(context.currentUser && Object.keys(context.currentUser).length > 0)setIsPlaylistModalOpen(true)}}>
                   ☰
                 </button>
-                <button className="border border-white text-white px-3 py-2 hover:bg-white hover:text-black transition z-10" onClick={() => setIsWatchlistModalOpen(true)}>
+                <button className="border border-white text-white px-3 py-2 hover:bg-white hover:text-black transition z-10" onClick={() => {if(context.currentUser && Object.keys(context.currentUser).length > 0)setIsPlaylistModalOpen(true)}}>
                   ＋
                 </button>
               </div>
@@ -514,6 +516,7 @@ function Movie() {
           </div>
         </div>
       )}
+      <LoginPopup showing={context.loggedInModal} parentSetShowModal={context.setLoggedInModal}/>
     </>
   );
 }

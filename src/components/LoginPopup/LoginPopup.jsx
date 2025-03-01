@@ -38,6 +38,7 @@ export const LoginPopup = () => {
             context.setLoggedIn(true);
             setShowModal(false);
             resetModal();
+            window.location.reload(true);
         } catch (error) {
             setError({"code":error.code, "message": error.message})
         }

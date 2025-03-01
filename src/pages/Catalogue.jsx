@@ -1,16 +1,18 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { API } from "aws-amplify";
 import { getSearch, getMoviesMain } from "../custom-queries/queries";
 import { MyGridMovies, MyGridPlaylists } from "../modified-ui-components/Grid";
 import { PersonList } from "../modified-ui-components/PersonList";
 import { listCountryCodes, listMovieTypes } from "../graphql/queries";
+import { GlobalContext } from "../App";
 
 const getTab = async (id) => {
   return document.getElementById(id);
 };
 
 const Catalogue = () => {
+  const context = useContext(GlobalContext);
   const [tab, setTab] = useState(['Movies', null]);
   const [data, setData] = useState({ movies: [], persons: [], playlists: [] });
   const [originalData, setOriginalData] = useState({ movies: [], persons: [], playlists: [] });
@@ -483,6 +485,7 @@ const Catalogue = () => {
                       data={data.movies}
                       maxRows={2}
                       maxColumns={3}
+                      isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}
                     />
                   </div>
                 </>

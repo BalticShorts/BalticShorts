@@ -2,12 +2,14 @@ import { useContext } from "react";
 import { GlobalContext } from "../../../App";
 
 export const Dropdown = () => {
-  const context = useContext(GlobalContext);
+  const context = useContext(GlobalContext);  
 
   const signOut = async () => {
     try {
       await context.auth.signOut();
       context.setLoggedIn(false);
+      context.setCurrentUser({});
+      window.location.reload(true);
     } catch (error) {
       console.log("error on logging out: " + error);
     }
@@ -16,23 +18,28 @@ export const Dropdown = () => {
   return (
     <>
       <div className="w-40 h-fit pb-0 justify-start inline-flex z-20">
-        <div className={`w-full ${context.loggedIn ? "h-64" : "h-40"} absolute z-20`}>
+        <div className={`w-full ${context.loggedIn ? "h-64" : "h-44"} absolute z-20`}>
           <div className="w-full h-full absolute bg-beige shadow border border-black flex-col justify-start items-center inline-flex z-20">
             <div className="h-full w-full flex-col justify-center items-center flex z-20">
               <div className="h-full w-full flex-col justify-center items-start gap-3.5 flex z-20">
                 {context.loggedIn && (
+                  <>
                   <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide">
                     <a href={"/user/" + context.currentUser.id}>
                       MANS PROFILS
                     </a>
-                  </div>
+                    </div>
+                    {context.currentUser.is_admin && (
+                      <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide">
+                      <a href="/upload">PIETEIKT DARBU</a>
+                    </div>
+                    )}
+                  </>
                 )}
                 <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide">
                   <a href="/catalogue">KATALOGS</a>
                 </div>
-                <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide">
-                  <a href="/upload">PIETEIKT DARBU</a>
-                </div>
+
                 <hr className="w-full h-px border border-gray-700" />
                 <div className="ml-2 text-black text-xs font-normal font-['Arial'] uppercase leading-none tracking-wide">
                   <a href="/about">PAR PROJEKTU</a>

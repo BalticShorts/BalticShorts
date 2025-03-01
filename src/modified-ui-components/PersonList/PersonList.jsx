@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { ListMoviesByPerson } from "../../custom-queries/queries";
 import { API } from "aws-amplify";
 import { MyGridMovies } from "../Grid";
 import { useNavigate } from "react-router-dom";
+import { GlobalContext } from "../../App";
 
 export const PersonList = ({ data }) => {
+  const context = useContext(GlobalContext);
   const [movies, setMovies] = useState({});
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
@@ -93,6 +95,7 @@ export const PersonList = ({ data }) => {
                 data={movies[person.id]}
                 maxRows={2}
                 maxColumns={3}
+                isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}
               />
             </div>
           )}

@@ -14,7 +14,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
 
       try {
         // Dynamically import the Bitmovin Player script
-        console.log('Loading Bitmovin Player script...');
+        // console.log('Loading Bitmovin Player script...');
         await new Promise((resolve, reject) => {
           const script = document.createElement('script');
           script.src = 'https://cdn.bitmovin.com/player/web/8/bitmovinplayer.js';
@@ -23,7 +23,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           script.onerror = reject;
           document.body.appendChild(script);
         });
-        console.log('Bitmovin Player script loaded successfully.');
+        // console.log('Bitmovin Player script loaded successfully.');
 
         // Ensure Bitmovin Player script has loaded
         if (!window.bitmovin || !window.bitmovin.player) {
@@ -47,7 +47,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
             autoplay: false,
           },
           logs: {
-            level: 'debug',
+            level: 'none',
           },
           tweaks: {
             native_hls_parsing: false
@@ -109,23 +109,23 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           },
         });
   
-        console.log('Creating Bitmovin Player instance...');
+        // console.log('Creating Bitmovin Player instance...');
         const player = new window.bitmovin.player.Player(playerRef.current, config);
         const subtitle = subtitles ? { url: subtitles, kind: 'subtitles', label: 'English', lang: 'en', id: "sub1" } : undefined
   
         const loadSourceWithFallback = async (primarySource, fallbackSource) => {
           try {
-            console.log('Attempting to load primary source...');
+            // console.log('Attempting to load primary source...');
             await player.load(primarySource);
-            console.log('Primary source loaded successfully.');
+            // console.log('Primary source loaded successfully.');
           } catch (error) {
-            console.error('Error loading primary source:', error);
+            // console.error('Error loading primary source:', error);
             if (fallbackSource) {
-              console.log('Attempting to load fallback source...');
+              // console.log('Attempting to load fallback source...');
               await player.load(fallbackSource);
-              console.log('Fallback source loaded successfully.');
+              // console.log('Fallback source loaded successfully.');
             } else {
-              console.error('No fallback source provided.');
+              // console.error('No fallback source provided.');
             }
           }
           player.subtitles.add(subtitle)
@@ -145,12 +145,12 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
   
         return () => {
           if (player) {
-            console.log('Destroying Bitmovin Player instance...');
+            // console.log('Destroying Bitmovin Player instance...');
             player.destroy();
           }
         };
       } catch (error) {
-        console.error('Error setting up Bitmovin Player:', error);
+        // console.error('Error setting up Bitmovin Player:', error);
       }
     };
 

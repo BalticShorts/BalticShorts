@@ -86,16 +86,16 @@ export default function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="about" element={<About />} />
+            <Route path="movie/:name/:id" element={<Movie />} />
+            <Route path="search/:query?" element={<Search />} />
+            <Route path="catalogue/:givenTab?" element={<Catalogue />} />
+            <Route path="profile/:id/:mode?" element={<Profile />} />
+            <Route path="playlist/:id" element={<Playlist />} />
 
             {loggedIn ? (
               <>
-                <Route path="movie/:name/:id" element={<Movie />} />
-                <Route path="profile/:id/:mode?" element={<Profile />} />
-                <Route path="search/:query?" element={<Search />} />
-                <Route path="catalogue/:givenTab?" element={<Catalogue />} />
                 <Route path="user/:id" element={<UserProfilePage />} />
                 <Route path="faq" element={<Buj />} />
-                <Route path="playlist/:id" element={<Playlist />} />
                 <Route path="subscribe" element={<Purchase />} />
                 <Route path="settings/:id" element={<SettingsPage />} />
                 {admin ? (
@@ -110,7 +110,6 @@ export default function App() {
               </>
             ) : (
               <>
-                <Route path="settings/:id" element={<SettingsPage />} />
                 <Route path="subscribe" element={<Purchase />} />
                 <Route path="*" element={<Subscribe />} />
               </>
