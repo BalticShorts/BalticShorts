@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { API, Auth } from "aws-amplify";
 import { getUserProfile } from "../graphql/queries";
 import { updateUserProfile } from "../graphql/mutations";
-import { useRef } from "react";
-import { useContext } from "react";
 import { GlobalContext } from "../App";
 
 const fetchProfile = async (id) => {
@@ -32,14 +30,17 @@ function SettingsPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
+  const [showPauseModal, setShowPauseModal] = useState(false);
+  const [pauseMessage, setPauseMessage] = useState("");
 
   const profileRef = useRef(null);
   const abonetRef = useRef(null);
+  const navigate = useNavigate();
+  const context = useContext(GlobalContext);
 
   const scrollToSection = (ref) => {
     ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
-  const context = useContext(GlobalContext);
 
   const signOut = async () => {
     try {
@@ -103,20 +104,23 @@ function SettingsPage() {
     }
   };
 
-  const handleSubscribe = async () => {
-    const oneMonthFromNow = new Date();
-    oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+  const handleSubscribe = () => {
+    navigate('/subscribe');
+  };
+
+  const handlePauseSubscription = async () => {
     try {
       const updated = await API.graphql({
         query: updateUserProfile,
         variables: {
-          input: { id: profile.id, is_member: true, member_until: oneMonthFromNow },
+          input: { id: profile.id, continues_payment: false },
         },
         authMode: "AWS_IAM",
       });
       setProfile(updated.data.updateUserProfile);
+      setPauseMessage("Abonements ir atcelts, varat lietot mājaslapu līdz abonementa termiņa beigām.");
     } catch (error) {
-      console.error("Error updating subscription:", error);
+      console.error("Error pausing subscription:", error);
     }
   };
 
@@ -133,9 +137,6 @@ function SettingsPage() {
           <ul className="space-y-2">
             <li className="text-gray-700 hover:text-black cursor-pointer" onClick={() => scrollToSection(profileRef)}>Profils</li>
             <li className="text-gray-700 hover:text-black cursor-pointer" onClick={() => scrollToSection(abonetRef)}>Abonements</li>
-            {/* <li className="text-gray-600">Skatīšanās uzstādījumi</li>
-            <li className="text-gray-600">Pievienotās filmas</li>
-            <li className="text-gray-600">Baltic Shorts vēstkopā</li> */}
             <li className="text-gray-700 hover:text-black cursor-pointer" onClick={signOut}>Iziet</li>
           </ul>
         </aside>
@@ -175,11 +176,56 @@ function SettingsPage() {
           <hr />
 
           <section className="mt-8 pb-10" ref={abonetRef}>
-            <h2 className="text-lg font-bold">ABONET</h2>
-            <button onClick={handleSubscribe} className="mt-6 px-6 py-2 bg-green-600 text-white rounded">Abonēt</button>
+            <h2 className="text-lg font-bold">ABONEMENTS</h2>
+            {profile.is_member ? (
+              <>
+                <p className="mt-2">Abonements aktīvs līdz: {profile.member_until?.split('T')[0]}</p>
+                <p className="mt-2">Abonements tiek turpināts: {profile.continues_payment ? 'Jā' : 'Nē'}</p>
+                {profile.continues_payment && (<button onClick={() => setShowPauseModal(true)} className="mt-4 px-4 py-2 bg-beige text-black border border-black">Apturēt abonementu</button>)}
+              </>
+            ) : (
+              <button onClick={handleSubscribe} className="mt-4 px-4 py-2 bg-green-600 border border-black">Abonēt</button>
+            )}
           </section>
         </main>
       </div>
+
+      {showPauseModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-beige p-8 rounded-lg shadow-lg text-center">
+            <h2 className="text-2xl font-bold mb-4">Vai tiešām vēlaties apturēt abonementu?</h2>
+            <button
+              className="bg-beige text-black px-4 py-2 rounded hover:bg-red-700 transition mx-2 border border-black"
+              onClick={() => {
+                handlePauseSubscription();
+                setShowPauseModal(false);
+              }}
+            >
+              Jā
+            </button>
+            <button
+              className="bg-beige text-black px-4 py-2 rounded hover:bg-gray-400 transition mx-2 border border-black"
+              onClick={() => setShowPauseModal(false)}
+            >
+              Nē
+            </button>
+          </div>
+        </div>
+      )}
+
+      {pauseMessage && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-beige p-8 rounded-lg shadow-lg text-center">
+            <h2 className="text-2xl font-bold mb-4">{pauseMessage}</h2>
+            <button
+              className="bg-beige text-black px-4 py-2 rounded hover:bg-gray-400 transition mx-2 border border-black"
+              onClick={() => setPauseMessage("")}
+            >
+              Aizvērt
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
