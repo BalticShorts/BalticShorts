@@ -255,6 +255,8 @@ function Movie() {
 
       const objectURL = URL.createObjectURL(new Blob([data.Body], { type: "image/png" }));
       setThumbnailURL(objectURL);
+      const element = document.getElementById('textOnMovie');
+      element.setAttribute('style', 'background-image: url(' + objectURL + '); background-size: cover;');
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -327,7 +329,7 @@ function Movie() {
           <div
             id="textOnMovie"
             className="TextOverlay absolute w-full h-full flex flex-col justify-between pointer-events-auto inset-0 z-0"
-            style={{ "background-image": `url(${thumbnailURL})`, "background-size": "cover" }}
+            style={{ "background-color" : 'rgba(0, 0, 0, 1)' }}
           >
             <div className="Rectangle3 w-full h-[20%] flex items-center justify-center bg-gradient-to-b from-stone-950 to-transparent">
               <div className="text-center mix-blend-normal">
@@ -496,7 +498,7 @@ function Movie() {
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-beige p-8 rounded-lg shadow-lg text-center">
             <h2 className="text-2xl font-bold mb-4">Abonējiet!</h2>
-            <p className="mb-4">Lai skatītos īsfilmas, nepieciešams aktīvs abonaments.</p>
+            <p className="mb-4">Lai skatītos īsfilmas, nepieciešams aktīvs abonements.</p>
             <button
               className="bg-beige text-black px-2 py-2 rounded mt-4 border border-black px-4 py-2 text-sm font-semibold uppercase tracking-wide hover:bg-black hover:text-white transition mx-2"
               onClick={() => navigate('/subscribe')}
