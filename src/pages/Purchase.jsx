@@ -1,14 +1,17 @@
 import React, { useContext, useState, useEffect } from "react";
 import TermsOfService from "../components/TermsOfService/TOS";
+import Agreement from "../components/Agreement/Agreement";
 import { GlobalContext } from "../App";
 import { useLocation } from "react-router-dom";
 
 const Purchase = () => {
   const context = useContext(GlobalContext);
   const [isChecked, setIsChecked] = useState(false);
+  const [isAgreementChecked, setIsAgreementChecked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showTOS, setShowTOS] = useState(false);
+  const [showAgreement, setShowAgreement] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [paymentReference, setPaymentReference] = useState(null);
 
@@ -26,8 +29,8 @@ const Purchase = () => {
   }, [location.search]);
 
   const handlePayment = async () => {
-    if (!isChecked) {
-      setError("Lūdzu, piekrītiet noteikumiem.");
+    if (!isChecked || !isAgreementChecked) {
+      setError("Lūdzu, piekrītiet noteikumiem un nosacījumiem un distances līgumam.");
       return;
     }
 
@@ -80,7 +83,7 @@ const Purchase = () => {
             {paymentStatus === "fail" && <p className="text-red-500 text-l mt-2 text-center mb-4">Maksājums nav izdevies</p>}
             {paymentStatus === "cancel" && <p className="text-red-500 text-l mt-2 text-center mb-4">Maksājums atcelts</p>}
             <p className="text-lg font-semibold">Abonements: <span className="font-normal">Balticshorts</span></p>
-            <p className="text-lg font-semibold">Cena: <span className="font-normal">€2.99 / mēnesī</span></p>
+            <p className="text-lg font-semibold">Cena: <span className="font-normal">€3.99 / mēnesī</span></p>
           </div>
 
           <div className="mt-4">
@@ -93,6 +96,20 @@ const Purchase = () => {
               />
               <span className="text-sm">
                 Es piekrītu <span className="underline cursor-pointer" onClick={() => setShowTOS(true)}>noteikumiem un nosacījumiem</span>.
+              </span>
+            </label>
+          </div>
+
+          <div className="pt-1">
+            <label className="flex items-start space-x-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={isAgreementChecked}
+                onChange={() => setIsAgreementChecked(!isAgreementChecked)}
+                className="mt-1"
+              />
+              <span className="text-sm">
+                Es piekrītu <span className="underline cursor-pointer" onClick={() => setShowAgreement(true)}>distances līgumam</span>.
               </span>
             </label>
           </div>
@@ -117,6 +134,18 @@ const Purchase = () => {
             <h1 className="text-2xl font-bold">Lietošanas noteikumi</h1>
             <TermsOfService />
             <div className="w-1/6 h-fit relative flex items-center justify-center py-5 border border-black rounded mb-5 justify-center cursor-pointer" onClick={() => setShowTOS(false)}>
+              Aizvērt
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAgreement && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md bg-opacity-50 z-10 overscroll-auto">
+          <div className="w-3/5 h-3/5 px-5 pt-5 bg-beige border border-black flex-col justify-start inline-flex overflow-y-auto items-center">
+            <h1 className="text-2xl font-bold">Distances līgums</h1>
+            <Agreement />
+            <div className="w-1/6 h-fit relative flex items-center justify-center py-5 border border-black rounded mb-5 justify-center cursor-pointer" onClick={() => setShowAgreement(false)}>
               Aizvērt
             </div>
           </div>

@@ -87,13 +87,12 @@ export default function App() {
             <Route index element={<Home />} />
             <Route path="about" element={<About />} />
 
-            {loggedIn && currentUser.is_member? (
+            {loggedIn ? (
               <>
                 <Route path="movie/:name/:id" element={<Movie />} />
                 <Route path="profile/:id/:mode?" element={<Profile />} />
                 <Route path="search/:query?" element={<Search />} />
                 <Route path="catalogue/:givenTab?" element={<Catalogue />} />
-                <Route path="upload" element={<Upload />} />
                 <Route path="user/:id" element={<UserProfilePage />} />
                 <Route path="faq" element={<Buj />} />
                 <Route path="playlist/:id" element={<Playlist />} />
@@ -103,6 +102,7 @@ export default function App() {
                   <>
                     <Route path="admin/playlists" element={<AdminPlaylist />} />
                     <Route path="addPlaylist/:id?" element={<PlaylistUpload />} />
+                    <Route path="upload" element={<Upload />} />
                   </>
                 ):(
                   <Route path="*" element={<Home/>} />
