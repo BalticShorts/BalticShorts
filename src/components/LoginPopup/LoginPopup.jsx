@@ -144,6 +144,7 @@ export const LoginPopup = () => {
                         user_id: id,
                         is_member: false,
                         is_admin: false,
+                        continues_payment: false,
                     }},
                     authMode: 'AWS_IAM'
                 });
