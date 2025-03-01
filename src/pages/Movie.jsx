@@ -353,9 +353,11 @@ function Movie() {
 
             <div className="Rectangle4 w-full h-[20%] flex flex-col sm:flex-row items-center justify-between px-6 bg-gradient-to-t from-stone-950 to-transparent">
               <div className="flex flex-col items-center gap-4 text-white ml-10 px-10">
+                {movieTrailer && (
                 <button className="flex items-center gap-2 border border-white px-4 py-2 hover:bg-white hover:text-black transition z-10" onClick={() => setIsVideoModalOpen(true)}>
                   ▶ Treileris
                 </button>
+                )}
                 <div className="flex items-center gap-2 text-sm">
                   🔊 {movieData.screen_language} | 🌍 {movieData.captions_language}
                 </div>
