@@ -196,6 +196,7 @@ export default function PaymentCreateForm(props) {
     status: "",
     createdAt: "",
     klixId: "",
+    paymentType: "",
     userprofileID: undefined,
     Email: undefined,
   };
@@ -205,6 +206,9 @@ export default function PaymentCreateForm(props) {
   const [status, setStatus] = React.useState(initialValues.status);
   const [createdAt, setCreatedAt] = React.useState(initialValues.createdAt);
   const [klixId, setKlixId] = React.useState(initialValues.klixId);
+  const [paymentType, setPaymentType] = React.useState(
+    initialValues.paymentType
+  );
   const [userprofileID, setUserprofileID] = React.useState(
     initialValues.userprofileID
   );
@@ -224,6 +228,7 @@ export default function PaymentCreateForm(props) {
     setStatus(initialValues.status);
     setCreatedAt(initialValues.createdAt);
     setKlixId(initialValues.klixId);
+    setPaymentType(initialValues.paymentType);
     setUserprofileID(initialValues.userprofileID);
     setCurrentUserprofileIDValue(undefined);
     setCurrentUserprofileIDDisplayValue("");
@@ -262,6 +267,7 @@ export default function PaymentCreateForm(props) {
     status: [{ type: "Required" }],
     createdAt: [{ type: "Required" }],
     klixId: [],
+    paymentType: [],
     userprofileID: [{ type: "Required" }],
     Email: [],
   };
@@ -374,6 +380,7 @@ export default function PaymentCreateForm(props) {
           status,
           createdAt,
           klixId,
+          paymentType,
           userprofileID,
           Email: Email1,
         };
@@ -420,6 +427,7 @@ export default function PaymentCreateForm(props) {
             status: modelFields.status,
             createdAt: modelFields.createdAt,
             klixId: modelFields.klixId,
+            paymentType: modelFields.paymentType,
             userprofileID: modelFields.userprofileID,
             paymentEmailId: modelFields?.Email1?.id,
           };
@@ -462,6 +470,7 @@ export default function PaymentCreateForm(props) {
               status,
               createdAt,
               klixId,
+              paymentType,
               userprofileID,
               Email: Email1,
             };
@@ -493,6 +502,7 @@ export default function PaymentCreateForm(props) {
               status,
               createdAt,
               klixId,
+              paymentType,
               userprofileID,
               Email: Email1,
             };
@@ -528,6 +538,7 @@ export default function PaymentCreateForm(props) {
               status,
               createdAt,
               klixId,
+              paymentType,
               userprofileID,
               Email: Email1,
             };
@@ -559,6 +570,7 @@ export default function PaymentCreateForm(props) {
               status: value,
               createdAt,
               klixId,
+              paymentType,
               userprofileID,
               Email: Email1,
             };
@@ -592,6 +604,7 @@ export default function PaymentCreateForm(props) {
               status,
               createdAt: value,
               klixId,
+              paymentType,
               userprofileID,
               Email: Email1,
             };
@@ -623,6 +636,7 @@ export default function PaymentCreateForm(props) {
               status,
               createdAt,
               klixId: value,
+              paymentType,
               userprofileID,
               Email: Email1,
             };
@@ -639,6 +653,38 @@ export default function PaymentCreateForm(props) {
         hasError={errors.klixId?.hasError}
         {...getOverrideProps(overrides, "klixId")}
       ></TextField>
+      <TextField
+        label="Payment type"
+        isRequired={false}
+        isReadOnly={false}
+        value={paymentType}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              reference,
+              email,
+              amount,
+              status,
+              createdAt,
+              klixId,
+              paymentType: value,
+              userprofileID,
+              Email: Email1,
+            };
+            const result = onChange(modelFields);
+            value = result?.paymentType ?? value;
+          }
+          if (errors.paymentType?.hasError) {
+            runValidationTasks("paymentType", value);
+          }
+          setPaymentType(value);
+        }}
+        onBlur={() => runValidationTasks("paymentType", paymentType)}
+        errorMessage={errors.paymentType?.errorMessage}
+        hasError={errors.paymentType?.hasError}
+        {...getOverrideProps(overrides, "paymentType")}
+      ></TextField>
       <ArrayField
         lengthLimit={1}
         onChange={async (items) => {
@@ -651,6 +697,7 @@ export default function PaymentCreateForm(props) {
               status,
               createdAt,
               klixId,
+              paymentType,
               userprofileID: value,
               Email: Email1,
             };
@@ -751,6 +798,7 @@ export default function PaymentCreateForm(props) {
               status,
               createdAt,
               klixId,
+              paymentType,
               userprofileID,
               Email: value,
             };

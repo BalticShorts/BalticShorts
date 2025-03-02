@@ -28,6 +28,7 @@ export declare type PaymentUpdateFormInputValues = {
     status?: string;
     createdAt?: string;
     klixId?: string;
+    paymentType?: string;
     userprofileID?: string;
     Email?: any;
 };
@@ -38,6 +39,7 @@ export declare type PaymentUpdateFormValidationValues = {
     status?: ValidationFunction<string>;
     createdAt?: ValidationFunction<string>;
     klixId?: ValidationFunction<string>;
+    paymentType?: ValidationFunction<string>;
     userprofileID?: ValidationFunction<string>;
     Email?: ValidationFunction<any>;
 };
@@ -50,6 +52,7 @@ export declare type PaymentUpdateFormOverridesProps = {
     status?: PrimitiveOverrideProps<TextFieldProps>;
     createdAt?: PrimitiveOverrideProps<TextFieldProps>;
     klixId?: PrimitiveOverrideProps<TextFieldProps>;
+    paymentType?: PrimitiveOverrideProps<TextFieldProps>;
     userprofileID?: PrimitiveOverrideProps<AutocompleteProps>;
     Email?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;

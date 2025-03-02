@@ -42,6 +42,7 @@ export const getUserProfile = /* GraphQL */ `
           status
           createdAt
           klixId
+          paymentType
           userprofileID
           updatedAt
           paymentEmailId
@@ -1292,6 +1293,7 @@ export const getPayment = /* GraphQL */ `
       status
       createdAt
       klixId
+      paymentType
       userprofileID
       Email {
         id
@@ -1325,6 +1327,7 @@ export const listPayments = /* GraphQL */ `
         status
         createdAt
         klixId
+        paymentType
         userprofileID
         Email {
           id
@@ -1369,6 +1372,7 @@ export const paymentsByUserProfile = /* GraphQL */ `
         status
         createdAt
         klixId
+        paymentType
         userprofileID
         Email {
           id

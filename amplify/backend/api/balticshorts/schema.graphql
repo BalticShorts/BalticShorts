@@ -171,6 +171,7 @@ type Payment @model @auth(rules: [
   status: String!
   createdAt: AWSDateTime!
   klixId: String
+  paymentType: String
   userprofileID: ID! @index(name: "byUserProfile", queryField: "paymentsByUserProfile")
   Email: Email @hasOne
 }

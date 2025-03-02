@@ -45,6 +45,7 @@ export const createUserProfile = /* GraphQL */ `
           status
           createdAt
           klixId
+          paymentType
           userprofileID
           updatedAt
           paymentEmailId
@@ -118,6 +119,7 @@ export const updateUserProfile = /* GraphQL */ `
           status
           createdAt
           klixId
+          paymentType
           userprofileID
           updatedAt
           paymentEmailId
@@ -191,6 +193,7 @@ export const deleteUserProfile = /* GraphQL */ `
           status
           createdAt
           klixId
+          paymentType
           userprofileID
           updatedAt
           paymentEmailId
@@ -1724,6 +1727,7 @@ export const createPayment = /* GraphQL */ `
       status
       createdAt
       klixId
+      paymentType
       userprofileID
       Email {
         id
@@ -1755,6 +1759,7 @@ export const updatePayment = /* GraphQL */ `
       status
       createdAt
       klixId
+      paymentType
       userprofileID
       Email {
         id
@@ -1786,6 +1791,7 @@ export const deletePayment = /* GraphQL */ `
       status
       createdAt
       klixId
+      paymentType
       userprofileID
       Email {
         id
