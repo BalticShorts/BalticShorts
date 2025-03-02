@@ -527,7 +527,7 @@ const Catalogue = () => {
                       </button>
                     </div>
                   </div>
-                  <div className='w-3/4'>
+                  <div className='w-full'>
                     <PersonList data = {data.persons !== undefined ? data.persons : []}></PersonList>
                   </div>
                 </>

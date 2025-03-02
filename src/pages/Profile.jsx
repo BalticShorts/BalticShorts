@@ -25,12 +25,11 @@ function Profile () {
 
     useEffect(() => {
         const get = async () => {
-          console.log('id:', id);
-            if (id === undefined || id === null)
-              return;
-            let profileData = await fetchProfile(id);
-            const filteredMovies = profileData.PersonMovieTeams?.items.filter(team => team.MovieTeam.Movie !== null);
-            profileData.PersonMovieTeams.items = filteredMovies;
+          if (id === undefined || id === null)
+            return;
+          let profileData = await fetchProfile(id);
+          const filteredMovies = profileData.PersonMovieTeams?.items.filter(team => team.MovieTeam.Movie !== null);
+          profileData.PersonMovieTeams.items = filteredMovies;
           try {     
             setProfile(profileData);
             const uniqueMovies = new Set(filteredMovies?.map(team => team.MovieTeam.Movie.id));

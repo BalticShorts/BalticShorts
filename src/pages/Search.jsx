@@ -3,6 +3,7 @@ import { getSearch } from "../custom-queries/queries";
 import { API } from "aws-amplify";
 import { MyGridMovies, MyGridPersons, MyGridPlaylists } from "../modified-ui-components/Grid";
 import { GlobalContext } from "../App";
+import { PersonList } from "../modified-ui-components/PersonList";
 
 const Search = () => {
     const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -94,10 +95,12 @@ const Search = () => {
                   </div>
                 }
                 {searchResult.persons?.length > 0 &&
-                  <div className='w-3/4 h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
+                  <div className='w-full h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
                     <div className="w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative left-[15%]">Personas</div>
-                    <MyGridPersons data={searchResult.persons} maxRows={2} maxColumns={5}></MyGridPersons>
+                  {/* //   <MyGridPersons data={searchResult.persons} maxRows={2} maxColumns={5}></MyGridPersons> */}
+                    <PersonList data = {searchResult.persons !== undefined ? searchResult.persons : []}></PersonList>
                   </div>
+
                 }
                 {searchResult.playlists?.length > 0 &&
                   <div className='w-3/4 h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>

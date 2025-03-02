@@ -16,7 +16,6 @@ export const PersonList = ({ data }) => {
   const fetchMovies = async (personID) => {
     if (movies[personID]) return;
 
-
     setLoading(personID);
     setError(null);
 
@@ -31,10 +30,9 @@ export const PersonList = ({ data }) => {
       if (result.errors) {
         throw new Error(result.errors[0].message);
       }
-
-      const moviesData = result.data.listPersonMovieTeams.items.map(
-        (item) => item.MovieTeam.Movie
-      );
+      const filteredResult = result.data.listPersonMovieTeams.items.filter(team => team.MovieTeam.Movie !== null);
+      const moviesData = Array.from(new Set(filteredResult.map(item => item.MovieTeam.Movie.id)))
+        .map(id => filteredResult.find(item => item.MovieTeam.Movie.id === id).MovieTeam.Movie);
 
       setMovies((prev) => ({
         ...prev,
@@ -54,9 +52,8 @@ export const PersonList = ({ data }) => {
     }));
   };
 
-
   return (
-    <div className="flex flex-col gap-4 p-4 w-full">
+    <div className="flex flex-col gap-4 p-4 w-full items-center bg-inherit">
       {data.map((person, index) => (
         <>
         <div
