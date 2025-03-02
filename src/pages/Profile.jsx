@@ -25,12 +25,15 @@ function Profile () {
 
     useEffect(() => {
         const get = async () => {
-            if (id === undefined)
-                return;
-            const profileData = await fetchProfile(id);
+          console.log('id:', id);
+            if (id === undefined || id === null)
+              return;
+            let profileData = await fetchProfile(id);
+            const filteredMovies = profileData.PersonMovieTeams?.items.filter(team => team.MovieTeam.Movie !== null);
+            profileData.PersonMovieTeams.items = filteredMovies;
           try {     
             setProfile(profileData);
-            const uniqueMovies = new Set(profileData.PersonMovieTeams?.items.map(team => team.MovieTeam.Movie.id));
+            const uniqueMovies = new Set(filteredMovies?.map(team => team.MovieTeam.Movie.id));
             setMovieCount(uniqueMovies.size);
           } catch (error) {
             console.log('Error on fetching: ', error);
@@ -38,6 +41,15 @@ function Profile () {
         }
         get();
       }, [id]);
+
+      const groupedMovies = profile.PersonMovieTeams?.items.reduce((acc, team) => {
+        const roleName = team.Role.name;
+        if (!acc[roleName]) {
+          acc[roleName] = [];
+        }
+        acc[roleName].push(team.MovieTeam.Movie);
+        return acc;
+      }, {});
 
       return (
         <div className="min-h-screen bg-inherit text-gray-900">
@@ -57,10 +69,10 @@ function Profile () {
             </div>
           </section>
     
-          {profile.PersonMovieTeams?.items.map((team, index) => (
+          {groupedMovies && Object.keys(groupedMovies).map((roleName, index) => (
             <section key={index} className="w-4/5 mx-auto px-6 py-8">
-              <h3 className="text-lg font-bold mb-4">{team.Role.name}</h3>
-              <MyGridMovies data={team.MovieTeam.Movie ? [team.MovieTeam.Movie] : []} maxRows={1} maxColumns={3} isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}/>
+              <h3 className="text-lg font-bold mb-4">{roleName}</h3>
+              <MyGridMovies data={groupedMovies[roleName]} maxRows={1} maxColumns={3} isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}/>
             </section>
           ))}
     
