@@ -104,7 +104,7 @@ const EditListModal = ({ isOpen, onClose, list, mode }) => {
           )}
           <button
             onClick={saveList}
-            className="border border-black bg-black text-white px-4 py-2 hover:bg-gray-800 ml-auto"
+            className="border border-black bg-black text-beige px-4 py-2 hover:bg-gray-800 ml-auto"
           >
             Saglabāt izmaiņas
           </button>

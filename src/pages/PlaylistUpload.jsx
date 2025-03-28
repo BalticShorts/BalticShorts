@@ -281,7 +281,7 @@ const PlaylistUpload = ({onClose, id, recommendedCount}) => {
                         )}
                         {(thumbnail.length > 0) && (
                             <button
-                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline mt-4"
+                                className="bg-red-500 hover:bg-red-700 text-beige font-bold py-2 px-2 rounded focus:outline-none focus:shadow-outline mt-4"
                                 type="button"
                                 onClick={handleRemoveThumbnail}
                             >
@@ -292,21 +292,21 @@ const PlaylistUpload = ({onClose, id, recommendedCount}) => {
                 </div>
                 <div className="flex items-center justify-between">
                     <button
-                    className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    className="bg-slate-500 hover:bg-slate-700 text-beige font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="button"
                     onClick={() => onClose(false)}
                     >
                     Atpakaļ
                     </button>
                     <button
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    className="bg-red-500 hover:bg-red-700 text-beige font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="button"
                     onClick={handleDelete}
                     >
                     Dzēst sarakstu
                     </button>
                     <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    className="bg-blue-500 hover:bg-blue-700 text-beige font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     type="button"
                     onClick={handleSave}
                     >

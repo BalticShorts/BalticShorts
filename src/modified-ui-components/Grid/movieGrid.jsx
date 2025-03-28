@@ -62,9 +62,9 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
   };
 
   return (
-    <div className="w-full h-auto p-4 flex flex-col items-center bg-inherit">
+    <div className="w-full h-auto flex flex-col items-center bg-inherit">
       <div
-        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-center w-full bg-inherit`}
+        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-25 items-center w-full bg-inherit`}
       >
         {data.map((item, idx) => (
           <>
@@ -73,10 +73,10 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
                 {item !== null && (
                   <div
                     key={item.id}
-                    className="relative flex flex-col shadow-md bg-inherit border border-black max-h-[292px] sm:min-h-[292px] overflow-hidden"
+                    className="relative flex flex-col bg-inherit border border-black max-h-[270px] overflow-hidden"
                     onClick={() => navigate('/movie/'+encodeURIComponent(item.name) + '/' + encodeURIComponent(item.id))}
                   >
-                    <div className="relative w-full h-full h-20 sm:h-36 lg:h-48 lg:min-h-[192px] overflow-hidden bg-inherit">
+                    <div className="relative w-full h-full h-20 sm:h-36 lg:h-48 lg:min-h-[195px] overflow-hidden bg-inherit">
                       <img
                         className="w-full h-full object-cover"
                         src={photoSrc[item.id]}
@@ -89,23 +89,25 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
                           setSelectedMovieId(item.id);
                           setModalOpen(true);
                         }}
-                        className="absolute top-2 right-2 p-1 bg-transparent text-white rounded border border-white hover:bg-white hover:text-black"
+                        className="absolute top-2 right-2 p-1 bg-transparent text-beige rounded border border-white hover:bg-white hover:text-black"
                       >
                         <MdFormatListBulleted size={20} />
                       </button>
                       )}
                     </div>
-                    <div className="mt-1 lg:mt-2 flex flex-col bg-inherit lg:px-4 px-2">
-                      <span className="text-black text-sm lg:text-lg font-bold">
+                    <div className="mt-10 lg:mt-15 flex flex-col bg-inherit mx-15 justify-between">
+                      <div className="typography-body-large uppercase !font-bold">
                         {item.name}
-                      </span>
-                      <div className="text-sm text-gray-600 mt-1">
-                        {directors[item.id]}
                       </div>
-                      <div className="text-sm text-gray-500">
-                        {item.length}', {item.created_year}, {item.origin_country}
+                      <div className="mt-10 mb-15 flex flex-row bg-inherit justify-between">
+                        <div className="typography-body-small">
+                          {directors[item.id]}
+                        </div>
+                        <div className="typography-technical">
+                          {item.length}', {item.created_year}, {item.origin_country}
+                        </div>
+                        </div>
                       </div>
-                    </div>
                   </div>
                 )}
               </>
@@ -114,15 +116,20 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
         ))}
       </div>
       {data.length / maxColumns > rows && (
-        <div className="flex justify-center mt-6">
-          <button
-            className="px-4 py-2 text-black rounded-md shadow-md"
-            onClick={() => setRows(rows + 1)}
-          >
-            Vairāk
-          </button>
-        </div>
-      )}
+        <>
+          <div className="relative w-full h-10">
+            <div className="w-full absolute inset-x-0 -top-20 h-28 bg-gradient-to-t from-gray-100 to-transparent"/>
+            <div className="flex justify-center mt-20 ">
+              <button
+                className="typography-technical z-10"
+                onClick={() => setRows(rows + 1)}
+              >
+                Vairāk ▼
+              </button>
+            </div>
+          </div>
+        </>
+        )}
       <WatchlistModal isOpen={modalOpen} onClose={() => setModalOpen(false)} movieId={selectedMovieId} />
     </div>
   );

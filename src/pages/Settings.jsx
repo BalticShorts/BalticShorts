@@ -158,7 +158,7 @@ function SettingsPage() {
             <h2 className="text-lg font-bold">MAINĪT E-PASTU</h2>
             <input type="email" className="border w-full p-2 mt-1 bg-beige" placeholder="Jaunais e-pasts" onChange={(e) => setNewEmail(e.target.value)} />
             <input type="email" className="border w-full p-2 mt-1 bg-beige" placeholder="Apstiprināt jauno e-pastu" onChange={(e) => setConfirmNewEmail(e.target.value)} />
-            <button onClick={handleEmailUpdate} className="mt-4 px-4 py-2 bg-neutral-600 text-white ">Atjaunot e-pastu</button>
+            <button onClick={handleEmailUpdate} className="mt-4 px-4 py-2 bg-neutral-600 text-beige ">Atjaunot e-pastu</button>
             {emailMessage && <p className="text-red-500 mt-2">{emailMessage}</p>}
           </section>
 
@@ -169,7 +169,7 @@ function SettingsPage() {
             <input type="password" className="border w-full p-2 mt-1 bg-beige" placeholder="Vecā parole" onChange={(e) => setOldPassword(e.target.value)} />
             <input type="password" className="border w-full p-2 mt-1 bg-beige" placeholder="Jaunā parole" onChange={(e) => setNewPassword(e.target.value)} />
             <input type="password" className="border w-full p-2 mt-1 bg-beige" placeholder="Apstiprināt jauno paroli" onChange={(e) => setConfirmNewPassword(e.target.value)} />
-            <button onClick={handlePasswordUpdate} className="mt-4 px-4 py-2 bg-neutral-600 text-white">Mainīt paroli</button>
+            <button onClick={handlePasswordUpdate} className="mt-4 px-4 py-2 bg-neutral-600 text-beige">Mainīt paroli</button>
             {passwordMessage && <p className="text-red-500 mt-2">{passwordMessage}</p>}
           </section>
 

@@ -86,63 +86,64 @@ const Home = () => {
     <>
       <div className="w-full" id="container">
         {highlightedMovie && <MainMovie movie={highlightedMovie} isLoggedIn = {context.currentUser && Object.keys(context.currentUser).length > 0} />}
-        <div className="flex flex-row w-4/5 my-10 m-auto items-center justify-center gap-6">
-          <div className="w-80 h-48 relative border border-black flex flex-col items-center justify-center m-auto gap-10 cursor-pointer" onClick={() => navigate('/catalogue/Movies')}>
-            <div className="w-80 h-3 relative text-center text-black text-opacity-80 text-xl font-bold font-['Arial'] uppercase tracking-wide">
-              DARBI
+        <div className="max-w-[1100px] flex flex-col justify-center items-center m-auto">
+          <div className="flex flex-row mt-50 gap-25 w-full h-fit justify-center items-center">
+            <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4" onClick={() => navigate('/catalogue/Movies')}>
+              <div className="w-4/5 text-center typography-h2 my-auto">
+                DARBI
+              </div>
+              <div className="h-2.5 text-center typography-body-small mb-10">
+                Jaunas, senas, vislabākās un vissliktākās<br />īsfilmas no visas Baltijas
+              </div>
             </div>
-            <div className="w-80 h-2.5 relative text-center text-black text-opacity-80 text-sm font-normal font-['SchoolBook']">
-              Jaunas, senas, vislabākās un vissliktākās<br />īsfilmas no visas Baltijas
+
+            <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4" onClick={() => navigate('/catalogue/Persons')}>
+              <div className="w-4/5 text-center typography-h2 my-auto">
+                PERSONAS
+              </div>
+              <div className="h-2.5 text-center typography-body-small mb-10">
+              Režisori, scenāriju autori, aktieri, mākslinieki un visi pārējie īsfilmu komandu dalībnieki
+              </div>
             </div>
+
+            <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4" onClick={() => navigate('/catalogue/Playlists')}>
+              <div className="w-4/5 text-center typography-h2 my-auto">
+                SARAKSTI
+              </div>
+              <div className="h-2.5 text-center typography-body-small mb-10">
+                Baltic Shorts kuratoru un lietotāju <br/> veidotie īsfilmu saraksti
+              </div>
+            </div>
+
           </div>
 
-          <div className="w-80 h-48 relative border border-black flex flex-col items-center justify-center m-auto gap-10 cursor-pointer" onClick={() => navigate('/catalogue/Persons')}>
-            <div className="w-80 h-3 relative text-center text-black text-opacity-80 text-xl font-bold font-['Arial'] uppercase tracking-wide">
-              PERSONAS
+          <div className='w-full h-fit gap-6 mt-100 mb-25 flex flex-col items-center relative justify-center'>
+            <div className="w-full typography-h2">
+              BALTIC SHORTS IESAKA
             </div>
-            <div className="w-80 h-2.5 relative text-center text-black text-opacity-80 text-sm font-normal font-['SchoolBook']">
-            Režisori, scenāriju autori, aktieri, mākslinieki un visi pārējie īsfilmu komandu dalībnieki
+            <DisplayedPlaylistGroup elementsShown={recomendedPlaylists.length} playlists={recomendedPlaylists} />
+            {/* Need to list the highlighted playlists and give the data */}
+        
+            {movies.items?.length > 0 &&
+                <MyGridMovies data={movies.items} maxRows={2} maxColumns={3} isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}></MyGridMovies>
+            }
+          </div>
+
+          <div className="relative my-100 flex flex-row w-full items-center justify-center gap-50">
+            <div className="mr-50">
+              <img className="w-full h-fit" src={require("./static/Black_Logo.png")} alt="Subscribe" />
             </div>
-          </div>
-
-          <div className="w-80 h-48 relative border border-black flex flex-col items-center justify-center m-auto gap-10 cursor-pointer" onClick={() => navigate('/catalogue/Playlists')}>
-            <div className="w-80 h-3 relative text-center text-black text-opacity-80 text-xl font-bold font-['Arial'] uppercase tracking-wide">
-              SARAKSTI
+            <div className="typography-body uppercase !tracking-[0.1em] !font-normal">
+            JAUNAS, VECAS, SLIKTĀKĀS, LABĀKĀS,<br/> LIELBUDŽETA, BEZBUDŽETA ĪSFILMAS,<br/>REŽISORI, OPERATORI UN CITI FILMU VAROŅI <br/>NO baltijas valstu filmu industrijas.
             </div>
-            <div className="w-80 h-2.5 relative text-center text-black text-opacity-80 text-sm font-normal font-['SchoolBook']">
-              Baltic Shorts kuratoru un lietotāju <br/> veidotie īsfilmu saraksti
-            </div>
-          </div>
-
-        </div>
-
-        <div className='w-4/5 h-fit gap-6 my-24 flex flex-col items-center relative justify-center m-auto'>
-          <div className="my-5 w-full h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative">
-            BALTIC SHORTS IESAKA
-          </div>
-          <DisplayedPlaylistGroup elementsShown={recomendedPlaylists.length} playlists={recomendedPlaylists} />
-          {/* Need to list the highlighted playlists and give the data */}
-      
-          {movies.items?.length > 0 &&
-              <MyGridMovies data={movies.items} maxRows={2} maxColumns={3} isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}></MyGridMovies>
-          }
-        </div>
-
-        <div className="relative mt-10 flex flex-row w-3/5 items-center justify-center m-auto">
-          <div className="m-auto">
-            <img className="w-full h-fit" src={require("./static/Black_Logo.png")} alt="Subscribe" />
 
           </div>
-          <div className="text-black text-base font-normal font-['SchoolBook'] uppercase tracking-wider m-auto px-6">
-          JAUNAS, VECAS, SLIKTĀKĀS, LABĀKĀS,<br/> LIELBUDŽETA, BEZBUDŽETA ĪSFILMAS,<br/>REŽISORI, OPERATORI UN CITI FILMU VAROŅI <br/>NO baltijas valstu filmu industrijas.
+
+          <div className="flex-col justify-center items-center mb-50">
+            <div className="text-center text-black typography-h2">PAR PROJEKTU</div>
+            <div className="my-50 m-auto w-3/5 text-black typography-body-large">Baltic Shorts ir digitāla straumēšanas platforma, kas fokusējas uz Baltijas valstīs (Latvija, Lietuva, Igaunija) radītu īsfilmu izrādīšanu. Projekta mērķis ir radīt un uzturēt ērti lietojamu plaša satura mājaslapu, kas attīsta īsfilmu formas pieejamību un to autoru atpazīstamību plašākā tirgū.</div>
+            <div className="w-fit px-10 m-auto text-center text-black !typography-body border border-black cursor-pointer h-30" onClick={() => navigate('/about')}>Uzzināt vairāk</div>
           </div>
-
-        </div>
-
-        <div className="flex-col justify-center items-center gap-12 my-24 w-3/5 m-auto">
-          <div className="text-center text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">PAR PROJEKTU</div>
-          <div className="m-auto w-3/5 text-black text-lg font-normal font-['SchoolBook'] my-10">Baltic Shorts ir digitāla straumēšanas platforma, kas fokusējas uz Baltijas valstīs (Latvija, Lietuva, Igaunija) radītu īsfilmu izrādīšanu. Projekta mērķis ir radīt un uzturēt ērti lietojamu plaša satura mājaslapu, kas attīsta īsfilmu formas pieejamību un to autoru atpazīstamību plašākā tirgū.</div>
-          <div className="w-fit px-5 m-auto grow shrink basis-0 text-center text-black text-base font-normal font-['SchoolBook'] border border-black cursor-pointer" onClick={() => navigate('/about')}>Uzzināt vairāk</div>
         </div>
       </div>
     </>

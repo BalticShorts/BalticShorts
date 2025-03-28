@@ -51,8 +51,8 @@ function Profile () {
       }, {});
 
       return (
-        <div className="min-h-screen bg-inherit text-gray-900">
-          <section className="w-4/5 mx-auto px-6 py-12 flex flex-row justify-between">
+        <div className="min-h-screen bg-inherit text-black max-w-[1100px] m-auto">
+          <section className="py-50 flex flex-row justify-between">
             <div className="flex flex-col">
                 <h1 className="text-4xl font-bold">{profile.name} {profile.surname} <span className="text-xs">{profile.nationality}</span></h1>
                 <h2 className="text-md mt-2 font-semibold">{profile.role}</h2>

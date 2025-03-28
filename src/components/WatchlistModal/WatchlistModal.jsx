@@ -121,7 +121,7 @@ const WatchlistModal = ({ isOpen, onClose, movieId }) => {
 
         <button
           onClick={saveChanges}
-          className="mt-4 w-full bg-black text-white px-3 py-2 hover:bg-gray-800"
+          className="mt-4 w-full bg-black text-beige px-3 py-2 hover:bg-gray-800"
         >
           Saglabāt
         </button>

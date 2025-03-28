@@ -120,7 +120,7 @@ const Purchase = () => {
             onClick={handlePayment}
             disabled={loading}
             className={`mt-4 border border-black px-4 py-2 text-sm font-semibold uppercase tracking-wide ${
-              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-black hover:text-white transition"
+              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-black hover:text-beige transition"
             }`}
           >
             {loading ? "Gaida..." : "Apstiprināt un maksāt"}

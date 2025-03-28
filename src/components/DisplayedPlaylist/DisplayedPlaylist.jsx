@@ -40,27 +40,31 @@ export const DisplayedPlaylist = ({ photoPosition, playlist }) => {
     return(
         <>
         {position === 'left' ? (
-        <div className="w-fit h-fit border border-black border-opacity-40 justify-center items-center flex flex-row my-6" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
-            <div className="relative w-[750px] h-[360px] border-r border-black border-opacity-40">
+        <div className="w-full h-fit border border-black justify-center items-center flex flex-row" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
+            <div className="relative w-[750px] h-[360px] border-r border-black">
                 <img className="w-[750px] h-[360px] object-cover" src={photoSrc} alt={playlist.title} />
-                <div className="pl-2 absolute bottom-0 w-4/5 text-stone-50 text-3xl font-bold font-['SchoolBook'] leading-loose">{playlist.title}</div>
+                <div className="pl-2 absolute bottom-0 w-4/5 text-stone-50 typography-h1-small uppercase mb-15">{playlist.title}</div>
             </div>
-            <div className="w-80 max-h-[360px] p-7 flex-col justify-between items-start inline-flex ">
+            <div className="w-1/3 max-h-[360px] p-7 flex-col justify-between items-start inline-flex ">
                 <div></div>
                 <div className="m-auto w-72 h-60 text-black text-base font-normal font-['SchoolBook'] break-words">{playlist.description}</div>
-                <div className="text-black text-base font-normal font-['SchoolBook'] border border-black h-fit w-fit px-6 cursor-pointer">Skatīties</div>
+                <button className="flex items-center button-default button-white" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
+                ▶ Skatīties
+              </button>
             </div>
         </div>
         ) : (
-        <div className="w-fit h-fit border border-black border-opacity-40 justify-center items-center flex flex-row" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
-            <div className="w-80 max-h-[360px] p-7 flex-col justify-between items-start inline-flex ">
+        <div className="w-fit h-fit border border-black justify-center items-center flex flex-row" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
+            <div className="w-1/3 max-h-[360px] p-7 flex-col justify-between items-start inline-flex ">
                 <div></div>
                 <div className="m-auto w-72 h-60 text-black text-base font-normal font-['SchoolBook'] break-words">{playlist.description}</div>
-                <div className="text-black text-base font-normal font-['SchoolBook'] border border-black h-fit w-fit px-6 cursor-pointer">Skatīties</div>
+                <button className="flex items-center button-default button-white" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
+                ▶ Skatīties
+                </button>
             </div>
-            <div className="relative w-[750px] h-[360px] border-l border-black border-opacity-40">
+            <div className="relative w-[750px] h-[360px] border-l border-black">
                 <img className="w-[750px] h-[360px] object-cover" src={photoSrc} alt={playlist.title} />
-                <div className="pl-2 absolute bottom-0 w-4/5 text-stone-50 text-3xl font-bold font-['SchoolBook'] leading-loose">{playlist.title}</div>
+                <div className="pl-2 absolute bottom-0 w-4/5 text-stone-50 typography-h1-small uppercase mb-15">{playlist.title}</div>
             </div>
         </div>  
         )}

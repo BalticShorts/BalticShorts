@@ -332,7 +332,7 @@ const Catalogue = () => {
             </div>
           </div>
         </div>
-        <div className='w-4/5 h-fit gap-6 flex flex-col items-center relative justify-center p-8 mx-auto'>
+        <div className='max-w-[1100px] m-auto h-fit gap-25 flex flex-col items-center relative justify-center'>
           {loading ? (
             <div className="text-center mt-4">Loading...</div>
           ) : (

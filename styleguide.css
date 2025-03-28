@@ -1,3 +1,8 @@
 :root {
-    --beige: #fdfcf5;
-  }
+  --beige: #fdfcf5;
+  --beige-70: rgba(253, 252, 245, 0.7); /* 70% opacity */
+
+  /* Typography */
+  --font-schoolbook: "SchoolBook", serif;
+  --font-arial: "Arial", sans-serif;
+}

@@ -43,9 +43,9 @@ export function MyGridPlaylists({ data, maxRows, maxColumns }) {
   };
 
   return (
-    <div className="w-full h-auto p-4 flex flex-col items-center bg-inherit">
+    <div className="w-full h-auto flex flex-col items-center bg-inherit">
       <div
-        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-center w-full bg-inherit`}
+        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-25 items-center w-full bg-inherit`}
       >
         {data.map((item, idx) => (
           <>
@@ -54,22 +54,22 @@ export function MyGridPlaylists({ data, maxRows, maxColumns }) {
                 {item !== null && (
                   <div
                     key={item.id}
-                    className="relative flex flex-col shadow-md bg-inherit border border-black max-h-[292px] sm:min-h-[292px] overflow-hidden"
+                    className="relative flex flex-col shadow-md bg-inherit border border-black max-h-[200px] overflow-hidden"
                     onClick={() => navigate(`/playlist/${item.id}`)}
                   >
-                    <div className="relative w-full h-full sm:h-48 sm:min-h-[192px] overflow-hidden bg-inherit">
+                    <div className="relative w-full h-full max-h-[100px] overflow-hidden bg-inherit">
                       <img
                         className="w-full h-full object-cover"
                         src={photoSrc[item.id]}
                         alt={item.title}
                       />
                     </div>
-                    <div className="mt-2 flex flex-col bg-inherit p-4 ">
-                      <span className="text-black text-lg font-bold">
+                    <div className="m-15 flex flex-col bg-inherit">
+                      <span className="typography-body !font-bold mb-10 uppercase">
                         {item.title}
                       </span>
-                      <div className="text-sm text-gray-600 mt-1">
-                        by {item.creator}
+                      <div className="typography-body-small mb-10">
+                        {item.creator}
                       </div>
                       <div className="text-sm text-gray-500">
                         FILMAS {item.size} | SEKOTĀJI 10
@@ -83,15 +83,20 @@ export function MyGridPlaylists({ data, maxRows, maxColumns }) {
         ))}
       </div>
       {data.length / maxColumns > rows && (
-        <div className="flex justify-center mt-6">
-          <button
-            className="px-4 py-2 text-black rounded-md shadow-md"
-            onClick={() => setRows(rows + 1)}
-          >
-            Vairāk
-          </button>
-        </div>
-      )}
+        <>
+          <div className="relative w-full h-10">
+            <div className="w-full absolute inset-x-0 -top-20 h-28 bg-gradient-to-t from-gray-100 to-transparent"/>
+            <div className="flex justify-center mt-20 ">
+              <button
+                className="typography-technical z-10"
+                onClick={() => setRows(rows + 1)}
+              >
+                Vairāk ▼
+              </button>
+            </div>
+          </div>
+        </>
+        )}
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { getMoviesByPlaylistId } from "../custom-queries/queries";
 import image from "./static/H_B.jpg";
 import { GlobalContext } from "../App";
+import { Navbar } from "../modified-ui-components/Header";
 
 const Playlist = () => {
   const context = useContext(GlobalContext);
@@ -80,17 +81,18 @@ const Playlist = () => {
 
   return (
     <div className="bg-beige min-h-screen">
+      <div className='absolute top-0 left-0 w-full z-10 text-beige hover:text-black hover:bg-beige fill-beige hover:fill-black'><Navbar/></div>
+      
       <div
-        className="relative w-full h-64 bg-gradient-to-b from-gray-800 to-transparent flex flex-col items-center justify-center"
+        className="relative w-full h-64 bg-gradient-to-b from-gray-800 to-transparent flex flex-col items-center justify-between"
         style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: "contain" }}
       >
-        <h1 className="text-3xl font-bold text-white tracking-wide w-3/4 text-left py-4">
+        <h1 className="typography-h1 !text-beige mt-150 w-full max-w-[1100px] text-left mb-10">
           {playlist.title}
         </h1>
-        <p className="text-xl relative w-3/4 text-left text-white">{playlist.creator}</p>
+        <p className="typography-body w-full max-w-[1100px] text-left text-beige mb-50">{playlist.creator}</p>
       </div>
-
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="mx-auto py-8 max-w-[1100px]">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">{movies.length} FILMAS</h2>
           <div className="flex items-center">

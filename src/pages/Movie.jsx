@@ -14,6 +14,7 @@ import WatchlistModal from "../components/WatchlistModal/WatchlistModal";
 import { MyGridPlaylists } from '../modified-ui-components/Grid/playlistGrid.jsx';
 import { GlobalContext } from "../App";
 import { LoginPopup } from "../components/LoginPopup/LoginPopup";
+import { Navbar, StickyNavbar } from '../modified-ui-components/Header/HEADER.jsx';
 
 Amplify.configure(awsExports);
 const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
@@ -327,72 +328,91 @@ function Movie() {
           subtitles={subtitles}
           thumbnail={thumbnailURL}
         />
-
         {!isMobile && (
           <div
             id="textOnMovie"
             className="TextOverlay absolute w-full h-full flex flex-col justify-between pointer-events-auto inset-0 z-0"
             style={{ "background-color" : 'rgba(0, 0, 0, 1)' }}
-          >
-            <div className="Rectangle3 w-full h-[20%] flex items-center justify-center bg-gradient-to-b from-stone-950 to-transparent">
-              <div className="text-center mix-blend-normal">
-                <h1 className="text-white text-sm sm:text-3xl lg:text-4xl font-bold font-['SchoolBook'] uppercase leading-10 text-opacity-90">
+          >        
+          <div className='absolute top-0 left-0 w-full z-10 text-beige hover:text-black hover:bg-beige fill-beige hover:fill-black'><Navbar/></div>
+
+            <div className="w-full h-[20%] flex flex-col items-center justify-center bg-gradient-to-b from-stone-950 to-transparent">
+
+              <div className="text-center mix-blend-normal mt-20">
+                <h1 className="text-beige typography-h1 text-opacity-90">
                   {movieData.name}
                 </h1>
-                <p className="text-white text-xs sm:text-sm lg:text-base font-normal font-['SchoolBook'] uppercase tracking-wider text-opacity-90">
+                <p className="text-beige typography-body uppercase text-opacity-90">
                   {movieData.name_eng}
                 </p>
               </div>
             </div>
 
             <div className="absolute inset-0 flex items-center justify-center">
-              <button className="w-14 h-14 flex items-center justify-center border border-white bg-transparent text-white hover:bg-white hover:text-black transition" onClick={() => removeText()}>
-                ▶
+              <button className="w-[60px] h-[60px] flex items-center justify-center border border-white bg-transparent text-beige hover:bg-beige hover:text-black transition" onClick={() => removeText()}>
+              <div className='flex items-center justify-center'>
+                <svg width="26" height="30" viewBox="0 0 26 30" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-colors duration-300 group-hover:fill-black">
+                  <path d="M25.5862 15L0.413767 30L0.413769 -1.10032e-06L25.5862 15Z" fill="currentColor"/>
+                </svg>
+              </div>
               </button>
             </div>
 
-            <div className="Rectangle4 w-full h-[20%] flex flex-col sm:flex-row items-center justify-between px-6 bg-gradient-to-t from-stone-950 to-transparent">
-              <div className="flex flex-col items-center gap-4 text-white ml-10 px-10">
-                {movieTrailer && (
-                <button className="flex items-center gap-2 border border-white px-4 py-2 hover:bg-white hover:text-black transition z-10" onClick={() => setIsVideoModalOpen(true)}>
-                  ▶ Treileris
-                </button>
-                )}
-                <div className="flex items-center gap-2 text-sm">
-                  🔊 {movieData.screen_language} | 🌍 {movieData.captions_language}
+            <div className="Rectangle4 w-full h-[20%] flex items-center justify-between bg-gradient-to-t from-stone-950 to-transparent">
+              <div className="!max-w-[1100px] flex flex-row justify-between m-auto w-full mb-50">
+                
+                <div className="flex flex-col items-start gap-20 text-beige w-1/3">
+                  {movieTrailer && (
+                    <button className="flex items-center button-default button-transparent z-10" onClick={() => setIsVideoModalOpen(true)}>
+                      ▶ Treileris
+                    </button>
+                  )}
+                  <div className="flex items-center gap-2 text-sm lowercase">
+                    <svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M0 3.94755V8.05245H2.7366L6.15735 11.4732V0.526796L2.7366 3.94755H0ZM9.23603 6C9.23589 5.42677 9.0757 4.86496 8.77352 4.37784C8.47134 3.89072 8.03916 3.49764 7.52565 3.24287V8.75029C8.5382 8.25086 9.23603 7.21095 9.23603 6ZM7.52565 0V1.40935C9.50285 1.99772 10.9464 3.83124 10.9464 6C10.9464 8.16876 9.50285 10.0023 7.52565 10.5906V12C10.2691 11.3774 12.3147 8.92816 12.3147 6C12.3147 3.07184 10.2691 0.622577 7.52565 0Z" fill="#FDFCF5" fill-opacity="0.7"/>
+                    </svg>
+                    {movieData.screen_language} | 
+                    <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M15.3147 0H0.314697V12H15.3147V0ZM1.8147 6H4.8147V7.5H1.8147V6ZM9.3147 10.5H1.8147V9H9.3147V10.5ZM13.8147 10.5H10.8147V9H13.8147V10.5ZM13.8147 7.5H6.3147V6H13.8147V7.5Z" fill="#FDFCF5" fill-opacity="0.7"/>
+                    </svg>
+                    {movieData.captions_language}
+                  </div>
                 </div>
-              </div>
 
-              <div className="text-center items-center text-white text-opacity-90 text-sm sm:text-lg lg:text-xl font-normal font-['SchoolBook'] m-auto">
-                <p>Režisors {movieTeamData.Director?.map((person) => person.name).join(", ")}</p>
-                <p>{movieData.origin_country} | {movieData.created_year} | {movieData.length}’ | {movieData.age_rating}+</p>
-                <p>{movieData.genre}</p>
-              </div>
-              <div className="flex items-center gap-4 mr-10 px-10">
-                <button className="border border-white text-white px-3 py-2 hover:bg-white hover:text-black transition z-10" onClick={() => {if(context.currentUser && Object.keys(context.currentUser).length > 0)setIsPlaylistModalOpen(true)}}>
-                  ☰
-                </button>
-                <button className="border border-white text-white px-3 py-2 hover:bg-white hover:text-black transition z-10" onClick={() => {if(context.currentUser && Object.keys(context.currentUser).length > 0)setIsPlaylistModalOpen(true)}}>
-                  ＋
-                </button>
+                <div className="flex flex-col items-center text-beige text-opacity-90 typography-body-small gap-2 w-1/3">
+                  <p>REŽISORS {movieTeamData.Director?.map((person) => person.name).join(", ")}</p>
+                  <p>{movieData.origin_country} | {movieData.created_year} | {movieData.length}’ | {movieData.age_rating}+</p>
+                  <p className='text-opacity-80'>{movieData.genre}</p>
+                </div>
+
+                <div className="flex flex-row items-center justify-end gap-4 w-1/3">
+                  <button className="button-transparent add z-10" onClick={() => {if(context.currentUser && Object.keys(context.currentUser).length > 0)setIsPlaylistModalOpen(true)}}>
+                    ☰
+                  </button>
+                  <button className="button-transparent add z-10" onClick={() => {if(context.currentUser && Object.keys(context.currentUser).length > 0)setIsPlaylistModalOpen(true)}}>
+                    ＋
+                  </button>
+                </div>
+
               </div>
             </div>
           </div>
         )}
       </div>
     </section>
-      <div className='Description w-full pt-8 flex flex-col items-center'>
-        <div className="w-full h-5 py-8 relative text-center text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">ANOTĀCIJA</div>
-        <div className="w-full h-45 mt-5 py-2 relative text-justify text-black text-xl font-normal font-['SchoolBook'] max-w-3xl">{movieData.description}</div>
+    <div className='!max-w-[1100px] items-center justify-center m-auto flex flex-col'>
+      <div className='w-full flex flex-col items-center mt-50'>
+        <div className="w-full relative text-center typography-h2 mb-25">ANOTĀCIJA</div>
+        <div className="w-full relative text-justify typography-body-large max-w-3xl mb-100">{movieData.description}</div>
         {/* <div className="w-full h-45 mt-5 py-2 relative text-justify text-black text-xl font-normal font-['SchoolBook'] max-w-3xl">Description in english: {movieData.description_eng}  </div> */}
       </div>
-      <div className='Description w-full pt-8 flex flex-col items-center'>
-        <div className="w-full h-5 py-8 relative text-center text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">AUTORU KOMENTARS</div>
-        <div className="w-full h-45 mt-5 py-2 relative text-justify text-black text-xl font-normal font-['SchoolBook'] max-w-3xl">{movieData.creators_comment}</div>
+      <div className='Description w-full flex flex-col items-center'>
+        <div className="w-full relative text-center typography-h2 mb-25">AUTORU KOMENTĀRS</div>
+        <div className="w-full relative text-justify typography-body-large max-w-3xl mb-100">{movieData.creators_comment}</div>
       </div>
-      <div className='Team w-3/4 pt-8 flex flex-col'>
-        <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">KOMANDA</div>
-          <div className="relative justify-center pt-8 gap-6 inline-flex flex-row items-center left-[15%] max-w-full min-w-fit">
+      <div className='flex flex-col mb-100'>
+        <div className="w-full relative typography-h2 mb-25">KOMANDA</div>
+          <div className="relative justify-center gap-6 inline-flex flex-row items-center max-w-full min-w-fit">
             <div className="m-auto w-full">
               {movieTeamKeyOrder.map((key, idx) => {
                 if (key in movieTeamData) {
@@ -402,14 +422,14 @@ function Movie() {
                   const tm = teamList;
                   teamList = [];
                   return (
-                    <div key={idx} className="grid grid-cols-3 gap-8 py-4 mx-auto">
+                    <div key={idx} className="grid grid-cols-3 justify-between mx-auto w-full gap-25 mb-20">
                       {tm.map((item, teamIdx) => (
-                        <div key={teamIdx} className="flex flex-col items-center gap-4">
-                          <span className="text-black text-base font-['SchoolBook']">{item[0].roleName}</span>
+                        <div key={teamIdx} className="flex flex-col gap-1 w-full">
+                          <span className="typography-body-small uppercase">{item[0].roleName}</span>
                           <div className="flex flex-col">
                             {item.map((person) => (
-                              <div key={person.id} className="flex flex-col items-center">
-                                <span className="text-black text-base font-bold font-['SchoolBook']">
+                              <div key={person.id} className="flex flex-col mb-1">
+                                <span className="typography-body !font-bold">
                                   <a href={"/profile/" + person.id}>{person.name}</a>
                                   <br />
                                 </span>
@@ -425,9 +445,9 @@ function Movie() {
             </div>
           </div>
         </div>
-        <div className='Team w-3/4 py-8 flex flex-col'>
-          <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">KADRI</div>
-          <div className="relative justify-center py-5 inline-flex flex-row items-center left-[15%] max-w-full min-w-fit">
+        <div className='flex flex-col mb-100'>
+          <div className="w-full relative typography-h2 mb-25">KADRI</div>
+          <div className="relative justify-center inline-flex flex-row items-center max-w-full min-w-fit">
             <div className="carousel-container w-full relative m-auto">
               {photoURLs.length > 0 ? (
                 <Carousel>
@@ -444,23 +464,23 @@ function Movie() {
           </div>
         </div>
         {movieData?.awards?.items.length > 0 && (
-          <div className="Team w-3/4 pt-8 flex flex-col">
-            <div className="Komanda w-full h-5 left-[15%] relative text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">
+          <div className="flex flex-col mb-100 w-full">
+            <div className="w-full relative typography-h2 mb-25">
               PANĀKUMI & FESTIVĀLI
             </div>
-            <div className="relative py-5 flex flex-col left-[15%] max-w-full min-w-fit">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="relative flex flex-col w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-25">
                 {movieData.awards.items.map((award, index) => (
                   <div
                     key={index}
-                    className="flex flex-col items-start justify-start p-4 rounded-md"
+                    className="flex flex-col items-start justify-start rounded-md"
                   >
-                    <div className="text-black text-xl font-semibold font-['SchoolBook']">
+                    <div className="typography-body !font-bold">
                       {award.name}
                     </div>
-                    <div className="flex items-center text-black text-md font-normal font-['SchoolBook'] mt-2">
-                      <span className='mr-2'>{award.year}</span>
-                      <span className='mr-2'>{award.category}</span>
+                    <div className="flex items-center typography-body-small">
+                      <span className='mr-1'>{award.year}</span>
+                      <span className='mr-1'>{award.category}</span>
                       {award.type && (
                         <span> - {award.type}</span>
                       )}
@@ -471,12 +491,13 @@ function Movie() {
             </div>
           </div>
         )}
-        <div className='h-fit gap-6 my-24 flex flex-col relative justify-center m-auto items-center'>
-          <div className="w-3/4 h-5 text-black text-xl font-bold font-['Arial'] uppercase tracking-wide relative">Saraksti, kuros filma ir iekļauta</div>
-          <div className='w-3/4 h-fit gap-6 flex flex-col items-center relative justify-center '>
+        <div className='h-fit flex flex-col relative justify-center m-auto items-center mb-100'>
+          <div className="w-full relative typography-h2 mb-25">Saraksti, kuros filma ir iekļauta</div>
+          <div className='w-full h-fit gap-6 flex flex-col items-center relative justify-center '>
             <MyGridPlaylists data={playlists.flat()} maxRows={3} maxColumns={3} />
           </div>
         </div>
+      </div>
       </div>
       {isVideoModalOpen && (
         <VideoModal
@@ -504,13 +525,13 @@ function Movie() {
             <h2 className="text-2xl font-bold mb-4">Abonējiet!</h2>
             <p className="mb-4">Lai skatītos īsfilmas, nepieciešams aktīvs abonements.</p>
             <button
-              className="bg-beige text-black px-2 py-2 rounded mt-4 border border-black px-4 py-2 text-sm font-semibold uppercase tracking-wide hover:bg-black hover:text-white transition mx-2"
+              className="bg-beige text-black px-2 py-2 rounded mt-4 border border-black px-4 py-2 text-sm font-semibold uppercase tracking-wide hover:bg-black hover:text-beige transition mx-2"
               onClick={() => navigate('/subscribe')}
             >
               Abonēt
             </button>
             <button
-              className="bg-beige text-black px-2 py-2 rounded mt-4 border border-black px-4 py-2 text-sm font-semibold uppercase tracking-wide hover:bg-black hover:text-white transition mx-2"
+              className="bg-beige text-black px-2 py-2 rounded mt-4 border border-black px-4 py-2 text-sm font-semibold uppercase tracking-wide hover:bg-black hover:text-beige transition mx-2"
               onClick={() => setShowSubscribeModal(false)}
             >
               Aizvērt

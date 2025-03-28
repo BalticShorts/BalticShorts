@@ -9,17 +9,17 @@ const About = () => {
 
     return(
         <>
-        <div className="ParBalticShorts w-full h-fit relative bg-beige">
+        <div className="ParBalticShorts w-full h-fit relative bg-beige mt-50 max-w-[1100px] m-auto flex flex-col items-center">
                 <div className="LogoContainer w-full h-fit flex flex-col items-center justify-center">
-                    <div className="Logo w-80 h-48 relative flex flex-col items-center mt-10 mb-24">
+                    <div className="Logo w-80 h-48 relative flex flex-col items-center mb-50">
                         <img className="w-full h-full" src={require("./static/Logo.png")} alt="Baltic shorts logo" />
                     </div>
                 </div>
             
             
-            <div className="ParProjektu items-center flex flex-col py-10">
-                <div className="mb-10 w-full h-5 relative text-center text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">PAR PROJEKTU</div>
-                <div className="w-1/2 relative text-justify text-black text-lg font-normal font-['SchoolBook']">
+            <div className="ParProjektu items-center flex flex-col justify-center mb-100">
+                <div className="w-full relative typography-h2 mb-50 text-center">PAR PROJEKTU</div>
+                <div className="w-3/5 relative text-justify typography-body-large">
                     <p>Baltic Shorts ir digitāla straumēšanas platforma, kas fokusējas uz Baltijas valstīs (Latvija, Lietuva, Igaunija) radītu īsfilmu izrādīšanu.
                     Projekta mērķis ir radīt un uzturēt ērti lietojamu plaša satura mājaslapu, kas attīsta īsfilmu formas pieejamību un to autoru atpazīstamību plašākā tirgū.</p>
                     <br/>
@@ -29,52 +29,53 @@ const About = () => {
                     </div>
             </div>
 
-            <div className="Atbildiba items-center flex flex-col py-10">
-                <div className="mb-10 w-full h-5 relative text-center text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">ATBILDĪBA</div>
-                <div className="mb-10 relative justify-start items-start gap-6 inline-flex">
-                    <div className="w-96 text-center">
-                        <span className="text-black text-sm font-normal font-['SchoolBook']">PROJEKTA VADĪTĀJS<br/></span>
-                        <span className="text-black text-base font-bold font-['SchoolBook']">Emīls Alps</span>
+            <div className="items-center flex flex-col mb-100 w-full">
+                <div className="w-full relative typography-h2 mb-50 text-center">KOMANDA</div>
+                <div className="w-full relative justify-between items-center gap-25 inline-flex">
+                    <div className="w-full text-center">
+                        <span className="typography-body-small">PROJEKTA VADĪTĀJS<br/></span>
+                        <span className="typography-body !font-bold">Emīls Alps</span>
                     </div>
-                    <div className="w-96 text-center">
-                        <span className="text-black text-sm font-normal font-['SchoolBook']">GALVENAIS KURATORS<br/></span>
-                        <span className="text-black text-base font-bold font-['SchoolBook']">Rūdolfs Deinats</span>
+                    <div className="w-full text-center">
+                        <span className="typography-body-small">GALVENAIS KURATORS<br/></span>
+                        <span className="typography-body !font-bold">Rūdolfs Deinats</span>
                     </div>
-                    <div className="w-96 text-center">
-                        <span className="text-black text-sm font-normal font-['SchoolBook']">DIZAINS<br/></span>
-                        <span className="text-black text-base font-bold font-['SchoolBook']">Dans Jirgensons</span>
+                    <div className="w-full text-center">
+                        <span className="typography-body-small">DIZAINS<br/></span>
+                        <span className="typography-body !font-bold">Dans Jirgensons</span>
                     	</div>
                 </div>
-                <div className="relative justify-start items-start gap-6 inline-flex">
-                    <div className="w-96 text-center">
-                        <span className="text-black text-sm font-normal font-['SchoolBook']">LAPAS IZSTRĀDE<br/></span>
-                        <span className="text-black text-base font-bold font-['SchoolBook']">Dāvis Jankevics</span>
+                <div className="relative justify-between items-center inline-flex mt-10">
+                    <div className="w-full text-center">
+                        <span className="typography-body-small">LAPAS IZSTRĀDE<br/></span>
+                        <span className="typography-body !font-bold">Dāvis Jankevics</span>
                     </div>
                 </div>
             </div>
 
-            <div className="Atbalstitaji items-center flex flex-col mt-10 py-10">
-                <div className="mb-10 w-full h-5 relative text-center text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">ATBALSTĪTĀJI</div>
-                <div className="mb-10 relative justify-start items-start gap-6 inline-flex">
-                    <div className="w-96 text-center">
-                        <span className="text-black text-base font-bold font-['SchoolBook']">Latvijas Valsts Kultūrkapitālfonds<br/></span>
+            <div className="items-center flex flex-col mb-100 w-full">
+                <div className="w-full relative typography-h2 mb-50 text-center">ATBALSTĪTĀJI</div>
+                <div className="w-full relative justify-between items-center gap-25 inline-flex">
+                    <div className="w-full text-center">
+                        <span className="typography-body !font-bold">Latvijas Valsts Kultūrkapitālfonds<br/></span>
                     </div>
-                    <div className="w-96 text-center">
-                        <span className="text-black text-base font-bold font-['SchoolBook']">Latvijas Kultūras Akadēmija</span>
+                    <div className="w-full text-center">
+                        <span className="typography-body !font-bold">Latvijas Kultūras Akadēmija</span>
                     </div>
-                    <div className="w-96 text-center">
-                        <span className="text-black text-base font-bold font-['SchoolBook']">Latvijas Mākslas Akadēmija</span>
+                    <div className="w-full text-center">
+                        <span className="typography-body !font-bold">Latvijas Mākslas Akadēmija</span>
                     	</div>
                 </div>
-                <div className="relative justify-start items-start gap-6 inline-flex">
-                    <div className="w-96 text-center">
-                        <span className="text-black text-base font-bold font-['SchoolBook']">Citas Baltijas filmu skolas</span>
+                <div className="relative justify-start items-start gap-6 inline-flex mt-10">
+                    <div className="w-full text-center">
+                        <span className="typography-body !font-bold">Citas Baltijas filmu skolas</span>
                     </div>
                 </div>
-
             </div>
-
-            <div id="contact" className="w-full h-64 py-20 my-10 relative text-center text-black text-xl font-bold font-['Arial'] uppercase tracking-wide">info@balticshorts.com</div>
+            <div className="items-center flex flex-col mb-100 w-full">
+                <div className="w-full relative typography-h2 mb-50 text-center">Sazinies ar mums</div>
+                <div id="contact" className="w-fit text-center relative button-default typography-body border border-black !font-normal">info@balticshorts.com</div>
+            </div>
         </div>
         </>
     );

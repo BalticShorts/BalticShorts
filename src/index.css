@@ -76,3 +76,64 @@ code {
 .bmpui-ui-playbacktogglebutton.bmpui-on.bmpui-stoptoggle {
   background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' style='enable-background:new 0 0 32 32' xml:space='preserve'%3E%3Cpath d='M24.3 5.4H7.7c-1.3 0-2.4 1.1-2.4 2.4v16.5c0 1.3 1.1 2.4 2.4 2.4h16.5c1.3 0 2.4-1.1 2.4-2.4V7.7c0-1.3-1-2.3-2.3-2.3zm0 18.9H7.7V7.7h16.5v16.6z' style='fill:%23fff'/%3E%3C/svg%3E")
 }
+/* Typography */
+.typography-h1 {
+  @apply text-h1 font-schoolbook font-bold leading-[45px] tracking-normal align-bottom uppercase;
+}
+
+.typography-h1-small {
+  @apply text-h1-small font-schoolbook font-bold leading-[31px] tracking-normal align-bottom;
+}
+
+.typography-h2 {
+  @apply text-h2 font-arial font-bold leading-[100%] tracking-[5%] align-bottom uppercase;
+}
+
+.typography-body-large {
+  @apply text-body-large font-schoolbook font-normal leading-[100%] tracking-normal align-bottom;
+}
+
+.typography-body {
+  @apply text-body font-schoolbook font-normal leading-[100%] tracking-normal align-bottom;
+}
+
+.typography-body-small {
+  @apply text-body-small font-schoolbook font-normal leading-[100%] tracking-normal align-bottom;
+}
+
+.typography-technical {
+  @apply text-technical-small font-arial font-normal leading-[100%] tracking-[10%] align-bottom;
+}
+
+/* Link Styles */
+.link-normal {
+  @apply text-body font-schoolbook font-normal leading-[100%] tracking-normal align-bottom;
+}
+
+.link-hover:hover {
+  @apply text-body font-schoolbook font-normal leading-[100%] tracking-normal align-bottom opacity-70;
+}
+
+.link-active {
+  @apply text-body font-schoolbook font-bold leading-[100%] tracking-normal align-bottom;
+}
+
+.button-default {
+  @apply text-body font-schoolbook font-bold leading-[100%] tracking-normal align-bottom h-30 p-10;
+}
+
+.button-white {
+  @apply border border-black bg-beige text-black hover:bg-black hover:text-beige transition;
+}
+
+.button-black {
+  @apply border border-white bg-black text-beige hover:bg-white hover:text-black transition;
+}
+
+.button-transparent {
+  @apply border border-white bg-transparent text-beige hover:bg-white hover:text-black transition;
+}
+
+.button-transparent.add {
+  @apply h-30 w-30;
+}

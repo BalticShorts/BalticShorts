@@ -1,61 +1,105 @@
-import React, { useState} from "react";
+import React, { useState, useRef} from "react";
 import WatchlistModal from "../WatchlistModal/WatchlistModal";
+import { Navbar } from "../../modified-ui-components/Header";
 
 const MainMovie = ({ movie, isLoggedIn }) => {
 
     const director = movie.MovieTeam?.PersonMovieTeams.items.find(person => person.Role.name === "Režisors");
     const mov = 'https://balticshortsphotos.s3.eu-north-1.amazonaws.com/' + movie?.trailer_location.replace("balticshortsphotos/", "")
+    const img = 'https://balticshortsphotos.s3.eu-north-1.amazonaws.com/' + movie?.thumbnail_location.replace("balticshortsphotos/", "")
 
     const [modalOpen, setModalOpen] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
+    const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+
+    const videoRef = useRef(null);
+
+    const handleMouseEnter = () => {
+      setIsHovered(true);
+      if (isVideoLoaded && videoRef.current) {
+        videoRef.current.play();
+      }
+    };
+  
+    const handleMouseLeave = () => {
+      setIsHovered(false);
+      if (isVideoLoaded &&videoRef.current) {
+        videoRef.current.pause();
+      }
+    };
+
+    const handleVideoLoaded = () => {
+      setIsVideoLoaded(true);
+      console.log("isHovered");
+      if (isHovered && videoRef.current) {
+        videoRef.current.play(); // Play if mouse is already hovering
+      }
+    };
 
   return (
-    <section className="relative w-full h-[70vh] sm:h-[80vh] bg-black z-0">
+    <section className="relative w-full h-[70vh] sm:h-[80vh] bg-black z-0"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}>
       <div className="absolute inset-0">
-        <video className='videoTag overflow-hidden object-cover w-full h-full -z-10' autoPlay loop muted>
+        
+        <video ref={videoRef} className={`videoTag overflow-hidden object-cover w-full h-full -z-10 ${
+          isHovered ? "opacity-100" : "opacity-0"
+        }`} loop muted onLoadedData={handleVideoLoaded}>
           <source src={mov} type="video/mp4" alt={movie.name}/>
         </video>
+        <img
+        src={img}
+        alt="Thumbnail"
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+          isHovered ? "opacity-0" : "opacity-100"
+        }`}
+        />
         <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       </div>
 
-      <div className="relative z-0 flex flex-col justify-between h-full text-white px-6 sm:px-20 mx-24">
-        <div className="mt-12 sm:mt-20">
-          <p className="uppercase text-sm sm:text-base tracking-widest mb-2 sm:mb-4">
+      <div className="relative z-0 flex flex-col h-full text-beige m-auto">
+      <div className='w-full z-10 hover:bg-beige text-beige hover:text-black fill-beige hover:fill-black hover:border hover:border-b-2 hover:border-black border-none'><Navbar/></div>
+      <div className="relative z-0 flex flex-col justify-between h-full text-beige max-w-[1100px] m-auto">
+
+        <div className="mt-25">
+          <p className="typography-technical uppercase">
             Nedēļas īsfilma
           </p>
 
-          <h1 className="text-3xl sm:text-5xl font-bold leading-tight">
+          <h1 className="typography-h1 my-10">
             {movie.name.toUpperCase()}
           </h1>
 
-          <p className="text-lg sm:text-xl text-gray-300 mt-1">
+          <p className="typography-body uppercase">
             {movie.name_eng}
           </p>
         </div>
 
-        <div className="mb-12 sm:mb-20 flex items-center justify-center sm:justify-between gap-6">
+        <div className="mb-12 sm:mb-50 flex items-center justify-center sm:justify-between gap-6">
           <div className="flex flex-col sm:ml-10">
-            <p className="text-sm sm:text-base text-gray-300">
-              <span className="font-semibold">{director?.Person.name + ' ' + director?.Person.surname}</span>
+            <p className="typography-body">
+              <span>{director?.Person.name + ' ' + director?.Person.surname}</span>
             </p>
-            <p className="text-sm sm:text-base text-gray-300 mb-4">
+            <p className="typography-technical mb-20">
               <span className="text-gray-400">{movie.length}’, {movie.created_year}, {movie.origin_country}</span>
             </p>
 
-            <div className="flex gap-4">
-              <button className="flex items-center px-4 py-2 border border-white bg-black text-white hover:bg-white hover:text-black transition" onClick={() => window.location.href = '/movie/'+encodeURIComponent(movie.name) + '/' + encodeURIComponent(movie.id)}>
+            <div className="flex gap-10">
+              <button className="flex items-center button-default button-transparent" onClick={() => window.location.href = '/movie/'+encodeURIComponent(movie.name) + '/' + encodeURIComponent(movie.id)}>
                 ▶ Skatīties
               </button>
-              <button className="px-3 py-2 border border-white text-white bg-transparent hover:bg-white hover:text-black transition" onClick={() => {if(isLoggedIn)setModalOpen(true)}}>
+              <button className="flex items-center button-default button-transparent add" onClick={() => {if(isLoggedIn)setModalOpen(true)}}>
                 +
               </button>
             </div>
           </div>
 
-          <p className="max-w-2xl sm:max-w-3xl text-sm sm:text-base text-gray-300 text-left px-20 sm:p-10">
+          <p className="typography-body-small text-beige w-1/2">
             {movie.description}
           </p>
+          </div>
+          </div>
         </div>
-      </div>
       <WatchlistModal isOpen={modalOpen} onClose={() => setModalOpen(false)} movieId={movie.id} />
     </section>
   );

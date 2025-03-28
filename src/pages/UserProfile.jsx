@@ -57,8 +57,8 @@ const UserProfilePage = () => {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="bg-beige min-h-screen felx flex-col">
-      <header className="py-10 m-auto mx-auto max-w-6xl">
+    <div className="bg-beige min-h-screen felx flex-col max-w-[1100px] m-auto">
+      <header className="py-50 m-auto mx-auto">
         <h1 className="text-4xl font-bold tracking-wide">{profile.name} {profile.surname}</h1>
         <nav className="mt-2 text-sm font-semibold">
           {/* <a href="#" className="mr-6">SKATĪŠANĀS VĒSTURE</a> */}
@@ -66,7 +66,7 @@ const UserProfilePage = () => {
         </nav>
       </header>
 
-      <main className="max-w-6xl mx-auto">
+      <main className="m-auto">
         <section className="mb-10">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">SKATĪTIES VĒLĀK <sup>{watchLaterMovies.length}</sup></h2>

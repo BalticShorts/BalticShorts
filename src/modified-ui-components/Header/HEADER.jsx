@@ -4,11 +4,15 @@ import { Dropdown } from "./Dropdown";
 import { useContext } from "react";
 import { GlobalContext } from "../../App";
 import { LoginPopup } from "../../components/LoginPopup/LoginPopup";
+import gifAnimation from "../../assets/images/bs_logo_animation.gif";
+import { ReactComponent as Logo } from "../../assets/images/bs_logo_wide.svg";
+import { ReactComponent as User } from "../../assets/images/user.svg";
 
 export const Navbar = () => {
   const context = useContext(GlobalContext);
 
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   function toggleDropdown(){
     setShowDropdown(!showDropdown);
@@ -44,29 +48,44 @@ export const Navbar = () => {
 
   return (
     <>
-      <div className="w-full h-11 min-h-full relative bg-inherit flex flex-row justify-center items-center">
-        <div className="w-full max-w-screen-lg flex flex-row justify-between items-center px-4 sm:px-6 m-auto">
-          <div className="flex flex-row gap-4 sm:gap-20 px-1">
-            <div className="pt-1 text-black text-lg font-normal font-['SchoolBook'] tracking-tight">
-              <a href="/search">Meklēt</a>
+      <div className="w-full h-50 min-h-full bg-inherit flex flex-row justify-center items-center">
+        <div className="w-full flex flex-row justify-between items-center m-auto !max-w-[1100px] my-15">
+          <div className="flex flex-row gap-25">
+            <div className="typography-body-small text-center items-center flex">
+              <a href="/search">
+                Meklēt
+              </a>
             </div>
-            <div className="pt-1 text-black text-lg font-normal font-['SchoolBook'] tracking-tight">
+            <div className="typography-body-small text-center items-center flex">
               <a href="/catalogue">Katalogs</a>
             </div>
           </div>
 
-          {/* Centered Title */}
-          <div className="flex-grow text-black text-xl sm:text-2xl md:text-3xl font-bold font-['SchoolBook'] uppercase tracking-[5px] sm:tracking-[9px] text-center overflow-hidden min-w-fit flex justify-center items-center px-1">
-            <a href="/">Baltic Shorts</a>
+          <div className="relative text-center justify-center items-center w-1/3 group" 
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}>
+            
+            {!isHovered ? (
+            <Logo onClick={() => window.location.href = '/'}/>
+            ):(
+            <img
+              src= {gifAnimation}
+              alt="Baltic Shorts"
+              className="w-auto h-4/5 cursor-pointer"
+              onClick={() => window.location.href = '/'}
+            />
+            )}
           </div>
 
-          <div className="flex flex-row gap-4 sm:gap-20">
+          <div className="flex flex-row gap-25">
             <div className="relative flex flex-row cursor-pointer">
               {context.loggedIn ? (
-                <div className="m-auto relative mr-4"><a href={"/user/" + context.currentUser?.id}>{context.currentUser?.name}</a></div>
+                <div className="m-auto relative">
+                  <User className="text-white" onClick={() => window.location.href = "/user/" + context.currentUser?.id}/>
+                </div>
               ) : (
                 <div
-                  className="cursor-pointer m-auto pt-1 text-black text-lg font-normal font-['SchoolBook'] mr-4"
+                  className="cursor-pointer typography-body-small text-center items-center flex"
                   onClick={() => openModal()}
                 >
                   Ienākt

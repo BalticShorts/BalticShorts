@@ -120,7 +120,7 @@ export function CreateAwards(props) {
         <button
           type="button"
           onClick={handleAddAward}
-          className="mb-4 p-2 bg-blue-500 text-white rounded-md"
+          className="mb-4 p-2 bg-blue-500 text-beige rounded-md"
         >
           Add an Award
         </button>

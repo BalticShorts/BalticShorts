@@ -66,7 +66,7 @@ export const SearchableMovieDropdown = ({ items, selectedItems, setSelectedItems
           <div key={item.id} className="flex items-center p-2 border rounded mb-2 z-10">
             <span className="flex-grow">{item.name}</span>
             <button
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
+              className="bg-red-500 hover:bg-red-700 text-beige font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline"
               type="button"
               onClick={() => handleRemoveItem(item.id)}
             >
