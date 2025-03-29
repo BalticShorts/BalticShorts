@@ -7,12 +7,15 @@ import { LoginPopup } from "../../components/LoginPopup/LoginPopup";
 import gifAnimation from "../../assets/images/bs_logo_animation.gif";
 import { ReactComponent as Logo } from "../../assets/images/bs_logo_wide.svg";
 import { ReactComponent as User } from "../../assets/images/user.svg";
+import { ReactComponent as X } from "../../assets/images/x.svg";
+import Search from "../../pages/Search";
 
 export const Navbar = () => {
   const context = useContext(GlobalContext);
 
   const [showDropdown, setShowDropdown] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [showSearchModal, setShowSearchModal] = useState(false); // State to control search modal visibility
 
   function toggleDropdown(){
     setShowDropdown(!showDropdown);
@@ -23,6 +26,25 @@ export const Navbar = () => {
       setShowDropdown(!showDropdown);
     context.setLoggedInModal(true);
   }
+
+  function openSearchModal() {
+    setShowSearchModal(true);
+  }
+
+  function closeSearchModal() {
+    setShowSearchModal(false); // Close the search modal
+  }
+
+  useEffect(() => {
+    if (showSearchModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [showSearchModal]);
 
   useEffect(() => {
     // Are there users, that are logged in and are no paying???
@@ -52,13 +74,22 @@ export const Navbar = () => {
         <div className="w-full flex flex-row justify-between items-center m-auto !max-w-[1100px] my-15">
           <div className="flex flex-row gap-25">
             <div className="typography-body-small text-center items-center flex">
-              <a href="/search">
-                Meklēt
-              </a>
+              {showSearchModal ? (
+                <div onClick={closeSearchModal} className="cursor-pointer flex flex-row items-center">
+                  <X className="w-15 h-15 mr-2" />
+                  <div className="typography-body-small">Aizvērt</div>
+                </div>
+              ) : (
+                <span onClick={openSearchModal} className="cursor-pointer typography-body-small">
+                  Meklēt
+                </span>
+              )}
             </div>
-            <div className="typography-body-small text-center items-center flex">
+            {!showSearchModal && (
+              <div className="typography-body-small text-center items-center flex cursor-pointer">
               <a href="/catalogue">Katalogs</a>
             </div>
+            )}
           </div>
 
           <div className="relative text-center justify-center items-center w-1/3 group" 
@@ -78,6 +109,7 @@ export const Navbar = () => {
           </div>
 
           <div className="flex flex-row gap-25">
+          {!showSearchModal && (
             <div className="relative flex flex-row cursor-pointer">
               {context.loggedIn ? (
                 <div className="m-auto relative">
@@ -113,9 +145,17 @@ export const Navbar = () => {
                 </div>
               </div>
             </div>
+            )}
           </div>
         </div>
       </div>
+      {showSearchModal && (
+        <div className="absolute top-[50px] left-0 right-0 bottom-0 bg-beige z-[80] overflow-auto min-h-screen h-full">
+          <div className="relative w-full h-fit min-h-screen">
+            <Search />
+          </div>
+        </div>
+      )}
       <LoginPopup />
     </>
   );  

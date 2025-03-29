@@ -318,6 +318,8 @@ function Movie() {
   return (
     <>
     <div className="FilmasSkats w-full relative bg-beige rounded-3xl">
+    <div className='absolute top-0 left-0 w-full z-10 text-beige hover:text-black hover:bg-beige fill-beige hover:fill-black'><Navbar/></div>
+
     <section
       className="MovieContainer w-full max-h-[80vh] relative min-w-2/5"
     >
@@ -334,8 +336,6 @@ function Movie() {
             className="TextOverlay absolute w-full h-full flex flex-col justify-between pointer-events-auto inset-0 z-0"
             style={{ "background-color" : 'rgba(0, 0, 0, 1)' }}
           >        
-          <div className='absolute top-0 left-0 w-full z-10 text-beige hover:text-black hover:bg-beige fill-beige hover:fill-black'><Navbar/></div>
-
             <div className="w-full h-[20%] flex flex-col items-center justify-center bg-gradient-to-b from-stone-950 to-transparent">
 
               <div className="text-center mix-blend-normal mt-20">
@@ -400,7 +400,7 @@ function Movie() {
         )}
       </div>
     </section>
-    <div className='!max-w-[1100px] items-center justify-center m-auto flex flex-col'>
+    <div className='!max-w-[1100px] items-center justify-center m-auto flex flex-col z-0'>
       <div className='w-full flex flex-col items-center mt-50'>
         <div className="w-full relative text-center typography-h2 mb-25">ANOTĀCIJA</div>
         <div className="w-full relative text-justify typography-body-large max-w-3xl mb-100">{movieData.description}</div>

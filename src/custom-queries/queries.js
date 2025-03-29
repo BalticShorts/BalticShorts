@@ -155,6 +155,7 @@ export const getSearch = `
         id
         is_public
         size
+        photo_location
       }
     }
   }

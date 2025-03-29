@@ -53,12 +53,12 @@ export const PersonList = ({ data }) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4 w-full items-center bg-inherit">
+    <div className="flex flex-col gap-4 py-4 w-full items-center bg-inherit">
       {data.map((person, index) => (
         <>
         <div
           key={index}
-          className="flex flex-col md:flex-row justify-between items-start md:items-end bg-inherit p-4 border-b-2 border-black w-4/5"
+          className="flex flex-col md:flex-row justify-between items-start md:items-end bg-inherit border-b-2 border-black w-full"
           >
           <div className="flex flex-col md:items-start items-start">
             <div className="flex items-center gap-2 ">
