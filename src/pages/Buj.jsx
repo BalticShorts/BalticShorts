@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { GlobalContext } from "../App";
 import TermsOfService from "../components/TermsOfService/TOS";
 import Agreement from "../components/Agreement/Agreement";
+import Privacy from "../components/Privacy/Privacy";
 
 const Buj = () => {
   const faqRef = useRef(null);
@@ -97,12 +98,7 @@ const Buj = () => {
           </section>
     
           <section ref={privacyRef} className="mb-12">
-            <h2 className="text-xl font-semibold">PRIVĀTUMA POLITIKA</h2>
-            <ol className="list-decimal ml-6 space-y-2 p-6">
-              <li>SIA "Neonorma" apstrādā Klientu personas datus saskaņā ar Latvijas Republikas un Eiropas Savienības normatīvajiem aktiem par datu aizsardzību.</li>
-              <li>Klienta dati tiek izmantoti tikai tādā apjomā, kāds nepieciešams Pakalpojuma sniegšanai un uzlabošanai, kā arī lai nodrošinātu personalizētu lietošanas pieredzi.</li>
-              <li>Klientiem ir tiesības atteikties no komerciālo paziņojumu saņemšanas e-pastā, izmantojot atteikšanās saiti katrā paziņojumā.</li>
-            </ol>
+            <Privacy />
           </section>
           <section className="mb-12" ref={agreementRef}>
             <Agreement />

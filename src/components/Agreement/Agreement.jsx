@@ -1,7 +1,7 @@
 export default function Agreement() {
     return (
       <div className="max-w-full p-6">
-        <h2 className="text-xl font-bold text-center">Distances līgums<br/>Par audiovizuālo materiālu straumēšanas pakalpojuma sniegšanu</h2>
+        <h2 className="text-xl font-bold text-center mb-25">Distances līgums<br/>Par audiovizuālo materiālu straumēšanas pakalpojuma sniegšanu</h2>
         <ol className="list-decimal space-y-4 ml-4 counter-reset">
           <li>
             <strong>Vispārīgā informācija</strong>
