@@ -54,7 +54,7 @@ export function MyGridPlaylists({ data, maxRows, maxColumns }) {
                 {item !== null && (
                   <div
                     key={item.id}
-                    className="relative flex flex-col shadow-md bg-inherit border border-black max-h-[200px] overflow-hidden"
+                    className="relative flex flex-col bg-inherit border border-black max-h-[200px] overflow-hidden"
                     onClick={() => navigate(`/playlist/${item.id}`)}
                   >
                     <div className="relative w-full h-full max-h-[100px] overflow-hidden bg-inherit">

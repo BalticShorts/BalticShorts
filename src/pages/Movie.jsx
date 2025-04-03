@@ -338,7 +338,7 @@ function Movie() {
           >        
             <div className="w-full h-[20%] flex flex-col items-center justify-center bg-gradient-to-b from-stone-950 to-transparent">
 
-              <div className="text-center mix-blend-normal mt-20">
+              <div className="text-center mix-blend-normal mt-75 mx-auto max-w-[1100px]">
                 <h1 className="text-beige typography-h1 text-opacity-90">
                   {movieData.name}
                 </h1>

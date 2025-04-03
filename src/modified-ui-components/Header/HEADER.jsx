@@ -92,17 +92,17 @@ export const Navbar = () => {
             )}
           </div>
 
-          <div className="relative text-center justify-center items-center w-1/3 group" 
+          <div className="relative text-center !justify-between !items-center w-1/3 group h-20" 
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}>
             
             {!isHovered ? (
-            <Logo onClick={() => window.location.href = '/'}/>
+            <Logo onClick={() => window.location.href = '/'} className="h-20 mx-auto"/>
             ):(
             <img
               src= {gifAnimation}
               alt="Baltic Shorts"
-              className="w-auto h-4/5 cursor-pointer"
+              className="w-auto h-20 cursor-pointer mx-auto"
               onClick={() => window.location.href = '/'}
             />
             )}

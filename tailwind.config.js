@@ -20,7 +20,8 @@ module.exports = {
         "technical-small": "10px",
       },
       fontFamily: {
-        schoolbook: ["Century Schoolbook", "serif"],
+        schoolbook: ["schoolbookregular"],
+        schoolbookbold: ["schoolbookbold"],
         century: ["Century Schoolbook", "Georgia", "serif"],
         arial: ["var(--font-arial)", "Arial", "sans-serif"],
       },
@@ -39,10 +40,12 @@ module.exports = {
         20: "20px",
         25: "25px",
         50: "50px",
+        75: "75px",
         100: "100px",
         150: "150px",
       },
       height: {
+        20: "20px",
         30: "30px",
         50: "50px",
       },

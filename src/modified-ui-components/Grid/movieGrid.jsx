@@ -96,7 +96,7 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
                       )}
                     </div>
                     <div className="mt-10 lg:mt-15 flex flex-col bg-inherit mx-15 justify-between">
-                      <div className="typography-body-large uppercase !font-bold">
+                      <div className="typography-body-large-bold uppercase !font-bold">
                         {item.name}
                       </div>
                       <div className="mt-10 mb-15 flex flex-row bg-inherit justify-between">

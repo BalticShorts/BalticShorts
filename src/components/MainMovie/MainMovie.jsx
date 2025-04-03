@@ -58,7 +58,7 @@ const MainMovie = ({ movie, isLoggedIn }) => {
       </div>
 
       <div className="relative z-0 flex flex-col h-full text-beige m-auto">
-      <div className='w-full z-10 hover:bg-beige text-beige hover:text-black fill-beige hover:fill-black hover:border hover:border-b-2 hover:border-black border-none'><Navbar/></div>
+      <div className='w-full z-10 hover:bg-beige text-beige hover:text-black fill-beige hover:fill-black hover:border-b-2 hover:border-black border-none'><Navbar/></div>
       <div className="relative z-0 flex flex-col justify-between h-full text-beige max-w-[1100px] m-auto">
 
         <div className="mt-25">

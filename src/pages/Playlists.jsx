@@ -85,7 +85,9 @@ const Playlist = () => {
       
       <div
         className="relative w-full h-64 bg-gradient-to-b from-gray-800 to-transparent flex flex-col items-center justify-between"
-        style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: "contain" }}
+        style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat", }}
       >
         <h1 className="typography-h1 !text-beige mt-150 w-full max-w-[1100px] text-left mb-10">
           {playlist.title}

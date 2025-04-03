@@ -332,7 +332,7 @@ const Catalogue = () => {
             </div>
           </div>
         </div>
-        <div className='max-w-[1100px] m-auto h-fit gap-25 flex flex-col items-center relative justify-center'>
+        <div className='w-full max-w-[1100px] mx-auto h-fit gap-25 flex flex-col items-center relative justify-center'>
           {loading ? (
             <div className="text-center mt-4">Loading...</div>
           ) : (
@@ -492,7 +492,7 @@ const Catalogue = () => {
               )}
               {tab[0] === 'Persons' && (
                 <>
-                  <div className="w-full flex justify-center items-center mb-4">
+                  <div className="w-full h-full flex flex-col relative justify-between my-25">
                     <div className="relative text-center">
                       <button onClick={() => setShowFilter(!showFilter)} className="ml-2">
                         Profesiju saraksts {showFilter ? '▲' : '▼'}
@@ -534,10 +534,10 @@ const Catalogue = () => {
               )}
               {tab[0] === 'Playlists' && (
                 <>
-                  <div className="w-full flex justify-between items-center mb-4">
-                    <div className="text-xl font-bold">{data.playlists.length} Saraksti</div>
+                  <div className="w-full h-full flex flex-col relative justify-between my-25">
+                    <div className="typography-h2">{data.playlists.length} Saraksti</div>
                   </div>
-                  <div className='w-3/4 h-fit gap-6 my-24 flex flex-col items-center relative justify-center '>
+                  <div className='w-full h-fit gap-6 flex flex-col items-center relative justify-center '>
                     <MyGridPlaylists data = {data.playlists !== undefined ? data.playlists : []} maxRows={2} maxColumns={3}></MyGridPlaylists>
                   </div>
                 </>

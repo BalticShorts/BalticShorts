@@ -52,7 +52,7 @@ function Profile () {
 
       return (
         <div className="min-h-screen bg-inherit text-black max-w-[1100px] m-auto">
-          <section className="py-50 flex flex-row justify-between">
+          <section className="mt-25 mb-50 flex flex-row justify-between">
             <div className="flex flex-col">
                 <h1 className="text-4xl font-bold">{profile.name} {profile.surname} <span className="text-xs">{profile.nationality}</span></h1>
                 <h2 className="text-md mt-2 font-semibold">{profile.role}</h2>
@@ -69,8 +69,10 @@ function Profile () {
           </section>
     
           {groupedMovies && Object.keys(groupedMovies).map((roleName, index) => (
-            <section key={index} className="w-4/5 mx-auto px-6 py-8">
-              <h3 className="text-lg font-bold mb-4">{roleName}</h3>
+            <section key={index} className="w-full mx-auto mb-100">
+              <div className="flex flex-row mb-25">
+              <h3 className="typography-h2">{roleName}</h3><div className="typography-technical">{  groupedMovies[roleName].length}</div>
+              </div>
               <MyGridMovies data={groupedMovies[roleName]} maxRows={1} maxColumns={3} isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}/>
             </section>
           ))}
