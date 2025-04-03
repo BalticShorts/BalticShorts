@@ -53,7 +53,7 @@ const EditListModal = ({ isOpen, onClose, list, mode }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-20">
-      <div className="bg-beige border border-black p-6 w-96 shadow-lg z-20">
+      <div className="bg-beige border border-black p-6 modal-size shadow-lg z-20">
         <div className="flex justify-between items-center border-b border-black pb-2">
           <h2 className="text-lg font-bold">
             {mode === "add" ? "Pievienot sarakstu" : "Rediģēt sarakstu"}

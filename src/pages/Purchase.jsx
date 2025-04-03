@@ -3,15 +3,18 @@ import TermsOfService from "../components/TermsOfService/TOS";
 import Agreement from "../components/Agreement/Agreement";
 import { GlobalContext } from "../App";
 import { useLocation } from "react-router-dom";
+import Privacy from "../components/Privacy/Privacy";
 
 const Purchase = () => {
   const context = useContext(GlobalContext);
   const [isChecked, setIsChecked] = useState(false);
   const [isAgreementChecked, setIsAgreementChecked] = useState(false);
+  const [isPrivacyChecked, setIsPrivacyChecked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showTOS, setShowTOS] = useState(false);
   const [showAgreement, setShowAgreement] = useState(false);
+  const [showPrivacy, setShowPrivacy] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [paymentReference, setPaymentReference] = useState(null);
 
@@ -29,8 +32,8 @@ const Purchase = () => {
   }, [location.search]);
 
   const handlePayment = async () => {
-    if (!isChecked || !isAgreementChecked) {
-      setError("Lūdzu, piekrītiet noteikumiem un nosacījumiem un distances līgumam.");
+    if (!isChecked || !isAgreementChecked || !isPrivacyChecked) {
+      setError("Lūdzu, piekrītiet noteikumiem un nosacījumiem, distances līgumam un privātuma politikai.");
       return;
     }
 
@@ -114,6 +117,20 @@ const Purchase = () => {
             </label>
           </div>
 
+          <div className="pt-1">
+            <label className="flex items-start space-x-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={isPrivacyChecked}
+                onChange={() => setIsPrivacyChecked(!isPrivacyChecked)}
+                className="mt-1"
+              />
+              <span className="text-sm">
+                Es piekrītu <span className="underline cursor-pointer" onClick={() => setShowPrivacy(true)}>privātuma politikai</span>.
+              </span>
+            </label>
+          </div>
+
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
           <button
@@ -133,7 +150,7 @@ const Purchase = () => {
           <div className="w-3/5 h-3/5 px-5 pt-5 bg-beige border border-black flex-col justify-start inline-flex overflow-y-auto items-center">
             <h1 className="text-2xl font-bold">Lietošanas noteikumi</h1>
             <TermsOfService />
-            <div className="w-1/6 h-fit relative flex items-center justify-center py-5 border border-black rounded mb-5 justify-center cursor-pointer" onClick={() => setShowTOS(false)}>
+            <div className="button-default relative flex items-center justify-center py-5 border border-black mb-5 cursor-pointer" onClick={() => setShowTOS(false)}>
               Aizvērt
             </div>
           </div>
@@ -145,7 +162,19 @@ const Purchase = () => {
           <div className="w-3/5 h-3/5 px-5 pt-5 bg-beige border border-black flex-col justify-start inline-flex overflow-y-auto items-center">
             <h1 className="text-2xl font-bold">Distances līgums</h1>
             <Agreement />
-            <div className="w-1/6 h-fit relative flex items-center justify-center py-5 border border-black rounded mb-5 justify-center cursor-pointer" onClick={() => setShowAgreement(false)}>
+            <div className="button-default relative flex items-center justify-center py-5 border border-black mb-5 cursor-pointer" onClick={() => setShowAgreement(false)}>
+              Aizvērt
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showPrivacy && (
+        <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md bg-opacity-50 z-10 overscroll-auto">
+          <div className="w-3/5 h-3/5 px-5 pt-5 bg-beige border border-black flex-col justify-start inline-flex overflow-y-auto items-center">
+            <h1 className="text-2xl font-bold">Privātuma politika</h1>
+            <Privacy />
+            <div className="button-default relative flex items-center justify-center py-5 border border-black mb-5 cursor-pointer" onClick={() => setShowPrivacy(false)}>
               Aizvērt
             </div>
           </div>

@@ -165,6 +165,10 @@ code {
   @apply h-30 w-30;
 }
 
+.modal-size {
+  @apply w-[540px] h-[540px];
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

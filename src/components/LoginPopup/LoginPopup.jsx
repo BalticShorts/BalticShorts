@@ -5,6 +5,8 @@ import { createMoviePlaylist, createUserProfile } from "../../graphql/mutations"
 import { API } from "aws-amplify";
 import { checkPersonExists } from "../../custom-queries/queries";
 import TermsOfService from "../TermsOfService/TOS";
+import Agreement from "../Agreement/Agreement";
+import Privacy from "../Privacy/Privacy";
 
 export const LoginPopup = () => {
     const context = useContext(GlobalContext)
@@ -206,7 +208,7 @@ export const LoginPopup = () => {
         <>
             {showModal && (
             <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md bg-opacity-50 z-10 overscroll-auto">
-                <div className="w-[470px] h-[500px] px-5 pt-5 bg-beige border border-black flex-col justify-start inline-flex">
+                <div className="modal-size px-5 pt-5 bg-beige border border-black flex-col justify-start inline-flex">
                     <div className="w-full h-fit relative flex items-left justify-between mb-5">
                         <img src={require("./static/BS_small_logo.png")} alt="logo" />
                         <div className="flex items-end">
@@ -240,8 +242,8 @@ export const LoginPopup = () => {
                             <div className="AizmirsiParoli text-center text-black text-xs font-normal font-['Arial'] tracking-wide cursor-pointer" onClick={() => setPage('forget')}>Aizmirsi paroli?</div>
                         </div>
                         <div className="Frame137 pt-6 flex-col justify-start items-start flex">
-                            <div className="Button h-7 px-2.5 pt-1 pb-0.5 bg-beige border border-black justify-center items-center gap-2.5 inline-flex">
-                                <div type="submit" className="cursor-pointer grow shrink basis-0 text-center text-black text-base font-normal font-['SchoolBook']" onClick={() => logIn()}>Ieiet</div>
+                            <div className="button-default px-2.5 pt-1 pb-0.5 bg-beige border border-black justify-center items-center gap-2.5 inline-flex">
+                                <div type="submit" className="button-default !font-normal cursor-pointer grow shrink basis-0 text-center text-black text-base font-normal font-['SchoolBook']" onClick={() => logIn()}>Ieiet</div>
                             </div>
                         </div>
                     </div>
@@ -381,10 +383,12 @@ export const LoginPopup = () => {
             )}
             {showTOS && (
                 <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md bg-opacity-50 z-10 overscroll-auto">
-                    <div className="w-3/5 h-3/5 px-5 pt-5 bg-beige border border-black flex-col justify-start inline-flex overflow-y-auto items-center">
-                        <h1 className="text-2xl font-bold">Lietošanas noteikumi</h1>
+                    <div className="modal-size px-5 pt-5 bg-beige border border-black flex-col justify-start inline-flex overflow-y-auto items-center text-start">
+                        <h2 className="typography-h2 my-25 pl-6 text-start w-full">LIETOŠANAS NOTEIKUMI</h2>
                         <TermsOfService />
-                        <div className="w-1/6 h-fit relative flex items-center justify-center py-5 border border-black rounded mb-5 justify-center cursor-pointer" onClick={() => { setShowTOS(false); setTosRead(true); }}>
+                        <Agreement />
+                        <Privacy />
+                        <div className="button-default relative flex items-center justify-center py-5 border border-black mb-5 cursor-pointer" onClick={() => { setShowTOS(false); setTosRead(true); }}>
                             Aizvērt
                         </div>
                     </div>
