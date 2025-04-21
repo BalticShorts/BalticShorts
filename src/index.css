@@ -109,44 +109,44 @@ code {
 }
 
 .typography-h2 {
-  @apply text-h2 font-arial leading-[100%] tracking-[5%] align-bottom uppercase;
+  @apply text-h2 font-arial leading-[23px] tracking-wide align-bottom uppercase;
 }
 
 .typography-body-large {
-  @apply text-body-large font-schoolbook font-normal leading-[100%] tracking-normal align-bottom;
+  @apply text-body-large font-schoolbook font-normal leading-[24px] tracking-normal align-bottom;
 }
 
 .typography-body-large-bold {
-  @apply text-body-large font-schoolbookbold leading-[100%] tracking-normal align-bottom;
+  @apply text-body-large font-schoolbookbold leading-[24px] tracking-normal align-bottom;
 }
 
 .typography-body {
-  @apply text-body font-schoolbook font-normal leading-[100%] tracking-normal align-bottom;
+  @apply text-body font-schoolbook font-normal leading-[21px] tracking-normal align-bottom;
 }
 
 .typography-body-bold {
-  @apply text-body font-schoolbookbold leading-[100%] tracking-normal align-bottom;
+  @apply text-body font-schoolbookbold leading-[21px] tracking-normal align-bottom;
 }
 
 .typography-body-small {
-  @apply text-body-small font-schoolbook font-normal leading-[100%] tracking-normal align-bottom;
+  @apply text-body-small font-schoolbook font-normal leading-[18px] tracking-normal align-bottom;
 }
 
 .typography-technical-12 {
-  @apply text-technical font-arial font-normal leading-[100%] tracking-[0.04em] align-bottom;
+  @apply text-technical font-arial font-normal leading-[18px] tracking-[0.04em] align-bottom;
 }
 
 .typography-technical {
-  @apply text-technical-small font-arial font-normal leading-[100%] tracking-[0.04em] align-bottom;
+  @apply text-technical-small font-arial font-normal leading-[18px] tracking-[0.04em] align-bottom;
 }
 
 /* Link Styles */
 .link-normal {
-  @apply text-body font-schoolbook font-normal leading-[100%] tracking-normal align-bottom;
+  @apply text-body font-schoolbook font-normal leading-[21px] tracking-normal align-bottom;
 }
 
 .link-hover:hover {
-  @apply text-body font-schoolbook font-normal leading-[100%] tracking-normal align-bottom opacity-70;
+  @apply text-body font-schoolbook font-normal leading-[21px] tracking-normal align-bottom opacity-70;
 }
 
 .hover-opacity:hover {
@@ -154,11 +154,11 @@ code {
 }
 
 .link-active {
-  @apply text-body font-schoolbook font-bold leading-[100%] tracking-normal align-bottom;
+  @apply text-body font-schoolbook font-bold leading-[21px] tracking-normal align-bottom;
 }
 
 .button-default {
-  @apply text-body font-schoolbook font-normal leading-[100%] tracking-normal align-bottom h-30 p-10;
+  @apply text-body font-schoolbook font-normal leading-[21px] tracking-normal align-bottom h-30 p-10;
 }
 
 .button-white {
