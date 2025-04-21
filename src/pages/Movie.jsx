@@ -14,7 +14,9 @@ import WatchlistModal from "../components/WatchlistModal/WatchlistModal";
 import { MyGridPlaylists } from '../modified-ui-components/Grid/playlistGrid.jsx';
 import { GlobalContext } from "../App";
 import { LoginPopup } from "../components/LoginPopup/LoginPopup";
-import { Navbar, StickyNavbar } from '../modified-ui-components/Header/HEADER.jsx';
+import { Navbar } from '../modified-ui-components/Header/HEADER.jsx';
+import { ReactComponent as Plus } from "../assets/images/plus.svg";
+import { ReactComponent as List } from "../assets/images/list.svg";
 
 Amplify.configure(awsExports);
 const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
@@ -318,12 +320,12 @@ function Movie() {
   return (
     <>
     <div className="FilmasSkats w-full relative bg-beige rounded-3xl">
-    <div className='absolute top-0 left-0 w-full z-10 text-beige hover:text-black hover:bg-beige fill-beige hover:fill-black'><Navbar/></div>
+    <div className='absolute top-0 left-0 w-full z-10 text-beige hover:text-black hover:bg-beige fill-beige hover:fill-black !h-50'><Navbar/></div>
 
     <section
-      className="MovieContainer w-full max-h-[80vh] relative min-w-2/5"
+      className="MovieContainer w-full max-h-[70vh] h-[70vh] relative min-w-2/5"
     >
-      <div className="VideoWrapper w-full max-h-[80vh] relative min-w-2/5">
+      <div className="VideoWrapper w-full max-h-[70vh] h-[70vh] relative min-w-2/5">
         <VideoPlayer
           movieURL={movieURL}
           urlAddon={urlAddon}
@@ -342,20 +344,20 @@ function Movie() {
                 <h1 className="text-beige typography-h1 text-opacity-90">
                   {movieData.name}
                 </h1>
-                <p className="text-beige typography-body uppercase text-opacity-90">
+                <p className="text-beige typography-body uppercase text-opacity-90 mt-10">
                   {movieData.name_eng}
                 </p>
               </div>
             </div>
 
             <div className="absolute inset-0 flex items-center justify-center">
-              <button className="w-[60px] h-[60px] flex items-center justify-center border border-white bg-transparent text-beige hover:bg-beige hover:text-black transition" onClick={() => removeText()}>
-              <div className='flex items-center justify-center'>
-                <svg width="26" height="30" viewBox="0 0 26 30" fill="none" xmlns="http://www.w3.org/2000/svg" className="transition-colors duration-300 group-hover:fill-black">
-                  <path d="M25.5862 15L0.413767 30L0.413769 -1.10032e-06L25.5862 15Z" fill="currentColor"/>
-                </svg>
+              <div className="w-[60px] h-[60px] flex items-center justify-center border border-white bg-transparent text-beige hover:bg-beige hover:text-black cursor-pointer" onClick={() => removeText()}>
+                <div className='flex items-center justify-center m-auto w-full h-full'>
+                  <svg width="26" height="30" viewBox="0 0 26 30" fill="none" xmlns="http://www.w3.org/2000/svg" className="group-hover:fill-black">
+                    <path d="M25.5862 15L0.413767 30L0.413769 -1.10032e-06L25.5862 15Z" fill="currentColor"/>
+                  </svg>
+                </div>
               </div>
-              </button>
             </div>
 
             <div className="Rectangle4 w-full h-[20%] flex items-center justify-between bg-gradient-to-t from-stone-950 to-transparent">
@@ -367,11 +369,11 @@ function Movie() {
                       ▶ Treileris
                     </button>
                   )}
-                  <div className="flex items-center gap-2 text-sm lowercase">
+                  <div className="flex items-center gap-2 typography-body lowercase !text-opacity-70">
                     <svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M0 3.94755V8.05245H2.7366L6.15735 11.4732V0.526796L2.7366 3.94755H0ZM9.23603 6C9.23589 5.42677 9.0757 4.86496 8.77352 4.37784C8.47134 3.89072 8.03916 3.49764 7.52565 3.24287V8.75029C8.5382 8.25086 9.23603 7.21095 9.23603 6ZM7.52565 0V1.40935C9.50285 1.99772 10.9464 3.83124 10.9464 6C10.9464 8.16876 9.50285 10.0023 7.52565 10.5906V12C10.2691 11.3774 12.3147 8.92816 12.3147 6C12.3147 3.07184 10.2691 0.622577 7.52565 0Z" fill="#FDFCF5" fill-opacity="0.7"/>
                     </svg>
-                    {movieData.screen_language} | 
+                    {movieData.screen_language} <span> | </span>
                     <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M15.3147 0H0.314697V12H15.3147V0ZM1.8147 6H4.8147V7.5H1.8147V6ZM9.3147 10.5H1.8147V9H9.3147V10.5ZM13.8147 10.5H10.8147V9H13.8147V10.5ZM13.8147 7.5H6.3147V6H13.8147V7.5Z" fill="#FDFCF5" fill-opacity="0.7"/>
                     </svg>
@@ -379,19 +381,19 @@ function Movie() {
                   </div>
                 </div>
 
-                <div className="flex flex-col items-center text-beige text-opacity-90 typography-body-small gap-2 w-1/3">
-                  <p>REŽISORS {movieTeamData.Director?.map((person) => person.name).join(", ")}</p>
-                  <p>{movieData.origin_country} | {movieData.created_year} | {movieData.length}’ | {movieData.age_rating}+</p>
-                  <p className='text-opacity-80'>{movieData.genre}</p>
+                <div className="flex flex-col items-center text-beige typography-body-small gap-2 w-1/3">
+                  <div>REŽISORS {movieTeamData.Director?.map((person) => person.name).join(", ")}</div>
+                  <div>{movieData.origin_country}  <span> | </span>  {movieData.created_year}  <span> | </span>  {movieData.length}’  <span> | </span>  {movieData.age_rating} + </div>
+                  <div className='!text-opacity-70'>{movieData.genre}</div>
                 </div>
 
                 <div className="flex flex-row items-center justify-end gap-4 w-1/3">
-                  <button className="button-transparent add z-10" onClick={() => {if(context.currentUser && Object.keys(context.currentUser).length > 0)setIsPlaylistModalOpen(true)}}>
-                    ☰
-                  </button>
-                  <button className="button-transparent add z-10" onClick={() => {if(context.currentUser && Object.keys(context.currentUser).length > 0)setIsPlaylistModalOpen(true)}}>
-                    ＋
-                  </button>
+                  <div className="flex button-transparent add z-10 items-center justify-center cursor-pointer" onClick={() => {if(context.currentUser && Object.keys(context.currentUser).length > 0)setIsPlaylistModalOpen(true)}}>
+                    <List/>
+                  </div>
+                  <div className="flex button-transparent add z-10 items-center justify-center cursor-pointer" onClick={() => {if(context.currentUser && Object.keys(context.currentUser).length > 0)setIsPlaylistModalOpen(true)}}>
+                    <Plus />
+                  </div>
                 </div>
 
               </div>
@@ -450,7 +452,7 @@ function Movie() {
           <div className="relative justify-center inline-flex flex-row items-center max-w-full min-w-fit">
             <div className="carousel-container w-full relative m-auto">
               {photoURLs.length > 0 ? (
-                <Carousel>
+                <Carousel showIndicators = {false} showStatus = {false} infiniteLoop>
                   {photoURLs.map((url, index) => (
                     <div key={index}>
                       <img src={url} alt={`photo-${index}`} />

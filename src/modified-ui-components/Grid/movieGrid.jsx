@@ -96,7 +96,7 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
                       )}
                     </div>
                     <div className="mt-10 lg:mt-15 flex flex-col bg-inherit mx-15 justify-between">
-                      <div className="typography-body-large-bold uppercase !font-bold">
+                      <div className="typography-body-bold uppercase !font-bold">
                         {item.name}
                       </div>
                       <div className="mt-10 mb-15 flex flex-row bg-inherit justify-between">
@@ -118,10 +118,10 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
       {data.length / maxColumns > rows && (
         <>
           <div className="relative w-full h-10">
-            <div className="w-full absolute inset-x-0 -top-20 h-28 bg-gradient-to-t from-gray-100 to-transparent"/>
+            <div className="w-full absolute inset-x-0 -top-[70px] h-28 bg-[linear-gradient(180deg,rgba(253,252,245,0.2)_0%,rgba(253,252,245,0.8)_50%,rgba(253,252,245,1)_100%)]"/>
             <div className="flex justify-center mt-20 ">
               <button
-                className="typography-technical z-10"
+                className="typography-technical z-10 !uppercase"
                 onClick={() => setRows(rows + 1)}
               >
                 Vairāk ▼

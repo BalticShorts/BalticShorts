@@ -23,11 +23,11 @@ const Layout = () => {
   return (
     <div className="min-h-[100vh] flex flex-col justify-start bg-beige">
       {(showNavbar || !shouldHideNavbarInitially) && (
-        <div className="h-fit !sticky top-0 left-0 z-50 bg-beige transition-all duration-300 border-b-2 border-black">
+        <div className="!h-50 !sticky top-0 left-0 z-50 bg-beige transition-all duration-300 border-b border-black">
           <Navbar />
         </div>
       )}
-      <div className="MainContainer mb-auto flex-grow grow-1 bg-inherit">
+      <div className="MainContainer mb-100 flex-grow grow-1 bg-inherit">
         <Outlet />
       </div>
       <div className="footer mt-auto bg-inherit">

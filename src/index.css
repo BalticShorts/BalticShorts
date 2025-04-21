@@ -101,15 +101,15 @@ code {
 }
 /* Typography */
 .typography-h1 {
-  @apply text-h1 font-schoolbookbold font-bold leading-[45px] tracking-normal align-bottom uppercase;
+  @apply text-h1 font-schoolbookbold leading-[45px] tracking-normal align-bottom uppercase;
 }
 
 .typography-h1-small {
-  @apply text-h1-small font-schoolbookbold font-bold leading-[31px] tracking-normal align-bottom;
+  @apply text-h1-small font-schoolbookbold leading-[31px] tracking-normal align-bottom;
 }
 
 .typography-h2 {
-  @apply text-h2 font-arial font-bold leading-[100%] tracking-[5%] align-bottom uppercase;
+  @apply text-h2 font-arial leading-[100%] tracking-[5%] align-bottom uppercase;
 }
 
 .typography-body-large {
@@ -117,19 +117,27 @@ code {
 }
 
 .typography-body-large-bold {
-  @apply text-body-large font-schoolbookbold font-bold leading-[100%] tracking-normal align-bottom;
+  @apply text-body-large font-schoolbookbold leading-[100%] tracking-normal align-bottom;
 }
 
 .typography-body {
   @apply text-body font-schoolbook font-normal leading-[100%] tracking-normal align-bottom;
 }
 
+.typography-body-bold {
+  @apply text-body font-schoolbookbold leading-[100%] tracking-normal align-bottom;
+}
+
 .typography-body-small {
   @apply text-body-small font-schoolbook font-normal leading-[100%] tracking-normal align-bottom;
 }
 
+.typography-technical-12 {
+  @apply text-technical font-arial font-normal leading-[100%] tracking-[0.04em] align-bottom;
+}
+
 .typography-technical {
-  @apply text-technical-small font-arial font-normal leading-[100%] tracking-[10%] align-bottom;
+  @apply text-technical-small font-arial font-normal leading-[100%] tracking-[0.04em] align-bottom;
 }
 
 /* Link Styles */
@@ -141,24 +149,28 @@ code {
   @apply text-body font-schoolbook font-normal leading-[100%] tracking-normal align-bottom opacity-70;
 }
 
+.hover-opacity:hover {
+  @apply opacity-70;
+}
+
 .link-active {
   @apply text-body font-schoolbook font-bold leading-[100%] tracking-normal align-bottom;
 }
 
 .button-default {
-  @apply text-body font-schoolbook font-bold leading-[100%] tracking-normal align-bottom h-30 p-10;
+  @apply text-body font-schoolbook font-normal leading-[100%] tracking-normal align-bottom h-30 p-10;
 }
 
 .button-white {
-  @apply border border-black bg-beige text-black hover:bg-black hover:text-beige transition;
+  @apply border border-black bg-beige text-black hover:bg-black hover:text-beige;
 }
 
 .button-black {
-  @apply border border-white bg-black text-beige hover:bg-white hover:text-black transition;
+  @apply border border-white bg-black text-beige hover:bg-white hover:text-black;
 }
 
 .button-transparent {
-  @apply border border-white bg-transparent text-beige hover:bg-white hover:text-black transition;
+  @apply border border-white bg-transparent text-beige hover:bg-white hover:text-black;
 }
 
 .button-transparent.add {
@@ -176,4 +188,26 @@ code {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.carousel .thumbs-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.carousel .thumbs {
+  justify-content: center !important;
+}
+
+.carousel .control-arrow {
+  background: none !important;
+  border: none;
+  box-shadow: none;
+}
+
+.carousel .control-arrow:hover {
+  background: none !important;
+}
+.carousel .thumb {
+  padding: 0px !important;
 }

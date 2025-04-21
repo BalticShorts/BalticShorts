@@ -16,14 +16,14 @@ module.exports = {
         "body-large": "18px",
         body: "16px",
         "body-small": "14px",
-        technical: "13px",
+        technical: "12px",
         "technical-small": "10px",
       },
       fontFamily: {
         schoolbook: ["schoolbookregular"],
         schoolbookbold: ["schoolbookbold"],
         century: ["Century Schoolbook", "Georgia", "serif"],
-        arial: ["var(--font-arial)", "Arial", "sans-serif"],
+        arial: ["Arial", "sans-serif"],
       },
       letterSpacing: {
         tight: "-0.02em",
@@ -59,6 +59,7 @@ module.exports = {
       },
       padding: {
         10: "10px",
+        20: "20px",
         25: "25px",
         50: "50px",
       },

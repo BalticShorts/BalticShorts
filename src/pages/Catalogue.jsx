@@ -126,14 +126,14 @@ const Catalogue = () => {
     const changeTab = async () => {
       getTab(tab[1]).then((currentTab) => {
         if (currentTab !== null) {
-          currentTab.classList.remove("font-bold");
-          currentTab.classList.add("font-normal");
+          currentTab.classList.remove("typography-body-bold");
+          currentTab.classList.add("typography-body");
         }
       });
       getTab(tab[0]).then((currentTab) => {
         if (currentTab !== null) {
-          currentTab.classList.remove("font-normal");
-          currentTab.classList.add("font-bold");
+          currentTab.classList.remove("typography-body");
+          currentTab.classList.add("typography-body-bold");
         }
       });
     };
@@ -308,24 +308,24 @@ const Catalogue = () => {
       <div className="bg-beige flex flex-col min-h-[70vh]" id="container">
         <div className="w-full h-12 relative">
           <div className="w-full h-12 absolute bg-beige border-b border-black" />
-          <div className="w-full mt-1 h-6 flex items-center justify-center relative">
+          <div className="w-full mt-1 h-full flex items-center justify-center relative">
             <div
               id="Movies"
-              className="h-5 mx-2 text-center text-black tex text-xl font-bold font-['SchoolBook'] tracking-tight inline-flex cursor-pointer"
+              className="h-5 mx-2 text-center typography-body inline-flex cursor-pointer"
               onClick={() => setTab(['Movies', tab[0]])}
             >
               Filmas
             </div>
             <div
               id="Persons"
-              className="h-5 mx-6 text-center text-black text-xl font-['SchoolBook'] font-normal tracking-tight inline-flex cursor-pointer"
+              className="h-5 mx-6 text-center typography-body inline-flex cursor-pointer"
               onClick={() => setTab(['Persons', tab[0]])}
             >
               Personas
             </div>
             <div
               id="Playlists"
-              className="h-5 mx-2 my-auto text-center text-black text-xl font-normal font-['SchoolBook'] tracking-tight inline-flex cursor-pointer"
+              className="h-5 mx-2 my-auto text-center typography-body inline-flex cursor-pointer"
               onClick={() => setTab(['Playlists', tab[0]])}
             >
               Saraksti
@@ -339,25 +339,25 @@ const Catalogue = () => {
             <>
               {tab[0] === 'Movies' && (
                 <>
-                  <div className="w-full flex justify-center items-center mb-4 p-2">
+                  <div className="w-full flex justify-center items-center mt-25">
                     <div className="relative flex justify-center items-center">
                       <div className="flex flex-col items-center">
-                        <div className="cursor-pointer font-bold uppercase mt-0" onClick={() => setShowFiltri(!showFiltri)}>
+                        <div className="cursor-pointer font-bold uppercase mt-0 typography-technical" onClick={() => setShowFiltri(!showFiltri)}>
                           Filtri {showFiltri ? '▲' : '▼'}
                         </div>
                         {showFiltri && (
                           <>
-                            <div className="absolute right-0 top-0 flex items-center gap-4">
+                            <div className="absolute right-0 top-0 flex items-center gap-4 typography-technical">
                               <div className="cursor-pointer" onClick={() => clearFilters()}>Noņemt filtrus</div>
                             </div>
                             <div className="flex justify-start items-start gap-12 p-4">
                               {['Country', 'Year', 'Length', 'Type', 'Genre', 'Audio', 'Subtitles'].map((filter) => (
                                 <div key={filter} className="relative">
-                                  <div className="cursor-pointer flex items-center" onClick={() => toggleDropdown(filter)}>
+                                  <div className="cursor-pointer flex items-center typography-technical" onClick={() => toggleDropdown(filter)}>
                                     {filterLabels[filter]} {dropdowns[filter] ? '▼' : '▲'}
                                   </div>
                                   {dropdowns[filter] && (
-                                    <div className="absolute bg-beige border mt-2 p-2 max-h-48 overflow-y-auto z-20 min-w-full whitespace-nowrap">
+                                    <div className="absolute bg-beige border mt-2 p-2 max-h-48 overflow-y-auto z-20 min-w-full whitespace-nowrap typography-technical">
                                       {filter === 'Year' ? (
                                         <div className="flex flex-col">
                                           {years.map((year) => (
@@ -367,7 +367,7 @@ const Catalogue = () => {
                                                 checked={selectedFilters.Year.includes(year)}
                                                 onChange={() => handleCheckboxChange('Year', year)}
                                               />
-                                              <span className="ml-2">{year}</span>
+                                              <span className="ml-2 typography-technical">{year}</span>
                                             </label>
                                           ))}
                                         </div>
@@ -381,7 +381,7 @@ const Catalogue = () => {
                                                 checked={selectedFilters.Country.includes(country)}
                                                 onChange={() => handleCheckboxChange('Country', country)}
                                               />
-                                              <span className="ml-2">{country}</span>
+                                              <span className="ml-2 typography-technical">{country}</span>
                                             </label>
                                           ))}
                                         </div>
@@ -395,7 +395,7 @@ const Catalogue = () => {
                                                 checked={selectedFilters.Type.includes(type)}
                                                 onChange={() => handleCheckboxChange('Type', type)}
                                               />
-                                              <span className="ml-2">{type}</span>
+                                              <span className="ml-2 typography-technical">{type}</span>
                                             </label>
                                           ))}
                                         </div>
@@ -409,7 +409,7 @@ const Catalogue = () => {
                                                 checked={selectedFilters.Genre.includes(genre)}
                                                 onChange={() => handleCheckboxChange('Genre', genre)}
                                               />
-                                              <span className="ml-2">{genre}</span>
+                                              <span className="ml-2 typography-technical">{genre}</span>
                                             </label>
                                           ))}
                                         </div>
@@ -423,7 +423,7 @@ const Catalogue = () => {
                                                 checked={selectedFilters.Audio.includes(audio)}
                                                 onChange={() => handleCheckboxChange('Audio', audio)}
                                               />
-                                              <span className="ml-2">{audio}</span>
+                                              <span className="ml-2 typography-technical">{audio}</span>
                                             </label>
                                           ))}
                                         </div>
@@ -437,7 +437,7 @@ const Catalogue = () => {
                                                 checked={selectedFilters.Subtitles.includes(subtitle)}
                                                 onChange={() => handleCheckboxChange('Subtitles', subtitle)}
                                               />
-                                              <span className="ml-2">{subtitle}</span>
+                                              <span className="ml-2 typography-technical">{subtitle}</span>
                                             </label>
                                           ))}
                                         </div>
@@ -450,7 +450,7 @@ const Catalogue = () => {
                                                 checked={selectedFilters.Length.includes(length)}
                                                 onChange={() => handleCheckboxChange('Length', length)}
                                               />
-                                              <span className="ml-2">{length} min</span>
+                                              <span className="ml-2 typography-technical">{length} min</span>
                                             </label>
                                           ))}
                                         </div>
@@ -466,10 +466,10 @@ const Catalogue = () => {
                     </div>
                   </div>
                   <div className="w-full flex justify-between items-center mb-4">
-                    <div className="text-xl font-bold">{data.movies.length} Filmas</div>
+                    <div className="typography-h2 font-bold">{data.movies.length} Filmas</div>
                     <div className="flex items-center">
-                      <span className="mr-2">Kārtot pēc:</span>
-                      <select value={sortOption} onChange={handleSortChange} className="p-1 bg-beige">
+                      <span className="mr-2 typography-technical">Kārtot pēc:</span>
+                      <select value={sortOption} onChange={handleSortChange} className="p-1 bg-beige typography-technical">
                         <option value="date">Ievietošanas datums</option>
                         <option value="year">Gads</option>
                         <option value="alphabet">Alfabēts</option>
@@ -492,7 +492,7 @@ const Catalogue = () => {
               )}
               {tab[0] === 'Persons' && (
                 <>
-                  <div className="w-full h-full flex flex-col relative justify-between my-25">
+                  <div className="w-full h-full flex flex-col relative justify-between my-25 typography-technical">
                     <div className="relative text-center">
                       <button onClick={() => setShowFilter(!showFilter)} className="ml-2">
                         Profesiju saraksts {showFilter ? '▲' : '▼'}
@@ -516,9 +516,9 @@ const Catalogue = () => {
                     </div>
                   </div>
                   <div className="w-full flex justify-between items-center mb-4">
-                    <div className="text-xl font-bold">{data.persons.length} Personas</div>
-                    <div class="flex items-center">
-                      <span class="mr-2">Kārtot pēc:</span>
+                    <div className="typography-h2 font-bold">{data.persons.length} Personas</div>
+                    <div class="flex items-center typography-technical">
+                      <span class="mr-2 ">Kārtot pēc:</span>
                       <select value={sortOption} onChange={handleSortChange} class="p-1 bg-beige">
                         <option value="alphabet">Alfabēts</option>
                       </select>

@@ -71,7 +71,7 @@ export function MyGridPlaylists({ data, maxRows, maxColumns }) {
                       <div className="typography-body-small mb-10">
                         {item.creator}
                       </div>
-                      <div className="text-sm text-gray-500">
+                      <div className="typography-technical">
                         FILMAS {item.size} | SEKOTĀJI 10
                       </div>
                     </div>

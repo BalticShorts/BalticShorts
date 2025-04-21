@@ -1,103 +1,87 @@
-import { useContext, useState } from "react";
-import { ListMoviesByPerson } from "../../custom-queries/queries";
-import { API } from "aws-amplify";
-import { MyGridMovies } from "../Grid";
 import { useNavigate } from "react-router-dom";
-import { GlobalContext } from "../../App";
+import { ReactComponent as Triangle } from "../../assets/images/triangle.svg";
 
 export const PersonList = ({ data }) => {
-  const context = useContext(GlobalContext);
-  const [movies, setMovies] = useState({});
-  const [loading, setLoading] = useState(null);
-  const [error, setError] = useState(null);
-  const [collapsed, setCollapsed] = useState({});
   const navigate = useNavigate();
-
-  const fetchMovies = async (personID) => {
-    if (movies[personID]) return;
-
-    setLoading(personID);
-    setError(null);
-
-    try {
-      const result = await API.graphql({
-        query: ListMoviesByPerson,
-        authMode: 'AWS_IAM',
-        variables : {
-          personID: personID
-        },
-      });
-      if (result.errors) {
-        throw new Error(result.errors[0].message);
-      }
-      const filteredResult = result.data.listPersonMovieTeams.items.filter(team => team.MovieTeam.Movie !== null);
-      const moviesData = Array.from(new Set(filteredResult.map(item => item.MovieTeam.Movie.id)))
-        .map(id => filteredResult.find(item => item.MovieTeam.Movie.id === id).MovieTeam.Movie);
-
-      setMovies((prev) => ({
-        ...prev,
-        [personID]: moviesData,
-      }));
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(null);
-    }
+  const countryNameToCode = {
+    "Portugal": "PT",
+    "Republic of Ireland": "IE",
+    "Czech Republic": "CZ",
+    "Malta": "MT",
+    "Latvia": "LV",
+    "Slovenia": "SI",
+    "Poland": "PL",
+    "Sweden": "SE",
+    "Slovakia": "SK",
+    "Luxembourg": "LU",
+    "Belgium": "BE",
+    "Bulgaria": "BG",
+    "Italy": "IT",
+    "Denmark": "DK",
+    "Finland": "FI",
+    "Croatia": "HR",
+    "United Kingdom": "GB",
+    "England": "EN",
+    "France": "FR",
+    "Ukraine": "UA",
+    "Spain": "ES",
+    "Lithuania": "LT",
+    "Cyprus": "CY",
+    "Russian Federation": "RU",
+    "Estonia": "EE",
+    "Netherlands": "NL",
+    "Greece": "GR",
+    "Romania": "RO",
+    "Austria": "AT",
+    "Germany": "DE",
   };
 
-  const toggleCollapse = (personID) => {
-    setCollapsed((prev) => ({
-      ...prev,
-      [personID]: !prev[personID],
-    }));
-  };
 
   return (
-    <div className="flex flex-col gap-4 py-4 w-full items-center bg-inherit">
-      {data.map((person, index) => (
-        <>
-        <div
-          key={index}
-          className="flex flex-col md:flex-row justify-between items-start md:items-end bg-inherit border-b-2 border-black w-full"
-          >
-          <div className="flex flex-col md:items-start items-start">
-            <div className="flex items-center gap-2 ">
-              <div className="text-black/80 text-2xl font-bold uppercase leading-tight">
-                {person.name} {person.surname}
-              </div>
-              <div className="text-gray-500 text-xs tracking-wide align-top text-left pr-20">
-                {person.nationality}
-              </div>
-            </div>
-            <div className="text-black/70 text-sm uppercase font-medium">{person.role}</div>
-          </div>
+    <div className="flex flex-col gap-4 w-full items-center bg-inherit">
+      {data.map((person, index) => {
+        const teams = person?.PersonMovieTeams?.items || [];
 
-          <div className="flex flex-col items-end gap-2">
-            <div
-                className="text-right text-gray-500 text-xs tracking-wide cursor-pointer hover:underline"
-                onClick={() => {
-                  fetchMovies(person.id);
-                  toggleCollapse(person.id);
-                }}              >
-              {collapsed[person.id] ? "AIZVĒRT" : "DARBI"}
+        const uniqueMovieIds = new Set();
+        teams.forEach(team => {
+          const movieId = team?.MovieTeam?.Movie?.id;
+          if (movieId) {
+            uniqueMovieIds.add(movieId);
+          }
+        });
+
+        const uniqueMovieCount = uniqueMovieIds.size;
+
+        return (
+          <div
+            key={index}
+            className="flex flex-col md:flex-row justify-between items-start md:items-end bg-inherit border-b-2 border-black w-full hover-opacity cursor-pointer"
+            onClick={() => navigate('/profile/' + person.id)}
+          >
+            <div className="flex flex-col md:items-start items-start">
+              <div className="flex gap-2">
+                <div className="typography-h1">
+                  {person.name} {person.surname}
+                </div>
+                <div className="typography-technical align-top text-left">
+                  {countryNameToCode[person.nationality] || person.nationality}
+                </div>
               </div>
-            <div className="text-right text-gray-500 text-xs tracking-wide cursor-pointer hover:underline" onClick={() => navigate('/profile/'+person.id)}>
-              VAIRĀK
+              <div className="typography-body-small uppercase">{person.role}</div>
+            </div>
+
+            <div className="flex flex-col items-end gap-2">
+              <div className="text-right typography-technical">
+                {uniqueMovieCount} {uniqueMovieCount === 1 ? "DARBS" : "DARBI"}
+              </div>
+              <div className="text-right typography-technical flex flex-row mb-1 items-center">
+                <div className="mr-1">VAIRĀK</div>      
+                <Triangle />
+              </div>
             </div>
           </div>
-        </div>
-        {collapsed[person.id] && movies[person.id]?.length > 0 && (
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-end bg-inherit p-4 border-b-2 border-black w-4/5">
-              <MyGridMovies
-                data={movies[person.id]}
-                maxRows={2}
-                maxColumns={3}
-                isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}
-              />
-            </div>
-          )}
-        </>
-      ))}
+        );
+      })}
     </div>
   );
 };

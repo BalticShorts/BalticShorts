@@ -11,6 +11,8 @@ import { MyGridMovies } from "../modified-ui-components/Grid/movieGrid.jsx";
 import { getMoviesMain } from "../custom-queries/queries.js";
 import { DisplayedPlaylistGroup } from "../components/DisplayedPlaylistGroup/DisplayedPlaylistGroup.jsx";
 import MainMovie from "../components/MainMovie/MainMovie.jsx";
+import { ReactComponent as Logo } from "../assets/images/bs_logo.svg";
+
 // https://mui.com/material-ui/material-icons/
 import { GlobalContext } from "../App";
 
@@ -131,7 +133,7 @@ const Home = () => {
 
           <div className="relative my-100 flex flex-row w-full items-center justify-center gap-50">
             <div className="mr-50">
-              <img className="w-full h-fit" src={require("./static/Black_Logo.png")} alt="Subscribe" />
+              <Logo className="w-full h-fit"/>
             </div>
             <div className="typography-body uppercase !tracking-[0.1em] !font-normal">
             JAUNAS, VECAS, SLIKTĀKĀS, LABĀKĀS,<br/> LIELBUDŽETA, BEZBUDŽETA ĪSFILMAS,<br/>REŽISORI, OPERATORI UN CITI FILMU VAROŅI <br/>NO baltijas valstu filmu industrijas.
@@ -142,7 +144,7 @@ const Home = () => {
           <div className="flex-col justify-center items-center mb-50">
             <div className="text-center text-black typography-h2">PAR PROJEKTU</div>
             <div className="my-50 m-auto w-3/5 text-black typography-body-large">Baltic Shorts ir digitāla straumēšanas platforma, kas fokusējas uz Baltijas valstīs (Latvija, Lietuva, Igaunija) radītu īsfilmu izrādīšanu. Projekta mērķis ir radīt un uzturēt ērti lietojamu plaša satura mājaslapu, kas attīsta īsfilmu formas pieejamību un to autoru atpazīstamību plašākā tirgū.</div>
-            <div className="w-fit px-10 m-auto text-center text-black !typography-body border border-black cursor-pointer h-30" onClick={() => navigate('/about')}>Uzzināt vairāk</div>
+            <div className="w-fit px-10 m-auto text-center text-black !typography-body flex items-center button-default button-white cursor-pointer" onClick={() => navigate('/about')}>Uzzināt vairāk</div>
           </div>
         </div>
       </div>

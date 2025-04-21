@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import MenuIcon from '@mui/icons-material/Menu';
 import { Dropdown } from "./Dropdown";
 import { useContext } from "react";
 import { GlobalContext } from "../../App";
@@ -8,12 +7,14 @@ import gifAnimation from "../../assets/images/bs_logo_animation.gif";
 import { ReactComponent as Logo } from "../../assets/images/bs_logo_wide.svg";
 import { ReactComponent as User } from "../../assets/images/user.svg";
 import { ReactComponent as X } from "../../assets/images/x.svg";
+import { ReactComponent as SearchB } from "../../assets/images/search.svg";
+import { ReactComponent as Menu } from "../../assets/images/menu.svg";
 import Search from "../../pages/Search";
+import { useDropdown } from "../../context/DropdownContext";
 
 export const Navbar = () => {
   const context = useContext(GlobalContext);
-
-  const [showDropdown, setShowDropdown] = useState(false);
+  const { showDropdown, setShowDropdown } = useDropdown();
   const [isHovered, setIsHovered] = useState(false);
   const [showSearchModal, setShowSearchModal] = useState(false); // State to control search modal visibility
 
@@ -46,33 +47,11 @@ export const Navbar = () => {
     };
   }, [showSearchModal]);
 
-  useEffect(() => {
-    // Are there users, that are logged in and are no paying???
-    // console.log('test')
-    // if(context.loggedIn){
-    //   console.log('test2')
-    //   if(!context.currentUser.completed_setup){
-    //     console.log('test3')
-    //     if(context.currentUser.id !== undefined){
-    //       console.log('test4')
-    //     if(window.location.pathname !== '/profile/'+context.currentUser.id+'/setup'){
-    //       console.log('test5')
-    //       navigate('/profile/'+context.currentUser.id+'/setup');
-    //     }
-    //   }
-    // }
-    // console.log('context.currentUser')
-    // console.log(context.currentUser)
-    // need to finish creating profile
-    //   }
-    // }
-  }, [context.loggedIn]);
-
   return (
     <>
-      <div className="w-full h-50 min-h-full bg-inherit flex flex-row justify-center items-center">
-        <div className="w-full flex flex-row justify-between items-center m-auto !max-w-[1100px] my-15">
-          <div className="flex flex-row gap-25">
+      <div className="w-full h-full !h-full min-h-full bg-inherit flex flex-row justify-center items-center relative">
+        <div className="w-full flex flex-row justify-between items-center m-auto !max-w-[1100px] my-15 relative">
+          <div className="flex flex-row gap-25 absolute left-0 top-1/2 -translate-y-1/2">
             <div className="typography-body-small text-center items-center flex">
               {showSearchModal ? (
                 <div onClick={closeSearchModal} className="cursor-pointer flex flex-row items-center">
@@ -80,9 +59,10 @@ export const Navbar = () => {
                   <div className="typography-body-small">Aizvērt</div>
                 </div>
               ) : (
-                <span onClick={openSearchModal} className="cursor-pointer typography-body-small">
-                  Meklēt
-                </span>
+                <div onClick={openSearchModal} className="cursor-pointer typography-body-small flex flex-row items-center">
+                  <SearchB className="w-15 h-15 mr-2" />
+                  <div className="typography-body-small">Meklēt</div> 
+                </div>
               )}
             </div>
             {!showSearchModal && (
@@ -92,28 +72,28 @@ export const Navbar = () => {
             )}
           </div>
 
-          <div className="relative text-center !justify-between !items-center w-1/3 group h-20" 
+          <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center !justify-between !items-center group h-20" 
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}>
             
             {!isHovered ? (
-            <Logo onClick={() => window.location.href = '/'} className="h-20 mx-auto"/>
+            <Logo onClick={() => window.location.href = '/'} className="h-20 mx-auto !w-[210px]"/>
             ):(
             <img
               src= {gifAnimation}
               alt="Baltic Shorts"
-              className="w-auto h-20 cursor-pointer mx-auto"
+              className="!w-[210px] h-20 cursor-pointer mx-auto"
               onClick={() => window.location.href = '/'}
             />
             )}
           </div>
 
-          <div className="flex flex-row gap-25">
+          <div className="flex flex-row gap-25 absolute right-0 top-1/2 -translate-y-1/2">
           {!showSearchModal && (
             <div className="relative flex flex-row cursor-pointer">
               {context.loggedIn ? (
                 <div className="m-auto relative">
-                  <User className="text-white" onClick={() => window.location.href = "/user/" + context.currentUser?.id}/>
+                  <User onClick={() => window.location.href = "/user/" + context.currentUser?.id}/>
                 </div>
               ) : (
                 <div
@@ -123,14 +103,12 @@ export const Navbar = () => {
                   Ienākt
                 </div>
               )}
-
               <div className="inline-flex justify-end items-center relative ml-0 sm:ml-20">
                 <div className="flex flex-col relative gap-4 sm:gap-20">
-                  <MenuIcon onClick={() => toggleDropdown()} />
+                  <Menu onClick={() => toggleDropdown()} />
                   {showDropdown && (
-                    <div className="absolute top-full right-0 mt-1 z-10 flex items-end flex-col">
+                    <div className="absolute top-full right-0 mt-3 z-10 flex items-end flex-col">
                       <svg
-                        className="mr-2"
                         xmlns="http://www.w3.org/2000/svg"
                         width="9"
                         height="7"

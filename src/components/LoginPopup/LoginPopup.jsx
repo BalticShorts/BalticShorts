@@ -7,6 +7,8 @@ import { checkPersonExists } from "../../custom-queries/queries";
 import TermsOfService from "../TermsOfService/TOS";
 import Agreement from "../Agreement/Agreement";
 import Privacy from "../Privacy/Privacy";
+import { ReactComponent as Info } from "../../assets/images/info.svg";
+import { ReactComponent as X } from "../../assets/images/x.svg";
 
 export const LoginPopup = () => {
     const context = useContext(GlobalContext)
@@ -27,6 +29,7 @@ export const LoginPopup = () => {
     const [restorePassword, setRestorePassword] = useState(false);
     const [showTOS, setShowTOS] = useState(false);
     const [tosRead, setTosRead] = useState(false);
+    const [showInfo, setShowInfo] = useState(false);
 
     const Auth = context.auth
 
@@ -207,8 +210,8 @@ export const LoginPopup = () => {
     return(
         <>
             {showModal && (
-            <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md bg-opacity-50 z-10 overscroll-auto">
-                <div className="modal-size px-5 pt-5 bg-beige border border-black flex-col justify-start inline-flex">
+            <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md bg-opacity-50 z-10 overscroll-auto !modal-size">
+                <div className="modal-size p-20 bg-beige border border-black flex-col justify-start inline-flex">
                     <div className="w-full h-fit relative flex items-left justify-between mb-5">
                         <img src={require("./static/BS_small_logo.png")} alt="logo" />
                         <div className="flex items-end">
@@ -220,80 +223,62 @@ export const LoginPopup = () => {
 
                     {page === 'login' && (
                     <>
-                    <div className="w-full h-fit flex items-center justify-center mb-5">
-                        <img className="w-[80px] h-[100px]" src={require("./static/Login_placeholder.png")} alt="login_photo" />
-                    </div>
-                    <div className="pb-2 self-stretch flex-col justify-start items-center inline-flex">
-                        <div className="w-full justify-center items-center flex flex-col text-lg mb-2 text-red-700">{error.message}</div>
-                        <div className="w-full justify-center items-center flex flex-col text-lg mb-10">
-                            <input id="email" type="email" placeholder="E-pasts" className="bg-beige text-center border-none outline-none" onChange={e => setEmail(e.target.value)} ></input>
-                            <div className="w-full h-px relative border border-black"></div>
+                    <div className="my-auto self-stretch flex flex-col justify-between items-center inline-flex">
+                        <div className="w-full justify-center items-center flex flex-col typography-technical mb-2 !text-red-700">{error.message}</div>
+                        <div className="w-full justify-center items-center flex flex-col text-lg my-10">
+                            <input id="email" type="email" placeholder="E-pasts" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setEmail(e.target.value)} ></input>
+                            <div className="w-full h-px relative border-b border-black"></div>
                         </div>
                         <div className="w-full justify-center items-center flex flex-col text-lg">
-                            <input id="password" type="password" placeholder="Parole" className="bg-beige text-center border-none outline-none" onChange={e => setPassword(e.target.value)}></input>
-                            <div className="w-full h-px relative border border-black"></div>
+                            <input id="password" type="password" placeholder="Parole" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setPassword(e.target.value)}></input>
+                            <div className="w-full h-px relative border-b border-black"></div>
                         </div>
-                        <div className="Frame102 w-96 h-5 pt-2.5 justify-between items-center inline-flex py-10">
-                            <div className="text-center text-black text-xs font-normal font-['Arial'] tracking-wide ">
+                        <div className="w-full justify-between items-center inline-flex mt-10">
+                            <div className="typography-technical">
                                 <span id="rememberMe" className="cursor-pointer" onClick={() => setFastLogin(!fastLogin)}>{fastLogin ? <>[&#x2713;] </> : <>[  ] </>}</span>
                                 Atcerēties mani
                             </div>
 
-                            <div className="AizmirsiParoli text-center text-black text-xs font-normal font-['Arial'] tracking-wide cursor-pointer" onClick={() => setPage('forget')}>Aizmirsi paroli?</div>
+                            <div className="typography-technical cursor-pointer" onClick={() => setPage('forget')}>Aizmirsi paroli?</div>
                         </div>
-                        <div className="Frame137 pt-6 flex-col justify-start items-start flex">
-                            <div className="button-default px-2.5 pt-1 pb-0.5 bg-beige border border-black justify-center items-center gap-2.5 inline-flex">
-                                <div type="submit" className="button-default !font-normal cursor-pointer grow shrink basis-0 text-center text-black text-base font-normal font-['SchoolBook']" onClick={() => logIn()}>Ieiet</div>
-                            </div>
-                        </div>
+                        <div type="submit" className="button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => logIn()}>Ieiet</div>
                     </div>
                     </>
                     )}
                     {page === 'register' && (
                         <>
                         {confirmationStage ? (
-                        <div className="pb-2 self-stretch flex-col justify-start items-center inline-flex">
-                            <div className="w-full justify-center items-center flex flex-col text-lg mb-1 text-red-700">{error.message}</div>
-                            <div className="w-full justify-center items-center flex flex-col text-lg mb-1 text-red-700"> Kods nosūtīts uz epastu!</div>
+                        <div className="flex flex-col justify-start items-center my-auto">
+                            <div className="w-full justify-center items-center flex flex-col typography-technical mb-20 !text-red-700">{error.message}</div>
+                            <div className="w-full justify-center items-center flex flex-col typography-technical mb-20 !text-red-700"> Kods nosūtīts uz epastu!</div>
                             <div className="w-full justify-center items-center flex flex-col text-lg border border-black">
-                                <input id="code" type="text" placeholder="Code" className="bg-beige text-center border-none outline-none" onChange={e => setConfirmationCode(e.target.value)} ></input>
+                                <input id="code" type="text" placeholder="Code" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setConfirmationCode(e.target.value)} ></input>
                             </div>
-                            <div className="Frame137 pt-6 justify-start items-start flex flex-row gap-6">
-                                <div className="Button h-7 px-2.5 pt-1 pb-0.5 bg-beige border border-black justify-center items-center gap-2.5 inline-flex">
-                                    <div type="submit" className="cursor-pointer grow shrink basis-0 text-center text-black text-base font-normal font-['SchoolBook']" onClick={() => handleCodeConfirmatation()}>Reģistrēties</div>
-                                </div>
-                                <div className="Button h-7 px-2.5 pt-1 pb-0.5 bg-beige border border-black justify-center items-center gap-2.5 inline-flex">
-                                    <div className="cursor-pointer grow shrink basis-0 text-center text-black text-sm font-normal font-['SchoolBook']" onClick={() => resendCode()}>Pārsūtīt kodu</div>
-                                </div>
+                            <div className="mt-25 justify-start items-start flex flex-row gap-6">
+                                <div type="submit" className="button-default button-white !font-normal cursor-pointer" onClick={() => handleCodeConfirmatation()}>Reģistrēties</div>
+                                <div className="button-default button-white !font-normal cursor-pointer" onClick={() => resendCode()}>Pārsūtīt kodu</div>
                             </div>
                         </div>
                         ):(
                         <>
-                        <div className="w-full h-fit flex items-center justify-center">
-                            <img className="w-[80px] h-[100px]" src={require("./static/Login_placeholder.png")} alt="login_photo" />
-                        </div>
-
-                        <div className="pb-2 self-stretch flex-col justify-start items-center inline-flex">
-                            <div className="w-full justify-center items-center flex flex-col text-lg mb-1 text-red-700">{error.message}</div>
+                        <div className="flex flex-col justify-start items-center my-auto">
+                            <div className="w-full justify-center items-center flex flex-col typography-technical mb-20 !text-red-700">{error.message}</div>
                             <div className="w-full justify-center items-center flex flex-row text-lg mb-0 border border-black">
-                                <input id="name" type="text" placeholder="Vārds" className="bg-beige text-center border-none outline-none" onChange={e => setName(e.target.value)} ></input>
+                                <input id="name" type="text" placeholder="Vārds" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setName(e.target.value)} ></input>
                                 <div className="h-full w-0 border-r border-black "></div>
-                                <input id="surname" type="text" placeholder="Uzvards" className="bg-beige text-center border-none outline-none" onChange={e => setSurname(e.target.value)} ></input>
+                                <input id="surname" type="text" placeholder="Uzvards" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setSurname(e.target.value)} ></input>
                             </div>
                             <div className="w-full justify-center items-center flex flex-col text-lg border-x border-black">
-                                <input id="email" type="email" placeholder="E-pasts" className="bg-beige text-center border-none outline-none" onChange={e => setEmail(e.target.value)} ></input>
+                                <input id="email" type="email" placeholder="E-pasts" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setEmail(e.target.value)} ></input>
                             </div>
                             <div className="w-full justify-center items-center flex flex-col text-lg border border-black">
-                                <input id="password" type="password" placeholder="Parole" className="bg-beige text-center border-none outline-none" onChange={e => setPassword(e.target.value)}></input>
+                                <input id="password" type="password" placeholder="Parole" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setPassword(e.target.value)}></input>
                             </div>
-                            <div className="w-96 h-5 pt-2.5 justify-between items-center inline-row py-10">
-                                <div className="text-center text-black text-xs font-normal font-['Arial'] tracking-wide "><span id="acceptRules" className="cursor-pointer" onClick={handleAcceptRulesClick}>{piekrituTicked ? <>[&#x2713;]</> : <>[  ]</>}</span>Piekrītu <span className="text-center flex-row font-bold cursor-pointer" onClick={() => setShowTOS(true)}>noteikumiem</span></div>
+                            <div className="w-full mt-20 justify-between items-center inline-row">
+                                <div className="text-center typography-technical"><span id="acceptRules" className="cursor-pointer" onClick={handleAcceptRulesClick}>{piekrituTicked ? <>[&#x2713;]</> : <>[  ]</>}</span>Piekrītu <span className="text-center flex-row font-bold cursor-pointer" onClick={() => setShowTOS(true)}>noteikumiem</span></div>
                             </div>
-                            <div className="Frame137 pt-6 flex-col justify-start items-start flex">
-                                <div className="Button h-7 px-2.5 pt-1 pb-0.5 bg-beige border border-black justify-center items-center gap-2.5 inline-flex">
-                                    <div type="submit" className="cursor-pointer grow shrink basis-0 text-center text-black text-base font-normal font-['SchoolBook']" onClick={() => {piekrituTicked ? handleSignUp() : setError({"code":'AcceptRules', "message": 'Jāpiekrīt noteikumiem!'})}}>Reģistrēties</div>
-                                </div>
-                            </div>
+                            <div type="submit" className="button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => {piekrituTicked ? handleSignUp() : setError({"code":'AcceptRules', "message": 'Jāpiekrīt noteikumiem!'})}}>Reģistrēties</div>
+
                         </div>
                         </>
                         )}
@@ -302,66 +287,60 @@ export const LoginPopup = () => {
                     {page === 'forget' && (
                         <>
                         {restorePassword ?
-                            <div className="pb-2 self-stretch flex-col justify-start items-center inline-flex">
+                            <div className="flex flex-col justify-start items-center my-auto">
                                 <div className="flex-col justify-center items-center gap-2.5 flex">
-                                    <div className="w-96 text-center text-black text-xl font-normal font-['SchoolBook']">
+                                    <div className="w-full text-center typography-body">
                                         Ievadiet kodu un jauno paroli.
                                     </div>
                                 </div>
-                                <div className="w-full justify-center items-center flex flex-col text-lg mb-1 text-red-700">{error.message}</div>
+                                <div className="w-full justify-center items-center flex flex-col typography-technical mb-20 !text-red-700">{error.message}</div>
                                 <div className="w-full justify-center items-center flex flex-col text-lg my-4">
-                                    <input id="forgetEmail" type="text" placeholder="Email" className="bg-beige text-center border-none outline-none" readOnly value={forgetEmail}></input>
+                                    <input id="forgetEmail" type="text" placeholder="Email" className="bg-beige text-center border-none outline-none typography-body-large" readOnly value={forgetEmail}></input>
                                     <div className="w-full h-px relative border border-black"></div>
                                 </div>
                                 <div className="w-full justify-center items-center flex flex-col text-lg mb-4">
-                                    <input id="forgetCode" type="text" placeholder="Kods" className="bg-beige text-center border-none outline-none" onChange={e => setConfirmationCode(e.target.value)} value={confirmationCode} ></input>
+                                    <input id="forgetCode" type="text" placeholder="Kods" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setConfirmationCode(e.target.value)} value={confirmationCode} ></input>
                                     <div className="w-full h-px relative border border-black"></div>
                                 </div>
                                 <div className="w-full justify-center items-center flex flex-col text-lg mb-4">
-                                    <input id="password" type="password" placeholder="Parole" className="bg-beige text-center border-none outline-none" onChange={e => setPassword(e.target.value)}></input>
+                                    <input id="password" type="password" placeholder="Parole" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setPassword(e.target.value)}></input>
                                     <div className="w-full h-px relative border border-black"></div>
                                 </div>
                                 <div className="w-full justify-center items-center flex flex-col text-lg mb-4">
-                                    <input id="checkPassword" type="password" placeholder="Parole atkārtoti" className="bg-beige text-center border-none outline-none" onChange={e => setCheckPassword(e.target.value)}></input>
+                                    <input id="checkPassword" type="password" placeholder="Parole atkārtoti" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setCheckPassword(e.target.value)}></input>
                                     <div className="w-full h-px relative border border-black"></div>
                                 </div>
-                                <div className="Frame137 pt-6 justify-start items-start flex flex-row gap-6">
-                                    <div className="Button h-7 px-2.5 pt-1 pb-0.5 bg-beige border border-black justify-center items-center gap-2.5 inline-flex">
-                                        <div type="submit" className="cursor-pointer grow shrink basis-0 text-center text-black text-base font-normal font-['SchoolBook']" onClick={() => handleNewPassword()}>Nomainīt</div>
-                                    </div>
-                                </div>
+                                <div type="submit" className="button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => handleNewPassword()}>Nomainīt</div>
+
                             </div>
                             : 
-                            <div className="pb-2 self-stretch flex-col justify-start items-center inline-flex mt-5">
-                                <div className="pb-7 flex-col justify-center items-center flex">
-                                    <div className="Frame103 flex-col justify-start items-start flex">
-                                        <div className="Frame95 w-96 h-10 pb-1.5 flex-col justify-center items-center flex">
-                                            <div className="w-96 h-6 text-center text-black text-lg font-normal font-['SchoolBook']">Aizmirsi paroli?</div>
+                            <div className="flex flex-col justify-start items-center my-auto">
+                                <div className="flex-col justify-center items-center flex">
+                                    <div className="flex-col justify-start items-start flex">
+                                        <div className="w-full flex-col justify-center items-center flex">
+                                            <div className="w-full text-center typography-body-large">Aizmirsi paroli?</div>
                                         </div>
                                     </div>
                                     <div className="flex-col justify-center items-center gap-2.5 flex">
-                                        <div className="w-96 text-center text-black text-base font-normal font-['SchoolBook']">
+                                        <div className="w-full text-center typography-body">
                                             Ievadi zemāk e-pastu ar kuru reģistrējies. <br/>Uz to nosūtīsim kodu, lai atjaunotu paroli.
                                         </div>
                                     </div>
                                 </div>
-                                <div className="w-full justify-center items-center flex flex-col text-lg mb-5 text-red-700">{error.message}</div>
+                                <div className="w-full justify-center items-center flex flex-col typography-technical mb-5 !text-red-700">{error.message}</div>
 
                                 <div className="w-full justify-center items-center flex flex-col text-lg">
-                                    <input id="email" type="email" placeholder="E-pasts" className="bg-beige text-center border-none outline-none" onChange={e => setForgetEmail(e.target.value)} ></input>
-                                    <div className="w-full h-px relative border border-black"></div>
+                                    <input id="email" type="email" placeholder="E-pasts" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setForgetEmail(e.target.value)} ></input>
+                                    <div className="w-full relative border border-black"></div>
                                 </div>
-                                <div className="Frame137 pt-6 justify-start items-start flex flex-row gap-6">
-                                    <div className="Button h-7 px-2.5 pt-1 pb-0.5 bg-beige border border-black justify-center items-center gap-2.5 inline-flex">
-                                        <div type="submit" className="cursor-pointer grow shrink basis-0 text-center text-black text-base font-normal font-['SchoolBook']" onClick={() => handleForgetPassword()}>Sūtīt</div>
-                                    </div>
-                                </div>
+                                <div type="submit" className="button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => handleForgetPassword()}>Sūtīt</div>
+
                             </div>
                         }
                         </>
                     )}
-                    <div className="w-full h-fit max-h-[18px] flex mt-auto felx-row mb-5">
-                        <img className="bottom-0" src={require("./static/Info_button.png")} alt="info" />
+                    <div className="w-full h-fit flex mt-auto felx-row justify-between items-center">
+                        <Info className="!h-[18px] !w-[18px] cursor-pointer hover:bg-black hover:text-white border border-black" onClick={() => {setShowInfo(true)}}/>
                         <div className="w-full justify-center items-center inline-flex text-base">
                             <div className="inline-flex items-center cursor-pointer" onClick={() => {page !== 'login' ? changePage('login') : changePage('register')}}>
                                 {page !== 'login' && (
@@ -369,7 +348,7 @@ export const LoginPopup = () => {
                                         <path d="M5.36661e-08 4.99965L7 0.500069L7 9.50007L5.36661e-08 4.99965Z" fill="black"/>
                                     </svg>
                                 )}
-                                <div className="m-1 h-fit text-center text-black text-sm font-normal font-['SchoolBook']">{page !== 'login' ? 'Pieslēgties' : 'Reģistrēties'}</div>
+                                <div className="m-1 h-fit text-center typography-body-small">{page !== 'login' ? 'Pieslēgties' : 'Reģistrēties'}</div>
                                 {page === 'login' && (
                                     <svg xmlns="http://www.w3.org/2000/svg" width="8" height="10" viewBox="0 0 8 10" fill="none">
                                         <path d="M7.5 5.00035L0.5 9.49993L0.5 0.499931L7.5 5.00035Z" fill="black"/>
@@ -391,6 +370,19 @@ export const LoginPopup = () => {
                         <div className="button-default relative flex items-center justify-center py-5 border border-black mb-5 cursor-pointer" onClick={() => { setShowTOS(false); setTosRead(true); }}>
                             Aizvērt
                         </div>
+                    </div>
+                </div>
+            )}
+            {showInfo && (
+                <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md bg-opacity-50 z-10 overscroll-auto">
+                    <div className="modal-size !h-fit p-20 bg-beige border border-black flex-col justify-start inline-flex overflow-y-auto items-center text-start">
+                        <div className="w-full flex flex-row items-left justify-between mt-25 mb-10">
+                            <h2 className="typography-body-large text-center w-full">Kādēļ man vajadzīgs profils?</h2>
+                            <X className="cursor-pointer" onClick={() => {setShowInfo(false)}}/>
+                        </div>
+                        <div className="w-full border-b border-black"/>
+                        <p className="typography-body text-center my-25">Ar Baltic Shorts profilu tu vari skatīties filmas (abonējot platformu), pievienot darbus skatīšanai vēlāk, veidot darbu sarakstus.</p>
+                        <p className="typography-body text-center">Ja piedalies īsfilmu veidošanā – vari savu darbu komandās pieminēto vārdu sasaistīt ar savu profilu, tādejādi veidojot savu automātiski atjaunoto Baltic Shorts personas profilu. Kā arī iesūtīt darbus pievienošanai platformai.</p>
                     </div>
                 </div>
             )}

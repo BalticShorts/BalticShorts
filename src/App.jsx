@@ -20,6 +20,7 @@ import Playlist from "./pages/Playlists";
 import UserProfilePage from "./pages/UserProfile";
 import SettingsPage from "./pages/Settings";
 import Purchase from "./pages/Purchase";
+import { DropdownProvider } from "./context/DropdownContext";
 
 Amplify.configure(awsExports);
 export const GlobalContext = React.createContext();
@@ -29,6 +30,7 @@ export default function App() {
   const [loggedInModal, setLoggedInModal ] = useState(false);
   const [currentUser, setCurrentUser ] = useState({});
   const [admin, setAdmin] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
   
   const assessLoggedInState = async () => {
     // try {
@@ -81,42 +83,44 @@ export default function App() {
         setLoggedInModal: setLoggedInModal,
       }}
     >
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="about" element={<About />} />
-            <Route path="movie/:name/:id" element={<Movie />} />
-            <Route path="search/:query?" element={<Search />} />
-            <Route path="catalogue/:givenTab?" element={<Catalogue />} />
-            <Route path="profile/:id/:mode?" element={<Profile />} />
-            <Route path="playlist/:id" element={<Playlist />} />
+      <DropdownProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="about" element={<About />} />
+              <Route path="movie/:name/:id" element={<Movie />} />
+              <Route path="search/:query?" element={<Search />} />
+              <Route path="catalogue/:givenTab?" element={<Catalogue />} />
+              <Route path="profile/:id/:mode?" element={<Profile />} />
+              <Route path="playlist/:id" element={<Playlist />} />
 
-            {loggedIn ? (
-              <>
-                <Route path="user/:id" element={<UserProfilePage />} />
-                <Route path="faq" element={<Buj />} />
-                <Route path="subscribe" element={<Purchase />} />
-                <Route path="settings/:id" element={<SettingsPage />} />
-                {admin ? (
-                  <>
-                    <Route path="admin/playlists" element={<AdminPlaylist />} />
-                    <Route path="addPlaylist/:id?" element={<PlaylistUpload />} />
-                    <Route path="upload" element={<Upload />} />
-                  </>
-                ):(
-                  <Route path="*" element={<Home/>} />
-                )}
-              </>
-            ) : (
-              <>
-                <Route path="subscribe" element={<Purchase />} />
-                <Route path="*" element={<Subscribe />} />
-              </>
-            )}
-          </Route>
-        </Routes>
-      </BrowserRouter>
+              {loggedIn ? (
+                <>
+                  <Route path="user/:id" element={<UserProfilePage />} />
+                  <Route path="faq" element={<Buj />} />
+                  <Route path="subscribe" element={<Purchase />} />
+                  <Route path="settings/:id" element={<SettingsPage />} />
+                  {admin ? (
+                    <>
+                      <Route path="admin/playlists" element={<AdminPlaylist />} />
+                      <Route path="addPlaylist/:id?" element={<PlaylistUpload />} />
+                      <Route path="upload" element={<Upload />} />
+                    </>
+                  ):(
+                    <Route path="*" element={<Home/>} />
+                  )}
+                </>
+              ) : (
+                <>
+                  <Route path="subscribe" element={<Purchase />} />
+                  <Route path="*" element={<Subscribe />} />
+                </>
+              )}
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </DropdownProvider>
     </GlobalContext.Provider>
   );
 }

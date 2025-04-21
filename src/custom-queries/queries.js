@@ -10,6 +10,7 @@ export const getProfile = `
         name
         role
         surname
+        nationality
         PersonMovieTeams {
           items {
             MovieTeam {
@@ -141,6 +142,15 @@ export const getSearch = `
         role
         id
         nationality
+        PersonMovieTeams {
+          items {
+            MovieTeam {
+              Movie {
+                id
+              }
+            }
+          }
+        }
       }
     }
     listMoviePlaylists(

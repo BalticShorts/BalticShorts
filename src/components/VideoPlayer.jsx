@@ -158,10 +158,10 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
   }, [movieURL, urlAddon, subtitles, thumbnail]);
 
   return (
-    <div className="relative w-full max-h-[80vh]">
+    <div className="relative w-full max-h-[70vh]">
       <div
         ref={playerRef}
-        className="absolute top-0 left-0 w-full max-h-[80vh]"
+        className="absolute top-0 left-0 w-full max-h-[70vh]"
       ></div>
     </div>
   );
