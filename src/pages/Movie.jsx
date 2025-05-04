@@ -326,9 +326,9 @@ function Movie() {
     <div className='absolute top-0 left-0 w-full z-10 text-beige hover:text-black hover:bg-beige fill-beige hover:fill-black !h-50'><Navbar/></div>
 
     <section
-      className="MovieContainer w-full max-h-[70vh] h-[70vh] relative min-w-2/5"
+      className="MovieContainer w-full max-h-[65vh] h-[65vh] relative min-w-2/5"
     >
-      <div className="VideoWrapper w-full max-h-[70vh] h-[70vh] relative min-w-2/5">
+      <div className="VideoWrapper w-full max-h-[65vh] h-[65vh] relative min-w-2/5">
         <VideoPlayer
           movieURL={movieURL}
           urlAddon={urlAddon}

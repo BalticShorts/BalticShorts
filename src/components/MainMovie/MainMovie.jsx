@@ -39,7 +39,7 @@ const MainMovie = ({ movie, isLoggedIn }) => {
     };
 
   return (
-    <section className="relative w-full h-[60vh] sm:h-[70vh] bg-black z-0"
+    <section className="relative w-full h-[60vh] sm:h-[65vh] bg-black z-0"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}>
       <div className="absolute inset-0">
