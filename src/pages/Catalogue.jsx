@@ -303,6 +303,10 @@ const Catalogue = () => {
     Subtitles: 'Subtitri',
   };
 
+  useEffect(() => {
+    document.title = 'Baltic Shorts - Kataologs';
+  }, []);
+
   return (
     <>
       <div className="bg-beige flex flex-col min-h-[70vh]" id="container">

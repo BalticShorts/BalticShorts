@@ -83,6 +83,10 @@ function Profile () {
         return acc;
       }, {});
 
+      useEffect(() => {
+        document.title = 'Baltic Shorts - Persona';
+      }, []);
+
       return (
         <div className="min-h-screen bg-inherit text-black max-w-[1100px] m-auto">
           <section className="mt-25 mb-50 flex flex-row justify-between">

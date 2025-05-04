@@ -314,6 +314,9 @@ function Movie() {
       return [];
     }
   }
+  useEffect(() => {
+    document.title = `Baltic Shorts - ${movieData.name} (${movieData.created_year})`;
+    }, [movieData]);
 
   var teamList = [];
 

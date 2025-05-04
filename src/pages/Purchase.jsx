@@ -67,6 +67,10 @@ const Purchase = () => {
     setLoading(false);
   };
 
+    useEffect(() => {
+      document.title = 'Baltic Shorts - Abonēt';
+    }, []);
+
   return (
     <div className="max-w-lg mx-auto p-6 border border-black mt-10">
       {paymentStatus === "success" && paymentReference ? (

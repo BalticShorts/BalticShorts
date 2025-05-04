@@ -49,6 +49,10 @@ const Buj = () => {
     }
   };
 
+  useEffect(() => {
+    document.title = 'Baltic Shorts - BUJ';
+  }, []);
+
   return (
     <div className="flex flex-col max-w-[1100px] m-auto bg-beige overflow-auto">
       <div className="flex flex-1 h-screen">

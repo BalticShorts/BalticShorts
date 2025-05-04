@@ -77,6 +77,10 @@ const Playlist = () => {
     setMovies(sortedItems);
   };
 
+    useEffect(() => {
+      document.title = 'Baltic Shorts - ' + playlist?.title;
+    }, [playlist]);
+
   if (!playlist) return <div>Loading...</div>;
 
   return (

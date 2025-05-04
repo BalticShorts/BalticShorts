@@ -77,6 +77,9 @@ const Search = () => {
       else
         footer?.classList.remove('relative')
       }, [searchResult])
+      useEffect(() => {
+        document.title = 'Baltic Shorts - Search';
+      }, []);
 
     return(
         <>

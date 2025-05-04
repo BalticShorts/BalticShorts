@@ -124,6 +124,10 @@ function SettingsPage() {
     }
   };
 
+  useEffect(() => {
+    document.title = 'Baltic Shorts - Uzstādījumi';
+  }, []);
+
   if (loading) {
     return <div className="bg-gray-100 p-4">Loading...</div>;
   }

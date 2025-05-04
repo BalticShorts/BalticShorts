@@ -54,6 +54,10 @@ const UserProfilePage = () => {
     getProfileData();
   }, [id]);
 
+  useEffect(() => {
+    document.title = 'Baltic Shorts - Lietotājs';
+  }, []);
+
   if (loading) return <div>Loading...</div>;
 
   return (
