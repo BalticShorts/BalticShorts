@@ -64,7 +64,7 @@ const MainMovie = ({ movie, isLoggedIn }) => {
       <div className="relative z-0 flex flex-col justify-between h-full text-beige max-w-[1100px] m-auto">
 
         <div className="mt-25">
-          <p className="typography-technical uppercase">
+          <p className="typography-technical uppercase !font-bold">
             Nedēļas īsfilma
           </p>
 
@@ -82,7 +82,7 @@ const MainMovie = ({ movie, isLoggedIn }) => {
             <p className="typography-body-bold mb-[3px]">
               <span>{director?.Person.name + ' ' + director?.Person.surname}</span>
             </p>
-            <p className="typography-technical mb-20">
+            <p className="typography-technical mb-10">
               <span>{movie.length}’, {movie.created_year}, {movie.origin_country}</span>
             </p>
 
