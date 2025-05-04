@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import WatchlistModal from "../../components/WatchlistModal/WatchlistModal";
 import { MdFormatListBulleted } from "react-icons/md";
+import { ReactComponent as TriangleDown } from "../../assets/images/triangle_down.svg";
 
 export function getDirectors(data) {
   const result = {};
@@ -120,12 +121,12 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
           <div className="relative w-full h-10">
             <div className="w-full absolute inset-x-0 -top-[70px] h-28 bg-[linear-gradient(180deg,rgba(253,252,245,0.2)_0%,rgba(253,252,245,0.8)_50%,rgba(253,252,245,1)_100%)]"/>
             <div className="flex justify-center mt-20 ">
-              <button
-                className="typography-technical z-10 !uppercase"
+              <div
+                className="typography-technical z-10 flex flex-row justify-center items-center gap-1 cursor-pointer"
                 onClick={() => setRows(rows + 1)}
               >
-                Vairāk ▼
-              </button>
+                <span>VAIRĀK</span><TriangleDown/>
+              </div>
             </div>
           </div>
         </>
