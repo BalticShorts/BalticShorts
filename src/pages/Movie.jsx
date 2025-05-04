@@ -323,7 +323,7 @@ function Movie() {
   return (
     <>
     <div className="FilmasSkats w-full relative bg-beige rounded-3xl">
-    <div className='absolute top-0 left-0 w-full z-10 text-beige hover:text-black hover:bg-beige fill-beige hover:fill-black !h-50'><Navbar/></div>
+    <div className='absolute top-0 left-0 w-full z-10 text-beige hover:text-black hover:bg-beige fill-beige hover:fill-black !h-50 transition-colors duration-1000 ease-in-out'><Navbar/></div>
 
     <section
       className="MovieContainer w-full max-h-[65vh] h-[65vh] relative min-w-2/5"

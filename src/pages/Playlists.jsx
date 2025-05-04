@@ -85,7 +85,7 @@ const Playlist = () => {
 
   return (
     <div className="bg-beige min-h-screen">
-      <div className='absolute top-0 left-0 w-full z-10 text-beige hover:text-black hover:bg-beige fill-beige hover:fill-black !h-50'><Navbar/></div>
+      <div className='absolute top-0 left-0 w-full z-10 text-beige hover:text-black hover:bg-beige fill-beige hover:fill-black !h-50 transition-colors duration-1000 ease-in-out'><Navbar/></div>
       
       <div
         className="relative w-full h-64 bg-gradient-to-b from-gray-800 to-transparent flex flex-col items-center justify-between"
