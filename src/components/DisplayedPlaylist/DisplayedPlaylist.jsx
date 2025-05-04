@@ -43,7 +43,8 @@ export const DisplayedPlaylist = ({ photoPosition, playlist }) => {
         <div className="w-full h-fit border border-black justify-center items-center flex flex-row" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
             <div className="relative w-[750px] h-[360px] border-r border-black">
                 <img className="w-[750px] h-[360px] object-cover" src={photoSrc} alt={playlist.title} />
-                <div className="pl-2 absolute bottom-0 w-4/5 text-stone-50 typography-h1-small uppercase mb-15">{playlist.title}</div>
+                <div className="pl-2 absolute bottom-0 w-4/5 text-stone-50 typography-h1-small uppercase mb-15 z-10">{playlist.title}</div>
+                <div className="absolute bottom-0 left-0 w-full h-[35%] bg-gradient-to-t from-black/60 to-transparent" />
             </div>
             <div className="w-1/3 max-h-[360px] p-7 flex-col justify-between items-start inline-flex ">
                 <div></div>
