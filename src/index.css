@@ -210,4 +210,5 @@ code {
 }
 .carousel .thumb {
   padding: 0px !important;
+  border: none !important;
 }

@@ -366,13 +366,13 @@ function Movie() {
             <div className="Rectangle4 w-full h-[20%] flex items-center justify-between bg-gradient-to-t from-stone-950 to-transparent">
               <div className="!max-w-[1100px] flex flex-row justify-between m-auto w-full mb-50">
                 
-                <div className="flex flex-col items-start gap-20 text-beige w-1/3">
+                <div className="flex flex-col items-start gap-20 text-beige w-1/3 !text-opacity-70 !opacity-70">
                   {movieTrailer && (
                     <button className="flex items-center button-default button-transparent z-10" onClick={() => setIsVideoModalOpen(true)}>
                       ▶ Treileris
                     </button>
                   )}
-                  <div className="flex items-center gap-2 typography-body lowercase !text-opacity-70">
+                  <div className="flex items-center gap-2 typography-body lowercase">
                     <svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M0 3.94755V8.05245H2.7366L6.15735 11.4732V0.526796L2.7366 3.94755H0ZM9.23603 6C9.23589 5.42677 9.0757 4.86496 8.77352 4.37784C8.47134 3.89072 8.03916 3.49764 7.52565 3.24287V8.75029C8.5382 8.25086 9.23603 7.21095 9.23603 6ZM7.52565 0V1.40935C9.50285 1.99772 10.9464 3.83124 10.9464 6C10.9464 8.16876 9.50285 10.0023 7.52565 10.5906V12C10.2691 11.3774 12.3147 8.92816 12.3147 6C12.3147 3.07184 10.2691 0.622577 7.52565 0Z" fill="#FDFCF5" fill-opacity="0.7"/>
                     </svg>
@@ -386,8 +386,8 @@ function Movie() {
 
                 <div className="flex flex-col items-center text-beige typography-body-small gap-2 w-1/3">
                   <div>REŽISORS {movieTeamData.Director?.map((person) => person.name).join(", ")}</div>
-                  <div>{movieData.origin_country}  <span> | </span>  {movieData.created_year}  <span> | </span>  {movieData.length}’  <span> | </span>  {movieData.age_rating} + </div>
-                  <div className='!text-opacity-70'>{movieData.genre}</div>
+                  <div>{movieData.origin_country}  <span>&nbsp;|&nbsp;</span>  {movieData.created_year}  <span>&nbsp;|&nbsp;</span>  {movieData.length}’  <span>&nbsp;|&nbsp;</span>  {movieData.age_rating} + </div>
+                  <div className='!text-opacity-70 !opacity-70'>{movieData.genre}</div>
                 </div>
 
                 <div className="flex flex-row items-center justify-end gap-4 w-1/3">
