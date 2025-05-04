@@ -9,6 +9,7 @@ import Agreement from "../Agreement/Agreement";
 import Privacy from "../Privacy/Privacy";
 import { ReactComponent as Info } from "../../assets/images/info.svg";
 import { ReactComponent as X } from "../../assets/images/x.svg";
+import { ReactComponent as Logo } from "../../assets/images/bs_logo.svg";
 
 export const LoginPopup = () => {
     const context = useContext(GlobalContext)
@@ -213,7 +214,7 @@ export const LoginPopup = () => {
             <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md bg-opacity-50 z-10 overscroll-auto !modal-size">
                 <div className="modal-size p-20 bg-beige border border-black flex-col justify-start inline-flex">
                     <div className="w-full h-fit relative flex items-left justify-between mb-5">
-                        <img src={require("./static/BS_small_logo.png")} alt="logo" />
+                        <Logo className="w-[60px]"/>
                         <div className="flex items-end">
                             <CloseIcon className="cursor-pointer" onClick={() => resetModal()} />
                         </div>
@@ -241,7 +242,7 @@ export const LoginPopup = () => {
 
                             <div className="typography-technical cursor-pointer" onClick={() => setPage('forget')}>Aizmirsi paroli?</div>
                         </div>
-                        <div type="submit" className="button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => logIn()}>Ieiet</div>
+                        <div type="submit" className="flex button-default button-white mt-25 !font-normal cursor-pointer !text-center !items-center !justify-center" onClick={() => logIn()}>Ieiet</div>
                     </div>
                     </>
                     )}
@@ -255,7 +256,7 @@ export const LoginPopup = () => {
                                 <input id="code" type="text" placeholder="Code" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setConfirmationCode(e.target.value)} ></input>
                             </div>
                             <div className="mt-25 justify-start items-start flex flex-row gap-6">
-                                <div type="submit" className="button-default button-white !font-normal cursor-pointer" onClick={() => handleCodeConfirmatation()}>Reģistrēties</div>
+                                <div type="submit" className="flex !text-center !items-center !justify-center button-default button-white !font-normal cursor-pointer" onClick={() => handleCodeConfirmatation()}>Reģistrēties</div>
                                 <div className="button-default button-white !font-normal cursor-pointer" onClick={() => resendCode()}>Pārsūtīt kodu</div>
                             </div>
                         </div>
@@ -277,7 +278,7 @@ export const LoginPopup = () => {
                             <div className="w-full mt-20 justify-between items-center inline-row">
                                 <div className="text-center typography-technical"><span id="acceptRules" className="cursor-pointer" onClick={handleAcceptRulesClick}>{piekrituTicked ? <>[&#x2713;]</> : <>[  ]</>}</span>Piekrītu <span className="text-center flex-row font-bold cursor-pointer" onClick={() => setShowTOS(true)}>noteikumiem</span></div>
                             </div>
-                            <div type="submit" className="button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => {piekrituTicked ? handleSignUp() : setError({"code":'AcceptRules', "message": 'Jāpiekrīt noteikumiem!'})}}>Reģistrēties</div>
+                            <div type="submit" className="flex !text-center !items-center !justify-center button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => {piekrituTicked ? handleSignUp() : setError({"code":'AcceptRules', "message": 'Jāpiekrīt noteikumiem!'})}}>Reģistrēties</div>
 
                         </div>
                         </>
@@ -310,7 +311,7 @@ export const LoginPopup = () => {
                                     <input id="checkPassword" type="password" placeholder="Parole atkārtoti" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setCheckPassword(e.target.value)}></input>
                                     <div className="w-full h-px relative border border-black"></div>
                                 </div>
-                                <div type="submit" className="button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => handleNewPassword()}>Nomainīt</div>
+                                <div type="submit" className="flex !text-center !items-center !justify-center button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => handleNewPassword()}>Nomainīt</div>
 
                             </div>
                             : 
@@ -333,7 +334,7 @@ export const LoginPopup = () => {
                                     <input id="email" type="email" placeholder="E-pasts" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setForgetEmail(e.target.value)} ></input>
                                     <div className="w-full relative border border-black"></div>
                                 </div>
-                                <div type="submit" className="button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => handleForgetPassword()}>Sūtīt</div>
+                                <div type="submit" className="flex !text-center !items-center !justify-center button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => handleForgetPassword()}>Sūtīt</div>
 
                             </div>
                         }
