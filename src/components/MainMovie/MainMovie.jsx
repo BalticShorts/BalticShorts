@@ -44,7 +44,7 @@ const MainMovie = ({ movie, isLoggedIn }) => {
       onMouseLeave={handleMouseLeave}>
       <div className="absolute inset-0">
         
-        <video ref={videoRef} className={`videoTag overflow-hidden object-cover w-full h-full -z-10 ${
+        <video ref={videoRef} className={`videoTag overflow-hidden object-cover w-full h-full -z-10 transition-opacity duration-300${
           isHovered ? "opacity-100" : "opacity-0"
         }`} loop muted onLoadedData={handleVideoLoaded}>
           <source src={mov} type="video/mp4" alt={movie.name}/>
@@ -90,8 +90,10 @@ const MainMovie = ({ movie, isLoggedIn }) => {
               <button className="flex flex-row items-center button-default button-white" onClick={() => window.location.href = '/movie/'+encodeURIComponent(movie.name) + '/' + encodeURIComponent(movie.id)}>
                 <Play/> <span className="ml-[6px]"> Skatīties </span>
               </button>
-              <button className="flex items-center button-default button-transparent add" onClick={() => {if(isLoggedIn)setModalOpen(true)}}>                
-                <Plus/>
+              <button className="flex items-center justify-center button-default button-transparent add" onClick={() => {if(isLoggedIn)setModalOpen(true)}}>
+                <div className="flex items-center justify-center !w-[11px] !h-[11px]">            
+                  <Plus />
+                </div>    
               </button>
             </div>
           </div>

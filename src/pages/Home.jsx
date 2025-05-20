@@ -124,7 +124,6 @@ const Home = () => {
               BALTIC SHORTS IESAKA
             </div>
             <DisplayedPlaylistGroup elementsShown={recomendedPlaylists.length} playlists={recomendedPlaylists} />
-            {/* Need to list the highlighted playlists and give the data */}
         
             {movies.items?.length > 0 &&
                 <MyGridMovies data={movies.items} maxRows={2} maxColumns={3} isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}></MyGridMovies>

@@ -65,7 +65,7 @@ export function MyGridPlaylists({ data, maxRows, maxColumns }) {
                       />
                     </div>
                     <div className="m-15 flex flex-col bg-inherit">
-                      <span className="typography-body !font-bold mb-10 uppercase">
+                      <span className="typography-body-bold mb-10 uppercase">
                         {item.title}
                       </span>
                       <div className="typography-body-small mb-10">

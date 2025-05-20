@@ -37,21 +37,21 @@ const About = () => {
                 <div className="w-full relative justify-between items-center gap-25 inline-flex">
                     <div className="w-full text-center">
                         <span className="typography-body-small">PROJEKTA VADĪTĀJS<br/></span>
-                        <span className="typography-body !font-bold">Emīls Alps</span>
+                        <span className="typography-body-bold">Emīls Alps</span>
                     </div>
                     <div className="w-full text-center">
                         <span className="typography-body-small">GALVENAIS KURATORS<br/></span>
-                        <span className="typography-body !font-bold">Rūdolfs Deinats</span>
+                        <span className="typography-body-bold">Rūdolfs Deinats</span>
                     </div>
                     <div className="w-full text-center">
                         <span className="typography-body-small">DIZAINS<br/></span>
-                        <span className="typography-body !font-bold">Dans Jirgensons</span>
+                        <span className="typography-body-bold">Dans Jirgensons</span>
                     	</div>
                 </div>
                 <div className="relative justify-between items-center inline-flex mt-10">
                     <div className="w-full text-center">
                         <span className="typography-body-small">LAPAS IZSTRĀDE<br/></span>
-                        <span className="typography-body !font-bold">Dāvis Jankevics</span>
+                        <span className="typography-body-bold">Dāvis Jankevics</span>
                     </div>
                 </div>
             </div>
@@ -60,18 +60,18 @@ const About = () => {
                 <div className="w-full relative typography-h2 mb-50 text-center">ATBALSTĪTĀJI</div>
                 <div className="w-full relative justify-between items-center gap-25 inline-flex">
                     <div className="w-full text-center">
-                        <span className="typography-body !font-bold">Latvijas Valsts Kultūrkapitālfonds<br/></span>
+                        <span className="typography-body-bold">Latvijas Valsts Kultūrkapitālfonds<br/></span>
                     </div>
                     <div className="w-full text-center">
-                        <span className="typography-body !font-bold">Latvijas Kultūras Akadēmija</span>
+                        <span className="typography-body-bold">Latvijas Kultūras Akadēmija</span>
                     </div>
                     <div className="w-full text-center">
-                        <span className="typography-body !font-bold">Latvijas Mākslas Akadēmija</span>
+                        <span className="typography-body-bold">Latvijas Mākslas Akadēmija</span>
                     	</div>
                 </div>
                 <div className="relative justify-start items-start gap-6 inline-flex mt-10">
                     <div className="w-full text-center">
-                        <span className="typography-body !font-bold">Citas Baltijas filmu skolas</span>
+                        <span className="typography-body-bold">Citas Baltijas filmu skolas</span>
                     </div>
                 </div>
             </div>

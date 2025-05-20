@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 import WatchlistModal from "../../components/WatchlistModal/WatchlistModal";
 import { MdFormatListBulleted } from "react-icons/md";
 import { ReactComponent as TriangleDown } from "../../assets/images/triangle_down.svg";
-
+import { ReactComponent as PlayBig } from "../../assets/images/play_big.svg";
+import { ReactComponent as List } from "../../assets/images/list.svg";
+import { ReactComponent as Plus } from "../../assets/images/plus.svg";
 export function getDirectors(data) {
   const result = {};
   data.forEach((item) => {
@@ -74,7 +76,7 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
                 {item !== null && (
                   <div
                     key={item.id}
-                    className="relative flex flex-col bg-inherit border border-black max-h-[285px] overflow-hidden"
+                    className="relative flex flex-col bg-inherit border border-black max-h-[285px] overflow-hidden cursor-pointer"
                     onClick={() => navigate('/movie/'+encodeURIComponent(item.name) + '/' + encodeURIComponent(item.id))}
                   >
                     <div className="relative w-full h-full h-20 sm:h-36 lg:h-48 lg:min-h-[195px] overflow-hidden bg-inherit">
@@ -83,18 +85,25 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
                         src={photoSrc[item.id]}
                         alt={item.name}
                       />
-                      {isLoggedIn && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedMovieId(item.id);
-                          setModalOpen(true);
-                        }}
-                        className="absolute top-2 right-2 p-1 bg-transparent text-beige rounded border border-white hover:bg-white hover:text-black"
-                      >
-                        <MdFormatListBulleted size={20} />
-                      </button>
-                      )}
+                      <div className="hover:opacity-100 opacity-0 transition-opacity duration-300 absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
+                        {isLoggedIn && (
+                          <div className="absolute top-0 right-0 mt-10 mr-10">
+                            <div className="flex flex-row items-center justify-end gap-10">
+                              <div className="flex button-transparent add z-10 items-center justify-center" onClick={(e) => {e.stopPropagation();setSelectedMovieId(item.id);setModalOpen(true);}}>
+                                <List/>
+                              </div>
+                              <div className="flex button-transparent add z-10 items-center justify-center" onClick={(e) => {e.stopPropagation();setSelectedMovieId(item.id);setModalOpen(true);}}>
+                                <Plus />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-[40px] h-[40px] flex items-center justify-center bg-transparent text-beige hover:bg-beige hover:text-black">
+                            <PlayBig/>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <div className="mt-10 lg:mt-15 flex flex-col bg-inherit mx-15 justify-between">
                       <div className="typography-body-bold uppercase !font-bold">
@@ -125,7 +134,7 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
                 className="typography-technical z-10 flex flex-row justify-center items-center gap-1 cursor-pointer"
                 onClick={() => setRows(rows + 1)}
               >
-                <span>VAIRĀK</span><TriangleDown/>
+                <span className="typography-technical !tracking-[0.1em]">VAIRĀK</span><TriangleDown/>
               </div>
             </div>
           </div>

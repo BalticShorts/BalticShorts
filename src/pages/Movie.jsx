@@ -17,6 +17,8 @@ import { LoginPopup } from "../components/LoginPopup/LoginPopup";
 import { Navbar } from '../modified-ui-components/Header/HEADER.jsx';
 import { ReactComponent as Plus } from "../assets/images/plus.svg";
 import { ReactComponent as List } from "../assets/images/list.svg";
+import { ReactComponent as PlayBig } from "../assets/images/play_big.svg";
+import { ReactComponent as Play } from "../assets/images/triangle.svg";
 
 Amplify.configure(awsExports);
 const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
@@ -354,12 +356,8 @@ function Movie() {
             </div>
 
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-[60px] h-[60px] flex items-center justify-center border border-white bg-transparent text-beige hover:bg-beige hover:text-black cursor-pointer" onClick={() => removeText()}>
-                <div className='flex items-center justify-center m-auto w-full h-full'>
-                  <svg width="26" height="30" viewBox="0 0 26 30" fill="none" xmlns="http://www.w3.org/2000/svg" className="group-hover:fill-black">
-                    <path d="M25.5862 15L0.413767 30L0.413769 -1.10032e-06L25.5862 15Z" fill="currentColor"/>
-                  </svg>
-                </div>
+              <div className="w-[60px] h-[60px] flex items-center justify-center bg-transparent text-beige hover:bg-beige hover:text-black cursor-pointer" onClick={() => removeText()}>
+                <PlayBig/>
               </div>
             </div>
 
@@ -369,7 +367,7 @@ function Movie() {
                 <div className="flex flex-col items-start gap-20 text-beige w-1/3 !text-opacity-70 !opacity-70">
                   {movieTrailer && (
                     <button className="flex items-center button-default button-transparent z-10" onClick={() => setIsVideoModalOpen(true)}>
-                      ▶ Treileris
+                      <Play/> <span className="ml-[6px]"> Treileris </span>
                     </button>
                   )}
                   <div className="flex items-center gap-2 typography-body lowercase">
@@ -395,7 +393,9 @@ function Movie() {
                     <List/>
                   </div>
                   <div className="flex button-transparent add z-10 items-center justify-center cursor-pointer" onClick={() => {if(context.currentUser && Object.keys(context.currentUser).length > 0)setIsPlaylistModalOpen(true)}}>
-                    <Plus />
+                    <div className="flex items-center justify-center !w-[11px] !h-[11px]">            
+                      <Plus />
+                    </div> 
                   </div>
                 </div>
 
@@ -417,39 +417,36 @@ function Movie() {
       </div>
       <div className='flex flex-col mb-100'>
         <div className="w-full relative typography-h2 mb-25">KOMANDA</div>
-          <div className="relative justify-center gap-6 inline-flex flex-row items-center max-w-full min-w-fit">
-            <div className="m-auto w-full">
-              {movieTeamKeyOrder.map((key, idx) => {
-                if (key in movieTeamData) {
-                  teamList.push(movieTeamData[key]);
-                }
-                if (teamList.length % 3 === 0 || (idx === movieTeamKeyOrder.length - 1 && teamList.length !== 0)) {
-                  const tm = teamList;
-                  teamList = [];
-                  return (
-                    <div key={idx} className="grid grid-cols-3 justify-between mx-auto w-full gap-25 mb-20">
-                      {tm.map((item, teamIdx) => (
-                        <div key={teamIdx} className="flex flex-col gap-1 w-full">
-                          <span className="typography-body-small uppercase">{item[0].roleName}</span>
+        <div className="relative justify-center gap-6 inline-flex flex-row items-start max-w-full min-w-fit">
+          <div className="m-auto w-full">
+            <div className="grid grid-cols-3 gap-25 mb-20">
+              {[0, 1, 2].map((colIdx) => (
+                <div key={colIdx} className="flex flex-col gap-4">
+                  {movieTeamKeyOrder
+                    .filter((key, idx) => idx % 3 === colIdx && key in movieTeamData)
+                    .map((key, idx) => {
+                      const roleGroup = movieTeamData[key];
+                      return (
+                        <div key={idx} className="flex flex-col gap-1 w-full">
+                          <span className="typography-body-small uppercase">{roleGroup[0].roleName}</span>
                           <div className="flex flex-col">
-                            {item.map((person) => (
+                            {roleGroup.map((person) => (
                               <div key={person.id} className="flex flex-col mb-1">
-                                <span className="typography-body !font-bold">
-                                  <a href={"/profile/" + person.id}>{person.name}</a>
-                                  <br />
+                                <span className="typography-body-bold">
+                                  <a href={`/profile/${person.id}`}>{person.name}</a>
                                 </span>
                               </div>
                             ))}
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  );
-                }
-              })}
+                      );
+                    })}
+                </div>
+              ))}
             </div>
           </div>
         </div>
+      </div>
         <div className='flex flex-col mb-100'>
           <div className="w-full relative typography-h2 mb-25">KADRI</div>
           <div className="relative justify-center inline-flex flex-row items-center max-w-full min-w-fit">
@@ -480,7 +477,7 @@ function Movie() {
                     key={index}
                     className="flex flex-col items-start justify-start rounded-md"
                   >
-                    <div className="typography-body !font-bold">
+                    <div className="typography-body-bold">
                       {award.name}
                     </div>
                     <div className="flex items-center typography-body-small">
