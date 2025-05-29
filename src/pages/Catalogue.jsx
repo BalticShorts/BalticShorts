@@ -304,46 +304,45 @@ const Catalogue = () => {
   };
 
   useEffect(() => {
-    document.title = 'Baltic Shorts - Kataologs';
+    document.title = 'Baltic Shorts - Katalogs';
   }, []);
 
   return (
     <>
       <div className="bg-beige flex flex-col min-h-[70vh]" id="container">
-        <div className="w-full h-12 relative">
-          <div className="w-full h-12 absolute bg-beige border-b border-black" />
-          <div className="w-full mt-1 h-full flex items-center justify-center relative">
+        <div className="w-full h-50 relative border-b border-black flex items-center justify-center">
+          <div className="w-full flex items-center justify-center relative my-auto">
             <div
               id="Movies"
-              className="h-5 mx-2 text-center typography-body inline-flex cursor-pointer"
+              className="h-5 text-center typography-body link-hover inline-flex cursor-pointer"
               onClick={() => setTab(['Movies', tab[0]])}
             >
               Filmas
             </div>
             <div
               id="Persons"
-              className="h-5 mx-6 text-center typography-body inline-flex cursor-pointer"
+              className="h-5 mx-25 text-center typography-body link-hover inline-flex cursor-pointer"
               onClick={() => setTab(['Persons', tab[0]])}
             >
               Personas
             </div>
             <div
               id="Playlists"
-              className="h-5 mx-2 my-auto text-center typography-body inline-flex cursor-pointer"
+              className="h-5 text-center typography-body link-hover inline-flex cursor-pointer"
               onClick={() => setTab(['Playlists', tab[0]])}
             >
               Saraksti
             </div>
           </div>
         </div>
-        <div className='w-full max-w-[1100px] mx-auto h-fit gap-25 flex flex-col items-center relative justify-center'>
+        <div className='w-full max-w-[1100px] mx-auto h-fit flex flex-col items-center relative justify-center'>
           {loading ? (
             <div className="text-center mt-4">Loading...</div>
           ) : (
             <>
               {tab[0] === 'Movies' && (
                 <>
-                  <div className="w-full flex justify-center items-center mt-25">
+                  <div className="w-full flex justify-center items-center mt-15">
                     <div className="relative flex justify-center items-center">
                       <div className="flex flex-col items-center">
                         <div className="cursor-pointer font-bold uppercase mt-0 typography-technical" onClick={() => setShowFiltri(!showFiltri)}>
@@ -469,10 +468,10 @@ const Catalogue = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="w-full flex justify-between items-center mb-4">
+                  <div className="w-full flex justify-between items-center my-25">
                     <div className="typography-h2 font-bold">{data.movies.length} Filmas</div>
                     <div className="flex items-center">
-                      <span className="mr-2 typography-technical">Kārtot pēc:</span>
+                      <span className="mr-2 typography-technical !uppercase">Kārtot pēc:</span>
                       <select value={sortOption} onChange={handleSortChange} className="p-1 bg-beige typography-technical">
                         <option value="date">Ievietošanas datums</option>
                         <option value="year">Gads</option>
@@ -498,11 +497,11 @@ const Catalogue = () => {
                 <>
                   <div className="w-full h-full flex flex-col relative justify-between my-25 typography-technical">
                     <div className="relative text-center">
-                      <button onClick={() => setShowFilter(!showFilter)} className="ml-2">
+                      <button onClick={() => setShowFilter(!showFilter)} className="ml-2 !uppercase">
                         Profesiju saraksts {showFilter ? '▲' : '▼'}
                       </button>
                       {showFilter && (
-                        <div className="bg-beige mt-2 p-2 flex flex-wrap justify-center gap-4 text-center w-full">
+                        <div className="bg-beige flex flex-wrap justify-center gap-x-25 text-center w-full">
                           <div className={`cursor-pointer ${filterOption === 'Director' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Director')}>REŽISORS</div>
                           <div className={`cursor-pointer ${filterOption === 'Actor' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Actor')}>AKTIERIS</div>
                           <div className={`cursor-pointer ${filterOption === 'Cinematographer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Cinematographer')}>OPERATORS</div>
@@ -522,7 +521,7 @@ const Catalogue = () => {
                   <div className="w-full flex justify-between items-center mb-4">
                     <div className="typography-h2 font-bold">{data.persons.length} Personas</div>
                     <div class="flex items-center typography-technical">
-                      <span class="mr-2 ">Kārtot pēc:</span>
+                      <span class="mr-2 !uppercase">Kārtot pēc:</span>
                       <select value={sortOption} onChange={handleSortChange} class="p-1 bg-beige">
                         <option value="alphabet">Alfabēts</option>
                       </select>

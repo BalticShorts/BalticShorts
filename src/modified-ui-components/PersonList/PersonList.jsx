@@ -55,10 +55,10 @@ export const PersonList = ({ data }) => {
         return (
           <div
             key={index}
-            className="flex flex-col md:flex-row justify-between items-start md:items-end bg-inherit border-b-2 border-black w-full hover-opacity cursor-pointer"
+            className="!border-b !border-black flex flex-col md:flex-row justify-between items-start md:items-end bg-inherit  w-full hover-opacity cursor-pointer"
             onClick={() => navigate('/profile/' + person.id)}
           >
-            <div className="flex flex-col md:items-start items-start">
+            <div className="flex flex-col md:items-start items-start my-25">
               <div className="flex gap-2">
                 <div className="typography-h1">
                   {person.name} {person.surname}
@@ -70,11 +70,11 @@ export const PersonList = ({ data }) => {
               <div className="typography-body-small uppercase">{person.role}</div>
             </div>
 
-            <div className="flex flex-col items-end gap-2">
-              <div className="text-right typography-technical">
+            <div className="flex flex-col items-end my-25">
+              <div className="text-right typography-technical !align-bottom">
                 {uniqueMovieCount} {uniqueMovieCount === 1 ? "DARBS" : "DARBI"}
               </div>
-              <div className="text-right typography-technical flex flex-row mb-1 items-center">
+              <div className="text-right typography-technical flex flex-row items-center">
                 <div className="mr-1">VAIRĀK</div>      
                 <Triangle />
               </div>

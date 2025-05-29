@@ -361,8 +361,8 @@ function Movie() {
               </div>
             </div>
 
-            <div className="Rectangle4 w-full h-[20%] flex items-center justify-between bg-gradient-to-t from-stone-950 to-transparent">
-              <div className="!max-w-[1100px] flex flex-row justify-between m-auto w-full mb-50">
+            <div className="w-full h-[20%] flex items-center justify-between bg-gradient-to-t from-stone-950 to-transparent">
+              <div className="!max-w-[1100px] flex flex-row items-end justify-between m-auto w-full mb-50">
                 
                 <div className="flex flex-col items-start gap-20 text-beige w-1/3 !text-opacity-70 !opacity-70">
                   {movieTrailer && (
@@ -382,23 +382,26 @@ function Movie() {
                   </div>
                 </div>
 
-                <div className="flex flex-col items-center text-beige typography-body-small gap-2 w-1/3">
+                <div className="flex flex-col text-center text-beige typography-body-small gap-1 w-1/3">
                   <div>REŽISORS {movieTeamData.Director?.map((person) => person.name).join(", ")}</div>
-                  <div>{movieData.origin_country}  <span>&nbsp;|&nbsp;</span>  {movieData.created_year}  <span>&nbsp;|&nbsp;</span>  {movieData.length}’  <span>&nbsp;|&nbsp;</span>  {movieData.age_rating} + </div>
-                  <div className='!text-opacity-70 !opacity-70'>{movieData.genre}</div>
+                  <div>{movieData.origin_country} <span>&nbsp;|&nbsp;</span> {movieData.created_year} <span>&nbsp;|&nbsp;</span> {movieData.length}’ <span>&nbsp;|&nbsp;</span> {movieData.age_rating} + </div>
+                  <div className="!text-opacity-70 !opacity-70">{movieData.genre}</div>
                 </div>
 
-                <div className="flex flex-row items-center justify-end gap-4 w-1/3">
-                  <div className="flex button-transparent add z-10 items-center justify-center cursor-pointer" onClick={() => {if(context.currentUser && Object.keys(context.currentUser).length > 0)setIsPlaylistModalOpen(true)}}>
+                <div className="flex flex-row items-end justify-end gap-4 w-1/3 relative pt-20">
+                  <div className="flex button-transparent add z-10 items-center justify-center cursor-pointer" onClick={() => {
+                    if(context.currentUser && Object.keys(context.currentUser).length > 0) setIsPlaylistModalOpen(true)
+                  }}>
                     <List/>
                   </div>
-                  <div className="flex button-transparent add z-10 items-center justify-center cursor-pointer" onClick={() => {if(context.currentUser && Object.keys(context.currentUser).length > 0)setIsPlaylistModalOpen(true)}}>
+                  <div className="flex button-transparent add z-10 items-center justify-center cursor-pointer" onClick={() => {
+                    if(context.currentUser && Object.keys(context.currentUser).length > 0) setIsPlaylistModalOpen(true)
+                  }}>
                     <div className="flex items-center justify-center !w-[11px] !h-[11px]">            
                       <Plus />
                     </div> 
                   </div>
                 </div>
-
               </div>
             </div>
           </div>

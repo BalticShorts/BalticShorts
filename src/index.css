@@ -109,7 +109,7 @@ code {
 }
 
 .typography-h2 {
-  @apply text-h2 font-arial leading-[23px] tracking-wide align-bottom uppercase;
+  @apply text-h2 font-arial leading-[23px] tracking-wide align-bottom uppercase font-bold;
 }
 
 .typography-body-large {
@@ -142,11 +142,15 @@ code {
 
 /* Link Styles */
 .link-normal {
-  @apply text-body font-schoolbook font-normal leading-[21px] tracking-normal align-bottom;
+  @apply typography-body;
+}
+
+.link-body-small {
+  @apply typography-body-small;
 }
 
 .link-hover:hover {
-  @apply text-body font-schoolbook font-normal leading-[21px] tracking-normal align-bottom opacity-70;
+  @apply opacity-70;
 }
 
 .hover-opacity:hover {
@@ -158,7 +162,7 @@ code {
 }
 
 .button-default {
-  @apply text-body font-schoolbook font-normal leading-[21px] tracking-normal align-bottom h-30 p-10;
+  @apply typography-body h-30 p-10;
 }
 
 .button-white {

@@ -94,7 +94,7 @@ const Home = () => {
               <div className="w-4/5 text-center typography-h2 my-auto">
                 DARBI
               </div>
-              <div className="h-2.5 text-center typography-body-small mb-10">
+              <div className="h-2.5 text-center typography-body-small mb-20">
                 Jaunas, senas, vislabākās un vissliktākās<br />īsfilmas no visas Baltijas
               </div>
             </div>
@@ -103,7 +103,7 @@ const Home = () => {
               <div className="w-4/5 text-center typography-h2 my-auto">
                 PERSONAS
               </div>
-              <div className="h-2.5 text-center typography-body-small mb-10">
+              <div className="h-2.5 text-center typography-body-small mb-20">
               Režisori, scenāriju autori, aktieri, mākslinieki un visi pārējie īsfilmu komandu dalībnieki
               </div>
             </div>
@@ -112,7 +112,7 @@ const Home = () => {
               <div className="w-4/5 text-center typography-h2 my-auto">
                 SARAKSTI
               </div>
-              <div className="h-2.5 text-center typography-body-small mb-10">
+              <div className="h-2.5 text-center typography-body-small mb-20">
                 Baltic Shorts kuratoru un lietotāju <br/> veidotie īsfilmu saraksti
               </div>
             </div>
@@ -140,9 +140,9 @@ const Home = () => {
 
           </div>
 
-          <div className="flex-col justify-center items-center mb-50">
+          <div className="flex-col justify-center items-center mb-50 w-full">
             <div className="text-center text-black typography-h2">PAR PROJEKTU</div>
-            <div className="my-50 m-auto w-3/5 text-black typography-body-large">Baltic Shorts ir digitāla straumēšanas platforma, kas fokusējas uz Baltijas valstīs (Latvija, Lietuva, Igaunija) radītu īsfilmu izrādīšanu. Projekta mērķis ir radīt un uzturēt ērti lietojamu plaša satura mājaslapu, kas attīsta īsfilmu formas pieejamību un to autoru atpazīstamību plašākā tirgū.</div>
+            <div className="my-50 m-auto w-2/3 text-black typography-body-large !text-justify">Baltic Shorts ir digitāla straumēšanas platforma, kas fokusējas uz Baltijas valstīs (Latvija, Lietuva, Igaunija) radītu īsfilmu izrādīšanu. Projekta mērķis ir radīt un uzturēt ērti lietojamu plaša satura mājaslapu, kas attīsta īsfilmu formas pieejamību un to autoru atpazīstamību plašākā tirgū.</div>
             <div className="w-fit px-10 m-auto text-center text-black !typography-body flex items-center button-default button-white cursor-pointer" onClick={() => navigate('/about')}>Uzzināt vairāk</div>
           </div>
         </div>
@@ -150,5 +150,5 @@ const Home = () => {
     </>
   );
 }
-  
+
   export default Home;
