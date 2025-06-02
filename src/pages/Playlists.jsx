@@ -89,18 +89,25 @@ const Playlist = () => {
       
       <div
         className="relative w-full h-64 bg-gradient-to-b from-gray-800 to-transparent flex flex-col items-center justify-between"
-        style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat", }}
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
       >
-        <h1 className="typography-h1 !text-beige mt-150 w-full max-w-[1100px] text-left mb-10">
+        <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-t from-gray-500 to-transparent z-0" />
+
+        <h1 className="typography-h1 !text-beige mt-150 w-full max-w-[1100px] text-left mb-10 z-10">
           {playlist.title}
         </h1>
-        <p className="typography-body w-full max-w-[1100px] text-left text-beige mb-50">{playlist.creator}</p>
+        <p className="typography-body w-full max-w-[1100px] text-left text-beige mb-50 z-10">
+          {playlist.creator}
+        </p>
       </div>
       <div className="mx-auto py-8 max-w-[1100px]">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">{movies.length} FILMAS</h2>
+          <h2 className="typography-h2">{movies.length} FILMAS</h2>
           <div className="flex items-center">
             <span className="mr-2">Kārtot pēc:</span>
             <select value={sortBy} onChange={handleSortChange} className="p-1 bg-beige">

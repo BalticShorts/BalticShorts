@@ -207,6 +207,19 @@ code {
   background: none !important;
   border: none;
   box-shadow: none;
+  opacity: 1;
+  transition: none !important;
+  outline: none !important;
+}
+
+.carousel .control-arrow:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+}
+
+.carousel .control-arrow:active {
+  opacity: 0.1;
 }
 
 .carousel .control-arrow:hover {

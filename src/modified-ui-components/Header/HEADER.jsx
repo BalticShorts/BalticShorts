@@ -11,12 +11,14 @@ import { ReactComponent as SearchB } from "../../assets/images/search.svg";
 import { ReactComponent as Menu } from "../../assets/images/menu.svg";
 import Search from "../../pages/Search";
 import { useDropdown } from "../../context/DropdownContext";
+import { useLocation } from "react-router-dom";
 
 export const Navbar = () => {
   const context = useContext(GlobalContext);
   const { showDropdown, setShowDropdown } = useDropdown();
   const [isHovered, setIsHovered] = useState(false);
   const [showSearchModal, setShowSearchModal] = useState(false); // State to control search modal visibility
+  const location = useLocation();
 
   function toggleDropdown(){
     setShowDropdown(!showDropdown);
@@ -35,6 +37,9 @@ export const Navbar = () => {
   function closeSearchModal() {
     setShowSearchModal(false); // Close the search modal
   }
+  useEffect(() => {
+    setShowSearchModal(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (showSearchModal) {

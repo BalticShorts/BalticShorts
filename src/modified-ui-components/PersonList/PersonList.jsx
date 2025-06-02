@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { ReactComponent as Triangle } from "../../assets/images/triangle.svg";
 
-export const PersonList = ({ data }) => {
+export const PersonList = ({ data, onPersonClick }) => {
   const navigate = useNavigate();
+
   const countryNameToCode = {
     "Portugal": "PT",
     "Republic of Ireland": "IE",
@@ -36,27 +37,32 @@ export const PersonList = ({ data }) => {
     "Germany": "DE",
   };
 
-
   return (
     <div className="flex flex-col gap-4 w-full items-center bg-inherit">
       {data.map((person, index) => {
         const teams = person?.PersonMovieTeams?.items || [];
-
         const uniqueMovieIds = new Set();
+
         teams.forEach(team => {
           const movieId = team?.MovieTeam?.Movie?.id;
-          if (movieId) {
-            uniqueMovieIds.add(movieId);
-          }
+          if (movieId) uniqueMovieIds.add(movieId);
         });
 
         const uniqueMovieCount = uniqueMovieIds.size;
 
+        const handleClick = () => {
+          if (typeof onPersonClick === 'function') {
+            onPersonClick(person.id);
+          } else {
+            navigate('/profile/' + person.id);
+          }
+        };
+
         return (
           <div
             key={index}
-            className="!border-b !border-black flex flex-col md:flex-row justify-between items-start md:items-end bg-inherit  w-full hover-opacity cursor-pointer"
-            onClick={() => navigate('/profile/' + person.id)}
+            className="!border-b !border-black flex flex-col md:flex-row justify-between items-start md:items-end bg-inherit w-full hover-opacity cursor-pointer"
+            onClick={handleClick}
           >
             <div className="flex flex-col md:items-start items-start my-25">
               <div className="flex gap-2">
@@ -75,7 +81,7 @@ export const PersonList = ({ data }) => {
                 {uniqueMovieCount} {uniqueMovieCount === 1 ? "DARBS" : "DARBI"}
               </div>
               <div className="text-right typography-technical flex flex-row items-center">
-                <div className="mr-1">VAIRĀK</div>      
+                <div className="mr-1">VAIRĀK</div>
                 <Triangle />
               </div>
             </div>

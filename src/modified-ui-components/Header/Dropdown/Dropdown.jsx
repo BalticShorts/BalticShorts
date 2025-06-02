@@ -20,6 +20,9 @@ export const Dropdown = () => {
       <div className="w-36 h-fit justify-start inline-flex z-20 bg-beige border border-black">
         <div className="h-full w-full flex flex-col justify-center items-start gap-3 flex z-20 my-10">
           <div className="flex flex-col ml-2 text-black typography-technical-12 uppercase gap-2">
+            <div>
+              <a href="/">Sākums</a>
+            </div>
             {context.loggedIn && (
               <>
                 <div>
@@ -38,7 +41,7 @@ export const Dropdown = () => {
               <a href="/catalogue">KATALOGS</a>
             </div>
           </div>
-          <hr className="w-full h-px border border-black" />
+          <div className="w-full border-b border-black" />
           <div className="flex flex-col ml-2 text-black typography-technical-12 uppercase gap-2">
 
             <div>

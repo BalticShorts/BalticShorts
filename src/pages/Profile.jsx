@@ -50,11 +50,14 @@ const countryNameToCode = {
   "Germany": "DE",
 };
 
-function Profile () {
+function Profile({ personId }) {
     const context = useContext(GlobalContext);
     const [profile, setProfile] = useState({});
     const [movieCount, setMovieCount] = useState(0);
-    const { id, mode } = useParams();
+    var { id, mode } = useParams();
+    if (personId !== undefined && personId !== null) {
+        id = personId;
+    }
 
     useEffect(() => {
         const get = async () => {
@@ -100,15 +103,15 @@ function Profile () {
                   </div>
                 </div>                
                 <div className="typography-body-small mt-2">{profile.role}</div>
-                <div className="typography-body-small mt-2 uppercase">{movieCount} {movieCount === 1 ? "darbs" : "darbi"}</div>
+                <div className="typography-technical-12 mt-2 uppercase">{movieCount} {movieCount === 1 ? "darbs" : "darbi"}</div>
                 <p className="typography-body mt-4 max-w-3xl">
                 {profile.description}
                 </p>
             </div>
             <div className="flex flex-col items-end">
-              <a href={`mailto:${profile.email}`} className="mb-2 typography-body-small hover-opacity cursor-pointer">E-PASTS</a>
-              <a href={profile.Instagram} className="mb-2 typography-body-small hover-opacity cursor-pointer">INSTAGRAM</a>
-              <a href={profile.IMBD} className="typography-body-small hover-opacity cursor-pointer">IMDB</a>
+              <a href={`mailto:${profile.email}`} className="mb-2 typography-technical-12 hover-opacity cursor-pointer">E-PASTS</a>
+              <a href={profile.Instagram} className="mb-2 typography-technical-12 hover-opacity cursor-pointer">INSTAGRAM</a>
+              <a href={profile.IMBD} className="typography-technical-12 hover-opacity cursor-pointer">IMDB</a>
             </div>
           </section>
     

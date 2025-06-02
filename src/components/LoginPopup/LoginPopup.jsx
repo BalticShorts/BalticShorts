@@ -211,14 +211,14 @@ export const LoginPopup = () => {
     return(
         <>
             {showModal && (
-            <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md bg-opacity-50 z-10 overscroll-auto !modal-size">
-                <div className="modal-size p-20 bg-beige border border-black flex-col justify-start inline-flex">
-                    <div className="w-full h-fit relative flex items-left justify-between mb-5">
-                        <Logo className="w-[60px]"/>
-                        <div className="flex items-end">
-                            <CloseIcon className="cursor-pointer" onClick={() => resetModal()} />
+                <div className="fixed inset-0 flex items-center justify-center bg-black/75 z-10 overscroll-auto !modal-size">
+                    <div className="modal-size p-20 bg-beige border border-black flex-col justify-start inline-flex">
+                        <div className="w-full h-fit relative flex items-left justify-between mb-5">
+                            <Logo className="w-[60px]"/>
+                            <div className="flex items-end">
+                                <CloseIcon className="cursor-pointer" onClick={() => resetModal()} />
+                            </div>
                         </div>
-                    </div>
 
 
 
@@ -270,13 +270,13 @@ export const LoginPopup = () => {
                                 <input id="surname" type="text" placeholder="Uzvards" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setSurname(e.target.value)} ></input>
                             </div>
                             <div className="w-full justify-center items-center flex flex-col text-lg border-x border-black">
-                                <input id="email" type="email" placeholder="E-pasts" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setEmail(e.target.value)} ></input>
+                                <input id="email" type="email" placeholder="E-pasts" className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setEmail(e.target.value)} ></input>
                             </div>
                             <div className="w-full justify-center items-center flex flex-col text-lg border border-black">
-                                <input id="password" type="password" placeholder="Parole" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setPassword(e.target.value)}></input>
+                                <input id="password" type="password" placeholder="Parole" className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setPassword(e.target.value)}></input>
                             </div>
                             <div className="w-full mt-20 justify-between items-center inline-row">
-                                <div className="text-center typography-technical"><span id="acceptRules" className="cursor-pointer" onClick={handleAcceptRulesClick}>{piekrituTicked ? <>[&#x2713;]</> : <>[  ]</>}</span>Piekrītu <span className="text-center flex-row font-bold cursor-pointer" onClick={() => setShowTOS(true)}>noteikumiem</span></div>
+                                <div className="text-center typography-technical"><span id="acceptRules" className="cursor-pointer" onClick={handleAcceptRulesClick}>{piekrituTicked ? <>[&#x2713;] </> : <>[  ] </>}</span>Piekrītu <span className="text-center flex-row font-bold cursor-pointer" onClick={() => setShowTOS(true)}>noteikumiem</span></div>
                             </div>
                             <div type="submit" className="flex !text-center !items-center !justify-center button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => {piekrituTicked ? handleSignUp() : setError({"code":'AcceptRules', "message": 'Jāpiekrīt noteikumiem!'})}}>Reģistrēties</div>
 
@@ -359,33 +359,33 @@ export const LoginPopup = () => {
                         </div>
                     </div>
                 </div>
+                {showTOS && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black/75 z-10 overscroll-auto">
+                        <div className="modal-size px-5 pt-5 bg-beige border border-black flex-col justify-start inline-flex overflow-y-auto items-center text-start">
+                            <h2 className="typography-h2 my-25 pl-6 text-start w-full">LIETOŠANAS NOTEIKUMI</h2>
+                            <TermsOfService />
+                            <Agreement />
+                            <Privacy />
+                            <div className="button-default relative flex items-center justify-center py-5 border border-black mb-5 cursor-pointer" onClick={() => { setShowTOS(false); setTosRead(true); }}>
+                                Aizvērt
+                            </div>
+                        </div>
+                    </div>
+                )}
+                {showInfo && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black/75 z-10 overscroll-auto -mt-[270px]">
+                        <div className="modal-size !h-fit p-20 bg-beige border border-black flex-col justify-start inline-flex overflow-y-auto items-center text-start">
+                            <div className="w-full flex flex-row items-left justify-between mb-10">
+                                <h2 className="typography-body-large text-center w-full">Kādēļ man vajadzīgs profils?</h2>
+                                <X className="cursor-pointer" onClick={() => {setShowInfo(false)}}/>
+                            </div>
+                            <div className="w-full border-b border-black"/>
+                            <p className="typography-body text-center my-25">Ar Baltic Shorts profilu tu vari skatīties filmas (abonējot platformu), pievienot darbus skatīšanai vēlāk, veidot darbu sarakstus.</p>
+                            <p className="typography-body text-center">Ja piedalies īsfilmu veidošanā – vari savu darbu komandās pieminēto vārdu sasaistīt ar savu profilu, tādejādi veidojot savu automātiski atjaunoto Baltic Shorts personas profilu. Kā arī iesūtīt darbus pievienošanai platformai.</p>
+                        </div>
+                    </div>
+                )}
             </div>
-            )}
-            {showTOS && (
-                <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md bg-opacity-50 z-10 overscroll-auto">
-                    <div className="modal-size px-5 pt-5 bg-beige border border-black flex-col justify-start inline-flex overflow-y-auto items-center text-start">
-                        <h2 className="typography-h2 my-25 pl-6 text-start w-full">LIETOŠANAS NOTEIKUMI</h2>
-                        <TermsOfService />
-                        <Agreement />
-                        <Privacy />
-                        <div className="button-default relative flex items-center justify-center py-5 border border-black mb-5 cursor-pointer" onClick={() => { setShowTOS(false); setTosRead(true); }}>
-                            Aizvērt
-                        </div>
-                    </div>
-                </div>
-            )}
-            {showInfo && (
-                <div className="fixed inset-0 flex items-center justify-center backdrop-filter backdrop-blur-md bg-opacity-50 z-10 overscroll-auto">
-                    <div className="modal-size !h-fit p-20 bg-beige border border-black flex-col justify-start inline-flex overflow-y-auto items-center text-start">
-                        <div className="w-full flex flex-row items-left justify-between mt-25 mb-10">
-                            <h2 className="typography-body-large text-center w-full">Kādēļ man vajadzīgs profils?</h2>
-                            <X className="cursor-pointer" onClick={() => {setShowInfo(false)}}/>
-                        </div>
-                        <div className="w-full border-b border-black"/>
-                        <p className="typography-body text-center my-25">Ar Baltic Shorts profilu tu vari skatīties filmas (abonējot platformu), pievienot darbus skatīšanai vēlāk, veidot darbu sarakstus.</p>
-                        <p className="typography-body text-center">Ja piedalies īsfilmu veidošanā – vari savu darbu komandās pieminēto vārdu sasaistīt ar savu profilu, tādejādi veidojot savu automātiski atjaunoto Baltic Shorts personas profilu. Kā arī iesūtīt darbus pievienošanai platformai.</p>
-                    </div>
-                </div>
             )}
         </>
     )

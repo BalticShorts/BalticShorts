@@ -6,6 +6,7 @@ import { MyGridMovies, MyGridPlaylists } from "../modified-ui-components/Grid";
 import { PersonList } from "../modified-ui-components/PersonList";
 import { listCountryCodes, listMovieTypes } from "../graphql/queries";
 import { GlobalContext } from "../App";
+import Profile from "./Profile";
 
 const getTab = async (id) => {
   return document.getElementById(id);
@@ -52,6 +53,7 @@ const Catalogue = () => {
     Audio: [],
     Subtitles: [],
   });
+  const [selectedPersonId, setSelectedPersonId] = useState(null);
 
   const { givenTab } = useParams();
 
@@ -136,6 +138,7 @@ const Catalogue = () => {
           currentTab.classList.add("typography-body-bold");
         }
       });
+      setSelectedPersonId(null);
     };
     changeTab();
   }, [tab]);
@@ -495,44 +498,58 @@ const Catalogue = () => {
               )}
               {tab[0] === 'Persons' && (
                 <>
-                  <div className="w-full h-full flex flex-col relative justify-between my-25 typography-technical">
-                    <div className="relative text-center">
-                      <button onClick={() => setShowFilter(!showFilter)} className="ml-2 !uppercase">
-                        Profesiju saraksts {showFilter ? '▲' : '▼'}
-                      </button>
-                      {showFilter && (
-                        <div className="bg-beige flex flex-wrap justify-center gap-x-25 text-center w-full">
-                          <div className={`cursor-pointer ${filterOption === 'Director' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Director')}>REŽISORS</div>
-                          <div className={`cursor-pointer ${filterOption === 'Actor' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Actor')}>AKTIERIS</div>
-                          <div className={`cursor-pointer ${filterOption === 'Cinematographer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Cinematographer')}>OPERATORS</div>
-                          <div className={`cursor-pointer ${filterOption === 'Editor' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Editor')}>MONTĀŽAS REŽISORS</div>
-                          <div className={`cursor-pointer ${filterOption === 'Screenwriter' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Screenwriter')}>SCENĀRIJA AUTORS</div>
-                          <div className={`cursor-pointer ${filterOption === 'Costume Designer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Costume Designer')}>TĒRPU MĀKSLINIEKS</div>
-                          <div className={`cursor-pointer ${filterOption === 'Production Designer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Production Designer')}>FILMAS MĀKSLINIEKS</div>
-                          <div className={`cursor-pointer ${filterOption === 'Makeup Artist' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Makeup Artist')}>GRIMA MĀKSLINIEKS</div>
-                          <div className={`cursor-pointer ${filterOption === 'Sound Designer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Sound Designer')}>SKAŅAS REŽISORS</div>
-                          <div className={`cursor-pointer ${filterOption === 'Driver' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Driver')}>ŠOFERIS</div>
-                          <div className={`cursor-pointer ${filterOption === 'Graphic Designer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Graphic Designer')}>GRAFIKAS DIZAINERS</div>
-                          <div className={`cursor-pointer ${filterOption === 'Producer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Producer')}>PRODUCENTS</div>
+                  {!selectedPersonId ? (
+                    <>
+                      <div className="w-full h-full flex flex-col relative justify-between my-25 typography-technical">
+                        <div className="relative text-center">
+                          <button onClick={() => setShowFilter(!showFilter)} className="ml-2 !uppercase">
+                            Profesiju saraksts {showFilter ? '▲' : '▼'}
+                          </button>
+                          {showFilter && (
+                            <div className="bg-beige flex flex-wrap justify-center gap-x-25 text-center w-full">
+                              <div className={`cursor-pointer ${filterOption === 'Director' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Director')}>REŽISORS</div>
+                              <div className={`cursor-pointer ${filterOption === 'Actor' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Actor')}>AKTIERIS</div>
+                              <div className={`cursor-pointer ${filterOption === 'Cinematographer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Cinematographer')}>OPERATORS</div>
+                              <div className={`cursor-pointer ${filterOption === 'Editor' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Editor')}>MONTĀŽAS REŽISORS</div>
+                              <div className={`cursor-pointer ${filterOption === 'Screenwriter' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Screenwriter')}>SCENĀRIJA AUTORS</div>
+                              <div className={`cursor-pointer ${filterOption === 'Costume Designer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Costume Designer')}>TĒRPU MĀKSLINIEKS</div>
+                              <div className={`cursor-pointer ${filterOption === 'Production Designer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Production Designer')}>FILMAS MĀKSLINIEKS</div>
+                              <div className={`cursor-pointer ${filterOption === 'Makeup Artist' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Makeup Artist')}>GRIMA MĀKSLINIEKS</div>
+                              <div className={`cursor-pointer ${filterOption === 'Sound Designer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Sound Designer')}>SKAŅAS REŽISORS</div>
+                              <div className={`cursor-pointer ${filterOption === 'Driver' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Driver')}>ŠOFERIS</div>
+                              <div className={`cursor-pointer ${filterOption === 'Graphic Designer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Graphic Designer')}>GRAFIKAS DIZAINERS</div>
+                              <div className={`cursor-pointer ${filterOption === 'Producer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Producer')}>PRODUCENTS</div>
+                            </div>
+                          )}
                         </div>
-                      )}
+                      </div>
+
+                      <div className="w-full flex justify-between items-center mb-4">
+                        <div className="typography-h2 font-bold">{data.persons.length} Personas</div>
+                        <div className="flex items-center typography-technical">
+                          <span className="mr-2 !uppercase">Kārtot pēc:</span>
+                          <select value={sortOption} onChange={handleSortChange} className="p-1 bg-beige">
+                            <option value="alphabet">Alfabēts</option>
+                          </select>
+                          <button onClick={handleSortOrderChange} className="ml-2">
+                            {sortOrder === 'asc' ? '▲' : '▼'}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="w-full">
+                        <PersonList
+                          data={data.persons !== undefined ? data.persons : []}
+                          onPersonClick={(id) => setSelectedPersonId(id)}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <div className="w-full">
+                      {/* <button onClick={() => setSelectedPersonId(null)} className="mb-4 underline">← Atpakaļ uz sarakstu</button> */}
+                      <Profile personId={selectedPersonId} />
                     </div>
-                  </div>
-                  <div className="w-full flex justify-between items-center mb-4">
-                    <div className="typography-h2 font-bold">{data.persons.length} Personas</div>
-                    <div class="flex items-center typography-technical">
-                      <span class="mr-2 !uppercase">Kārtot pēc:</span>
-                      <select value={sortOption} onChange={handleSortChange} class="p-1 bg-beige">
-                        <option value="alphabet">Alfabēts</option>
-                      </select>
-                      <button onClick={handleSortOrderChange} class="ml-2">
-                        {sortOrder === 'asc' ? '▲' : '▼'}
-                      </button>
-                    </div>
-                  </div>
-                  <div className='w-full'>
-                    <PersonList data = {data.persons !== undefined ? data.persons : []}></PersonList>
-                  </div>
+                  )}
                 </>
               )}
               {tab[0] === 'Playlists' && (

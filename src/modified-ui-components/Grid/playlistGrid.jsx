@@ -54,7 +54,7 @@ export function MyGridPlaylists({ data, maxRows, maxColumns }) {
                 {item !== null && (
                   <div
                     key={item.id}
-                    className="relative flex flex-col bg-inherit border border-black max-h-[200px] overflow-hidden"
+                    className="relative flex flex-col bg-inherit border border-black max-h-[200px] overflow-hidden cursor-pointer"
                     onClick={() => navigate(`/playlist/${item.id}`)}
                   >
                     <div className="relative w-full h-full max-h-[100px] overflow-hidden bg-inherit">
@@ -69,7 +69,7 @@ export function MyGridPlaylists({ data, maxRows, maxColumns }) {
                         {item.title}
                       </div>
                       <div className="typography-body-small mb-10">
-                        {item.creator}
+                        Izveidoja {item.creator}
                       </div>
                       <div className="typography-technical">
                         FILMAS {item.size} | SEKOTĀJI 10
