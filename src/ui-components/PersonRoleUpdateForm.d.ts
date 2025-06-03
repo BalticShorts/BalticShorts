@@ -6,7 +6,16 @@
 
 import * as React from "react";
 import { AutocompleteProps, GridProps } from "@aws-amplify/ui-react";
-import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
+export declare type EscapeHatchProps = {
+    [elementHierarchy: string]: Record<string, unknown>;
+} | null;
+export declare type VariantValues = {
+    [key: string]: string;
+};
+export declare type Variant = {
+    variantValues: VariantValues;
+    overrides: EscapeHatchProps;
+};
 export declare type ValidationResponse = {
     hasError: boolean;
     errorMessage?: string;
@@ -15,19 +24,16 @@ export declare type ValidationFunction<T> = (value: T, validationResponse: Valid
 export declare type PersonRoleUpdateFormInputValues = {
     Person?: any;
     Role?: any;
-    roleID?: string;
 };
 export declare type PersonRoleUpdateFormValidationValues = {
     Person?: ValidationFunction<any>;
     Role?: ValidationFunction<any>;
-    roleID?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type PersonRoleUpdateFormOverridesProps = {
     PersonRoleUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     Person?: PrimitiveOverrideProps<AutocompleteProps>;
     Role?: PrimitiveOverrideProps<AutocompleteProps>;
-    roleID?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type PersonRoleUpdateFormProps = React.PropsWithChildren<{
     overrides?: PersonRoleUpdateFormOverridesProps | undefined | null;

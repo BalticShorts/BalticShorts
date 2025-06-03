@@ -21,8 +21,16 @@ import {
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { getRole, listPersonMovieTeams } from "../graphql/queries";
-import { updatePersonMovieTeam, updateRole } from "../graphql/mutations";
+import {
+  getRole,
+  listPersonMovieTeams,
+  listPersonRoles,
+} from "../graphql/queries";
+import {
+  updatePersonMovieTeam,
+  updatePersonRole,
+  updateRole,
+} from "../graphql/mutations";
 function ArrayField({
   items = [],
   onChange,
@@ -194,6 +202,7 @@ export default function RoleUpdateForm(props) {
     name: "",
     PersonMovieTeam: [],
     name_eng: "",
+    PersonRoles: [],
   };
   const [name, setName] = React.useState(initialValues.name);
   const [PersonMovieTeam, setPersonMovieTeam] = React.useState(
@@ -205,6 +214,11 @@ export default function RoleUpdateForm(props) {
     []
   );
   const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
+  const [PersonRoles, setPersonRoles] = React.useState(
+    initialValues.PersonRoles
+  );
+  const [PersonRolesLoading, setPersonRolesLoading] = React.useState(false);
+  const [personRolesRecords, setPersonRolesRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -213,6 +227,7 @@ export default function RoleUpdateForm(props) {
           ...initialValues,
           ...roleRecord,
           PersonMovieTeam: linkedPersonMovieTeam,
+          PersonRoles: linkedPersonRoles,
         }
       : initialValues;
     setName(cleanValues.name);
@@ -220,11 +235,16 @@ export default function RoleUpdateForm(props) {
     setCurrentPersonMovieTeamValue(undefined);
     setCurrentPersonMovieTeamDisplayValue("");
     setName_eng(cleanValues.name_eng);
+    setPersonRoles(cleanValues.PersonRoles ?? []);
+    setCurrentPersonRolesValue(undefined);
+    setCurrentPersonRolesDisplayValue("");
     setErrors({});
   };
   const [roleRecord, setRoleRecord] = React.useState(roleModelProp);
   const [linkedPersonMovieTeam, setLinkedPersonMovieTeam] = React.useState([]);
   const canUnlinkPersonMovieTeam = true;
+  const [linkedPersonRoles, setLinkedPersonRoles] = React.useState([]);
+  const canUnlinkPersonRoles = true;
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
@@ -237,11 +257,17 @@ export default function RoleUpdateForm(props) {
         : roleModelProp;
       const linkedPersonMovieTeam = record?.PersonMovieTeam?.items ?? [];
       setLinkedPersonMovieTeam(linkedPersonMovieTeam);
+      const linkedPersonRoles = record?.PersonRoles?.items ?? [];
+      setLinkedPersonRoles(linkedPersonRoles);
       setRoleRecord(record);
     };
     queryData();
   }, [idProp, roleModelProp]);
-  React.useEffect(resetStateValues, [roleRecord, linkedPersonMovieTeam]);
+  React.useEffect(resetStateValues, [
+    roleRecord,
+    linkedPersonMovieTeam,
+    linkedPersonRoles,
+  ]);
   const [
     currentPersonMovieTeamDisplayValue,
     setCurrentPersonMovieTeamDisplayValue,
@@ -249,21 +275,34 @@ export default function RoleUpdateForm(props) {
   const [currentPersonMovieTeamValue, setCurrentPersonMovieTeamValue] =
     React.useState(undefined);
   const PersonMovieTeamRef = React.createRef();
+  const [currentPersonRolesDisplayValue, setCurrentPersonRolesDisplayValue] =
+    React.useState("");
+  const [currentPersonRolesValue, setCurrentPersonRolesValue] =
+    React.useState(undefined);
+  const PersonRolesRef = React.createRef();
   const getIDValue = {
     PersonMovieTeam: (r) => JSON.stringify({ id: r?.id }),
+    PersonRoles: (r) => JSON.stringify({ id: r?.id }),
   };
   const PersonMovieTeamIdSet = new Set(
     Array.isArray(PersonMovieTeam)
       ? PersonMovieTeam.map((r) => getIDValue.PersonMovieTeam?.(r))
       : getIDValue.PersonMovieTeam?.(PersonMovieTeam)
   );
+  const PersonRolesIdSet = new Set(
+    Array.isArray(PersonRoles)
+      ? PersonRoles.map((r) => getIDValue.PersonRoles?.(r))
+      : getIDValue.PersonRoles?.(PersonRoles)
+  );
   const getDisplayValue = {
     PersonMovieTeam: (r) => r?.id,
+    PersonRoles: (r) => r?.id,
   };
   const validations = {
     name: [{ type: "Required" }],
     PersonMovieTeam: [],
     name_eng: [],
+    PersonRoles: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -309,8 +348,36 @@ export default function RoleUpdateForm(props) {
     setPersonMovieTeamRecords(newOptions.slice(0, autocompleteLength));
     setPersonMovieTeamLoading(false);
   };
+  const fetchPersonRolesRecords = async (value) => {
+    setPersonRolesLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: { or: [{ id: { contains: value } }] },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await API.graphql({
+          query: listPersonRoles.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listPersonRoles?.items;
+      var loaded = result.filter(
+        (item) => !PersonRolesIdSet.has(getIDValue.PersonRoles?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setPersonRolesRecords(newOptions.slice(0, autocompleteLength));
+    setPersonRolesLoading(false);
+  };
   React.useEffect(() => {
     fetchPersonMovieTeamRecords("");
+    fetchPersonRolesRecords("");
   }, []);
   return (
     <Grid
@@ -324,6 +391,7 @@ export default function RoleUpdateForm(props) {
           name,
           PersonMovieTeam: PersonMovieTeam ?? null,
           name_eng: name_eng ?? null,
+          PersonRoles: PersonRoles ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -413,6 +481,55 @@ export default function RoleUpdateForm(props) {
               })
             );
           });
+          const personRolesToLink = [];
+          const personRolesToUnLink = [];
+          const personRolesSet = new Set();
+          const linkedPersonRolesSet = new Set();
+          PersonRoles.forEach((r) =>
+            personRolesSet.add(getIDValue.PersonRoles?.(r))
+          );
+          linkedPersonRoles.forEach((r) =>
+            linkedPersonRolesSet.add(getIDValue.PersonRoles?.(r))
+          );
+          linkedPersonRoles.forEach((r) => {
+            if (!personRolesSet.has(getIDValue.PersonRoles?.(r))) {
+              personRolesToUnLink.push(r);
+            }
+          });
+          PersonRoles.forEach((r) => {
+            if (!linkedPersonRolesSet.has(getIDValue.PersonRoles?.(r))) {
+              personRolesToLink.push(r);
+            }
+          });
+          personRolesToUnLink.forEach((original) => {
+            if (!canUnlinkPersonRoles) {
+              throw Error(
+                `PersonRole ${original.id} cannot be unlinked from Role because undefined is a required field.`
+              );
+            }
+            promises.push(
+              API.graphql({
+                query: updatePersonRole.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: original.id,
+                  },
+                },
+              })
+            );
+          });
+          personRolesToLink.forEach((original) => {
+            promises.push(
+              API.graphql({
+                query: updatePersonRole.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: original.id,
+                  },
+                },
+              })
+            );
+          });
           const modelFieldsToSave = {
             name: modelFields.name,
             name_eng: modelFields.name_eng ?? null,
@@ -454,6 +571,7 @@ export default function RoleUpdateForm(props) {
               name: value,
               PersonMovieTeam,
               name_eng,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -476,6 +594,7 @@ export default function RoleUpdateForm(props) {
               name,
               PersonMovieTeam: values,
               name_eng,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             values = result?.PersonMovieTeam ?? values;
@@ -564,6 +683,7 @@ export default function RoleUpdateForm(props) {
               name,
               PersonMovieTeam,
               name_eng: value,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             value = result?.name_eng ?? value;
@@ -578,6 +698,85 @@ export default function RoleUpdateForm(props) {
         hasError={errors.name_eng?.hasError}
         {...getOverrideProps(overrides, "name_eng")}
       ></TextField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              name,
+              PersonMovieTeam,
+              name_eng,
+              PersonRoles: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.PersonRoles ?? values;
+          }
+          setPersonRoles(values);
+          setCurrentPersonRolesValue(undefined);
+          setCurrentPersonRolesDisplayValue("");
+        }}
+        currentFieldValue={currentPersonRolesValue}
+        label={"Person roles"}
+        items={PersonRoles}
+        hasError={errors?.PersonRoles?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("PersonRoles", currentPersonRolesValue)
+        }
+        errorMessage={errors?.PersonRoles?.errorMessage}
+        getBadgeText={getDisplayValue.PersonRoles}
+        setFieldValue={(model) => {
+          setCurrentPersonRolesDisplayValue(
+            model ? getDisplayValue.PersonRoles(model) : ""
+          );
+          setCurrentPersonRolesValue(model);
+        }}
+        inputFieldRef={PersonRolesRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Person roles"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search PersonRole"
+          value={currentPersonRolesDisplayValue}
+          options={personRolesRecords.map((r) => ({
+            id: getIDValue.PersonRoles?.(r),
+            label: getDisplayValue.PersonRoles?.(r),
+          }))}
+          isLoading={PersonRolesLoading}
+          onSelect={({ id, label }) => {
+            setCurrentPersonRolesValue(
+              personRolesRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentPersonRolesDisplayValue(label);
+            runValidationTasks("PersonRoles", label);
+          }}
+          onClear={() => {
+            setCurrentPersonRolesDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchPersonRolesRecords(value);
+            if (errors.PersonRoles?.hasError) {
+              runValidationTasks("PersonRoles", value);
+            }
+            setCurrentPersonRolesDisplayValue(value);
+            setCurrentPersonRolesValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks("PersonRoles", currentPersonRolesDisplayValue)
+          }
+          errorMessage={errors.PersonRoles?.errorMessage}
+          hasError={errors.PersonRoles?.hasError}
+          ref={PersonRolesRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "PersonRoles")}
+        ></Autocomplete>
+      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

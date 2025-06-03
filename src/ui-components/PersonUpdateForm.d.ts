@@ -24,7 +24,6 @@ export declare type ValidationFunction<T> = (value: T, validationResponse: Valid
 export declare type PersonUpdateFormInputValues = {
     name?: string;
     surname?: string;
-    role?: string;
     description?: string;
     Instagram?: string;
     Facebook?: string;
@@ -34,16 +33,14 @@ export declare type PersonUpdateFormInputValues = {
     user_id?: string;
     is_public?: boolean;
     completed_setup?: boolean;
-    photo_location?: string;
     description_confirmed?: boolean;
-    photo_confirmed?: boolean;
     is_entity?: boolean;
     nationality?: string;
+    PersonRoles?: any[];
 };
 export declare type PersonUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
     surname?: ValidationFunction<string>;
-    role?: ValidationFunction<string>;
     description?: ValidationFunction<string>;
     Instagram?: ValidationFunction<string>;
     Facebook?: ValidationFunction<string>;
@@ -53,18 +50,16 @@ export declare type PersonUpdateFormValidationValues = {
     user_id?: ValidationFunction<string>;
     is_public?: ValidationFunction<boolean>;
     completed_setup?: ValidationFunction<boolean>;
-    photo_location?: ValidationFunction<string>;
     description_confirmed?: ValidationFunction<boolean>;
-    photo_confirmed?: ValidationFunction<boolean>;
     is_entity?: ValidationFunction<boolean>;
     nationality?: ValidationFunction<string>;
+    PersonRoles?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type PersonUpdateFormOverridesProps = {
     PersonUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
     surname?: PrimitiveOverrideProps<TextFieldProps>;
-    role?: PrimitiveOverrideProps<TextFieldProps>;
     description?: PrimitiveOverrideProps<TextFieldProps>;
     Instagram?: PrimitiveOverrideProps<TextFieldProps>;
     Facebook?: PrimitiveOverrideProps<TextFieldProps>;
@@ -74,11 +69,10 @@ export declare type PersonUpdateFormOverridesProps = {
     user_id?: PrimitiveOverrideProps<TextFieldProps>;
     is_public?: PrimitiveOverrideProps<SwitchFieldProps>;
     completed_setup?: PrimitiveOverrideProps<SwitchFieldProps>;
-    photo_location?: PrimitiveOverrideProps<TextFieldProps>;
     description_confirmed?: PrimitiveOverrideProps<SwitchFieldProps>;
-    photo_confirmed?: PrimitiveOverrideProps<SwitchFieldProps>;
     is_entity?: PrimitiveOverrideProps<SwitchFieldProps>;
     nationality?: PrimitiveOverrideProps<TextFieldProps>;
+    PersonRoles?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type PersonUpdateFormProps = React.PropsWithChildren<{
     overrides?: PersonUpdateFormOverridesProps | undefined | null;

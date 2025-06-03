@@ -192,7 +192,6 @@ export const getPersonMovieTeam = /* GraphQL */ `
         id
         name
         surname
-        role
         description
         Instagram
         Facebook
@@ -205,11 +204,13 @@ export const getPersonMovieTeam = /* GraphQL */ `
         user_id
         is_public
         completed_setup
-        photo_location
         description_confirmed
-        photo_confirmed
         is_entity
         nationality
+        PersonRoles {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -223,6 +224,10 @@ export const getPersonMovieTeam = /* GraphQL */ `
           __typename
         }
         name_eng
+        PersonRoles {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -260,7 +265,6 @@ export const listPersonMovieTeams = /* GraphQL */ `
           id
           name
           surname
-          role
           description
           Instagram
           Facebook
@@ -269,9 +273,7 @@ export const listPersonMovieTeams = /* GraphQL */ `
           user_id
           is_public
           completed_setup
-          photo_location
           description_confirmed
-          photo_confirmed
           is_entity
           nationality
           createdAt
@@ -327,7 +329,6 @@ export const personMovieTeamsByMovieteamID = /* GraphQL */ `
           id
           name
           surname
-          role
           description
           Instagram
           Facebook
@@ -336,9 +337,7 @@ export const personMovieTeamsByMovieteamID = /* GraphQL */ `
           user_id
           is_public
           completed_setup
-          photo_location
           description_confirmed
-          photo_confirmed
           is_entity
           nationality
           createdAt
@@ -394,7 +393,6 @@ export const personMovieTeamsByPersonID = /* GraphQL */ `
           id
           name
           surname
-          role
           description
           Instagram
           Facebook
@@ -403,9 +401,7 @@ export const personMovieTeamsByPersonID = /* GraphQL */ `
           user_id
           is_public
           completed_setup
-          photo_location
           description_confirmed
-          photo_confirmed
           is_entity
           nationality
           createdAt
@@ -461,7 +457,6 @@ export const personMovieTeamsByRoleID = /* GraphQL */ `
           id
           name
           surname
-          role
           description
           Instagram
           Facebook
@@ -470,9 +465,7 @@ export const personMovieTeamsByRoleID = /* GraphQL */ `
           user_id
           is_public
           completed_setup
-          photo_location
           description_confirmed
-          photo_confirmed
           is_entity
           nationality
           createdAt
@@ -516,6 +509,18 @@ export const getRole = /* GraphQL */ `
         __typename
       }
       name_eng
+      PersonRoles {
+        items {
+          id
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -537,6 +542,10 @@ export const listRoles = /* GraphQL */ `
           __typename
         }
         name_eng
+        PersonRoles {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -552,7 +561,6 @@ export const getPerson = /* GraphQL */ `
       id
       name
       surname
-      role
       description
       Instagram
       Facebook
@@ -574,11 +582,21 @@ export const getPerson = /* GraphQL */ `
       user_id
       is_public
       completed_setup
-      photo_location
       description_confirmed
-      photo_confirmed
       is_entity
       nationality
+      PersonRoles {
+        items {
+          id
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -596,7 +614,6 @@ export const listPeople = /* GraphQL */ `
         id
         name
         surname
-        role
         description
         Instagram
         Facebook
@@ -609,11 +626,225 @@ export const listPeople = /* GraphQL */ `
         user_id
         is_public
         completed_setup
-        photo_location
         description_confirmed
-        photo_confirmed
         is_entity
         nationality
+        PersonRoles {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getPersonRole = /* GraphQL */ `
+  query GetPersonRole($id: ID!) {
+    getPersonRole(id: $id) {
+      id
+      personID
+      roleID
+      Person {
+        id
+        name
+        surname
+        description
+        Instagram
+        Facebook
+        IMBD
+        email
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
+        user_id
+        is_public
+        completed_setup
+        description_confirmed
+        is_entity
+        nationality
+        PersonRoles {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      Role {
+        id
+        name
+        PersonMovieTeam {
+          nextToken
+          __typename
+        }
+        name_eng
+        PersonRoles {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listPersonRoles = /* GraphQL */ `
+  query ListPersonRoles(
+    $filter: ModelPersonRoleFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listPersonRoles(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        personID
+        roleID
+        Person {
+          id
+          name
+          surname
+          description
+          Instagram
+          Facebook
+          IMBD
+          email
+          user_id
+          is_public
+          completed_setup
+          description_confirmed
+          is_entity
+          nationality
+          createdAt
+          updatedAt
+          __typename
+        }
+        Role {
+          id
+          name
+          name_eng
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const personRolesByPersonID = /* GraphQL */ `
+  query PersonRolesByPersonID(
+    $personID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPersonRoleFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    personRolesByPersonID(
+      personID: $personID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        personID
+        roleID
+        Person {
+          id
+          name
+          surname
+          description
+          Instagram
+          Facebook
+          IMBD
+          email
+          user_id
+          is_public
+          completed_setup
+          description_confirmed
+          is_entity
+          nationality
+          createdAt
+          updatedAt
+          __typename
+        }
+        Role {
+          id
+          name
+          name_eng
+          createdAt
+          updatedAt
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const personRolesByRoleID = /* GraphQL */ `
+  query PersonRolesByRoleID(
+    $roleID: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelPersonRoleFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    personRolesByRoleID(
+      roleID: $roleID
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        personID
+        roleID
+        Person {
+          id
+          name
+          surname
+          description
+          Instagram
+          Facebook
+          IMBD
+          email
+          user_id
+          is_public
+          completed_setup
+          description_confirmed
+          is_entity
+          nationality
+          createdAt
+          updatedAt
+          __typename
+        }
+        Role {
+          id
+          name
+          name_eng
+          createdAt
+          updatedAt
+          __typename
+        }
         createdAt
         updatedAt
         __typename

@@ -311,7 +311,6 @@ export const onCreatePersonMovieTeam = /* GraphQL */ `
         id
         name
         surname
-        role
         description
         Instagram
         Facebook
@@ -324,11 +323,13 @@ export const onCreatePersonMovieTeam = /* GraphQL */ `
         user_id
         is_public
         completed_setup
-        photo_location
         description_confirmed
-        photo_confirmed
         is_entity
         nationality
+        PersonRoles {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -342,6 +343,10 @@ export const onCreatePersonMovieTeam = /* GraphQL */ `
           __typename
         }
         name_eng
+        PersonRoles {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -404,7 +409,6 @@ export const onUpdatePersonMovieTeam = /* GraphQL */ `
         id
         name
         surname
-        role
         description
         Instagram
         Facebook
@@ -417,11 +421,13 @@ export const onUpdatePersonMovieTeam = /* GraphQL */ `
         user_id
         is_public
         completed_setup
-        photo_location
         description_confirmed
-        photo_confirmed
         is_entity
         nationality
+        PersonRoles {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -435,6 +441,10 @@ export const onUpdatePersonMovieTeam = /* GraphQL */ `
           __typename
         }
         name_eng
+        PersonRoles {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -497,7 +507,6 @@ export const onDeletePersonMovieTeam = /* GraphQL */ `
         id
         name
         surname
-        role
         description
         Instagram
         Facebook
@@ -510,11 +519,13 @@ export const onDeletePersonMovieTeam = /* GraphQL */ `
         user_id
         is_public
         completed_setup
-        photo_location
         description_confirmed
-        photo_confirmed
         is_entity
         nationality
+        PersonRoles {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -528,6 +539,10 @@ export const onDeletePersonMovieTeam = /* GraphQL */ `
           __typename
         }
         name_eng
+        PersonRoles {
+          nextToken
+          __typename
+        }
         createdAt
         updatedAt
         __typename
@@ -557,6 +572,18 @@ export const onCreateRole = /* GraphQL */ `
         __typename
       }
       name_eng
+      PersonRoles {
+        items {
+          id
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -582,6 +609,18 @@ export const onUpdateRole = /* GraphQL */ `
         __typename
       }
       name_eng
+      PersonRoles {
+        items {
+          id
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -607,6 +646,18 @@ export const onDeleteRole = /* GraphQL */ `
         __typename
       }
       name_eng
+      PersonRoles {
+        items {
+          id
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -619,7 +670,6 @@ export const onCreatePerson = /* GraphQL */ `
       id
       name
       surname
-      role
       description
       Instagram
       Facebook
@@ -641,11 +691,21 @@ export const onCreatePerson = /* GraphQL */ `
       user_id
       is_public
       completed_setup
-      photo_location
       description_confirmed
-      photo_confirmed
       is_entity
       nationality
+      PersonRoles {
+        items {
+          id
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -658,7 +718,6 @@ export const onUpdatePerson = /* GraphQL */ `
       id
       name
       surname
-      role
       description
       Instagram
       Facebook
@@ -680,11 +739,21 @@ export const onUpdatePerson = /* GraphQL */ `
       user_id
       is_public
       completed_setup
-      photo_location
       description_confirmed
-      photo_confirmed
       is_entity
       nationality
+      PersonRoles {
+        items {
+          id
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -697,7 +766,6 @@ export const onDeletePerson = /* GraphQL */ `
       id
       name
       surname
-      role
       description
       Instagram
       Facebook
@@ -719,11 +787,192 @@ export const onDeletePerson = /* GraphQL */ `
       user_id
       is_public
       completed_setup
-      photo_location
       description_confirmed
-      photo_confirmed
       is_entity
       nationality
+      PersonRoles {
+        items {
+          id
+          personID
+          roleID
+          createdAt
+          updatedAt
+          __typename
+        }
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreatePersonRole = /* GraphQL */ `
+  subscription OnCreatePersonRole(
+    $filter: ModelSubscriptionPersonRoleFilterInput
+  ) {
+    onCreatePersonRole(filter: $filter) {
+      id
+      personID
+      roleID
+      Person {
+        id
+        name
+        surname
+        description
+        Instagram
+        Facebook
+        IMBD
+        email
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
+        user_id
+        is_public
+        completed_setup
+        description_confirmed
+        is_entity
+        nationality
+        PersonRoles {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      Role {
+        id
+        name
+        PersonMovieTeam {
+          nextToken
+          __typename
+        }
+        name_eng
+        PersonRoles {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdatePersonRole = /* GraphQL */ `
+  subscription OnUpdatePersonRole(
+    $filter: ModelSubscriptionPersonRoleFilterInput
+  ) {
+    onUpdatePersonRole(filter: $filter) {
+      id
+      personID
+      roleID
+      Person {
+        id
+        name
+        surname
+        description
+        Instagram
+        Facebook
+        IMBD
+        email
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
+        user_id
+        is_public
+        completed_setup
+        description_confirmed
+        is_entity
+        nationality
+        PersonRoles {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      Role {
+        id
+        name
+        PersonMovieTeam {
+          nextToken
+          __typename
+        }
+        name_eng
+        PersonRoles {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeletePersonRole = /* GraphQL */ `
+  subscription OnDeletePersonRole(
+    $filter: ModelSubscriptionPersonRoleFilterInput
+  ) {
+    onDeletePersonRole(filter: $filter) {
+      id
+      personID
+      roleID
+      Person {
+        id
+        name
+        surname
+        description
+        Instagram
+        Facebook
+        IMBD
+        email
+        PersonMovieTeams {
+          nextToken
+          __typename
+        }
+        user_id
+        is_public
+        completed_setup
+        description_confirmed
+        is_entity
+        nationality
+        PersonRoles {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
+      Role {
+        id
+        name
+        PersonMovieTeam {
+          nextToken
+          __typename
+        }
+        name_eng
+        PersonRoles {
+          nextToken
+          __typename
+        }
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename

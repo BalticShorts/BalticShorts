@@ -18,15 +18,9 @@ import {
   Text,
   useTheme,
 } from "@aws-amplify/ui-react";
-import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { fetchByPath, validateField } from "./utils";
+import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
-import {
-  getPersonRole,
-  getRole,
-  listPeople,
-  listRoles,
-} from "../graphql/queries";
+import { getPersonRole, listPeople, listRoles } from "../graphql/queries";
 import { updatePersonRole } from "../graphql/mutations";
 function ArrayField({
   items = [],
@@ -198,23 +192,18 @@ export default function PersonRoleUpdateForm(props) {
   const initialValues = {
     Person: undefined,
     Role: undefined,
-    roleID: undefined,
   };
   const [Person, setPerson] = React.useState(initialValues.Person);
   const [PersonLoading, setPersonLoading] = React.useState(false);
-  const [PersonRecords, setPersonRecords] = React.useState([]);
+  const [personRecords, setPersonRecords] = React.useState([]);
   const [Role, setRole] = React.useState(initialValues.Role);
   const [RoleLoading, setRoleLoading] = React.useState(false);
-  const [RoleRecords, setRoleRecords] = React.useState([]);
-  const [roleID, setRoleID] = React.useState(initialValues.roleID);
-  const [roleIDLoading, setRoleIDLoading] = React.useState(false);
-  const [roleIDRecords, setRoleIDRecords] = React.useState([]);
-  const [selectedRoleIDRecords, setSelectedRoleIDRecords] = React.useState([]);
+  const [roleRecords, setRoleRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = personRoleRecord
-      ? { ...initialValues, ...personRoleRecord, Person, Role, roleID }
+      ? { ...initialValues, ...personRoleRecord, Person, Role }
       : initialValues;
     setPerson(cleanValues.Person);
     setCurrentPersonValue(undefined);
@@ -222,9 +211,6 @@ export default function PersonRoleUpdateForm(props) {
     setRole(cleanValues.Role);
     setCurrentRoleValue(undefined);
     setCurrentRoleDisplayValue("");
-    setRoleID(cleanValues.roleID);
-    setCurrentRoleIDValue(undefined);
-    setCurrentRoleIDDisplayValue("");
     setErrors({});
   };
   const [personRoleRecord, setPersonRoleRecord] =
@@ -243,22 +229,11 @@ export default function PersonRoleUpdateForm(props) {
       setPerson(PersonRecord);
       const RoleRecord = record ? await record.Role : undefined;
       setRole(RoleRecord);
-      const roleIDRecord = record ? record.roleID : undefined;
-      const roleRecord = roleIDRecord
-        ? (
-            await API.graphql({
-              query: getRole.replaceAll("__typename", ""),
-              variables: { id: roleIDRecord },
-            })
-          )?.data?.getRole
-        : undefined;
-      setRoleID(roleIDRecord);
-      setSelectedRoleIDRecords([roleRecord]);
       setPersonRoleRecord(record);
     };
     queryData();
   }, [idProp, personRoleModelProp]);
-  React.useEffect(resetStateValues, [personRoleRecord, Person, Role, roleID]);
+  React.useEffect(resetStateValues, [personRoleRecord, Person, Role]);
   const [currentPersonDisplayValue, setCurrentPersonDisplayValue] =
     React.useState("");
   const [currentPersonValue, setCurrentPersonValue] = React.useState(undefined);
@@ -267,10 +242,6 @@ export default function PersonRoleUpdateForm(props) {
     React.useState("");
   const [currentRoleValue, setCurrentRoleValue] = React.useState(undefined);
   const RoleRef = React.createRef();
-  const [currentRoleIDDisplayValue, setCurrentRoleIDDisplayValue] =
-    React.useState("");
-  const [currentRoleIDValue, setCurrentRoleIDValue] = React.useState(undefined);
-  const roleIDRef = React.createRef();
   const getIDValue = {
     Person: (r) => JSON.stringify({ id: r?.id }),
     Role: (r) => JSON.stringify({ id: r?.id }),
@@ -287,13 +258,11 @@ export default function PersonRoleUpdateForm(props) {
   );
   const getDisplayValue = {
     Person: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
-    Role: (r) => `${r?.Name ? r?.Name + " - " : ""}${r?.id}`,
-    roleID: (r) => `${r?.Name ? r?.Name + " - " : ""}${r?.id}`,
+    Role: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
   };
   const validations = {
     Person: [],
     Role: [],
-    roleID: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -349,7 +318,7 @@ export default function PersonRoleUpdateForm(props) {
       const variables = {
         limit: autocompleteLength * 5,
         filter: {
-          or: [{ Name: { contains: value } }, { id: { contains: value } }],
+          or: [{ name: { contains: value } }, { id: { contains: value } }],
         },
       };
       if (newNext) {
@@ -370,37 +339,9 @@ export default function PersonRoleUpdateForm(props) {
     setRoleRecords(newOptions.slice(0, autocompleteLength));
     setRoleLoading(false);
   };
-  const fetchRoleIDRecords = async (value) => {
-    setRoleIDLoading(true);
-    const newOptions = [];
-    let newNext = "";
-    while (newOptions.length < autocompleteLength && newNext != null) {
-      const variables = {
-        limit: autocompleteLength * 5,
-        filter: {
-          or: [{ Name: { contains: value } }, { id: { contains: value } }],
-        },
-      };
-      if (newNext) {
-        variables["nextToken"] = newNext;
-      }
-      const result = (
-        await API.graphql({
-          query: listRoles.replaceAll("__typename", ""),
-          variables,
-        })
-      )?.data?.listRoles?.items;
-      var loaded = result.filter((item) => roleID !== item.id);
-      newOptions.push(...loaded);
-      newNext = result.nextToken;
-    }
-    setRoleIDRecords(newOptions.slice(0, autocompleteLength));
-    setRoleIDLoading(false);
-  };
   React.useEffect(() => {
     fetchPersonRecords("");
     fetchRoleRecords("");
-    fetchRoleIDRecords("");
   }, []);
   return (
     <Grid
@@ -413,7 +354,6 @@ export default function PersonRoleUpdateForm(props) {
         let modelFields = {
           Person: Person ?? null,
           Role: Role ?? null,
-          roleID,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -453,8 +393,7 @@ export default function PersonRoleUpdateForm(props) {
           });
           const modelFieldsToSave = {
             personID: modelFields?.Person?.id ?? null,
-            rolePersonRoleId: modelFields?.Role?.id ?? null,
-            roleID: modelFields.roleID,
+            roleID: modelFields?.Role?.id ?? null,
           };
           await API.graphql({
             query: updatePersonRole.replaceAll("__typename", ""),
@@ -486,7 +425,6 @@ export default function PersonRoleUpdateForm(props) {
             const modelFields = {
               Person: value,
               Role,
-              roleID,
             };
             const result = onChange(modelFields);
             value = result?.Person ?? value;
@@ -519,16 +457,16 @@ export default function PersonRoleUpdateForm(props) {
           isReadOnly={false}
           placeholder="Search Person"
           value={currentPersonDisplayValue}
-          options={PersonRecords.filter(
-            (r) => !PersonIdSet.has(getIDValue.Person?.(r))
-          ).map((r) => ({
-            id: getIDValue.Person?.(r),
-            label: getDisplayValue.Person?.(r),
-          }))}
+          options={personRecords
+            .filter((r) => !PersonIdSet.has(getIDValue.Person?.(r)))
+            .map((r) => ({
+              id: getIDValue.Person?.(r),
+              label: getDisplayValue.Person?.(r),
+            }))}
           isLoading={PersonLoading}
           onSelect={({ id, label }) => {
             setCurrentPersonValue(
-              PersonRecords.find((r) =>
+              personRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )
@@ -566,7 +504,6 @@ export default function PersonRoleUpdateForm(props) {
             const modelFields = {
               Person,
               Role: value,
-              roleID,
             };
             const result = onChange(modelFields);
             value = result?.Role ?? value;
@@ -597,16 +534,16 @@ export default function PersonRoleUpdateForm(props) {
           isReadOnly={false}
           placeholder="Search Role"
           value={currentRoleDisplayValue}
-          options={RoleRecords.filter(
-            (r) => !RoleIdSet.has(getIDValue.Role?.(r))
-          ).map((r) => ({
-            id: getIDValue.Role?.(r),
-            label: getDisplayValue.Role?.(r),
-          }))}
+          options={roleRecords
+            .filter((r) => !RoleIdSet.has(getIDValue.Role?.(r)))
+            .map((r) => ({
+              id: getIDValue.Role?.(r),
+              label: getDisplayValue.Role?.(r),
+            }))}
           isLoading={RoleLoading}
           onSelect={({ id, label }) => {
             setCurrentRoleValue(
-              RoleRecords.find((r) =>
+              roleRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )
@@ -634,98 +571,6 @@ export default function PersonRoleUpdateForm(props) {
           ref={RoleRef}
           labelHidden={true}
           {...getOverrideProps(overrides, "Role")}
-        ></Autocomplete>
-      </ArrayField>
-      <ArrayField
-        lengthLimit={1}
-        onChange={async (items) => {
-          let value = items[0];
-          if (onChange) {
-            const modelFields = {
-              Person,
-              Role,
-              roleID: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.roleID ?? value;
-          }
-          setRoleID(value);
-          setCurrentRoleIDValue(undefined);
-        }}
-        currentFieldValue={currentRoleIDValue}
-        label={"Role id"}
-        items={roleID ? [roleID] : []}
-        hasError={errors?.roleID?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks("roleID", currentRoleIDValue)
-        }
-        errorMessage={errors?.roleID?.errorMessage}
-        getBadgeText={(value) =>
-          value
-            ? getDisplayValue.roleID(
-                roleIDRecords.find((r) => r.id === value) ??
-                  selectedRoleIDRecords.find((r) => r.id === value)
-              )
-            : ""
-        }
-        setFieldValue={(value) => {
-          setCurrentRoleIDDisplayValue(
-            value
-              ? getDisplayValue.roleID(
-                  roleIDRecords.find((r) => r.id === value) ??
-                    selectedRoleIDRecords.find((r) => r.id === value)
-                )
-              : ""
-          );
-          setCurrentRoleIDValue(value);
-          const selectedRecord = roleIDRecords.find((r) => r.id === value);
-          if (selectedRecord) {
-            setSelectedRoleIDRecords([selectedRecord]);
-          }
-        }}
-        inputFieldRef={roleIDRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Role id"
-          isRequired={true}
-          isReadOnly={false}
-          placeholder="Search Role"
-          value={currentRoleIDDisplayValue}
-          options={roleIDRecords
-            .filter(
-              (r, i, arr) =>
-                arr.findIndex((member) => member?.id === r?.id) === i
-            )
-            .map((r) => ({
-              id: r?.id,
-              label: getDisplayValue.roleID?.(r),
-            }))}
-          isLoading={roleIDLoading}
-          onSelect={({ id, label }) => {
-            setCurrentRoleIDValue(id);
-            setCurrentRoleIDDisplayValue(label);
-            runValidationTasks("roleID", label);
-          }}
-          onClear={() => {
-            setCurrentRoleIDDisplayValue("");
-          }}
-          defaultValue={roleID}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchRoleIDRecords(value);
-            if (errors.roleID?.hasError) {
-              runValidationTasks("roleID", value);
-            }
-            setCurrentRoleIDDisplayValue(value);
-            setCurrentRoleIDValue(undefined);
-          }}
-          onBlur={() => runValidationTasks("roleID", currentRoleIDValue)}
-          errorMessage={errors.roleID?.errorMessage}
-          hasError={errors.roleID?.hasError}
-          ref={roleIDRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "roleID")}
         ></Autocomplete>
       </ArrayField>
       <Flex

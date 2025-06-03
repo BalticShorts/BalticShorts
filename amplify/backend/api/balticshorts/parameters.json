@@ -1,5 +1,12 @@
 {
   "AppSyncApiName": "balticshorts",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthModeLastUpdated": "2025-06-03T13:33:56.727Z",
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authbalticshorts",
+      "Outputs.UserPoolId"
+    ]
+  }
 }

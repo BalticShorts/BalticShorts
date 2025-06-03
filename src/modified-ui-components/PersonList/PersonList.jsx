@@ -3,7 +3,7 @@ import { ReactComponent as Triangle } from "../../assets/images/triangle.svg";
 
 export const PersonList = ({ data, onPersonClick }) => {
   const navigate = useNavigate();
-
+  console.log("PersonList data:", data);
   const countryNameToCode = {
     "Portugal": "PT",
     "Republic of Ireland": "IE",
@@ -58,6 +58,12 @@ export const PersonList = ({ data, onPersonClick }) => {
           }
         };
 
+        // Get up to 2 roles from PersonRoles
+        const rolesArr = (person.PersonRoles?.items || [])
+          .map(r => r.Role?.name)
+          .filter(Boolean)
+          .slice(0, 2);
+
         return (
           <div
             key={index}
@@ -73,7 +79,9 @@ export const PersonList = ({ data, onPersonClick }) => {
                   {countryNameToCode[person.nationality] || person.nationality}
                 </div>
               </div>
-              <div className="typography-body-small uppercase">{person.role}</div>
+              <div className="typography-body-small uppercase">
+                {rolesArr.length > 0 ? rolesArr.join(" | ") : ""}
+              </div>
             </div>
 
             <div className="flex flex-col items-end my-25">

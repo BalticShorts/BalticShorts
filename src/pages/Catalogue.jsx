@@ -4,7 +4,7 @@ import { API } from "aws-amplify";
 import { getSearch, getMoviesMain } from "../custom-queries/queries";
 import { MyGridMovies, MyGridPlaylists } from "../modified-ui-components/Grid";
 import { PersonList } from "../modified-ui-components/PersonList";
-import { listCountryCodes, listMovieTypes } from "../graphql/queries";
+import { listCountryCodes, listMovieTypes, listRoles } from "../graphql/queries";
 import { GlobalContext } from "../App";
 import Profile from "./Profile";
 
@@ -54,6 +54,7 @@ const Catalogue = () => {
     Subtitles: [],
   });
   const [selectedPersonId, setSelectedPersonId] = useState(null);
+  const [rolesList, setRolesList] = useState([]);
 
   const { givenTab } = useParams();
 
@@ -83,6 +84,11 @@ const Catalogue = () => {
         });
         const persons = datas.data.listPeople.items;
         const playlists = datas.data.listMoviePlaylists.items;
+
+        // Fetch all roles for filter display
+        const rolesData = await API.graphql({ query: listRoles, authMode: 'AWS_IAM' });
+        const allRoles = rolesData.data.listRoles.items || [];
+        setRolesList(allRoles);
 
         const fetchedData = { movies, persons, playlists };
         setData(fetchedData);
@@ -228,7 +234,11 @@ const Catalogue = () => {
     let filteredItems = originalData.persons;
 
     if (filter && filter !== filterOption) {
-      filteredItems = filteredItems.filter(person => person.role === filter);
+      filteredItems = filteredItems.filter(person =>
+        (person.PersonRoles?.items || []).some(
+          r => r.Role?.name_eng === filter
+        )
+      );
     }
     setFilterOption(filter && filter !== filterOption ? filter : '');
     setData({ ...data, persons: filteredItems });
@@ -506,19 +516,16 @@ const Catalogue = () => {
                             Profesiju saraksts {showFilter ? '▲' : '▼'}
                           </button>
                           {showFilter && (
-                            <div className="bg-beige flex flex-wrap justify-center gap-x-25 text-center w-full">
-                              <div className={`cursor-pointer ${filterOption === 'Director' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Director')}>REŽISORS</div>
-                              <div className={`cursor-pointer ${filterOption === 'Actor' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Actor')}>AKTIERIS</div>
-                              <div className={`cursor-pointer ${filterOption === 'Cinematographer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Cinematographer')}>OPERATORS</div>
-                              <div className={`cursor-pointer ${filterOption === 'Editor' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Editor')}>MONTĀŽAS REŽISORS</div>
-                              <div className={`cursor-pointer ${filterOption === 'Screenwriter' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Screenwriter')}>SCENĀRIJA AUTORS</div>
-                              <div className={`cursor-pointer ${filterOption === 'Costume Designer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Costume Designer')}>TĒRPU MĀKSLINIEKS</div>
-                              <div className={`cursor-pointer ${filterOption === 'Production Designer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Production Designer')}>FILMAS MĀKSLINIEKS</div>
-                              <div className={`cursor-pointer ${filterOption === 'Makeup Artist' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Makeup Artist')}>GRIMA MĀKSLINIEKS</div>
-                              <div className={`cursor-pointer ${filterOption === 'Sound Designer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Sound Designer')}>SKAŅAS REŽISORS</div>
-                              <div className={`cursor-pointer ${filterOption === 'Driver' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Driver')}>ŠOFERIS</div>
-                              <div className={`cursor-pointer ${filterOption === 'Graphic Designer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Graphic Designer')}>GRAFIKAS DIZAINERS</div>
-                              <div className={`cursor-pointer ${filterOption === 'Producer' ? 'font-bold' : ''}`} onClick={() => handlePersonFilterChange('Producer')}>PRODUCENTS</div>
+                            <div className="bg-beige flex flex-wrap justify-center gap-x-25 text-center w-full !uppercase">
+                              {rolesList.map(role => (
+                                <div
+                                  key={role.id}
+                                  className={`cursor-pointer ${filterOption === role.name_eng ? 'font-bold' : ''}`}
+                                  onClick={() => handlePersonFilterChange(role.name_eng)}
+                                >
+                                  {role.name}
+                                </div>
+                              ))}
                             </div>
                           )}
                         </div>

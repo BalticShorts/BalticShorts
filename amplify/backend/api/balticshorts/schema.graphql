@@ -47,6 +47,7 @@ type Role @model @auth(rules: [
   name: String!
   PersonMovieTeam: [PersonMovieTeam] @hasMany(indexName: "byRole", fields: ["id"])
   name_eng: String
+  PersonRoles: [PersonRole] @hasMany(indexName: "byRole", fields: ["id"])
 }
 
 type Person @model @auth(rules: [
@@ -56,7 +57,6 @@ type Person @model @auth(rules: [
   id: ID!
   name: String!
   surname: String
-  role: String
   description: String
   Instagram: AWSURL
   Facebook: AWSURL
@@ -66,11 +66,21 @@ type Person @model @auth(rules: [
   user_id: String
   is_public: Boolean
   completed_setup: Boolean
-  photo_location: String
   description_confirmed: Boolean
-  photo_confirmed: Boolean
   is_entity: Boolean
   nationality: String
+  PersonRoles: [PersonRole] @hasMany(indexName: "byPerson", fields: ["id"])
+}
+
+type PersonRole @model @auth(rules: [
+  { allow: public, provider: iam, operations: [read] },
+  { allow: private, provider: iam, operations: [read, create, update, delete] }
+]) {
+  id: ID!
+  personID: ID! @index(name: "byPerson")
+  roleID: ID! @index(name: "byRole")
+  Person: Person @belongsTo(fields: ["personID"])
+  Role: Role @belongsTo(fields: ["roleID"])
 }
 
 type MoviePlaylist @model @auth(rules: [

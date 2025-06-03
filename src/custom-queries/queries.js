@@ -8,7 +8,16 @@ export const getProfile = `
         email
         id
         name
-        role
+        PersonRoles {
+          items {
+            id
+            roleID
+            Role {
+              id
+              name
+            }
+          }
+        }
         surname
         nationality
         PersonMovieTeams {
@@ -139,7 +148,17 @@ export const getSearch = `
       items {
         name
         surname
-        role
+        PersonRoles {
+          items {
+            id
+            roleID
+            Role {
+              id
+              name
+              name_eng
+            }
+          }
+        }
         id
         nationality
         PersonMovieTeams {
@@ -465,3 +484,49 @@ query GetUserProfile($id: ID!) {
   }
 }
 `;
+
+export const updatePerson = `
+  mutation UpdatePerson($input: UpdatePersonInput!) {
+    updatePerson(input: $input) {
+      id
+      name
+      surname
+      description
+      Instagram
+      Facebook
+      IMBD
+      email
+      is_entity
+      nationality
+      PersonRoles {
+        items {
+          id
+          roleID
+          Role {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const deletePersonRole = `
+  mutation DeletePersonRole($input: DeletePersonRoleInput!) {
+    deletePersonRole(input: $input) {
+      id
+    }
+  }
+`;
+
+export const createPersonRole = `
+  mutation CreatePersonRole($input: CreatePersonRoleInput!) {
+    createPersonRole(input: $input) {
+      id
+      personID
+      roleID
+    }
+  }
+`;
+

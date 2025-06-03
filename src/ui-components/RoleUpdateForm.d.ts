@@ -25,11 +25,13 @@ export declare type RoleUpdateFormInputValues = {
     name?: string;
     PersonMovieTeam?: any[];
     name_eng?: string;
+    PersonRoles?: any[];
 };
 export declare type RoleUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
     PersonMovieTeam?: ValidationFunction<any>;
     name_eng?: ValidationFunction<string>;
+    PersonRoles?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type RoleUpdateFormOverridesProps = {
@@ -37,6 +39,7 @@ export declare type RoleUpdateFormOverridesProps = {
     name?: PrimitiveOverrideProps<TextFieldProps>;
     PersonMovieTeam?: PrimitiveOverrideProps<AutocompleteProps>;
     name_eng?: PrimitiveOverrideProps<TextFieldProps>;
+    PersonRoles?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type RoleUpdateFormProps = React.PropsWithChildren<{
     overrides?: RoleUpdateFormOverridesProps | undefined | null;

@@ -32,6 +32,8 @@ export { default as PaymentUpdateForm } from "./PaymentUpdateForm";
 export { default as PersonCreateForm } from "./PersonCreateForm";
 export { default as PersonMovieTeamCreateForm } from "./PersonMovieTeamCreateForm";
 export { default as PersonMovieTeamUpdateForm } from "./PersonMovieTeamUpdateForm";
+export { default as PersonRoleCreateForm } from "./PersonRoleCreateForm";
+export { default as PersonRoleUpdateForm } from "./PersonRoleUpdateForm";
 export { default as PersonUpdateForm } from "./PersonUpdateForm";
 export { default as Playbutton } from "./Playbutton";
 export { default as RoleCreateForm } from "./RoleCreateForm";
