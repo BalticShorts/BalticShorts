@@ -168,7 +168,6 @@ const Catalogue = () => {
     } else if (tab[0] === 'Persons') {
       sortedItems = [...data.persons];
     }
-    console.log(sortedItems)
 
     switch (option) {
       case 'date':

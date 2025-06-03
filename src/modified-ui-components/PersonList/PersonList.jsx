@@ -3,7 +3,6 @@ import { ReactComponent as Triangle } from "../../assets/images/triangle.svg";
 
 export const PersonList = ({ data, onPersonClick }) => {
   const navigate = useNavigate();
-  console.log("PersonList data:", data);
   const countryNameToCode = {
     "Portugal": "PT",
     "Republic of Ireland": "IE",
