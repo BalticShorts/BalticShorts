@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import VideoPlayer from '../components/VideoPlayer';
 import { movieMoviePlaylistsByMovieId } from '../graphql/queries.js';
 import { Amplify, API } from 'aws-amplify';
@@ -89,17 +89,20 @@ const fetchPlaylists = async id => {
 function Movie() {
   const context = useContext(GlobalContext);
   const navigate = useNavigate();
+  const location = useLocation();
   AWS.config.region = "eu-north-1";
   AWS.config.credentials = new AWS.CognitoIdentityCredentials(IdentityPoolId);
 
   const { id } = useParams();
+  const initialMovie = location.state && location.state.movie ? location.state.movie : {};
   const [movieURL, setMovieURL] = useState('');
   const [thumbnailURL, setThumbnailURL] = useState('');
   const [movieTrailer, setMovieTrailer] = useState('');
-  const [movieData, setMovieData] = useState({});
+  const [movieData, setMovieData] = useState(initialMovie);
   const [urlAddon, setUrlAddon] = useState({});
   const [movieTeamData, setMovieTeamData] = useState({});
-  const [textOnMovie, setTextOnMovie] = useState(true);
+  const [shouldAutoplay] = useState(!!(location.state && location.state.play));
+  const [textOnMovie, setTextOnMovie] = useState(!shouldAutoplay);
   const [playlists, setPlaylists] = useState([]);
   const [playlistRows, setPlaylistRows] = useState(1);
   const [subtitles, setSubtitles] = useState([]);
@@ -116,13 +119,14 @@ function Movie() {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     async function get() {
       const movie = await fetchMovie(id);
+      setMovieData(movie);
+
       const playlists = await fetchPlaylists(id);
       const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
       await getSrc(movie.subtitles_location);
       await getPhotoSrc(movie.thumbnail_location);
       const photos = await getPhotosFromFolder(movie.photo_location);
       try {
-        setMovieData(movie);
         setMovieTeamData(team);
         setPlaylists(playlists);
         setPhotoURLs(photos);
@@ -153,6 +157,19 @@ function Movie() {
       document.body.style.overflow = 'auto';
     }
   }, [isVideoModalOpen]);
+
+  useEffect(() => {
+    console.log('Location state:', location.state);
+    if (location.state && location.state.play) {
+      setTextOnMovie(false);
+      setTimeout(() => {
+        const videoElement = document.querySelector('video');
+        if (videoElement) {
+          videoElement.play();
+        }
+      }, 100);
+    }
+  }, [location.state]);
 
   async function getSrc(location) {
     const config = {
@@ -318,7 +335,7 @@ function Movie() {
   }
   useEffect(() => {
     document.title = `Baltic Shorts - ${movieData.name} (${movieData.created_year})`;
-    }, [movieData]);
+  }, [movieData]);
 
   var teamList = [];
 
@@ -336,6 +353,7 @@ function Movie() {
           urlAddon={urlAddon}
           subtitles={subtitles}
           thumbnail={thumbnailURL}
+          shouldAutoplay={shouldAutoplay}
         />
         {!isMobile && (
           <div

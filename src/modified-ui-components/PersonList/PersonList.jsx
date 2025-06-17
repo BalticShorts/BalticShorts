@@ -57,7 +57,6 @@ export const PersonList = ({ data, onPersonClick }) => {
           }
         };
 
-        // Get up to 2 roles from PersonRoles
         const rolesArr = (person.PersonRoles?.items || [])
           .map(r => r.Role?.name)
           .filter(Boolean)
@@ -69,27 +68,32 @@ export const PersonList = ({ data, onPersonClick }) => {
             className="!border-b !border-black flex flex-col md:flex-row justify-between items-start md:items-end bg-inherit w-full hover-opacity cursor-pointer"
             onClick={handleClick}
           >
-            <div className="flex flex-col md:items-start items-start my-25">
-              <div className="flex gap-2">
+            <div className="flex flex-col md:items-start items-start my-25 w-full">
+              <div className="flex flex-row gap-2">
                 <div className="typography-h1">
                   {person.name} {person.surname}
                 </div>
-                <div className="typography-technical align-top text-left">
+                <div className="typography-technical align-top text-left mt-1">
                   {countryNameToCode[person.nationality] || person.nationality}
                 </div>
               </div>
-              <div className="typography-body-small uppercase">
-                {rolesArr.length > 0 ? rolesArr.join(" | ") : ""}
-              </div>
-            </div>
-
-            <div className="flex flex-col items-end my-25">
-              <div className="text-right typography-technical !align-bottom">
-                {uniqueMovieCount} {uniqueMovieCount === 1 ? "DARBS" : "DARBI"}
-              </div>
-              <div className="text-right typography-technical flex flex-row items-center">
-                <div className="mr-1">VAIRĀK</div>
-                <Triangle />
+              <div className="flex flex-row w-full h-full -mt-4">
+                <div className="flex-1 flex items-stretch">
+                  <div className="flex items-end h-full">
+                    <span className="typography-body-small uppercase text-left">
+                      {rolesArr.length > 0 ? rolesArr.join(" | ") : ""}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end min-w-[180px] justify-between h-full">
+                  <div className="text-right typography-technical !align-bottom">
+                    {uniqueMovieCount} {uniqueMovieCount === 1 ? "DARBS" : "DARBI"}
+                  </div>
+                  <div className="text-right typography-technical flex flex-row items-center">
+                    <div className="mr-1">VAIRĀK</div>
+                    <Triangle />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

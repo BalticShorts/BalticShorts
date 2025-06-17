@@ -1,20 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { isSafari, isChrome, isAndroid, isIOS, isMacOs } from 'react-device-detect';
 
-const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
+const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail, shouldAutoplay }) => {
   const playerRef = useRef(null);
 
   useEffect(() => {
     const loadPlayer = async () => {
-
-      // if (!movieURL || (!movieURL.dash && !movieURL.hls)) {
-      //   console.error('Missing movieURL or its properties (dash/hls).', { movieURL });
-      //   return;
-      // }
-
       try {
         // Dynamically import the Bitmovin Player script
-        // console.log('Loading Bitmovin Player script...');
         await new Promise((resolve, reject) => {
           const script = document.createElement('script');
           script.src = 'https://cdn.bitmovin.com/player/web/8/bitmovinplayer.js';
@@ -23,9 +16,6 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           script.onerror = reject;
           document.body.appendChild(script);
         });
-        // console.log('Bitmovin Player script loaded successfully.');
-
-        // Ensure Bitmovin Player script has loaded
         if (!window.bitmovin || !window.bitmovin.player) {
           throw new Error('Bitmovin Player library not loaded.');
         }
@@ -109,43 +99,35 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
           },
         });
   
-        // console.log('Creating Bitmovin Player instance...');
         const player = new window.bitmovin.player.Player(playerRef.current, config);
         const subtitle = subtitles ? { url: subtitles, kind: 'subtitles', label: 'English', lang: 'en', id: "sub1" } : undefined
   
         const loadSourceWithFallback = async (primarySource, fallbackSource) => {
           try {
-            // console.log('Attempting to load primary source...');
             await player.load(primarySource);
-            // console.log('Primary source loaded successfully.');
           } catch (error) {
-            // console.error('Error loading primary source:', error);
             if (fallbackSource) {
-              // console.log('Attempting to load fallback source...');
               await player.load(fallbackSource);
-              // console.log('Fallback source loaded successfully.');
             } else {
-              // console.error('No fallback source provided.');
             }
           }
           player.subtitles.add(subtitle)
         };
   
-        // const primarySource = createSource(movieURL.dash, movieURL.cmafHls);
-        // const fallbackSource = createSource(
-        //   movieURL.cmafDash,
-        //   movieURL.hls
-        // );
-        // var hlsUrl = isSafari ? movieURL.hls : movieURL.hls
-        // var hlsUrl = 'https://drmexample.s3.eu-north-1.amazonaws.com/t_1_11/cmaf/1736621800121.m3u8'
         const primarySource = createSource(movieURL.dash, movieURL.hls);
         const fallbackSource = createSource(movieURL.dash, movieURL.hls);
   
         await loadSourceWithFallback(primarySource, fallbackSource);
   
+        if (shouldAutoplay && player) {
+          console.log('Autoplaying video');
+          try {
+            player.play();
+          } catch (e) {}
+        }
+
         return () => {
           if (player) {
-            // console.log('Destroying Bitmovin Player instance...');
             player.destroy();
           }
         };
@@ -155,7 +137,7 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
     };
 
     loadPlayer();
-  }, [movieURL, urlAddon, subtitles, thumbnail]);
+  }, [movieURL, urlAddon, subtitles, thumbnail, shouldAutoplay]);
 
   return (
     <div className="relative w-full max-h-[65vh]">
@@ -168,6 +150,3 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail }) => {
 };
 
 export default SimpleBitmovinPlayer;
-
-// export const isVideoPlaying = (video) =>
-//   !!(video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2);

@@ -77,7 +77,10 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
                   <div
                     key={item.id}
                     className="relative flex flex-col bg-inherit border border-black max-h-[285px] overflow-hidden cursor-pointer"
-                    onClick={() => navigate('/movie/'+encodeURIComponent(item.name) + '/' + encodeURIComponent(item.id))}
+                    onClick={() => navigate(
+                      '/movie/' + encodeURIComponent(item.name) + '/' + encodeURIComponent(item.id),
+                      { state: { movie: item } }
+                    )}
                   >
                     <div className="relative w-full h-full h-20 sm:h-36 lg:h-48 lg:min-h-[195px] overflow-hidden bg-inherit">
                       <img

@@ -87,7 +87,7 @@ const Home = () => {
   return (
     <>
       <div className="w-full" id="container">
-        {highlightedMovie && <MainMovie movie={highlightedMovie} isLoggedIn = {context.currentUser && Object.keys(context.currentUser).length > 0} />}
+        <MainMovie movie={highlightedMovie} isLoggedIn = {context.currentUser && Object.keys(context.currentUser).length > 0} />
         <div className="max-w-[1100px] flex flex-col justify-center items-center m-auto">
           <div className="flex flex-row mt-50 gap-25 w-full h-fit justify-center items-center">
             <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4" onClick={() => navigate('/catalogue/Movies')}>

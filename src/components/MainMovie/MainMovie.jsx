@@ -3,18 +3,23 @@ import WatchlistModal from "../WatchlistModal/WatchlistModal";
 import { ReactComponent as Plus } from "../../assets/images/plus.svg";
 import { ReactComponent as Play } from "../../assets/images/triangle.svg";
 import { Navbar } from "../../modified-ui-components/Header";
+import { useNavigate } from "react-router-dom";
 
 const MainMovie = ({ movie, isLoggedIn }) => {
-
-    const director = movie.MovieTeam?.PersonMovieTeams.items.find(person => person.Role.name === "Režisors");
-    const mov = 'https://balticshortsphotos.s3.eu-north-1.amazonaws.com/' + movie?.trailer_location.replace("balticshortsphotos/", "")
-    const img = 'https://balticshortsphotos.s3.eu-north-1.amazonaws.com/' + movie?.thumbnail_location.replace("balticshortsphotos/", "")
-
     const [modalOpen, setModalOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
     const videoRef = useRef(null);
+    const navigate = useNavigate();
+
+    if (!movie) {
+      return <div className="w-full h-[60vh] sm:h-[65vh] bg-black" />;
+    }
+
+    const director = movie.MovieTeam?.PersonMovieTeams.items.find(person => person.Role.name === "Režisors");
+    const mov = 'https://balticshortsphotos.s3.eu-north-1.amazonaws.com/' + movie?.trailer_location.replace("balticshortsphotos/", "")
+    const img = 'https://balticshortsphotos.s3.eu-north-1.amazonaws.com/' + movie?.thumbnail_location.replace("balticshortsphotos/", "")
 
     const handleMouseEnter = () => {
       setIsHovered(true);
@@ -68,11 +73,23 @@ const MainMovie = ({ movie, isLoggedIn }) => {
               Nedēļas īsfilma
             </p>
 
-            <h1 className="typography-h1 my-10 cursor-pointer" onClick={() => window.location.href = '/movie/'+encodeURIComponent(movie.name) + '/' + encodeURIComponent(movie.id)}>
+            <h1
+              className="typography-h1 my-10 cursor-pointer"
+              onClick={() => navigate(
+                '/movie/' + encodeURIComponent(movie.name) + '/' + encodeURIComponent(movie.id),
+                { state: { movie } }
+              )}
+            >
               {movie.name.toUpperCase()}
             </h1>
 
-            <p className="typography-body uppercase cursor-pointer" onClick={() => window.location.href = '/movie/'+encodeURIComponent(movie.name) + '/' + encodeURIComponent(movie.id)}>
+            <p
+              className="typography-body uppercase cursor-pointer"
+              onClick={() => navigate(
+                '/movie/' + encodeURIComponent(movie.name) + '/' + encodeURIComponent(movie.id),
+                { state: { movie } }
+              )}
+            >
               {movie.name_eng}
             </p>
           </div>
@@ -87,7 +104,13 @@ const MainMovie = ({ movie, isLoggedIn }) => {
               </p>
 
               <div className="flex gap-10">
-                <button className="flex flex-row items-center button-default button-white" onClick={() => window.location.href = '/movie/'+encodeURIComponent(movie.name) + '/' + encodeURIComponent(movie.id)}>
+                <button
+                  className="flex flex-row items-center button-default button-white"
+                  onClick={() => navigate(
+                    '/movie/' + encodeURIComponent(movie.name) + '/' + encodeURIComponent(movie.id),
+                    { state: { movie, play: true } }
+                  )}
+                >
                   <Play/> <span className="ml-[6px]"> Skatīties </span>
                 </button>
                 <button className="flex items-center justify-center button-default button-transparent add" onClick={() => {if(isLoggedIn)setModalOpen(true)}}>
