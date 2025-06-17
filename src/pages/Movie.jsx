@@ -337,6 +337,13 @@ function Movie() {
     document.title = `Baltic Shorts - ${movieData.name} (${movieData.created_year})`;
   }, [movieData]);
 
+  useEffect(() => {
+    if (shouldAutoplay) {
+      const elements = document.getElementById('textOnMovie');
+      elements.classList.add("hidden");
+    }
+  }, [shouldAutoplay]);
+
   var teamList = [];
 
   return (

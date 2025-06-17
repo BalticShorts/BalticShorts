@@ -120,7 +120,6 @@ const SimpleBitmovinPlayer = ({ movieURL, urlAddon, subtitles, thumbnail, should
         await loadSourceWithFallback(primarySource, fallbackSource);
   
         if (shouldAutoplay && player) {
-          console.log('Autoplaying video');
           try {
             player.play();
           } catch (e) {}
