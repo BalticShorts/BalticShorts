@@ -118,7 +118,7 @@ const Buj = () => {
             <h2 className="typography-h2 mb-50 pl-6">SAZIŅA</h2>
             <p className="text-gray-600 mt-2 ml-6 px-6 mb-50">
               Lai saņemtu papildu informāciju par Pakalpojuma izmantošanu vai iesniegtu sūdzības un komentārus, Klienti var sazināties ar SIA "Neonorma" elektroniski, rakstot uz e-pastu {" "}
-                <a href="mailto:info@balticshorts.com" className="text-blue-500">info@balticshorts.com</a>
+                <a href="mailto:info@balticshorts.com" className="text-blue-500 cursor-pointer">info@balticshorts.com</a>
             </p>
           </section>
     

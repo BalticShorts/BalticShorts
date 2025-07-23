@@ -82,7 +82,7 @@ export const Navbar = () => {
             onMouseLeave={() => setIsHovered(false)}>
             
             {!isHovered ? (
-            <Logo onClick={() => window.location.href = '/'} className="h-20 mx-auto !w-[210px]"/>
+            <Logo onClick={() => window.location.href = '/'} className="h-20 mx-auto !w-[210px] cursor-pointer"/>
             ):(
             <img
               src= {gifAnimation}

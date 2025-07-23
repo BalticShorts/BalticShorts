@@ -96,7 +96,7 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
                                 <List/>
                               </div>
                               <div className="flex button-transparent add z-10 items-center justify-center" onClick={(e) => {e.stopPropagation();setSelectedMovieId(item.id);setModalOpen(true);}}>
-                                <Plus />
+                                <Plus className="!w-[14px] !h-[14px]"/>
                               </div>
                             </div>
                           </div>

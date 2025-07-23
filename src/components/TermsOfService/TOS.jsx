@@ -102,7 +102,7 @@ export default function TermsOfService() {
             <ol className="list-decimal ml-6 space-y-2">
               <li className="typography-body">
               Lai saņemtu papildu informāciju par Pakalpojuma izmantošanu vai iesniegtu sūdzības un komentārus, Klienti var sazināties ar SIA "Neonorma" elektroniski, rakstot uz e-pastu {" "}
-                <a href="mailto:info@balticshorts.com" className="text-blue-500">info@balticshorts.com</a>
+                <a href="mailto:info@balticshorts.com" className="text-blue-500 cursor-pointer">info@balticshorts.com</a>
               </li>
             </ol>
           </li>

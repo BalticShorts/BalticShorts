@@ -58,7 +58,7 @@ const UserProfilePage = () => {
     document.title = 'Baltic Shorts - Lietotājs';
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="text-center mt-4 typography-body-large">Loading...</div>;
 
   return (
     <div className="bg-beige min-h-screen felx flex-col max-w-[1100px] m-auto">
@@ -66,7 +66,7 @@ const UserProfilePage = () => {
         <h1 className="text-4xl font-bold tracking-wide">{profile.name} {profile.surname}</h1>
         <nav className="mt-2 text-sm font-semibold">
           {/* <a href="#" className="mr-6">SKATĪŠANĀS VĒSTURE</a> */}
-          <a href={"/settings/" + id}>UZSTĀDĪJUMI</a>
+          <a className="cursor-pointer" href={"/settings/" + id}>UZSTĀDĪJUMI</a>
         </nav>
       </header>
 

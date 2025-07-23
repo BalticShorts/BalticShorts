@@ -81,14 +81,14 @@ const Playlist = () => {
       document.title = 'Baltic Shorts - ' + playlist?.title;
     }, [playlist]);
 
-  if (!playlist) return <div>Loading...</div>;
+  if (!playlist) return <div className="text-center mt-4 typography-body-large">Loading...</div>;
 
   return (
     <div className="bg-beige min-h-screen">
       <div className='absolute top-0 left-0 w-full z-10 text-beige hover:text-black hover:bg-beige fill-beige hover:fill-black !h-50 transition-colors duration-1000 ease-in-out'><Navbar/></div>
       
       <div
-        className="relative w-full h-64 bg-gradient-to-b from-gray-800 to-transparent flex flex-col items-center justify-between"
+        className="relative w-full h-64 flex flex-col items-center justify-between"
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: "cover",
@@ -96,7 +96,8 @@ const Playlist = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-t from-gray-500 to-transparent z-0" />
+        <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-t from-slate-600 to-transparent z-0" />
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-slate-600 to-transparent z-0" />
 
         <h1 className="typography-h1 !text-beige mt-150 w-full max-w-[1100px] text-left mb-10 z-10">
           {playlist.title}
@@ -109,7 +110,7 @@ const Playlist = () => {
         <div className="flex justify-between items-center mb-6">
           <h2 className="typography-h2">{movies.length} FILMAS</h2>
           <div className="flex items-center">
-            <span className="mr-2">Kārtot pēc:</span>
+            <span className="mr-2 typography-technical !uppercase">Kārtot pēc:</span>
             <select value={sortBy} onChange={handleSortChange} className="p-1 bg-beige">
               <option value="date">Ievietošanas datums</option>
               <option value="year">Gads</option>

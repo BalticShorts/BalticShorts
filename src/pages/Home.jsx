@@ -90,7 +90,7 @@ const Home = () => {
         <MainMovie movie={highlightedMovie} isLoggedIn = {context.currentUser && Object.keys(context.currentUser).length > 0} />
         <div className="max-w-[1100px] flex flex-col justify-center items-center m-auto">
           <div className="flex flex-row mt-50 gap-25 w-full h-fit justify-center items-center">
-            <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4" onClick={() => navigate('/catalogue/Movies')}>
+            <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4 hover-opacity" onClick={() => navigate('/catalogue/Movies')}>
               <div className="w-4/5 text-center typography-h2 my-auto">
                 DARBI
               </div>
@@ -99,7 +99,7 @@ const Home = () => {
               </div>
             </div>
 
-            <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4" onClick={() => navigate('/catalogue/Persons')}>
+            <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4 hover-opacity" onClick={() => navigate('/catalogue/Persons')}>
               <div className="w-4/5 text-center typography-h2 my-auto">
                 PERSONAS
               </div>
@@ -108,7 +108,7 @@ const Home = () => {
               </div>
             </div>
 
-            <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4" onClick={() => navigate('/catalogue/Playlists')}>
+            <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4 hover-opacity" onClick={() => navigate('/catalogue/Playlists')}>
               <div className="w-4/5 text-center typography-h2 my-auto">
                 SARAKSTI
               </div>

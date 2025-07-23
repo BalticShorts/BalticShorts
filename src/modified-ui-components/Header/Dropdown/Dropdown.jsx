@@ -21,42 +21,42 @@ export const Dropdown = () => {
         <div className="h-full w-full flex flex-col justify-center items-start gap-3 flex z-20 my-10">
           <div className="flex flex-col ml-2 text-black typography-technical-12 uppercase gap-2">
             <div>
-              <a href="/">Sākums</a>
+              <a className="cursor-pointer" href="/">Sākums</a>
             </div>
             {context.loggedIn && (
               <>
                 <div>
-                  <a href={"/user/" + context.currentUser.id}>
+                  <a className="cursor-pointer" href={"/user/" + context.currentUser.id}>
                     MANS PROFILS
                   </a>
                 </div>
                 {context.currentUser.is_admin && (
                   <div>
-                    <a href="/upload">PIETEIKT DARBU</a>
+                    <a className="cursor-pointer" href="/upload">PIETEIKT DARBU</a>
                   </div>
                 )}
               </>
             )}
             <div>
-              <a href="/catalogue">KATALOGS</a>
+              <a className="cursor-pointer" href="/catalogue">KATALOGS</a>
             </div>
           </div>
           <div className="w-full border-b border-black" />
           <div className="flex flex-col ml-2 text-black typography-technical-12 uppercase gap-2">
 
             <div>
-              <a href="/about">PAR PROJEKTU</a>
+              <a className="cursor-pointer" href="/about">PAR MUMS</a>
             </div>
             {context.loggedIn && (
               <div>
-                <a href={"/settings/" + context.currentUser.id}>
+                <a className="cursor-pointer" href={"/settings/" + context.currentUser.id}>
                   UZSTĀDĪJUMI
                 </a>
               </div>
             )}
             <div>
-              <a href={"/faq"}>
-                lietošanas noteikumi
+              <a className="cursor-pointer" href={"/faq"}>
+                PALĪDZĪBA
               </a>
             </div>
             {context.loggedIn && (

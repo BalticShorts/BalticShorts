@@ -65,11 +65,11 @@ export function MyGridPlaylists({ data, maxRows, maxColumns }) {
                       />
                     </div>
                     <div className="m-15 flex flex-col bg-inherit">
-                      <div className="typography-body-bold mb-10 uppercase">
+                      <div className="typography-body-bold uppercase">
                         {item.title}
                       </div>
                       <div className="typography-body-small mb-10">
-                        Izveidoja {item.creator}
+                        {item.creator}
                       </div>
                       <div className="typography-technical">
                         FILMAS {item.size} | SEKOTĀJI 10

@@ -129,7 +129,7 @@ function SettingsPage() {
   }, []);
 
   if (loading) {
-    return <div className="bg-gray-100 p-4">Loading...</div>;
+    return <div className="text-center mt-4 typography-body-large">Loading...</div>;
   }
 
   return (
@@ -188,7 +188,7 @@ function SettingsPage() {
                 {profile.continues_payment && (<button onClick={() => setShowPauseModal(true)} className="mt-4 px-4 py-2 bg-beige text-black border border-black">Apturēt abonementu</button>)}
               </>
             ) : (
-              <button onClick={handleSubscribe} className="mt-4 px-4 py-2 bg-green-600 border border-black">Abonēt</button>
+              <button onClick={handleSubscribe} className="mt-4 px-4 py-2 bg-green-600 border border-black cursor-pointer">Abonēt</button>
             )}
           </section>
         </main>

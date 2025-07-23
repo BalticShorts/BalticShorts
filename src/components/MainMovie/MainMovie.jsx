@@ -1,11 +1,14 @@
-import React, { useState, useRef} from "react";
+import React, { useState, useRef, useContext} from "react";
 import WatchlistModal from "../WatchlistModal/WatchlistModal";
 import { ReactComponent as Plus } from "../../assets/images/plus.svg";
 import { ReactComponent as Play } from "../../assets/images/triangle.svg";
 import { Navbar } from "../../modified-ui-components/Header";
 import { useNavigate } from "react-router-dom";
+import { GlobalContext } from "../../App";
 
 const MainMovie = ({ movie, isLoggedIn }) => {
+    const context = useContext(GlobalContext)
+  
     const [modalOpen, setModalOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [isVideoLoaded, setIsVideoLoaded] = useState(false);
@@ -16,6 +19,15 @@ const MainMovie = ({ movie, isLoggedIn }) => {
     if (!movie) {
       return <div className="w-full h-[60vh] sm:h-[65vh] bg-black" />;
     }
+
+    const handlePlayClick = () => {
+      if (context.loggedIn) {
+          navigate('/movie/' + encodeURIComponent(movie.name) + '/' + encodeURIComponent(movie.id),
+                      { state: { movie, play: true } })
+      } else {
+          context.setLoggedInModal(true);
+      }
+    };
 
     const director = movie.MovieTeam?.PersonMovieTeams.items.find(person => person.Role.name === "Režisors");
     const mov = 'https://balticshortsphotos.s3.eu-north-1.amazonaws.com/' + movie?.trailer_location.replace("balticshortsphotos/", "")
@@ -68,7 +80,7 @@ const MainMovie = ({ movie, isLoggedIn }) => {
       <div className='w-full z-10 hover:bg-beige text-beige hover:text-black fill-beige hover:fill-black hover:border-b-2 hover:border-black border-none !h-50 transition-colors duration-1000 ease-in-out'><Navbar/></div>
         <div className="relative z-0 flex flex-col justify-between h-full text-beige max-w-[1100px] m-auto">
 
-          <div className="mt-25">
+          <div className="mt-35">
             <p className="typography-technical uppercase !font-bold">
               Nedēļas īsfilma
             </p>
@@ -105,28 +117,31 @@ const MainMovie = ({ movie, isLoggedIn }) => {
 
               <div className="flex gap-10">
                 <button
-                  className="flex flex-row items-center button-default button-white"
-                  onClick={() => navigate(
-                    '/movie/' + encodeURIComponent(movie.name) + '/' + encodeURIComponent(movie.id),
-                    { state: { movie, play: true } }
-                  )}
+                  className="flex flex-row items-center button-default button-white cursor-pointer"
+                  onClick={() => handlePlayClick()}
                 >
-                  <Play/> <span className="ml-[6px]"> Skatīties </span>
+                  <Play /> <span className="ml-[6px]"> Skatīties </span>
                 </button>
-                <button className="flex items-center justify-center button-default button-transparent add" onClick={() => {if(isLoggedIn)setModalOpen(true)}}>
-                  <div className="flex items-center justify-center !w-[11px] !h-[11px]">            
+                <button
+                  className="flex items-center justify-center button-default button-transparent add"
+                  onClick={() => {
+                    if (isLoggedIn) setModalOpen(true);
+                  }}
+                >
+                  <div className="flex items-center justify-center !w-[14px] !h-[14px]">
                     <Plus />
-                  </div>    
+                  </div>
                 </button>
               </div>
             </div>
 
-            <p className="typography-body-small text-beige w-2/3 pl-10">
+            <p className="typography-body-small text-beige w-2/3 pl-10 self-end -mb-1">
               {movie.description.length > 320
                 ? movie.description.slice(0, 320) + "..."
                 : movie.description}
             </p>
-            </div>
+          </div>
+
           </div>
         </div>
       <WatchlistModal isOpen={modalOpen} onClose={() => setModalOpen(false)} movieId={movie.id} />

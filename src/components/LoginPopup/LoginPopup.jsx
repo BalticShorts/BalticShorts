@@ -216,7 +216,7 @@ export const LoginPopup = () => {
                         <div className="w-full h-fit relative flex items-left justify-between mb-5">
                             <Logo className="w-[60px]"/>
                             <div className="flex items-end">
-                                <CloseIcon className="cursor-pointer" onClick={() => resetModal()} />
+                                <X className="cursor-pointer" onClick={() => resetModal()} />
                             </div>
                         </div>
 
@@ -227,16 +227,16 @@ export const LoginPopup = () => {
                     <div className="my-auto self-stretch flex flex-col justify-between items-center inline-flex">
                         <div className="w-full justify-center items-center flex flex-col typography-technical mb-2 !text-red-700">{error.message}</div>
                         <div className="w-full justify-center items-center flex flex-col text-lg my-10">
-                            <input id="email" type="email" placeholder="E-pasts" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setEmail(e.target.value)} ></input>
+                            <input id="email" type="email" placeholder="E-pasts" className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setEmail(e.target.value)} ></input>
                             <div className="w-full h-px relative border-b border-black"></div>
                         </div>
                         <div className="w-full justify-center items-center flex flex-col text-lg">
-                            <input id="password" type="password" placeholder="Parole" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setPassword(e.target.value)}></input>
+                            <input id="password" type="password" placeholder="Parole" className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setPassword(e.target.value)}></input>
                             <div className="w-full h-px relative border-b border-black"></div>
                         </div>
-                        <div className="w-full justify-between items-center inline-flex mt-10">
-                            <div className="typography-technical">
-                                <span id="rememberMe" className="cursor-pointer" onClick={() => setFastLogin(!fastLogin)}>{fastLogin ? <>[&#x2713;] </> : <>[  ] </>}</span>
+                        <div className="w-full justify-between items-center inline-flex mt-10 cursor-pointer">
+                            <div className="typography-technical" onClick={() => setFastLogin(!fastLogin)}>
+                                <span id="rememberMe">{fastLogin ? <>[&#x2713;] </> : <>[  ] </>}</span>
                                 Atcerēties mani
                             </div>
 
@@ -265,9 +265,9 @@ export const LoginPopup = () => {
                         <div className="flex flex-col justify-start items-center my-auto">
                             <div className="w-full justify-center items-center flex flex-col typography-technical mb-20 !text-red-700">{error.message}</div>
                             <div className="w-full justify-center items-center flex flex-row text-lg mb-0 border border-black">
-                                <input id="name" type="text" placeholder="Vārds" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setName(e.target.value)} ></input>
+                                <input id="name" type="text" placeholder="Vārds" className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setName(e.target.value)} ></input>
                                 <div className="h-full w-0 border-r border-black "></div>
-                                <input id="surname" type="text" placeholder="Uzvards" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setSurname(e.target.value)} ></input>
+                                <input id="surname" type="text" placeholder="Uzvards" className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setSurname(e.target.value)} ></input>
                             </div>
                             <div className="w-full justify-center items-center flex flex-col text-lg border-x border-black">
                                 <input id="email" type="email" placeholder="E-pasts" className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setEmail(e.target.value)} ></input>

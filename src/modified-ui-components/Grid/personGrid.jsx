@@ -19,7 +19,7 @@ export function MyGridPersons({data, maxRows, maxColumns}) {
                     <>
                     {checkRow(idx) &&  
                         <div key={item.id} className="p-4 h-full mt-6">
-                            <div className="m-auto w-60 h-72 relative" onClick={() => navigate('/profile/'+item.id)} >
+                            <div className="m-auto w-60 h-72 relative cursor-pointer" onClick={() => navigate('/profile/'+item.id)} >
                                 <img className="w-48 h-72 left-0 top-0 relative" src="https://via.placeholder.com/200x260" />
                                 <div className="w-80 h-10 relative mt-1 ml-4 items-center justify-center">
                                     <div>

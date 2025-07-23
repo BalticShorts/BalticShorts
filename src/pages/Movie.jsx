@@ -370,7 +370,7 @@ function Movie() {
           >        
             <div className="w-full h-[20%] flex flex-col items-center justify-center bg-gradient-to-b from-stone-950 to-transparent">
 
-              <div className="text-center mix-blend-normal mt-75 mx-auto max-w-[1100px]">
+              <div className="text-center mix-blend-normal mt-100 mx-auto max-w-[1100px]">
                 <h1 className="text-beige typography-h1 text-opacity-90">
                   {movieData.name}
                 </h1>
@@ -422,7 +422,7 @@ function Movie() {
                   <div className="flex button-transparent add z-10 items-center justify-center cursor-pointer" onClick={() => {
                     if(context.currentUser && Object.keys(context.currentUser).length > 0) setIsPlaylistModalOpen(true)
                   }}>
-                    <div className="flex items-center justify-center !w-[11px] !h-[11px]">            
+                    <div className="flex items-center justify-center !w-[14px] !h-[14px]">            
                       <Plus />
                     </div> 
                   </div>
@@ -460,7 +460,7 @@ function Movie() {
                           <div className="flex flex-col">
                             {roleGroup.map((person) => (
                               <div key={person.id} className="flex flex-col mb-1">
-                                <span className="typography-body-bold">
+                                <span className="typography-body-bold cursor-pointer">
                                   <a href={`/profile/${person.id}`}>{person.name}</a>
                                 </span>
                               </div>
@@ -555,13 +555,13 @@ function Movie() {
             <h2 className="text-2xl font-bold mb-4">Abonējiet!</h2>
             <p className="mb-4">Lai skatītos īsfilmas, nepieciešams aktīvs abonements.</p>
             <button
-              className="bg-beige text-black px-2 py-2 rounded mt-4 border border-black px-4 py-2 text-sm font-semibold uppercase tracking-wide hover:bg-black hover:text-beige transition mx-2"
+              className="bg-beige text-black px-2 py-2 rounded mt-4 border border-black px-4 py-2 text-sm font-semibold uppercase tracking-wide hover:bg-black hover:text-beige transition mx-2 cursor-pointer"
               onClick={() => navigate('/subscribe')}
             >
               Abonēt
             </button>
             <button
-              className="bg-beige text-black px-2 py-2 rounded mt-4 border border-black px-4 py-2 text-sm font-semibold uppercase tracking-wide hover:bg-black hover:text-beige transition mx-2"
+              className="bg-beige text-black px-2 py-2 rounded mt-4 border border-black px-4 py-2 text-sm font-semibold uppercase tracking-wide hover:bg-black hover:text-beige transition mx-2 cursor-pointer"
               onClick={() => setShowSubscribeModal(false)}
             >
               Aizvērt

@@ -41,7 +41,7 @@ export const DisplayedPlaylist = ({ photoPosition, playlist }) => {
     return(
         <>
         {position === 'left' ? (
-        <div className="w-full h-fit border border-black justify-center items-center flex flex-row" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
+        <div className="w-full h-fit border border-black justify-center items-center flex flex-row cursor-pointer" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
             <div className="relative w-[750px] h-[360px] border-r border-black">
                 <img className="w-[750px] h-[360px] object-cover" src={photoSrc} alt={playlist.title} />
                 <div className="ml-15 absolute bottom-0 w-4/5 text-stone-50 typography-h1-small uppercase mb-15 z-10">{playlist.title}</div>
@@ -50,17 +50,17 @@ export const DisplayedPlaylist = ({ photoPosition, playlist }) => {
             <div className="w-1/3 h-[360px] p-7 flex-col justify-between items-start inline-flex m-30">
                 <div></div>
                 <div className="m-auto w-72 h-60 text-black typography-body break-words">{playlist.description}</div>
-                <button className="flex flex-row items-center button-default button-white" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
+                <button className="flex flex-row items-center button-default button-white cursor-pointer" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
                     <Play/> <span className="ml-[6px]"> Skatīties </span>
                 </button>
             </div>
         </div>
         ) : (
-        <div className="w-fit h-fit border border-black justify-center items-center flex flex-row" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
+        <div className="w-fit h-fit border border-black justify-center items-center flex flex-row cursor-pointer" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
             <div className="w-1/3 h-[360px] p-7 flex-col justify-between items-start inline-flex m-30">
                 <div></div>
                 <div className="m-auto w-72 h-60 text-black typography-body break-words">{playlist.description}</div>
-                <button className="flex flex-row items-center button-default button-white" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
+                <button className="flex flex-row items-center button-default button-white cursor-pointer" onClick={() => window.location.href=`/playlist/${playlist.id}`}>
                     <Play/> <span className="ml-[6px]"> Skatīties </span>
                 </button>
             </div>

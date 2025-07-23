@@ -301,10 +301,10 @@ function Profile({ personId }) {
               </>
             ) : (
               <>
-                <div className="typography-body-small mt-2">
+                <div className="typography-body-small mt-2 !uppercase">
                   {(profile.PersonRoles?.items || []).map(r => r.Role?.name).filter(Boolean).join(", ")}
                 </div>
-                <div className="typography-technical-12 mt-2 uppercase">{movieCount} {movieCount === 1 ? "darbs" : "darbi"}</div>
+                <div className="typography-technical mt-2 uppercase">{movieCount} {movieCount === 1 ? "darbs" : "darbi"}</div>
                 <p className="typography-body mt-4 max-w-3xl">
                   {profile.description}
                 </p>
@@ -315,28 +315,28 @@ function Profile({ personId }) {
             {editing ? (
               <>
                 <input
-                  className="mb-2 typography-technical-12"
+                  className="mb-2 typography-technical"
                   name="email"
                   value={editProfile.email || ""}
                   onChange={handleChange}
                   placeholder="E-PASTS"
                 />
                 <input
-                  className="mb-2 typography-technical-12"
+                  className="mb-2 typography-technical"
                   name="Instagram"
                   value={editProfile.Instagram || ""}
                   onChange={handleChange}
                   placeholder="INSTAGRAM"
                 />
                 <input
-                  className="mb-2 typography-technical-12"
+                  className="mb-2 typography-technical"
                   name="Facebook"
                   value={editProfile.Facebook || ""}
                   onChange={handleChange}
                   placeholder="FACEBOOK"
                 />
                 <input
-                  className="typography-technical-12"
+                  className="typography-technical"
                   name="IMBD"
                   value={editProfile.IMBD || ""}
                   onChange={handleChange}
@@ -345,9 +345,9 @@ function Profile({ personId }) {
               </>
             ) : (
               <>
-                <a href={`mailto:${profile.email}`} className="mb-2 typography-technical-12 hover-opacity cursor-pointer">E-PASTS</a>
-                <a href={profile.Instagram} className="mb-2 typography-technical-12 hover-opacity cursor-pointer">INSTAGRAM</a>
-                <a href={profile.IMBD} className="typography-technical-12 hover-opacity cursor-pointer">IMDB</a>
+                <a href={`mailto:${profile.email}`} className="mb-2 typography-technical hover-opacity cursor-pointer">E-PASTS</a>
+                <a href={profile.Instagram} className="mb-2 typography-technical hover-opacity cursor-pointer">INSTAGRAM</a>
+                <a href={profile.IMBD} className="typography-technical hover-opacity cursor-pointer">IMDB</a>
               </>
             )}
             {isAdmin && !editing && (

@@ -7,7 +7,7 @@ export default function Privacy() {
             <strong className="typography-body-large-bold !font-bold !align-middle">Vispārīgā informācija</strong>
             <p className="typography-body">SIA “Neonorma”, reģistrācijas numurs 50203307991 (turpmāk tekstā – "Neonorma"), apstrādājot personas datus ievēro Vispārīgās datu aizsardzības regulas prasības, Fizisko personas datu apstrādes likuma, ka arī citas Latvijā spēkā esošās normatīvo aktu prasības.</p>
             <p className="typography-body">Šīs privātuma politikas mērķis ir informēt par privātuma praksi un personas datu apstrādes principiem saistībā ar “Neonorma” pārvaldīto interneta vietni www.balticshorts.com (turpmāk tekstā - MĀJASLAPA) un tās apmeklētājiem.</p>
-            <p className="typography-body">Kontaktinformācija: <a href="mailto:info@balticshorts.com" className="text-blue-500">info@balticshorts.com</a></p>
+            <p className="typography-body">Kontaktinformācija: <a href="mailto:info@balticshorts.com" className="text-blue-500 cursor-pointer">info@balticshorts.com</a></p>
           </li>
           
           <li className="space-y-2">
@@ -49,14 +49,14 @@ export default function Privacy() {
   
           <li className="space-y-2">
             <strong className="typography-body-large-bold !font-bold !align-middle">Jūsu tiesības saistībā ar Jūsu personas datiem</strong>
-            <p className="typography-body">Ja esat datu subjekts saskaņā ar <a className="underline" href="https://ec.europa.eu/info/law/law-topic/data-protection_lv">ES VDAR</a> (ES pilsonis kurš sniedz mums savus personas datus), Jums pastāv turpmāk minētās tiesības saistībā ar saviem personas datiem:</p>
+            <p className="typography-body">Ja esat datu subjekts saskaņā ar <a className="underline cursor-pointer" href="https://ec.europa.eu/info/law/law-topic/data-protection_lv">ES VDAR</a> (ES pilsonis kurš sniedz mums savus personas datus), Jums pastāv turpmāk minētās tiesības saistībā ar saviem personas datiem:</p>
             <ul className="ml-6 space-y-2 list-disc">
               <li className="typography-body"><strong className="typography-body-bold">Tiesības piekļūt informācijai.</strong> Jums ir tiesības saņemt informāciju par to, kāpēc un kā tiek apstrādāti Jūsu personas dati. Jums ir tiesības bez maksas saņemt mūsu rīcībā esošo Jūsu personas datu kopiju plaši izmantotā elektroniskā formātā.</li>
               <li className="typography-body"><strong className="typography-body-bold">Tiesības labot.</strong> Jums ir tiesības panākt neprecīzu vai nepilnīgu personas datu labošanu vai papildināšanu bez nepamatotas kavēšanās.</li>
               <li className="typography-body"><strong className="typography-body-bold">Tiesības „tikt aizmirstam”.</strong> Jums ir tiesības atsaukt savu piekrišanu personas datu apstrādei un panākt savu personas datu dzēšanu bez nepamatotas kavēšanās, tiklīdz dati vairs nav nepieciešami, lai sniegtu Jūsu pieprasītos pakalpojumus un ievērotu normatīvo aktu prasības.</li>
               <li className="typography-body"><strong className="typography-body-bold">Tiesības ierobežot apstrādi.</strong> Jums ir tiesības panākt savu personas datu apstrādes ierobežošanu, ja Jūs iebilstat pret to un mums nav leģitīmu pamatu turpināt apstrādi, ja Jūs apstrīdat datu precizitāti, ja apstrāde ir pretlikumīga vai ja Jūs pieprasāt celt, īstenot vai aizstāvēt likumīgas prasības.</li>
               <li className="typography-body"><strong className="typography-body-bold">Tiesības iebilst.</strong> Jums ir tiesības jebkurā brīdī iebilst pret datu apstrādi, ja vien tas nav nepieciešams sabiedrības interesēs veicamam uzdevumam vai apstrādei nepastāv neapstrīdami likumīgs pamats.</li>
-              <li className="typography-body"><strong className="typography-body-bold">Citas tiesības saskaņā ar VDAR.</strong> Vairāk informācijas skatiet, apmeklējot <a className="underline" href="https://ec.europa.eu/info/law/law-topic/data-protection/reform/rights-citizens_lv">ES datu aizsardzībai veltīto mājas lapu</a>.</li>
+              <li className="typography-body"><strong className="typography-body-bold">Citas tiesības saskaņā ar VDAR.</strong> Vairāk informācijas skatiet, apmeklējot <a className="underline cursor-pointer" href="https://ec.europa.eu/info/law/law-topic/data-protection/reform/rights-citizens_lv">ES datu aizsardzībai veltīto mājas lapu</a>.</li>
             </ul>
           </li>
         </ol>

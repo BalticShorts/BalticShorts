@@ -25,7 +25,7 @@ const Subscribe = () => {
                         <span className="w-96 h-9 text-center text-stone-50 text-4xl font-bold font-['SchoolBook'] uppercase leading-10 relative">SKATIES ĪSFILMAS NO VISAS BALTIJAS</span>
                         <span className="w-96 h-5 text-center text-stone-50 text-xl font-bold font-['Arial'] uppercase tracking-wide">NIEKA €3.99 mēnesī</span>
                         <div className="Button h-7 px-2.5 pt-1 pb-0.5 border border-stone-50 justify-center items-center gap-2.5 inline-flex cursor-pointer">
-                            <span className="grow shrink basis-0 text-center text-stone-50 text-base font-normal font-['SchoolBook']" onClick={handleButtonClick}>
+                            <span className="grow shrink basis-0 text-center text-stone-50 text-base font-normal font-['SchoolBook'] cursor-pointer" onClick={handleButtonClick}>
                                 {context.loggedIn ? "Abonēt" : "Ienākt"}
                             </span>
                         </div>

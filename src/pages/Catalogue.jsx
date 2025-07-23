@@ -58,6 +58,11 @@ const Catalogue = () => {
 
   const { givenTab } = useParams();
 
+  const handlePersonClicked = (id) => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    setSelectedPersonId(id);
+  }
+
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 
@@ -136,11 +141,13 @@ const Catalogue = () => {
         if (currentTab !== null) {
           currentTab.classList.remove("typography-body-bold");
           currentTab.classList.add("typography-body");
+          currentTab.classList.add("link-hover");
         }
       });
       getTab(tab[0]).then((currentTab) => {
         if (currentTab !== null) {
           currentTab.classList.remove("typography-body");
+          currentTab.classList.remove("link-hover");
           currentTab.classList.add("typography-body-bold");
         }
       });
@@ -349,7 +356,7 @@ const Catalogue = () => {
         </div>
         <div className='w-full max-w-[1100px] mx-auto h-fit flex flex-col items-center relative justify-center'>
           {loading ? (
-            <div className="text-center mt-4">Loading...</div>
+            <div className="text-center mt-4 typography-body-large">Loading...</div>
           ) : (
             <>
               {tab[0] === 'Movies' && (
@@ -372,7 +379,7 @@ const Catalogue = () => {
                                     {filterLabels[filter]} {dropdowns[filter] ? '▼' : '▲'}
                                   </div>
                                   {dropdowns[filter] && (
-                                    <div className="absolute bg-beige border mt-2 p-2 max-h-48 overflow-y-auto z-20 min-w-full whitespace-nowrap typography-technical">
+                                    <div className="absolute bg-beige border border-black mt-2 p-2 max-h-48 overflow-y-auto z-20 min-w-full whitespace-nowrap typography-technical">
                                       {filter === 'Year' ? (
                                         <div className="flex flex-col">
                                           {years.map((year) => (
@@ -510,7 +517,7 @@ const Catalogue = () => {
                   {!selectedPersonId ? (
                     <>
                       <div className="w-full h-full flex flex-col relative justify-between my-25 typography-technical">
-                        <div className="relative text-center">
+                        <div className="relative text-center typography-technical">
                           <button onClick={() => setShowFilter(!showFilter)} className="ml-2 !uppercase">
                             Profesiju saraksts {showFilter ? '▲' : '▼'}
                           </button>
@@ -519,7 +526,7 @@ const Catalogue = () => {
                               {rolesList.map(role => (
                                 <div
                                   key={role.id}
-                                  className={`cursor-pointer ${filterOption === role.name_eng ? 'font-bold' : ''}`}
+                                  className={`typography-technical cursor-pointer ${filterOption === role.name_eng ? 'font-bold' : ''}`}
                                   onClick={() => handlePersonFilterChange(role.name_eng)}
                                 >
                                   {role.name}
@@ -533,7 +540,7 @@ const Catalogue = () => {
                       <div className="w-full flex justify-between items-center mb-4">
                         <div className="typography-h2 font-bold">{data.persons.length} Personas</div>
                         <div className="flex items-center typography-technical">
-                          <span className="mr-2 !uppercase">Kārtot pēc:</span>
+                          <span className="mr-2 typography-technical !uppercase">Kārtot pēc:</span>
                           <select value={sortOption} onChange={handleSortChange} className="p-1 bg-beige">
                             <option value="alphabet">Alfabēts</option>
                           </select>
@@ -546,13 +553,13 @@ const Catalogue = () => {
                       <div className="w-full">
                         <PersonList
                           data={data.persons !== undefined ? data.persons : []}
-                          onPersonClick={(id) => setSelectedPersonId(id)}
+                          onPersonClick={(id) => handlePersonClicked(id)}
                         />
                       </div>
                     </>
                   ) : (
                     <div className="w-full">
-                      {/* <button onClick={() => setSelectedPersonId(null)} className="mb-4 underline">← Atpakaļ uz sarakstu</button> */}
+                      {/* <button onClick={() => handlePersonClicked(null)} className="mb-4 underline">← Atpakaļ uz sarakstu</button> */}
                       <Profile personId={selectedPersonId} />
                     </div>
                   )}
