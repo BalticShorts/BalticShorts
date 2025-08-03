@@ -10,9 +10,11 @@ import Privacy from "../Privacy/Privacy";
 import { ReactComponent as Info } from "../../assets/images/info.svg";
 import { ReactComponent as X } from "../../assets/images/x.svg";
 import { ReactComponent as Logo } from "../../assets/images/bs_logo.svg";
+import { useNavigate } from "react-router-dom";
 
 export const LoginPopup = () => {
     const context = useContext(GlobalContext)
+    const navigate = useNavigate();
 
     const [showModal, setShowModal] = useState(context.loggedInModal);
     const [email, setEmail] = useState('');
@@ -37,20 +39,68 @@ export const LoginPopup = () => {
     useEffect(() => {
         setShowModal(context.loggedInModal);
     }, [context.loggedInModal])
-    
+
+    function errorParser(error) {
+        let errorMessage;
+        setError({ });
+        switch (error.code) {
+            case 'UserNotFoundException':
+            errorMessage = 'Lietotājs nav atrasts. Reģistrējies vai pārbaudi e-pastu.';
+            break;
+            case 'NotAuthorizedException':
+            errorMessage = 'Nepareiza parole. Mēģini vēlreiz.';
+            break;
+            case 'PasswordResetRequiredException':
+            errorMessage = 'Parole jāmaina. Atjauno to.';
+            break;
+            case 'UserNotConfirmedException':
+            errorMessage = 'Lietotājs nav apstiprināts. Pārbaudi e-pastu.';
+            break;
+            case 'CodeMismatchException':
+            errorMessage = 'Kods nesakrīt. Pārbaudi ievadīto.';
+            break;
+            case 'ExpiredCodeException':
+            errorMessage = 'Kods ir beidzies. Pieprasiet jaunu kodu.';
+            break;
+            case 'InvalidParameterException':
+            errorMessage = 'Nederīgs parametrs. Pārbaudi ievadīto.';
+            break;
+            case 'InvalidPasswordException':
+            errorMessage = 'Nederīga parole. Parolei jābūt vismaz 6 rakstzīmes garai.';
+            break;
+            case 'TooManyFailedAttemptsException':
+            errorMessage = 'Pārāk daudz neveiksmīgu mēģinājumu. Mēģini vēlāk.';
+            break;
+            case 'TooManyRequestsException':
+            errorMessage = 'Pārāk daudz pieprasījumu. Mēģini vēlāk.';
+            break;
+            case 'LimitExceededException':
+            errorMessage = 'Pārsniegts ierobežojums. Mēģini vēlāk.';
+            break;
+            default: errorMessage = 'Nezināma kļūda. Mēģini vēlreiz.';
+        }
+        setError({ "code": error.code, "message": errorMessage });
+    }
+
     const logIn = async () => {
         try {
             await Auth.signIn(email, password);
             context.setLoggedIn(true);
             setShowModal(false);
             resetModal();
-            window.location.reload(true);
+            const currentUser = await Auth.currentAuthenticatedUser();
+            console.log("currentUser", currentUser);
+            context.setCurrentUser({'id' : currentUser.username, 'name': currentUser.attributes.given_name, 'surname': currentUser.attributes.family_name, 'email': currentUser.attributes.email});
+            await context.assessLoggedInState();
+            await context.forceReload();
+            navigate('/');
         } catch (error) {
-            setError({"code":error.code, "message": error.message})
+            errorParser(error);
         }
     }
 
     async function handleSignUp() {
+        setError({});
         try {
             if(name === "" || surname === ""){
                 throw new Error("Vārds un uzvārds nevar būt tukši!")
@@ -69,24 +119,22 @@ export const LoginPopup = () => {
           setConfirmationStage(true);
 
         } catch (error) {
-          console.log('error signing up:', error.code);
-          setError({"code":error.code, "message": error.message})
+            errorParser(error);
         }
     }
 
     async function handleCodeConfirmatation(){
-        // console.log(confirmationCode)
         try {
             const username = email;
             const code = confirmationCode;
             await Auth.confirmSignUp(username, code)
-            setShowModal(false);
             setError({});
             setConfirmationStage(false);
             await logIn();
-            createProfile();
+            await createProfile();
+            setShowModal(false);
         } catch (error) {
-            
+            errorParser(error);
         }
     }
 
@@ -106,7 +154,7 @@ export const LoginPopup = () => {
             setRestorePassword(true);
             setConfirmationCode('');
         } catch (error) {
-            setError({"code":error.code, "message": error.message})
+            errorParser(error);
         }
     }
 
@@ -123,16 +171,18 @@ export const LoginPopup = () => {
             setPage('login');
             setError({"code":'PasswordChange', "message": 'Parole nomainīta'})
         } catch (error) {
-            setError({"code":error.code, "message": error.message})
+            errorParser(error);
         }
     }
 
     async function createProfile() {
         try {
-            const name = Auth.user.attributes.given_name;
-            const surname = Auth.user.attributes.family_name;
-            const email = Auth.user.attributes.email;
-            const id = Auth.user.username;
+            const user = await Auth.currentAuthenticatedUser();
+
+            const name = user.attributes.given_name;
+            const surname = user.attributes.family_name;
+            const email = user.attributes.email;
+            const id = user.username;
             const exists = await API.graphql({
                 query: checkPersonExists,
                 variables : {
@@ -179,6 +229,7 @@ export const LoginPopup = () => {
         setEmail('');
         setPassword('');
         setPage(page);
+        setError({});
     }
 
     function resetModal(){
@@ -201,11 +252,7 @@ export const LoginPopup = () => {
     }, [page])
 
     const handleAcceptRulesClick = () => {
-        if (!tosRead) {
-            setError({"code": 'TOSNotRead', "message": 'Lūdzu, izlasiet noteikumus pirms piekrītat!'});
-        } else {
-            setPiekrituTicked(!piekrituTicked);
-        }
+        setPiekrituTicked(!piekrituTicked);
     };
 
     return(
@@ -240,7 +287,7 @@ export const LoginPopup = () => {
                                 Atcerēties mani
                             </div>
 
-                            <div className="typography-technical cursor-pointer" onClick={() => setPage('forget')}>Aizmirsi paroli?</div>
+                            <div className="typography-technical cursor-pointer" onClick={() => changePage('forget')}>Aizmirsi paroli?</div>
                         </div>
                         <div type="submit" className="flex button-default button-white mt-25 !font-normal cursor-pointer !text-center !items-center !justify-center" onClick={() => logIn()}>Ieiet</div>
                     </div>
@@ -253,11 +300,11 @@ export const LoginPopup = () => {
                             <div className="w-full justify-center items-center flex flex-col typography-technical mb-20 !text-red-700">{error.message}</div>
                             <div className="w-full justify-center items-center flex flex-col typography-technical mb-20 !text-red-700"> Kods nosūtīts uz epastu!</div>
                             <div className="w-full justify-center items-center flex flex-col text-lg border border-black">
-                                <input id="code" type="text" placeholder="Code" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setConfirmationCode(e.target.value)} ></input>
+                                <input id="code" type="text" placeholder="Code" value={confirmationCode} className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setConfirmationCode(e.target.value)} ></input>
                             </div>
                             <div className="mt-25 justify-start items-start flex flex-row gap-6">
                                 <div type="submit" className="flex !text-center !items-center !justify-center button-default button-white !font-normal cursor-pointer" onClick={() => handleCodeConfirmatation()}>Reģistrēties</div>
-                                <div className="button-default button-white !font-normal cursor-pointer" onClick={() => resendCode()}>Pārsūtīt kodu</div>
+                                <div className="flex !text-center !items-center !justify-center button-default button-white !font-normal cursor-pointer" onClick={() => resendCode()}>Pārsūtīt kodu</div>
                             </div>
                         </div>
                         ):(
