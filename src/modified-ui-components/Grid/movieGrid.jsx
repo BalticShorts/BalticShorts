@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import WatchlistModal from "../../components/WatchlistModal/WatchlistModal";
-import { MdFormatListBulleted } from "react-icons/md";
 import { ReactComponent as TriangleDown } from "../../assets/images/triangle_down.svg";
 import { ReactComponent as PlayBig } from "../../assets/images/play_big.svg";
 import { ReactComponent as List } from "../../assets/images/list.svg";
@@ -79,7 +78,8 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
                     className="relative flex flex-col bg-inherit border border-black max-h-[285px] overflow-hidden cursor-pointer"
                     onClick={() => navigate(
                       '/movie/' + encodeURIComponent(item.name) + '/' + encodeURIComponent(item.id),
-                      { state: { movie: item } }
+                      { state: { movie: {} } }
+                      // { state: { movie: item } } NEED TO GIX THIS. NEW CATALOGUE.JSON BREAKS THIS
                     )}
                   >
                     <div className="relative w-full h-full h-20 sm:h-36 lg:h-48 lg:min-h-[195px] overflow-hidden bg-inherit">

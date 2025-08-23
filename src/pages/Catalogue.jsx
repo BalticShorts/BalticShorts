@@ -1,10 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { API } from "aws-amplify";
-import { getSearch, getMoviesMain } from "../custom-queries/queries";
 import { MyGridMovies, MyGridPlaylists } from "../modified-ui-components/Grid";
 import { PersonList } from "../modified-ui-components/PersonList";
-import { listCountryCodes, listMovieTypes, listRoles } from "../graphql/queries";
 import { GlobalContext } from "../App";
 import Profile from "./Profile";
 
@@ -69,32 +66,17 @@ const Catalogue = () => {
     const get = async () => {
       setLoading(true);
       try {
-        const moviesData = await API.graphql({
-          query: getMoviesMain,
-          authMode: 'AWS_IAM'
-        });
-        const movies = moviesData.data.listMovies.items.sort(
-          (a, b) => b.created_year - a.created_year
-        );
+        const response = await fetch("https://balticshortsphotos.s3.eu-north-1.amazonaws.com/catalogue.json");
+        if (!response.ok) throw new Error("Failed to fetch catalogue.json");
 
-        const datas = await API.graphql({
-          query: getSearch,
-          variables: {
-            searchString: '',
-            lowSearchString: '',
-            firstCapitalisedSearchString: '',
-            capitalisedSearchString: '',
-          },
-          authMode: 'AWS_IAM'
-        });
-        const persons = datas.data.listPeople.items;
-        const playlists = datas.data.listMoviePlaylists.items;
-
-        // Fetch all roles for filter display
-        const rolesData = await API.graphql({ query: listRoles, authMode: 'AWS_IAM' });
-        const allRoles = rolesData.data.listRoles.items || [];
+        const catalogue = await response.json();       
+        const movies = catalogue.movies.sort((a, b) => b.created_year - a.created_year);
+        const persons = catalogue.people;
+        const playlists = catalogue.playlists;
+        const allRoles = catalogue.roles || [];
+        const movieTypes = catalogue.movieTypes || [];
+        const countryCodes = catalogue.countryCodes || [];
         setRolesList(allRoles);
-
         const fetchedData = { movies, persons, playlists };
         setData(fetchedData);
         setOriginalData(fetchedData);
@@ -103,29 +85,28 @@ const Catalogue = () => {
           setTab([givenTab, tab[0]]);
         }
 
-        const countryData = await API.graphql({ query: listCountryCodes, authMode: 'AWS_IAM' });
-        const countryList = countryData.data.listCountryCodes.items.map(item => item.Code);
+        const countryList = countryCodes.map(item => item.Code);
         setCountryOptions(countryList);
-        setFilteredOptions(prevOptions => ({ ...prevOptions, Country: countryList }));
+        setFilteredOptions(prev => ({ ...prev, Country: countryList }));
 
-        const typeData = await API.graphql({ query: listMovieTypes, authMode: 'AWS_IAM' });
-        const typeList = typeData.data.listMovieTypes.items.map(item => item.type);
+        const typeList = movieTypes.map(item => item.type);
         setTypeOptions(typeList);
-        setFilteredOptions(prevOptions => ({ ...prevOptions, Type: typeList }));
+        setFilteredOptions(prev => ({ ...prev, Type: typeList }));
 
         const genres = [...new Set(movies.map(movie => movie.genre))];
         setGenreOptions(genres);
-        setFilteredOptions(prevOptions => ({ ...prevOptions, Genre: genres }));
+        setFilteredOptions(prev => ({ ...prev, Genre: genres }));
 
         const audioLanguages = [...new Set(movies.map(movie => movie.screen_language))];
         setAudioOptions(audioLanguages);
-        setFilteredOptions(prevOptions => ({ ...prevOptions, Audio: audioLanguages }));
+        setFilteredOptions(prev => ({ ...prev, Audio: audioLanguages }));
 
         const subtitleLanguages = [...new Set(movies.map(movie => movie.captions_language))];
         setSubtitleOptions(subtitleLanguages);
-        setFilteredOptions(prevOptions => ({ ...prevOptions, Subtitles: subtitleLanguages }));
+        setFilteredOptions(prev => ({ ...prev, Subtitles: subtitleLanguages }));
+
       } catch (error) {
-        console.log('Error fetching data: ', error);
+        console.log("Error fetching catalogue.json: ", error);
       } finally {
         setLoading(false);
       }

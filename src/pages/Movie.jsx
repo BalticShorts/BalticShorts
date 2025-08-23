@@ -344,8 +344,6 @@ function Movie() {
     }
   }, [shouldAutoplay]);
 
-  var teamList = [];
-
   return (
     <>
     <div className="FilmasSkats w-full relative bg-beige rounded-3xl">
