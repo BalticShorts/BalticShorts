@@ -78,8 +78,7 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
                     className="relative flex flex-col bg-inherit border border-black max-h-[285px] overflow-hidden cursor-pointer"
                     onClick={() => navigate(
                       '/movie/' + encodeURIComponent(item.name) + '/' + encodeURIComponent(item.id),
-                      { state: { movie: {} } }
-                      // { state: { movie: item } } NEED TO GIX THIS. NEW CATALOGUE.JSON BREAKS THIS
+                      { state: { movie: {item} } }
                     )}
                   >
                     <div className="relative w-full h-full h-20 sm:h-36 lg:h-48 lg:min-h-[195px] overflow-hidden bg-inherit">

@@ -1,14 +1,12 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import "./style.css";
 import '../App.css';
-import { Amplify, API } from 'aws-amplify';
+import { Amplify } from 'aws-amplify';
 import '@aws-amplify/ui-react/styles.css';
-import { listMoviePlaylists } from '../graphql/queries.js'
 import { useEffect, useState } from 'react';
 import awsExports from '../aws-exports';
 import { useNavigate } from "react-router-dom";
 import { MyGridMovies } from "../modified-ui-components/Grid/movieGrid.jsx";
-import { getMoviesMain } from "../custom-queries/queries.js";
 import { DisplayedPlaylistGroup } from "../components/DisplayedPlaylistGroup/DisplayedPlaylistGroup.jsx";
 import MainMovie from "../components/MainMovie/MainMovie.jsx";
 import { ReactComponent as Logo } from "../assets/images/bs_logo.svg";
@@ -18,69 +16,71 @@ import { GlobalContext } from "../App";
 
 
 const Home = () => {
-    const context = useContext(GlobalContext);
-    Amplify.configure(awsExports);
-    const navigate = useNavigate();
-    const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
-    var AWS = require('aws-sdk');
+  const context = useContext(GlobalContext);
+  Amplify.configure(awsExports);
+  const navigate = useNavigate();
+  const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
+  var AWS = require('aws-sdk');
 
   const [movies, setMovies] = useState([]);
   const [highlightedMovie, setHighlightedMovie] = useState(null);
   const [playlists, setPlaylists] = useState([]);
   const [recomendedPlaylists, setRecomendedPlaylists] = useState([]);
+  const [catalogue, setCatalogue] = useState(null);
 
   useEffect(() => {
-    updateAWSConfigAndGetClient(IdentityPoolId, "eu-north-1")
-    async function mov () {
-      try {
-        await fetchMovies();
-        await fetchPlaylists()
-      } catch (error) {
-        
-      }
-    }
-   mov();
+    updateAWSConfigAndGetClient(IdentityPoolId, "eu-north-1");
+    fetchCatalogue();
   }, []);
+
+  useEffect(() => {
+    if (catalogue) {
+      fetchMovies();
+      fetchPlaylists();
+    }
+  }, [catalogue]);
+
   function updateAWSConfigAndGetClient(cognitoIdentityCredentials, region) {
     if (cognitoIdentityCredentials != null) {
       AWS.config.region = region;
       AWS.config.credentials = new AWS.CognitoIdentityCredentials(cognitoIdentityCredentials);
     }
-}
-  const fetchMovies = async () => {
-    try {
-        const movieData = await API.graphql({
-          query: getMoviesMain,
-          authMode: 'AWS_IAM'
-        });
-        const movieList = movieData.data.listMovies;
-        setMovies(movieList);
-        const highlighted = movieList.items.find(movie => movie.is_highlighted);
-        setHighlightedMovie(highlighted);
+  }
 
-    }catch (error) {
-      console.log('Error on fetchnig movies', error);
+  const fetchCatalogue = async () => {
+    try {
+      const response = await fetch("https://balticshortsphotos.s3.eu-north-1.amazonaws.com/catalogue.json");
+      if (!response.ok) throw new Error("Failed to fetch catalogue.json");
+      const catalogueData = await response.json();
+      setCatalogue(catalogueData);
+    } catch (error) {
+      setCatalogue(null);
+      setMovies({ items: [] });
+      setHighlightedMovie(null);
+      setRecomendedPlaylists([]);
+      console.error(error);
     }
   }
 
-  const fetchPlaylists = async () => {
-    try {
-      const playlistData = await API.graphql({
-        query : listMoviePlaylists,
-        variables :  {
-          filter: {
-            is_public: {
-              eq: true
-            }
-          }
-        },
-        authMode: 'AWS_IAM'
-      });
-      const playlistInfo = playlistData.data.listMoviePlaylists.items;
+  const fetchMovies = () => {
+    if (catalogue && catalogue.movies) {
+      const movieList = { items: catalogue.movies || [] };
+      setMovies(movieList);
+      const highlighted = movieList.items.find(movie => movie.is_highlighted);
+      setHighlightedMovie(highlighted);
+    } else {
+      setMovies({ items: [] });
+      setHighlightedMovie(null);
+    }
+  }
+
+  const fetchPlaylists = () => {
+    if (catalogue && catalogue.playlists) {
+      const playlistInfo = catalogue.playlists;
       const recommendedPlaylists = playlistInfo.filter(playlist => playlist.is_recommended);
       setRecomendedPlaylists(recommendedPlaylists);
-    } catch (error) {
-      console.log('Error on fetching playlists', error);
+    } else {
+      setRecomendedPlaylists([]);
     }
   }
 

@@ -94,7 +94,7 @@ function Movie() {
   AWS.config.credentials = new AWS.CognitoIdentityCredentials(IdentityPoolId);
 
   const { id } = useParams();
-  const initialMovie = location.state && location.state.movie ? location.state.movie : {};
+  const initialMovie = location.state && location.state.movie ? (location.state.movie.item || location.state.movie) : {};
   const [movieURL, setMovieURL] = useState('');
   const [thumbnailURL, setThumbnailURL] = useState('');
   const [movieTrailer, setMovieTrailer] = useState('');
@@ -116,32 +116,53 @@ function Movie() {
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
   useEffect(() => {
+    let isMounted = true;
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-    async function get() {
-      const movie = await fetchMovie(id);
-      setMovieData(movie);
 
-      const playlists = await fetchPlaylists(id);
-      const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
-      await getSrc(movie.subtitles_location);
-      await getPhotoSrc(movie.thumbnail_location);
-      const photos = await getPhotosFromFolder(movie.photo_location);
+    if (initialMovie && Object.keys(initialMovie).length > 0) {
+      setMovieData(initialMovie);
+      if (initialMovie.MovieTeam?.PersonMovieTeams?.items) {
+        getMovieCast(initialMovie.MovieTeam.PersonMovieTeams.items).then(team => {
+          if (isMounted) setMovieTeamData(team);
+        });
+      }
+      getSrc(initialMovie.subtitles_location);
+      getPhotoSrc(initialMovie.thumbnail_location);
+      getPhotosFromFolder(initialMovie.photo_location).then(photos => {
+        if (isMounted) setPhotoURLs(photos);
+      });
+    }
+    async function get() {
       try {
-        setMovieTeamData(team);
-        setPlaylists(playlists);
-        setPhotoURLs(photos);
+        const movie = await fetchMovie(id);
+        if (isMounted) setMovieData(movie);
+        await getPhotoSrc(movie.thumbnail_location);
+
+        const playlists = await fetchPlaylists(id);
+        if (isMounted) setPlaylists(playlists);
+
+        const team = await getMovieCast(movie.MovieTeam.PersonMovieTeams.items);
+        if (isMounted) setMovieTeamData(team);
+
+        await getSrc(movie.subtitles_location);
+        const photos = await getPhotosFromFolder(movie.photo_location);
+        if (isMounted) setPhotoURLs(photos);
+
         if (context.currentUser.is_member) {
           const url = await fetchVideo(movie.guid);
           const signedUrlAddon = await signVideo(url.keyId, url.resourceId);
-          setUrlAddon(signedUrlAddon);
-          setMovieURL(url);
+          if (isMounted) {
+            setUrlAddon(signedUrlAddon);
+            setMovieURL(url);
+          }
         }
       } catch (error) {
         console.log('Error on fetching: ', error);
       }
     }
     get();
-    return () => { };
+
+    return () => { isMounted = false; };
   }, [id, context.currentUser.is_member]);
 
   useEffect(() => {
@@ -159,7 +180,6 @@ function Movie() {
   }, [isVideoModalOpen]);
 
   useEffect(() => {
-    console.log('Location state:', location.state);
     if (location.state && location.state.play) {
       setTextOnMovie(false);
       setTimeout(() => {
@@ -256,6 +276,7 @@ function Movie() {
   }
 
   async function getPhotoSrc(item) {
+    const fallbackImage = require("../assets/images/no_image_1.jpg");
     const config = {
       region: "eu-north-1",
       credentials: new AWS.CognitoIdentityCredentials({
@@ -265,25 +286,29 @@ function Movie() {
     };
     const myBucket = new AWS.S3(config);
 
-    if (item === null) return;
-    const split = item.split("/");
-    const key = split.pop();
-    const bucketLoc = split.join("/");
-
-    const params = {
-      Bucket: bucketLoc,
-      Key: key,
-    };
-
-    try {
-      const data = await myBucket.getObject(params).promise();
-
-      const objectURL = URL.createObjectURL(new Blob([data.Body], { type: "image/png" }));
-      setThumbnailURL(objectURL);
-      const element = document.getElementById('textOnMovie');
-      element.setAttribute('style', 'background-image: url(' + objectURL + '); background-size: cover;');
-    } catch (error) {
-      console.error("Error fetching data:", error);
+    let objectURL = null;
+    if (!item || typeof item !== "string" || item.trim() === "") {
+      objectURL = fallbackImage;
+    } else {
+      try {
+        const split = item.split("/");
+        const key = split.pop();
+        const bucketLoc = split.join("/");
+        const params = {
+          Bucket: bucketLoc,
+          Key: key,
+        };
+        const data = await myBucket.getObject(params).promise();
+        objectURL = URL.createObjectURL(new Blob([data.Body], { type: "image/png" }));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        objectURL = fallbackImage;
+      }
+    }
+    setThumbnailURL(objectURL);
+    const element = document.getElementById('textOnMovie');
+    if (element) {
+      element.setAttribute('style', `background-image: url('${objectURL}'); background-size: cover;`);
     }
   }
 
@@ -311,9 +336,6 @@ function Movie() {
 
     try {
       const data = await myBucket.listObjectsV2(params).promise();
-      if (data.Contents.length === 0) {
-        console.log("No objects found in the specified folder.");
-      }
 
       const photoKeys = data.Contents.map((item) => item.Key);
       const photoURLs = await Promise.all(
@@ -491,7 +513,7 @@ function Movie() {
             </div>
           </div>
         </div>
-        {movieData?.awards?.items.length > 0 && (
+        {(movieData?.awards && Array.isArray(movieData.awards.items) && movieData.awards.items.length > 0) && (
           <div className="flex flex-col mb-100 w-full">
             <div className="w-full relative typography-h2 mb-25">
               PANĀKUMI & FESTIVĀLI
