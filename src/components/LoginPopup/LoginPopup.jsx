@@ -125,12 +125,11 @@ export const LoginPopup = () => {
     }
 
     async function verifyCode(email, code) {
-        const res = await fetch(config.aws_api_gateway + "verify", {
+        const res = await fetch(config.aws_api_gateway +"email/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, code }),
         });
-
         if (!res.ok) throw new Error(await res.text());
         return res.json();
     }
