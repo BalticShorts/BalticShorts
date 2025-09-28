@@ -11,6 +11,7 @@ import { ReactComponent as Info } from "../../assets/images/info.svg";
 import { ReactComponent as X } from "../../assets/images/x.svg";
 import { ReactComponent as Logo } from "../../assets/images/bs_logo.svg";
 import { useNavigate } from "react-router-dom";
+import config from '../../config';
 
 export const LoginPopup = () => {
     const context = useContext(GlobalContext)
@@ -123,11 +124,23 @@ export const LoginPopup = () => {
         }
     }
 
+    async function verifyCode(email, code) {
+        const res = await fetch(config.aws_api_gateway + "verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, code }),
+        });
+
+        if (!res.ok) throw new Error(await res.text());
+        return res.json();
+    }
+
     async function handleCodeConfirmatation(){
         try {
             const username = email;
             const code = confirmationCode;
-            await Auth.confirmSignUp(username, code)
+            // await Auth.confirmSignUp(username, code)
+            await verifyCode(username, code);
             setError({});
             setConfirmationStage(false);
             await logIn();
@@ -304,7 +317,7 @@ export const LoginPopup = () => {
                             </div>
                             <div className="mt-25 justify-start items-start flex flex-row gap-6">
                                 <div type="submit" className="flex !text-center !items-center !justify-center button-default button-white !font-normal cursor-pointer" onClick={() => handleCodeConfirmatation()}>Reģistrēties</div>
-                                <div className="flex !text-center !items-center !justify-center button-default button-white !font-normal cursor-pointer" onClick={() => resendCode()}>Pārsūtīt kodu</div>
+                                {/* <div className="flex !text-center !items-center !justify-center button-default button-white !font-normal cursor-pointer" onClick={() => resendCode()}>Pārsūtīt kodu</div> */}
                             </div>
                         </div>
                         ):(
