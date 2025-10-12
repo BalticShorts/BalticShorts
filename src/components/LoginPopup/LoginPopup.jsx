@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react"
-import CloseIcon from '@mui/icons-material/Close';
 import { GlobalContext } from "../../App";
 import { createMoviePlaylist, createUserProfile } from "../../graphql/mutations";
 import { API } from "aws-amplify";
@@ -90,7 +89,7 @@ export const LoginPopup = () => {
             setShowModal(false);
             resetModal();
             const currentUser = await Auth.currentAuthenticatedUser();
-            console.log("currentUser", currentUser);
+            // console.log("currentUser", currentUser);
             context.setCurrentUser({'id' : currentUser.username, 'name': currentUser.attributes.given_name, 'surname': currentUser.attributes.family_name, 'email': currentUser.attributes.email});
             await context.assessLoggedInState();
             await context.forceReload();
@@ -124,11 +123,11 @@ export const LoginPopup = () => {
         }
     }
 
-    async function verifyCode(email, code) {
+    async function verifyCode(email, code, newPassword = null) {
         const res = await fetch(config.aws_api_gateway +"email/verify", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, code }),
+            body: JSON.stringify({ email, code, newPassword }),
         });
         if (!res.ok) throw new Error(await res.text());
         return res.json();
@@ -150,25 +149,44 @@ export const LoginPopup = () => {
         }
     }
 
-    async function resendCode(){
-        try {
-            const username = email;
-            await Auth.resendSignUp(username);
-        } catch (error) {
-            
+async function sendForget(email, language = "en") {
+    try {
+        const res = await fetch(`${config.aws_api_gateway}email/forget`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email,
+                flow: "RESET",
+                language,
+            }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+            throw new Error(data.message || "Failed to send reset email");
         }
+        return data;
+    } catch (err) {
+        // console.error("❌ sendForget failed:", err);
+        throw err;
     }
+}
 
-    async function handleForgetPassword(){
-        try {
-            const username = forgetEmail;
-            await Auth.forgotPassword(username);
-            setRestorePassword(true);
-            setConfirmationCode('');
-        } catch (error) {
-            errorParser(error);
+async function handleForgetPassword() {
+    try {
+        const username = forgetEmail.trim();
+        if (!username) {
+            throw new Error("Please enter your email address.");
         }
+        const response = await sendForget(username);
+        // console.log("✅ Reset email sent:", response);
+        setRestorePassword(true);
+        setConfirmationCode('');
+    } catch (error) {
+        // console.error("❌ handleForgetPassword error:", error);
+        errorParser(error);
+        setError(error.message || "Failed to send reset email");
     }
+}
 
     async function handleNewPassword(){
         try {
@@ -178,7 +196,7 @@ export const LoginPopup = () => {
             const checkNewPassword = checkPassword;
             if (newPassword !== checkNewPassword)
                 throw new Error("Paroles nesakrīt")
-            await Auth.forgotPasswordSubmit(username, code, newPassword);
+            await verifyCode(username, code, newPassword);
             setRestorePassword(false);
             setPage('login');
             setError({"code":'PasswordChange', "message": 'Parole nomainīta'})
@@ -233,7 +251,7 @@ export const LoginPopup = () => {
                 });
             }
         } catch (error) {
-            console.log("error creating profile", error)
+            // console.log("error creating profile", error)
         }
     }
 
