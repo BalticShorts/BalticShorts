@@ -58,30 +58,5 @@
     }
   },
   "function": {},
-  "parameters": {
-    "AMPLIFY_storage_balticshorts397b1215_bucketName": {
-      "usedBy": [
-        {
-          "category": "storage",
-          "resourceName": "balticshorts397b1215"
-        }
-      ]
-    },
-    "AMPLIFY_storage_balticshorts397b1215_region": {
-      "usedBy": [
-        {
-          "category": "storage",
-          "resourceName": "balticshorts397b1215"
-        }
-      ]
-    }
-  },
-  "storage": {
-    "balticshorts397b1215": {
-      "dependsOn": [],
-      "providerPlugin": "awscloudformation",
-      "service": "S3",
-      "serviceType": "imported"
-    }
-  }
+  "storage": {}
 }

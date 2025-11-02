@@ -1,4 +1,22 @@
 {
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-balticshorts-prod-91756-authRole",
+      "UnauthRoleArn": "arn:aws:iam::052035778887:role/amplify-balticshorts-prod-91756-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::052035778887:role/amplify-balticshorts-prod-91756-authRole",
+      "Region": "eu-north-1",
+      "DeploymentBucketName": "amplify-balticshorts-prod-91756-deployment",
+      "UnauthRoleName": "amplify-balticshorts-prod-91756-unauthRole",
+      "StackName": "amplify-balticshorts-prod-91756",
+      "StackId": "arn:aws:cloudformation:eu-north-1:052035778887:stack/amplify-balticshorts-prod-91756/f0e674c0-cb19-11ee-b883-0689e4deb86b",
+      "AmplifyAppId": "depuvux0wr1ch"
+    },
+    "categories": {
+      "auth": {
+        "balticshorts": {}
+      }
+    }
+  },
   "dev": {
     "awscloudformation": {
       "AuthRoleName": "amplify-balticshorts-dev-193002-authRole",
@@ -24,10 +42,20 @@
         "balticshorts397b1215": {
           "bucketName": "balticshortsprod-source71e471f1-1x9aicwn54xig",
           "region": "eu-north-1"
+        },
+        "balticshorts7ee72368": {
+          "bucketName": "balticshortsstack-source71e471f1-aacfeq17yzau",
+          "region": "eu-north-1"
         }
       },
       "api": {
         "balticshorts": {}
+      },
+      "function": {
+        "VODSignedLinks": {
+          "deploymentBucketName": "amplify-balticshorts-dev-193002-deployment",
+          "s3Key": "amplify-builds/VODSignedLinks-6f61374576736c2b5234-build.zip"
+        }
       }
     }
   }

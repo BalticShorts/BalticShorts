@@ -62,6 +62,12 @@ const Prod = () => {
           },
         });
 
+        await fetch("https://api.balticshorts.com/email/waitlist", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+
         console.log('Email submitted:', email);
         setMessage('Thank you for joining the waitlist!');
       }
