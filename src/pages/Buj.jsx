@@ -3,6 +3,7 @@ import { GlobalContext } from "../App";
 import TermsOfService from "../components/TermsOfService/TOS";
 import Agreement from "../components/Agreement/Agreement";
 import Privacy from "../components/Privacy/Privacy";
+import { useTranslation } from "react-i18next";
 
 const Buj = () => {
   const faqRef = useRef(null);
@@ -11,6 +12,7 @@ const Buj = () => {
   const privacyRef = useRef(null);
   const agreementRef = useRef(null);
   const [activeSection, setActiveSection] = useState(null);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,7 +52,7 @@ const Buj = () => {
   };
 
   useEffect(() => {
-    document.title = 'Baltic Shorts - BUJ';
+    document.title = `Baltic Shorts - ${t("BUJ")}`;
   }, []);
 
   return (
@@ -60,14 +62,14 @@ const Buj = () => {
         <aside className="hidden md:block w-64 h-screen fixed left-1/2 -translate-x-[550px] overflow-y-auto">
           <nav>
             <ul className="space-y-2 pl-2">
-              <li className="typography-h2 my-50">PALĪDZĪBA</li>
+              <li className="typography-h2 my-50 uppercase">{t("Palīdzība")}</li>
               <li
                 className={`typography-body border-b border-b-black pb-2 cursor-pointer ${
                   activeSection === "contact" ? "!font-bold" : ""
                 }`}
                 onClick={() => scrollToSection(contactRef)}
               >
-                Saziņa
+                {t("Saziņa")}
               </li>
               <li
                 className={`typography-body border-b border-b-black pb-2 cursor-pointer ${
@@ -75,7 +77,7 @@ const Buj = () => {
                 }`}
                 onClick={() => scrollToSection(termsRef)}
               >
-                Lietošanas noteikumi
+                {t("Lietošanas noteikumi")}
               </li>
               <li
                 className={`typography-body border-b border-b-black pb-2 cursor-pointer ${
@@ -83,7 +85,7 @@ const Buj = () => {
                 }`}
                 onClick={() => scrollToSection(privacyRef)}
               >
-                Privātuma politika
+                {t("Privātuma politika")}
               </li>
               <li
                 className={`typography-body border-b border-b-black pb-2 cursor-pointer ${
@@ -91,13 +93,13 @@ const Buj = () => {
                 }`}
                 onClick={() => scrollToSection(agreementRef)}
               >
-                Distances līgums
+                {t("Distances līgums")}
               </li>
               <li
                 className="typography-body border-b border-b-black pb-2 cursor-pointer"
                 onClick={() => signOut()}
               >
-                Iziet
+                {t("Iziet")}
               </li>
             </ul>
           </nav>
@@ -115,7 +117,7 @@ const Buj = () => {
           </section> */}
     
           <section ref={contactRef} className="my-50 border-b border-b-black">
-            <h2 className="typography-h2 mb-50 pl-6">SAZIŅA</h2>
+            <h2 className="typography-h2 mb-50 pl-6 uppercase">{t("Saziņa")}</h2>
             <p className="text-gray-600 mt-2 ml-6 px-6 mb-50">
               Lai saņemtu papildu informāciju par Pakalpojuma izmantošanu vai iesniegtu sūdzības un komentārus, Klienti var sazināties ar SIA "Neonorma" elektroniski, rakstot uz e-pastu {" "}
                 <a href="mailto:info@balticshorts.com" className="text-blue-500 cursor-pointer">info@balticshorts.com</a>
@@ -123,7 +125,7 @@ const Buj = () => {
           </section>
     
           <section ref={termsRef} className="mb-50 border-b border-b-black">
-            <h2 className="typography-h2 mb-50 pl-6">LIETOŠANAS NOTEIKUMI</h2>
+            <h2 className="typography-h2 mb-50 pl-6 uppercase">{t("Lietošanas noteikumi")}</h2>
             <TermsOfService />
             <div className="mb-50"/>
           </section>

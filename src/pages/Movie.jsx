@@ -19,6 +19,7 @@ import { ReactComponent as Plus } from "../assets/images/plus.svg";
 import { ReactComponent as List } from "../assets/images/list.svg";
 import { ReactComponent as PlayBig } from "../assets/images/play_big.svg";
 import { ReactComponent as Play } from "../assets/images/triangle.svg";
+import { useTranslation } from "react-i18next";
 
 Amplify.configure(awsExports);
 const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
@@ -112,6 +113,7 @@ function Movie() {
   const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
   const [showSubscribeModal, setShowSubscribeModal] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const { t, i18n } = useTranslation();
 
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -277,34 +279,7 @@ function Movie() {
 
   async function getPhotoSrc(item) {
     const fallbackImage = require("../assets/images/no_image_1.jpg");
-    const config = {
-      region: "eu-north-1",
-      credentials: new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: IdentityPoolId,
-      }),
-      bucketName: "balticshortsphotos",
-    };
-    const myBucket = new AWS.S3(config);
-
-    let objectURL = null;
-    if (!item || typeof item !== "string" || item.trim() === "") {
-      objectURL = fallbackImage;
-    } else {
-      try {
-        const split = item.split("/");
-        const key = split.pop();
-        const bucketLoc = split.join("/");
-        const params = {
-          Bucket: bucketLoc,
-          Key: key,
-        };
-        const data = await myBucket.getObject(params).promise();
-        objectURL = URL.createObjectURL(new Blob([data.Body], { type: "image/png" }));
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        objectURL = fallbackImage;
-      }
-    }
+    const objectURL = item && item !== null && item !== undefined ? `https://balticshortsphotos.s3.eu-north-1.amazonaws.com/${item.replace("balticshortsphotos/", "")}` : fallbackImage;
     setThumbnailURL(objectURL);
     const element = document.getElementById('textOnMovie');
     if (element) {
@@ -412,7 +387,7 @@ function Movie() {
                 <div className="flex flex-col items-start gap-20 text-beige w-1/3 !text-opacity-70 !opacity-70">
                   {movieTrailer && (
                     <button className="flex items-center button-default button-transparent z-10" onClick={() => setIsVideoModalOpen(true)}>
-                      <Play/> <span className="ml-[6px]"> Treileris </span>
+                      <Play/> <span className="ml-[6px]"> {t("Treileris")} </span>
                     </button>
                   )}
                   <div className="flex items-center gap-2 typography-body lowercase">
@@ -428,7 +403,7 @@ function Movie() {
                 </div>
 
                 <div className="flex flex-col text-center text-beige typography-body-small gap-1 w-1/3">
-                  <div>REŽISORS {movieTeamData.Director?.map((person) => person.name).join(", ")}</div>
+                  <div><span className='uppercase'>{t("Režisors")}</span> {movieTeamData.Director?.map((person) => person.name).join(", ")}</div>
                   <div>{movieData.origin_country} <span>&nbsp;|&nbsp;</span> {movieData.created_year} <span>&nbsp;|&nbsp;</span> {movieData.length}’ <span>&nbsp;|&nbsp;</span> {movieData.age_rating} + </div>
                   <div className="!text-opacity-70 !opacity-70">{movieData.genre}</div>
                 </div>
@@ -455,16 +430,16 @@ function Movie() {
     </section>
     <div className='!max-w-[1100px] items-center justify-center m-auto flex flex-col z-0'>
       <div className='w-full flex flex-col items-center mt-50'>
-        <div className="w-full relative text-center typography-h2 mb-25">ANOTĀCIJA</div>
+        <div className="w-full relative text-center typography-h2 mb-25">{t("Anotācija")}</div>
         <div className="w-full relative text-justify typography-body-large max-w-3xl mb-100">{movieData.description}</div>
         {/* <div className="w-full h-45 mt-5 py-2 relative text-justify text-black text-xl font-normal font-['SchoolBook'] max-w-3xl">Description in english: {movieData.description_eng}  </div> */}
       </div>
       <div className='Description w-full flex flex-col items-center'>
-        <div className="w-full relative text-center typography-h2 mb-25">AUTORU KOMENTĀRS</div>
+        <div className="w-full relative text-center typography-h2 mb-25">{t("Autoru Komentārs")}</div>
         <div className="w-full relative text-justify typography-body-large max-w-3xl mb-100">{movieData.creators_comment}</div>
       </div>
       <div className='flex flex-col mb-100'>
-        <div className="w-full relative typography-h2 mb-25">KOMANDA</div>
+        <div className="w-full relative typography-h2 mb-25">{t("Komanda")}</div>
         <div className="relative justify-center gap-6 inline-flex flex-row items-start max-w-full min-w-fit">
           <div className="m-auto w-full">
             <div className="grid grid-cols-3 gap-25 mb-20">
@@ -496,7 +471,7 @@ function Movie() {
         </div>
       </div>
         <div className='flex flex-col mb-100'>
-          <div className="w-full relative typography-h2 mb-25">KADRI</div>
+          <div className="w-full relative typography-h2 mb-25">{t("Kadri")}</div>
           <div className="relative justify-center inline-flex flex-row items-center max-w-full min-w-fit">
             <div className="carousel-container w-full relative m-auto">
               {photoURLs.length > 0 ? (
@@ -516,7 +491,7 @@ function Movie() {
         {(movieData?.awards && Array.isArray(movieData.awards.items) && movieData.awards.items.length > 0) && (
           <div className="flex flex-col mb-100 w-full">
             <div className="w-full relative typography-h2 mb-25">
-              PANĀKUMI & FESTIVĀLI
+              {t("Panākumi & Festivāli")}
             </div>
             <div className="relative flex flex-col w-full">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-25">
@@ -542,7 +517,7 @@ function Movie() {
           </div>
         )}
         <div className='h-fit flex flex-col relative justify-center m-auto items-center mb-100'>
-          <div className="w-full relative typography-h2 mb-25">Saraksti, kuros filma ir iekļauta</div>
+          <div className="w-full relative typography-h2 mb-25">{t("Saraksti, kuros filma ir iekļauta")}</div>
           <div className='w-full h-fit gap-6 flex flex-col items-center relative justify-center '>
             <MyGridPlaylists data={playlists.flat()} maxRows={3} maxColumns={3} />
           </div>
@@ -572,19 +547,19 @@ function Movie() {
       {showSubscribeModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-beige p-8 rounded-lg shadow-lg text-center">
-            <h2 className="text-2xl font-bold mb-4">Abonējiet!</h2>
-            <p className="mb-4">Lai skatītos īsfilmas, nepieciešams aktīvs abonements.</p>
+            <h2 className="text-2xl font-bold mb-4">{t("Abonējiet!")}</h2>
+            <p className="mb-4">{t("Lai skatītos īsfilmas, nepieciešams aktīvs abonements.")}</p>
             <button
               className="bg-beige text-black px-2 py-2 rounded mt-4 border border-black px-4 py-2 text-sm font-semibold uppercase tracking-wide hover:bg-black hover:text-beige transition mx-2 cursor-pointer"
               onClick={() => navigate('/subscribe')}
             >
-              Abonēt
+              {t("Abonēt")}
             </button>
             <button
               className="bg-beige text-black px-2 py-2 rounded mt-4 border border-black px-4 py-2 text-sm font-semibold uppercase tracking-wide hover:bg-black hover:text-beige transition mx-2 cursor-pointer"
               onClick={() => setShowSubscribeModal(false)}
             >
-              Aizvērt
+              {t("Aizvērt")}
             </button>
           </div>
         </div>

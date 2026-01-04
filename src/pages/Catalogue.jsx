@@ -4,6 +4,7 @@ import { MyGridMovies, MyGridPlaylists } from "../modified-ui-components/Grid";
 import { PersonList } from "../modified-ui-components/PersonList";
 import { GlobalContext } from "../App";
 import Profile from "./Profile";
+import { useTranslation } from "react-i18next";
 
 const getTab = async (id) => {
   return document.getElementById(id);
@@ -59,6 +60,7 @@ const Catalogue = () => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     setSelectedPersonId(id);
   }
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
@@ -80,6 +82,7 @@ const Catalogue = () => {
         const fetchedData = { movies, persons, playlists };
         setData(fetchedData);
         setOriginalData(fetchedData);
+        console.log("Fetched catalogue data:", rolesList);
 
         if (givenTab !== undefined) {
           setTab([givenTab, tab[0]]);
@@ -304,8 +307,8 @@ const Catalogue = () => {
   };
 
   useEffect(() => {
-    document.title = 'Baltic Shorts - Katalogs';
-  }, []);
+    document.title = `Baltic Shorts - ${t("Katalogs")}`;
+  }, [t]);
 
   return (
     <>
@@ -317,21 +320,21 @@ const Catalogue = () => {
               className="h-5 text-center typography-body link-hover inline-flex cursor-pointer"
               onClick={() => setTab(['Movies', tab[0]])}
             >
-              Filmas
+              {t("Filmas")}
             </div>
             <div
               id="Persons"
               className="h-5 mx-25 text-center typography-body link-hover inline-flex cursor-pointer"
               onClick={() => setTab(['Persons', tab[0]])}
             >
-              Personas
+              {t("Personas")}
             </div>
             <div
               id="Playlists"
               className="h-5 text-center typography-body link-hover inline-flex cursor-pointer"
               onClick={() => setTab(['Playlists', tab[0]])}
             >
-              Saraksti
+              {t("Saraksti")}
             </div>
           </div>
         </div>
@@ -346,18 +349,18 @@ const Catalogue = () => {
                     <div className="relative flex justify-center items-center">
                       <div className="flex flex-col items-center">
                         <div className="cursor-pointer font-bold uppercase mt-0 typography-technical" onClick={() => setShowFiltri(!showFiltri)}>
-                          Filtri {showFiltri ? '▲' : '▼'}
+                          {t("Filtri")} {showFiltri ? '▲' : '▼'}
                         </div>
                         {showFiltri && (
                           <>
                             <div className="absolute right-0 top-0 flex items-center gap-4 typography-technical">
-                              <div className="cursor-pointer" onClick={() => clearFilters()}>Noņemt filtrus</div>
+                              <div className="cursor-pointer" onClick={() => clearFilters()}>{t("Noņemt filtrus")}</div>
                             </div>
                             <div className="flex justify-start items-start gap-12 p-4">
                               {['Country', 'Year', 'Length', 'Type', 'Genre', 'Audio', 'Subtitles'].map((filter) => (
                                 <div key={filter} className="relative">
                                   <div className="cursor-pointer flex items-center typography-technical" onClick={() => toggleDropdown(filter)}>
-                                    {filterLabels[filter]} {dropdowns[filter] ? '▼' : '▲'}
+                                    {t(filterLabels[filter])} {dropdowns[filter] ? '▼' : '▲'}
                                   </div>
                                   {dropdowns[filter] && (
                                     <div className="absolute bg-beige border border-black mt-2 p-2 max-h-48 overflow-y-auto z-20 min-w-full whitespace-nowrap typography-technical">
@@ -376,7 +379,7 @@ const Catalogue = () => {
                                         </div>
                                       ) : filter === 'Country' ? (
                                         <div className="flex flex-col">
-                                          <input type="text" placeholder={`Meklēt `} className="p-1 mb-2 w-full bg-beige" onChange={(e) => handleFilterSelect('Country', e.target.value)} />
+                                          <input type="text" placeholder={t("Meklēt")} className="p-1 mb-2 w-full bg-beige" onChange={(e) => handleFilterSelect('Country', e.target.value)} />
                                           {filteredOptions.Country.map((country) => (
                                             <label key={country} className="flex items-center">
                                               <input
@@ -390,7 +393,7 @@ const Catalogue = () => {
                                         </div>
                                       ) : filter === 'Type' ? (
                                         <div className="flex flex-col">
-                                          <input type="text" placeholder={`Meklēt `} className="p-1 mb-2 w-full bg-beige" onChange={(e) => handleFilterSelect('Type', e.target.value)} />
+                                          <input type="text" placeholder={t("Meklēt")} className="p-1 mb-2 w-full bg-beige" onChange={(e) => handleFilterSelect('Type', e.target.value)} />
                                           {filteredOptions.Type.map((type) => (
                                             <label key={type} className="flex items-center">
                                               <input
@@ -404,7 +407,7 @@ const Catalogue = () => {
                                         </div>
                                       ) : filter === 'Genre' ? (
                                         <div className="flex flex-col">
-                                          <input type="text" placeholder={`Meklēt `} className="p-1 mb-2 w-full bg-beige" onChange={(e) => handleFilterSelect('Genre', e.target.value)} />
+                                          <input type="text" placeholder={t("Meklēt")} className="p-1 mb-2 w-full bg-beige" onChange={(e) => handleFilterSelect('Genre', e.target.value)} />
                                           {filteredOptions.Genre.map((genre) => (
                                             <label key={genre} className="flex items-center">
                                               <input
@@ -412,13 +415,13 @@ const Catalogue = () => {
                                                 checked={selectedFilters.Genre.includes(genre)}
                                                 onChange={() => handleCheckboxChange('Genre', genre)}
                                               />
-                                              <span className="ml-2 typography-technical">{genre}</span>
+                                              <span className="ml-2 typography-technical">{t(genre)}</span>
                                             </label>
                                           ))}
                                         </div>
                                       ) : filter === 'Audio' ? (
                                         <div className="flex flex-col">
-                                          <input type="text" placeholder={`Meklēt `} className="p-1 mb-2 w-full bg-beige" onChange={(e) => handleFilterSelect('Audio', e.target.value)} />
+                                          <input type="text" placeholder={t("Meklēt")} className="p-1 mb-2 w-full bg-beige" onChange={(e) => handleFilterSelect('Audio', e.target.value)} />
                                           {filteredOptions.Audio.map((audio) => (
                                             <label key={audio} className="flex items-center">
                                               <input
@@ -432,7 +435,7 @@ const Catalogue = () => {
                                         </div>
                                       ) : filter === 'Subtitles' ? (
                                         <div className="flex flex-col">
-                                          <input type="text" placeholder={`Meklēt `} className="p-1 mb-2 w-full bg-beige" onChange={(e) => handleFilterSelect('Subtitles', e.target.value)} />
+                                          <input type="text" placeholder={t("Meklēt")} className="p-1 mb-2 w-full bg-beige" onChange={(e) => handleFilterSelect('Subtitles', e.target.value)} />
                                           {filteredOptions.Subtitles.map((subtitle) => (
                                             <label key={subtitle} className="flex items-center">
                                               <input
@@ -469,14 +472,14 @@ const Catalogue = () => {
                     </div>
                   </div>
                   <div className="w-full flex justify-between items-center my-25">
-                    <div className="typography-h2 font-bold">{data.movies.length} Filmas</div>
+                    <div className="typography-h2 font-bold">{data.movies.length} {t("Filmas")}</div>
                     <div className="flex items-center">
-                      <span className="mr-2 typography-technical !uppercase">Kārtot pēc:</span>
+                      <span className="mr-2 typography-technical !uppercase">{t("Kārtot pēc:")}</span>
                       <select value={sortOption} onChange={handleSortChange} className="p-1 bg-beige typography-technical">
-                        <option value="date">Ievietošanas datums</option>
-                        <option value="year">Gads</option>
-                        <option value="alphabet">Alfabēts</option>
-                        <option value="length">Ilgums</option>
+                        <option value="date">{t("Ievietošanas datums")}</option>
+                        <option value="year">{t("Gads")}</option>
+                        <option value="alphabet">{t("Alfabēts")}</option>
+                        <option value="length">{t("Ilgums")}</option>
                       </select>
                       <button onClick={handleSortOrderChange} className="ml-2">
                         {sortOrder === 'asc' ? '▲' : '▼'}
@@ -500,7 +503,7 @@ const Catalogue = () => {
                       <div className="w-full h-full flex flex-col relative justify-between my-25 typography-technical">
                         <div className="relative text-center typography-technical">
                           <button onClick={() => setShowFilter(!showFilter)} className="ml-2 !uppercase">
-                            Profesiju saraksts {showFilter ? '▲' : '▼'}
+                            {t("Profesiju saraksts")} {showFilter ? '▲' : '▼'}
                           </button>
                           {showFilter && (
                             <div className="bg-beige flex flex-wrap justify-center gap-x-25 text-center w-full !uppercase">
@@ -510,7 +513,7 @@ const Catalogue = () => {
                                   className={`typography-technical cursor-pointer ${filterOption === role.name_eng ? 'font-bold' : ''}`}
                                   onClick={() => handlePersonFilterChange(role.name_eng)}
                                 >
-                                  {role.name}
+                                  {t(role.name)}
                                 </div>
                               ))}
                             </div>
@@ -519,11 +522,11 @@ const Catalogue = () => {
                       </div>
 
                       <div className="w-full flex justify-between items-center mb-4">
-                        <div className="typography-h2 font-bold">{data.persons.length} Personas</div>
+                        <div className="typography-h2 font-bold">{data.persons.length} {t("Personas")}</div>
                         <div className="flex items-center typography-technical">
-                          <span className="mr-2 typography-technical !uppercase">Kārtot pēc:</span>
+                          <span className="mr-2 typography-technical !uppercase">{t("Kārtot pēc:")}</span>
                           <select value={sortOption} onChange={handleSortChange} className="p-1 bg-beige">
-                            <option value="alphabet">Alfabēts</option>
+                            <option value="alphabet">{t("Alfabēts")}</option>
                           </select>
                           <button onClick={handleSortOrderChange} className="ml-2">
                             {sortOrder === 'asc' ? '▲' : '▼'}
@@ -549,7 +552,7 @@ const Catalogue = () => {
               {tab[0] === 'Playlists' && (
                 <>
                   <div className="w-full h-full flex flex-col relative justify-between my-25">
-                    <div className="typography-h2">{data.playlists.length} Saraksti</div>
+                    <div className="typography-h2">{data.playlists.length} {t("Saraksti")}</div>
                   </div>
                   <div className='w-full h-fit gap-6 flex flex-col items-center relative justify-center '>
                     <MyGridPlaylists data = {data.playlists !== undefined ? data.playlists : []} maxRows={2} maxColumns={3}></MyGridPlaylists>

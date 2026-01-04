@@ -5,16 +5,18 @@ import { ReactComponent as Play } from "../../assets/images/triangle.svg";
 import { Navbar } from "../../modified-ui-components/Header";
 import { useNavigate } from "react-router-dom";
 import { GlobalContext } from "../../App";
+import { useTranslation } from "react-i18next";
 
 const MainMovie = ({ movie, isLoggedIn }) => {
     const context = useContext(GlobalContext)
-  
+    console.log("MainMovie render with movie:", movie);  
     const [modalOpen, setModalOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [isVideoLoaded, setIsVideoLoaded] = useState(false);
 
     const videoRef = useRef(null);
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
 
     if (!movie) {
       return <div className="w-full h-[60vh] sm:h-[65vh] bg-black" />;
@@ -55,6 +57,12 @@ const MainMovie = ({ movie, isLoggedIn }) => {
       }
     };
 
+    const description = i18n.language === movie.origin_country.toLowerCase() && movie.description.length > 320
+      ? movie.description.slice(0, 320) + "..."
+      : i18n.language !== movie.origin_country.toLowerCase() && movie.description_eng.length > 320
+      ? movie.description_eng.slice(0, 320) + "..."
+      : i18n.language === movie.origin_country.toLowerCase() ? movie.description : movie.description_eng;
+
   return (
     <section className="relative w-full h-[60vh] sm:h-[65vh] bg-black z-0"
       onMouseEnter={handleMouseEnter}
@@ -82,25 +90,19 @@ const MainMovie = ({ movie, isLoggedIn }) => {
 
           <div className="mt-35">
             <p className="typography-technical uppercase !font-bold">
-              Nedēļas īsfilma
+              {t("Nedēļas īsfilma")}
             </p>
 
             <h1
               className="typography-h1 my-10 cursor-pointer"
-              onClick={() => navigate(
-                '/movie/' + encodeURIComponent(movie.name) + '/' + encodeURIComponent(movie.id),
-                { state: { movie } }
-              )}
+              onClick={() => navigate(`/${i18n.language}/movie/${encodeURIComponent(movie.name)}/${encodeURIComponent(movie.id)}`, { state: { movie } })}
             >
               {movie.name.toUpperCase()}
             </h1>
 
             <p
               className="typography-body uppercase cursor-pointer"
-              onClick={() => navigate(
-                '/movie/' + encodeURIComponent(movie.name) + '/' + encodeURIComponent(movie.id),
-                { state: { movie } }
-              )}
+              onClick={() => navigate(`/${i18n.language}/movie/${encodeURIComponent(movie.name)}/${encodeURIComponent(movie.id)}`, { state: { movie } })}
             >
               {movie.name_eng}
             </p>
@@ -120,7 +122,7 @@ const MainMovie = ({ movie, isLoggedIn }) => {
                   className="flex flex-row items-center button-default button-white cursor-pointer"
                   onClick={() => handlePlayClick()}
                 >
-                  <Play /> <span className="ml-[6px]"> Skatīties </span>
+                  <Play /> <span className="ml-[6px]"> {t("Skatīties")} </span>
                 </button>
                 <button
                   className="flex items-center justify-center button-default button-transparent add"
@@ -136,9 +138,7 @@ const MainMovie = ({ movie, isLoggedIn }) => {
             </div>
 
             <p className="typography-body-small text-beige w-2/3 pl-10 self-end -mb-1">
-              {movie.description.length > 320
-                ? movie.description.slice(0, 320) + "..."
-                : movie.description}
+              {description}
             </p>
           </div>
 

@@ -5,6 +5,8 @@ import { ReactComponent as TriangleDown } from "../../assets/images/triangle_dow
 import { ReactComponent as PlayBig } from "../../assets/images/play_big.svg";
 import { ReactComponent as List } from "../../assets/images/list.svg";
 import { ReactComponent as Plus } from "../../assets/images/plus.svg";
+import { useTranslation } from "react-i18next";
+
 export function getDirectors(data) {
   const result = {};
   data.forEach((item) => {
@@ -31,6 +33,7 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
   const navigate = useNavigate();
   const [rows, setRows] = useState(maxRows);
   const [directors, setDirectors] = useState(getDirectors(data));
+  const { t, i18n } = useTranslation();
 
   async function getSrc(items) {
     try {
@@ -76,10 +79,7 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
                   <div
                     key={item.id}
                     className="relative flex flex-col bg-inherit border border-black max-h-[285px] overflow-hidden cursor-pointer"
-                    onClick={() => navigate(
-                      '/movie/' + encodeURIComponent(item.name) + '/' + encodeURIComponent(item.id),
-                      { state: { movie: {item} } }
-                    )}
+                    onClick={() => navigate(`/${i18n.language}/movie/${encodeURIComponent(item.name)}/${encodeURIComponent(item.id)}`, { state: { movie: {item} } })}
                   >
                     <div className="relative w-full h-full h-20 sm:h-36 lg:h-48 lg:min-h-[195px] overflow-hidden bg-inherit">
                       <img
@@ -136,7 +136,7 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
                 className="typography-technical z-10 flex flex-row justify-center items-center gap-1 cursor-pointer"
                 onClick={() => setRows(rows + 1)}
               >
-                <span className="typography-technical !tracking-[0.1em]">VAIRĀK</span><TriangleDown/>
+                <span className="typography-technical !tracking-[0.1em] uppercase">{t("Vairāk")}</span><TriangleDown/>
               </div>
             </div>
           </div>

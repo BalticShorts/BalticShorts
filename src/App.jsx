@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
 import Movie from "./pages/Movie";
@@ -21,6 +21,9 @@ import UserProfilePage from "./pages/UserProfile";
 import SettingsPage from "./pages/Settings";
 import Purchase from "./pages/Purchase";
 import { DropdownProvider } from "./context/DropdownContext";
+import { I18nextProvider } from "react-i18next";
+import i18n from "./i18n";
+import LanguageWrapper from "./LanguageWrapper";
 
 Amplify.configure(awsExports);
 export const GlobalContext = React.createContext();
@@ -80,46 +83,49 @@ export default function App() {
         forceReload: () => setResetKey(prev => prev + 1)
       }}
     >
-      <DropdownProvider>
-        <div key={resetKey}>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<Home />} />
-                <Route path="about" element={<About />} />
-                <Route path="movie/:name/:id" element={<Movie />} />
-                <Route path="search/:query?" element={<Search />} />
-                <Route path="catalogue/:givenTab?" element={<Catalogue />} />
-                <Route path="profile/:id/:mode?" element={<Profile />} />
-                <Route path="playlist/:id" element={<Playlist />} />
+      <I18nextProvider i18n={i18n}>
+        <DropdownProvider>
+          <div key={resetKey}>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/:lang" element={<LanguageWrapper><Layout /></LanguageWrapper>}>
+                  <Route index element={<Home />} />
+                  <Route path="about" element={<About />} />
+                  <Route path="movie/:name/:id" element={<Movie />} />
+                  <Route path="search/:query?" element={<Search />} />
+                  <Route path="catalogue/:givenTab?" element={<Catalogue />} />
+                  <Route path="profile/:id/:mode?" element={<Profile />} />
+                  <Route path="playlist/:id" element={<Playlist />} />
 
-                {loggedIn ? (
-                  <>
-                    <Route path="user/:id" element={<UserProfilePage />} />
-                    <Route path="faq" element={<Buj />} />
-                    <Route path="subscribe" element={<Purchase />} />
-                    <Route path="settings/:id" element={<SettingsPage />} />
-                    {admin ? (
-                      <>
-                        <Route path="admin/playlists" element={<AdminPlaylist />} />
-                        <Route path="addPlaylist/:id?" element={<PlaylistUpload />} />
-                        <Route path="upload" element={<Upload />} />
-                      </>
-                    ):(
-                      <Route path="*" element={<Home/>} />
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <Route path="subscribe" element={<Purchase />} />
-                    <Route path="*" element={<Subscribe />} />
-                  </>
-                )}
-              </Route>
-            </Routes>
-          </BrowserRouter>
-        </div>
-      </DropdownProvider>
+                  {loggedIn ? (
+                    <>
+                      <Route path="user/:id" element={<UserProfilePage />} />
+                      <Route path="faq" element={<Buj />} />
+                      <Route path="subscribe" element={<Purchase />} />
+                      <Route path="settings/:id" element={<SettingsPage />} />
+                      {admin ? (
+                        <>
+                          <Route path="admin/playlists" element={<AdminPlaylist />} />
+                          <Route path="addPlaylist/:id?" element={<PlaylistUpload />} />
+                          <Route path="upload" element={<Upload />} />
+                        </>
+                      ):(
+                        <Route path="*" element={<Home/>} />
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <Route path="subscribe" element={<Purchase />} />
+                      <Route path="*" element={<Subscribe />} />
+                    </>
+                  )}
+                </Route>
+                <Route path="*" element={<Navigate to="/en" replace />} />
+              </Routes>
+            </BrowserRouter>
+          </div>
+        </DropdownProvider>
+      </I18nextProvider>
     </GlobalContext.Provider>
   );
 }

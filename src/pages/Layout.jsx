@@ -25,7 +25,10 @@ const Layout = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const shouldHideNavbarInitially = path.startsWith("/playlist/") || path.startsWith("/movie/") || path === "/";
+const shouldHideNavbarInitially =
+  path.match(/^\/(lv|en|lt|ee)\/playlist\//) ||
+  path.match(/^\/(lv|en|lt|ee)\/movie\//) ||
+  path.match(/^\/(lv|en|lt|ee)\/?$/);
 
   return (
     <div className="min-h-[100vh] flex flex-col justify-start bg-beige">

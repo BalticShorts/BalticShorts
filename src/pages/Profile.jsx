@@ -5,6 +5,7 @@ import { API } from 'aws-amplify';
 import { MyGridMovies } from "../modified-ui-components/Grid/movieGrid";
 import { GlobalContext } from "../App";
 import { listRoles } from "../graphql/queries";
+import { useTranslation } from "react-i18next";
 
 const fetchProfile = async id => {
     const profileData = await API.graphql({
@@ -68,6 +69,7 @@ function Profile({ personId }) {
     if (personId !== undefined && personId !== null) {
         id = personId;
     }
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {
         const get = async () => {
@@ -104,7 +106,7 @@ function Profile({ personId }) {
     }, {});
 
     useEffect(() => {
-      document.title = 'Baltic Shorts - Persona';
+      document.title = `Baltic Shorts - ${t("Persona")}`;
     }, []);
 
     const isAdmin = context.currentUser && context.currentUser.is_admin;
@@ -302,9 +304,9 @@ function Profile({ personId }) {
             ) : (
               <>
                 <div className="typography-body-small mt-2 !uppercase">
-                  {(profile.PersonRoles?.items || []).map(r => r.Role?.name).filter(Boolean).join(", ")}
+                  {(profile.PersonRoles?.items || []).map(r => t(r.Role?.name)).filter(Boolean).join(", ")}
                 </div>
-                <div className="typography-technical mt-2 uppercase">{movieCount} {movieCount === 1 ? "darbs" : "darbi"}</div>
+                <div className="typography-technical mt-2 uppercase">{movieCount} {movieCount === 1 ? t("Darbs") : t("Darbi")}</div>
                 <p className="typography-body mt-4 max-w-3xl">
                   {profile.description}
                 </p>
@@ -345,9 +347,9 @@ function Profile({ personId }) {
               </>
             ) : (
               <>
-                <a href={`mailto:${profile.email}`} className="mb-2 typography-technical hover-opacity cursor-pointer">E-PASTS</a>
-                <a href={profile.Instagram} className="mb-2 typography-technical hover-opacity cursor-pointer">INSTAGRAM</a>
-                <a href={profile.IMBD} className="typography-technical hover-opacity cursor-pointer">IMDB</a>
+                <a href={`mailto:${profile.email}`} className="mb-2 typography-technical hover-opacity cursor-pointer uppercase">{t("E-pasts")}</a>
+                <a href={profile.Instagram} className="mb-2 typography-technical hover-opacity cursor-pointer uppercase">{t("Instagram")}</a>
+                <a href={profile.IMBD} className="typography-technical hover-opacity cursor-pointer uppercase">{t("IMDB")}</a>
               </>
             )}
             {isAdmin && !editing && (

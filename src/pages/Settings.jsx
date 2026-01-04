@@ -4,6 +4,7 @@ import { API, Auth } from "aws-amplify";
 import { getUserProfile } from "../graphql/queries";
 import { updateUserProfile } from "../graphql/mutations";
 import { GlobalContext } from "../App";
+import { useTranslation } from "react-i18next";
 
 const fetchProfile = async (id) => {
   try {
@@ -37,6 +38,7 @@ function SettingsPage() {
   const abonetRef = useRef(null);
   const navigate = useNavigate();
   const context = useContext(GlobalContext);
+  const { t, i18n } = useTranslation();
 
   const scrollToSection = (ref) => {
     ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -71,13 +73,13 @@ function SettingsPage() {
     e.preventDefault();
     setEmailMessage("");
     if (newEmail !== confirmNewEmail) {
-      setEmailMessage("Emails do not match.");
+      setEmailMessage(t("Emails do not match."));
       return;
     }
     try {
       const user = await Auth.currentAuthenticatedUser();
       await Auth.updateUserAttributes(user, { email: newEmail });
-      setEmailMessage("Email update initiated. Please check your new email for a confirmation link.");
+      setEmailMessage(t("Email update initiated. Please check your new email for a confirmation link."));
     } catch (error) {
       console.error("Error updating email:", error);
       setEmailMessage(`Error: ${error.message}`);
@@ -88,13 +90,13 @@ function SettingsPage() {
     e.preventDefault();
     setPasswordMessage("");
     if (newPassword !== confirmNewPassword) {
-      setPasswordMessage("New passwords do not match.");
+      setPasswordMessage(t("New passwords do not match."));
       return;
     }
     try {
       const user = await Auth.currentAuthenticatedUser();
       await Auth.changePassword(user, oldPassword, newPassword);
-      setPasswordMessage("Password updated successfully!");
+      setPasswordMessage(t("Password updated successfully!"));
       setOldPassword("");
       setNewPassword("");
       setConfirmNewPassword("");
@@ -105,7 +107,7 @@ function SettingsPage() {
   };
 
   const handleSubscribe = () => {
-    navigate('/subscribe');
+    navigate(`/${i18n.language}/subscribe`);
   };
 
   const handlePauseSubscription = async () => {
@@ -118,14 +120,14 @@ function SettingsPage() {
         authMode: "AWS_IAM",
       });
       setProfile(updated.data.updateUserProfile);
-      setPauseMessage("Abonements ir atcelts, varat lietot mājaslapu līdz abonementa termiņa beigām.");
+      setPauseMessage(t("Abonements ir atcelts, varat lietot mājaslapu līdz abonementa termiņa beigām."));
     } catch (error) {
       console.error("Error pausing subscription:", error);
     }
   };
 
   useEffect(() => {
-    document.title = 'Baltic Shorts - Uzstādījumi';
+    document.title = `Baltic Shorts - ${t("Uzstādījumi")}`;
   }, []);
 
   if (loading) {
@@ -137,11 +139,11 @@ function SettingsPage() {
       <div className="min-h-screen bg-beige text-black flex">
         {/* Sidebar */}
         <aside className="w-1/6 p-6 border-r border-gray-300">
-          <h2 className="text-lg font-bold mb-4">UZSTĀDĪJUMI</h2>
+          <h2 className="text-lg font-bold mb-4 uppercase">{t("Uzstādījumi")}</h2>
           <ul className="space-y-2">
-            <li className="text-gray-700 hover:text-black cursor-pointer" onClick={() => scrollToSection(profileRef)}>Profils</li>
-            <li className="text-gray-700 hover:text-black cursor-pointer" onClick={() => scrollToSection(abonetRef)}>Abonements</li>
-            <li className="text-gray-700 hover:text-black cursor-pointer" onClick={signOut}>Iziet</li>
+            <li className="text-gray-700 hover:text-black cursor-pointer" onClick={() => scrollToSection(profileRef)}>{t("Profils")}</li>
+            <li className="text-gray-700 hover:text-black cursor-pointer" onClick={() => scrollToSection(abonetRef)}>{t("Abonements")}</li>
+            <li className="text-gray-700 hover:text-black cursor-pointer" onClick={signOut}>{t("Iziet")}</li>
           </ul>
         </aside>
 
@@ -150,45 +152,45 @@ function SettingsPage() {
           </div>
 
           <section className="mb-8" ref={profileRef}>
-            <h2 className="text-lg font-bold">INFORMĀCIJA</h2>
-            <p className="mt-2">Vārds: {profile.name}</p>
-            <p>Uzvārds: {profile.surname}</p>
-            <p>Bio: {profile.bio || "Nav apraksta"}</p>
+            <h2 className="text-lg font-bold uppercase">{t("Informācija")}</h2>
+            <p className="mt-2">{t("Vārds")}: {profile.name}</p>
+            <p>{t("Uzvārds")}: {profile.surname}</p>
+            <p>{t("Bio")}: {profile.bio || "Nav apraksta"}</p>
           </section>
 
           <hr />
 
           <section className="mt-8 pb-10">
-            <h2 className="text-lg font-bold">MAINĪT E-PASTU</h2>
-            <input type="email" className="border w-full p-2 mt-1 bg-beige" placeholder="Jaunais e-pasts" onChange={(e) => setNewEmail(e.target.value)} />
-            <input type="email" className="border w-full p-2 mt-1 bg-beige" placeholder="Apstiprināt jauno e-pastu" onChange={(e) => setConfirmNewEmail(e.target.value)} />
-            <button onClick={handleEmailUpdate} className="mt-4 px-4 py-2 bg-neutral-600 text-beige ">Atjaunot e-pastu</button>
+            <h2 className="text-lg font-bold uppercase">{t("Mainīt e-pastu")}</h2>
+            <input type="email" className="border w-full p-2 mt-1 bg-beige" placeholder={t("Jaunais e-pasts")} onChange={(e) => setNewEmail(e.target.value)} />
+            <input type="email" className="border w-full p-2 mt-1 bg-beige" placeholder={t("Apstiprināt jauno e-pastu")} onChange={(e) => setConfirmNewEmail(e.target.value)} />
+            <button onClick={handleEmailUpdate} className="mt-4 px-4 py-2 bg-neutral-600 text-beige ">{t("Atjaunot e-pastu")}</button>
             {emailMessage && <p className="text-red-500 mt-2">{emailMessage}</p>}
           </section>
 
           <hr />
 
           <section className="mt-8 pb-10">
-            <h2 className="text-lg font-bold">MAINĪT PAROLI</h2>
-            <input type="password" className="border w-full p-2 mt-1 bg-beige" placeholder="Vecā parole" onChange={(e) => setOldPassword(e.target.value)} />
-            <input type="password" className="border w-full p-2 mt-1 bg-beige" placeholder="Jaunā parole" onChange={(e) => setNewPassword(e.target.value)} />
-            <input type="password" className="border w-full p-2 mt-1 bg-beige" placeholder="Apstiprināt jauno paroli" onChange={(e) => setConfirmNewPassword(e.target.value)} />
-            <button onClick={handlePasswordUpdate} className="mt-4 px-4 py-2 bg-neutral-600 text-beige">Mainīt paroli</button>
+            <h2 className="text-lg font-bold uppercase">{t("Mainīt paroli")}</h2>
+            <input type="password" className="border w-full p-2 mt-1 bg-beige" placeholder={t("Vecā parole")} onChange={(e) => setOldPassword(e.target.value)} />
+            <input type="password" className="border w-full p-2 mt-1 bg-beige" placeholder={t("Jaunā parole")} onChange={(e) => setNewPassword(e.target.value)} />
+            <input type="password" className="border w-full p-2 mt-1 bg-beige" placeholder={t("Apstiprināt jauno paroli")} onChange={(e) => setConfirmNewPassword(e.target.value)} />
+            <button onClick={handlePasswordUpdate} className="mt-4 px-4 py-2 bg-neutral-600 text-beige">{t("Mainīt paroli")}</button>
             {passwordMessage && <p className="text-red-500 mt-2">{passwordMessage}</p>}
           </section>
 
           <hr />
 
           <section className="mt-8 pb-10" ref={abonetRef}>
-            <h2 className="text-lg font-bold">ABONEMENTS</h2>
+            <h2 className="text-lg font-bold uppercase">{t("Abonements")}</h2>
             {profile.is_member ? (
               <>
-                <p className="mt-2">Abonements aktīvs līdz: {profile.member_until?.split('T')[0]}</p>
-                <p className="mt-2">Abonements tiek turpināts: {profile.continues_payment ? 'Jā' : 'Nē'}</p>
-                {profile.continues_payment && (<button onClick={() => setShowPauseModal(true)} className="mt-4 px-4 py-2 bg-beige text-black border border-black">Apturēt abonementu</button>)}
+                <p className="mt-2">{t("Abonements līdz")}: {profile.member_until?.split('T')[0]}</p>
+                <p className="mt-2">{t("Abonements tiek turpināts")}: {profile.continues_payment ? t("Jā") : t("Nē")}</p>
+                {profile.continues_payment && (<button onClick={() => setShowPauseModal(true)} className="mt-4 px-4 py-2 bg-beige text-black border border-black">{t("Apturēt abonementu")}</button>)}
               </>
             ) : (
-              <button onClick={handleSubscribe} className="mt-4 px-4 py-2 bg-green-600 border border-black cursor-pointer">Abonēt</button>
+              <button onClick={handleSubscribe} className="mt-4 px-4 py-2 bg-green-600 border border-black cursor-pointer">{t("Abonēt")}</button>
             )}
           </section>
         </main>
@@ -197,7 +199,7 @@ function SettingsPage() {
       {showPauseModal && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-beige p-8 rounded-lg shadow-lg text-center">
-            <h2 className="text-2xl font-bold mb-4">Vai tiešām vēlaties apturēt abonementu?</h2>
+            <h2 className="text-2xl font-bold mb-4">{t("Vai tiešām vēlaties apturēt abonementu?")}</h2>
             <button
               className="bg-beige text-black px-4 py-2 rounded hover:bg-red-700 transition mx-2 border border-black"
               onClick={() => {
@@ -205,13 +207,13 @@ function SettingsPage() {
                 setShowPauseModal(false);
               }}
             >
-              Jā
+              {t("Jā")}
             </button>
             <button
               className="bg-beige text-black px-4 py-2 rounded hover:bg-gray-400 transition mx-2 border border-black"
               onClick={() => setShowPauseModal(false)}
             >
-              Nē
+              {t("Nē")}
             </button>
           </div>
         </div>
@@ -225,7 +227,7 @@ function SettingsPage() {
               className="bg-beige text-black px-4 py-2 rounded hover:bg-gray-400 transition mx-2 border border-black"
               onClick={() => setPauseMessage("")}
             >
-              Aizvērt
+              {t("Aizvērt")}
             </button>
           </div>
         </div>

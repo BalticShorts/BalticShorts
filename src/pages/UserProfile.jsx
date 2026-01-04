@@ -4,6 +4,7 @@ import { API } from "aws-amplify";
 import { MyGridMovies, MyGridPlaylists } from "../modified-ui-components/Grid";
 import { getUserPlaylistsFull } from "../custom-queries/queries";
 import { GlobalContext } from "../App";
+import { useTranslation } from "react-i18next";
 
 const fetchProfile = async (id) => {
   try {
@@ -55,8 +56,9 @@ const UserProfilePage = () => {
   }, [id]);
 
   useEffect(() => {
-    document.title = 'Baltic Shorts - Lietotājs';
+    document.title = `Baltic Shorts - ${t("Lietotājs")}`;
   }, []);
+  const { t, i18n } = useTranslation();
 
   if (loading) return <div className="text-center mt-4 typography-body-large">Loading...</div>;
 
@@ -66,21 +68,21 @@ const UserProfilePage = () => {
         <h1 className="text-4xl font-bold tracking-wide">{profile.name} {profile.surname}</h1>
         <nav className="mt-2 text-sm font-semibold">
           {/* <a href="#" className="mr-6">SKATĪŠANĀS VĒSTURE</a> */}
-          <a className="cursor-pointer" href={"/settings/" + id}>UZSTĀDĪJUMI</a>
+          <a className="cursor-pointer" href={`/${i18n.language}/settings/${id}`}>{t("Uzstādījumi")}</a>
         </nav>
       </header>
 
       <main className="m-auto">
         <section className="mb-10">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">SKATĪTIES VĒLĀK <sup>{watchLaterMovies.length}</sup></h2>
+            <h2 className="text-xl font-semibold uppercase">{t("Skatīties vēlāk")} <sup>{watchLaterMovies.length}</sup></h2>
           </div>
 
           <MyGridMovies data={watchLaterMovies} maxRows={3} maxColumns={3} isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}/>
         </section>
 
         <section>
-          <h2 className="text-xl font-semibold mb-4">MANI SARAKSTI</h2>
+          <h2 className="text-xl font-semibold mb-4 uppercase">{t("Mani saraksti")}</h2>
           <MyGridPlaylists data={myLists} maxRows={2} maxColumns={2} />
         </section>
       </main>

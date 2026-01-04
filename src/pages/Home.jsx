@@ -10,6 +10,7 @@ import { MyGridMovies } from "../modified-ui-components/Grid/movieGrid.jsx";
 import { DisplayedPlaylistGroup } from "../components/DisplayedPlaylistGroup/DisplayedPlaylistGroup.jsx";
 import MainMovie from "../components/MainMovie/MainMovie.jsx";
 import { ReactComponent as Logo } from "../assets/images/bs_logo.svg";
+import { useTranslation } from "react-i18next";
 
 // https://mui.com/material-ui/material-icons/
 import { GlobalContext } from "../App";
@@ -27,7 +28,7 @@ const Home = () => {
   const [playlists, setPlaylists] = useState([]);
   const [recomendedPlaylists, setRecomendedPlaylists] = useState([]);
   const [catalogue, setCatalogue] = useState(null);
-
+  const { t, i18n } = useTranslation();
   useEffect(() => {
     updateAWSConfigAndGetClient(IdentityPoolId, "eu-north-1");
     fetchCatalogue();
@@ -92,28 +93,28 @@ const Home = () => {
           <div className="flex flex-row mt-50 gap-25 w-full h-fit justify-center items-center">
             <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4 hover-opacity" onClick={() => navigate('/catalogue/Movies')}>
               <div className="w-4/5 text-center typography-h2 my-auto">
-                DARBI
+                {t("Darbi")}
               </div>
               <div className="h-2.5 text-center typography-body-small mb-20">
-                Jaunas, senas, vislabākās un vissliktākās<br />īsfilmas no visas Baltijas
+                {t("Darbi_Apr")}
               </div>
             </div>
 
             <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4 hover-opacity" onClick={() => navigate('/catalogue/Persons')}>
               <div className="w-4/5 text-center typography-h2 my-auto">
-                PERSONAS
+                {t("Personas")}
               </div>
               <div className="h-2.5 text-center typography-body-small mb-20">
-              Režisori, scenāriju autori, aktieri, mākslinieki un visi pārējie īsfilmu komandu dalībnieki
+                {t("Personas_Apr")}
               </div>
             </div>
 
             <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4 hover-opacity" onClick={() => navigate('/catalogue/Playlists')}>
               <div className="w-4/5 text-center typography-h2 my-auto">
-                SARAKSTI
+                {t("Saraksti")}
               </div>
               <div className="h-2.5 text-center typography-body-small mb-20">
-                Baltic Shorts kuratoru un lietotāju <br/> veidotie īsfilmu saraksti
+                {t("Saraksti_Apr")}
               </div>
             </div>
 
@@ -121,7 +122,7 @@ const Home = () => {
 
           <div className='w-full h-fit gap-6 mt-100 mb-25 flex flex-col items-center relative justify-center'>
             <div className="w-full typography-h2">
-              BALTIC SHORTS IESAKA
+              {t("BS_Iesaka")}
             </div>
             <DisplayedPlaylistGroup elementsShown={recomendedPlaylists.length} playlists={recomendedPlaylists} />
         
@@ -134,16 +135,16 @@ const Home = () => {
             <div className="mr-50">
               <Logo className="w-full h-fit"/>
             </div>
-            <div className="typography-body uppercase !tracking-[0.1em] !font-normal">
-            JAUNAS, VECAS, SLIKTĀKĀS, LABĀKĀS,<br/> LIELBUDŽETA, BEZBUDŽETA ĪSFILMAS,<br/>REŽISORI, OPERATORI UN CITI FILMU VAROŅI <br/>NO baltijas valstu filmu industrijas.
+            <div className="typography-body uppercase !tracking-[0.1em] !font-normal whitespace-pre-line">
+              {t("BS_apraksts")}
             </div>
 
           </div>
 
           <div className="flex-col justify-center items-center mb-50 w-full">
-            <div className="text-center text-black typography-h2">PAR PROJEKTU</div>
-            <div className="my-50 m-auto w-2/3 text-black typography-body-large !text-justify">Baltic Shorts ir digitāla straumēšanas platforma, kas fokusējas uz Baltijas valstīs (Latvija, Lietuva, Igaunija) radītu īsfilmu izrādīšanu. Projekta mērķis ir radīt un uzturēt ērti lietojamu plaša satura mājaslapu, kas attīsta īsfilmu formas pieejamību un to autoru atpazīstamību plašākā tirgū.</div>
-            <div className="w-fit px-10 m-auto text-center text-black !typography-body flex items-center button-default button-white cursor-pointer" onClick={() => navigate('/about')}>Uzzināt vairāk</div>
+            <div className="text-center text-black typography-h2">{t("Par Projektu")}</div>
+            <div className="my-50 m-auto w-2/3 text-black typography-body-large !text-justify">{t("Par_Projektu_Apr")}</div>
+            <div className="w-fit px-10 m-auto text-center text-black !typography-body flex items-center button-default button-white cursor-pointer" onClick={() => navigate(`/${i18n.language}/about`)}>{t("Uzzināt vairāk")}</div>
           </div>
         </div>
       </div>

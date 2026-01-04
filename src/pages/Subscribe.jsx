@@ -2,14 +2,16 @@ import { useContext } from "react";
 import { LoginPopup } from "../components/LoginPopup/LoginPopup";
 import { GlobalContext } from "../App";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Subscribe = () => {
     const context = useContext(GlobalContext);
     const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
 
     const handleButtonClick = () => {
         if (context.loggedIn) {
-            navigate("/subscribe");
+            navigate(`/${i18n.language}/subscribe`);
         } else {
             context.setLoggedInModal(true);
         }
@@ -22,11 +24,11 @@ const Subscribe = () => {
                 <img className="w-full h-fit" src={require("./static/ad_1.jpg")} alt="Subscribe" />
                 <div className="w-full flex-col justify-center items-center flex absolute">
                     <div className="flex-col justify-center items-center gap-28 flex mt-[10%] m-auto content-center">
-                        <span className="w-96 h-9 text-center text-stone-50 text-4xl font-bold font-['SchoolBook'] uppercase leading-10 relative">SKATIES ĪSFILMAS NO VISAS BALTIJAS</span>
-                        <span className="w-96 h-5 text-center text-stone-50 text-xl font-bold font-['Arial'] uppercase tracking-wide">NIEKA €3.99 mēnesī</span>
+                        <span className="w-1/2 h-9 text-center text-stone-50 text-4xl font-bold font-['SchoolBook'] uppercase leading-10 relative">{t("Skaties īsfilmas no visas Baltijas")}</span>
+                        <span className="w-1/2 h-5 text-center text-stone-50 text-xl font-bold font-['Arial'] uppercase tracking-wide mt-10">{t("Nieka €3.99 mēnesī")}</span>
                         <div className="Button h-7 px-2.5 pt-1 pb-0.5 border border-stone-50 justify-center items-center gap-2.5 inline-flex cursor-pointer">
                             <span className="grow shrink basis-0 text-center text-stone-50 text-base font-normal font-['SchoolBook'] cursor-pointer" onClick={handleButtonClick}>
-                                {context.loggedIn ? "Abonēt" : "Ienākt"}
+                                {context.loggedIn ? t("Abonēt") : t("Ienākt")}
                             </span>
                         </div>
                     </div>

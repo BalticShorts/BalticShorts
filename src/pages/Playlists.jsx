@@ -6,6 +6,7 @@ import { getMoviesByPlaylistId } from "../custom-queries/queries";
 import image from "./static/H_B.jpg";
 import { GlobalContext } from "../App";
 import { Navbar } from "../modified-ui-components/Header";
+import { useTranslation } from "react-i18next";
 
 const Playlist = () => {
   const context = useContext(GlobalContext);
@@ -15,6 +16,7 @@ const Playlist = () => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [backgroundImage, setBackgroundImage] = useState(image);
   const { id } = useParams();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     const fetchPlaylist = async () => {
@@ -108,14 +110,14 @@ const Playlist = () => {
       </div>
       <div className="mx-auto py-8 max-w-[1100px]">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="typography-h2">{movies.length} FILMAS</h2>
+          <h2 className="typography-h2">{movies.length} {t("Filmas")}</h2>
           <div className="flex items-center">
-            <span className="mr-2 typography-technical !uppercase">Kārtot pēc:</span>
+            <span className="mr-2 typography-technical !uppercase">{t("Kārtot pēc:")}</span>
             <select value={sortBy} onChange={handleSortChange} className="p-1 bg-beige">
-              <option value="date">Ievietošanas datums</option>
-              <option value="year">Gads</option>
-              <option value="alphabet">Alfabēts</option>
-              <option value="length">Ilgums</option>
+              <option value="date">{t("Ievietošanas datums")}</option>
+              <option value="year">{t("Gads")}</option>
+              <option value="alphabet">{t("Alfabēts")}</option>
+              <option value="length">{t("Ilgums")}</option>
             </select>
             <button onClick={handleSortOrderChange} className="ml-2">
               {sortOrder === 'asc' ? '▲' : '▼'}

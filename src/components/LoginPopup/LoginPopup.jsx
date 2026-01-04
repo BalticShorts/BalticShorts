@@ -11,6 +11,7 @@ import { ReactComponent as X } from "../../assets/images/x.svg";
 import { ReactComponent as Logo } from "../../assets/images/bs_logo.svg";
 import { useNavigate } from "react-router-dom";
 import config from '../../config';
+import { useTranslation } from "react-i18next";
 
 export const LoginPopup = () => {
     const context = useContext(GlobalContext)
@@ -35,6 +36,7 @@ export const LoginPopup = () => {
     const [showInfo, setShowInfo] = useState(false);
 
     const Auth = context.auth
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {
         setShowModal(context.loggedInModal);
@@ -45,39 +47,39 @@ export const LoginPopup = () => {
         setError({ });
         switch (error.code) {
             case 'UserNotFoundException':
-            errorMessage = 'Lietotājs nav atrasts. Reģistrējies vai pārbaudi e-pastu.';
+            errorMessage = t('Lietotājs nav atrasts. Reģistrējies vai pārbaudi e-pastu.');
             break;
             case 'NotAuthorizedException':
-            errorMessage = 'Nepareiza parole. Mēģini vēlreiz.';
+            errorMessage = t('Nepareiza parole. Mēģini vēlreiz.');
             break;
             case 'PasswordResetRequiredException':
-            errorMessage = 'Parole jāmaina. Atjauno to.';
+            errorMessage = t('Parole jāmaina. Atjauno to.');
             break;
             case 'UserNotConfirmedException':
-            errorMessage = 'Lietotājs nav apstiprināts. Pārbaudi e-pastu.';
+            errorMessage =  t('Lietotājs nav apstiprināts. Pārbaudi e-pastu.');
             break;
             case 'CodeMismatchException':
-            errorMessage = 'Kods nesakrīt. Pārbaudi ievadīto.';
+            errorMessage = t('Kods nesakrīt. Pārbaudi ievadīto.');
             break;
             case 'ExpiredCodeException':
-            errorMessage = 'Kods ir beidzies. Pieprasiet jaunu kodu.';
+            errorMessage = t('Kods ir beidzies. Pieprasiet jaunu kodu.');
             break;
             case 'InvalidParameterException':
-            errorMessage = 'Nederīgs parametrs. Pārbaudi ievadīto.';
+            errorMessage = t('Nederīgs parametrs. Pārbaudi ievadīto.');
             break;
             case 'InvalidPasswordException':
-            errorMessage = 'Nederīga parole. Parolei jābūt vismaz 6 rakstzīmes garai.';
+            errorMessage = t('Nederīga parole. Parolei jābūt vismaz 6 rakstzīmes garai.');
             break;
             case 'TooManyFailedAttemptsException':
-            errorMessage = 'Pārāk daudz neveiksmīgu mēģinājumu. Mēģini vēlāk.';
+            errorMessage = t('Pārāk daudz neveiksmīgu mēģinājumu. Mēģini vēlāk.');
             break;
             case 'TooManyRequestsException':
-            errorMessage = 'Pārāk daudz pieprasījumu. Mēģini vēlāk.';
+            errorMessage = t('Pārāk daudz pieprasījumu. Mēģini vēlāk.');
             break;
             case 'LimitExceededException':
-            errorMessage = 'Pārsniegts ierobežojums. Mēģini vēlāk.';
+            errorMessage = t('Pārsniegts ierobežojums. Mēģini vēlāk.');
             break;
-            default: errorMessage = 'Nezināma kļūda. Mēģini vēlreiz.';
+            default: errorMessage = t('Nezināma kļūda. Mēģini vēlreiz.');
         }
         setError({ "code": error.code, "message": errorMessage });
     }
@@ -103,7 +105,7 @@ export const LoginPopup = () => {
         setError({});
         try {
             if(name === "" || surname === ""){
-                throw new Error("Vārds un uzvārds nevar būt tukši!")
+                throw new Error(t("Vārds un uzvārds nevar būt tukši!"))
             }
             await Auth.signUp({
                 username: email,
@@ -199,7 +201,7 @@ async function handleForgetPassword() {
             await verifyCode(username, code, newPassword);
             setRestorePassword(false);
             setPage('login');
-            setError({"code":'PasswordChange', "message": 'Parole nomainīta'})
+            setError({"code":'PasswordChange', "message": t("Parole nomainīta")})
         } catch (error) {
             errorParser(error);
         }
@@ -314,12 +316,12 @@ async function handleForgetPassword() {
                         <div className="w-full justify-between items-center inline-flex mt-10 cursor-pointer">
                             <div className="typography-technical" onClick={() => setFastLogin(!fastLogin)}>
                                 <span id="rememberMe">{fastLogin ? <>[&#x2713;] </> : <>[  ] </>}</span>
-                                Atcerēties mani
+                                {t("Atcerēties mani")}
                             </div>
 
-                            <div className="typography-technical cursor-pointer" onClick={() => changePage('forget')}>Aizmirsi paroli?</div>
+                            <div className="typography-technical cursor-pointer" onClick={() => changePage('forget')}>{t("Aizmirsi paroli?")}</div>
                         </div>
-                        <div type="submit" className="flex button-default button-white mt-25 !font-normal cursor-pointer !text-center !items-center !justify-center" onClick={() => logIn()}>Ieiet</div>
+                        <div type="submit" className="flex button-default button-white mt-25 !font-normal cursor-pointer !text-center !items-center !justify-center" onClick={() => logIn()}>{t("Ieiet")}</div>
                     </div>
                     </>
                     )}
@@ -328,12 +330,12 @@ async function handleForgetPassword() {
                         {confirmationStage ? (
                         <div className="flex flex-col justify-start items-center my-auto">
                             <div className="w-full justify-center items-center flex flex-col typography-technical mb-20 !text-red-700">{error.message}</div>
-                            <div className="w-full justify-center items-center flex flex-col typography-technical mb-20 !text-red-700"> Kods nosūtīts uz epastu!</div>
+                            <div className="w-full justify-center items-center flex flex-col typography-technical mb-20 !text-red-700"> {t("Kods nosūtīts uz epastu!")}</div>
                             <div className="w-full justify-center items-center flex flex-col text-lg border border-black">
-                                <input id="code" type="text" placeholder="Code" value={confirmationCode} className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setConfirmationCode(e.target.value)} ></input>
+                                <input id="code" type="text" placeholder={t("Kods")} value={confirmationCode} className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setConfirmationCode(e.target.value)} ></input>
                             </div>
                             <div className="mt-25 justify-start items-start flex flex-row gap-6">
-                                <div type="submit" className="flex !text-center !items-center !justify-center button-default button-white !font-normal cursor-pointer" onClick={() => handleCodeConfirmatation()}>Reģistrēties</div>
+                                <div type="submit" className="flex !text-center !items-center !justify-center button-default button-white !font-normal cursor-pointer" onClick={() => handleCodeConfirmatation()}>{t("Reģistrēties")}</div>
                                 {/* <div className="flex !text-center !items-center !justify-center button-default button-white !font-normal cursor-pointer" onClick={() => resendCode()}>Pārsūtīt kodu</div> */}
                             </div>
                         </div>
@@ -342,20 +344,20 @@ async function handleForgetPassword() {
                         <div className="flex flex-col justify-start items-center my-auto">
                             <div className="w-full justify-center items-center flex flex-col typography-technical mb-20 !text-red-700">{error.message}</div>
                             <div className="w-full justify-center items-center flex flex-row text-lg mb-0 border border-black">
-                                <input id="name" type="text" placeholder="Vārds" className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setName(e.target.value)} ></input>
+                                <input id="name" type="text" placeholder={t("Vārds")} className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setName(e.target.value)} ></input>
                                 <div className="h-full w-0 border-r border-black "></div>
-                                <input id="surname" type="text" placeholder="Uzvards" className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setSurname(e.target.value)} ></input>
+                                <input id="surname" type="text" placeholder={t("Uzvārds")} className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setSurname(e.target.value)} ></input>
                             </div>
                             <div className="w-full justify-center items-center flex flex-col text-lg border-x border-black">
-                                <input id="email" type="email" placeholder="E-pasts" className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setEmail(e.target.value)} ></input>
+                                <input id="email" type="email" placeholder={t("E-pasts")} className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setEmail(e.target.value)} ></input>
                             </div>
                             <div className="w-full justify-center items-center flex flex-col text-lg border border-black">
-                                <input id="password" type="password" placeholder="Parole" className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setPassword(e.target.value)}></input>
+                                <input id="password" type="password" placeholder={t("Parole")} className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setPassword(e.target.value)}></input>
                             </div>
                             <div className="w-full mt-20 justify-between items-center inline-row">
-                                <div className="text-center typography-technical"><span id="acceptRules" className="cursor-pointer" onClick={handleAcceptRulesClick}>{piekrituTicked ? <>[&#x2713;] </> : <>[  ] </>}</span>Piekrītu <span className="text-center flex-row font-bold cursor-pointer" onClick={() => setShowTOS(true)}>noteikumiem</span></div>
+                                <div className="text-center typography-technical"><span id="acceptRules" className="cursor-pointer" onClick={handleAcceptRulesClick}>{piekrituTicked ? <>[&#x2713;] </> : <>[  ] </>}</span>{t("Piekrītu")} <span className="text-center flex-row font-bold cursor-pointer" onClick={() => setShowTOS(true)}>{t("noteikumiem")}</span></div>
                             </div>
-                            <div type="submit" className="flex !text-center !items-center !justify-center button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => {piekrituTicked ? handleSignUp() : setError({"code":'AcceptRules', "message": 'Jāpiekrīt noteikumiem!'})}}>Reģistrēties</div>
+                            <div type="submit" className="flex !text-center !items-center !justify-center button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => {piekrituTicked ? handleSignUp() : setError({"code":'AcceptRules', "message": t('Jāpiekrīt noteikumiem!')})}}>{t("Reģistrēties")}</div>
 
                         </div>
                         </>
@@ -368,27 +370,27 @@ async function handleForgetPassword() {
                             <div className="flex flex-col justify-start items-center my-auto">
                                 <div className="flex-col justify-center items-center gap-2.5 flex">
                                     <div className="w-full text-center typography-body">
-                                        Ievadiet kodu un jauno paroli.
+                                        {t("Ievadiet kodu un jauno paroli.")}
                                     </div>
                                 </div>
                                 <div className="w-full justify-center items-center flex flex-col typography-technical mb-20 !text-red-700">{error.message}</div>
                                 <div className="w-full justify-center items-center flex flex-col text-lg my-4">
-                                    <input id="forgetEmail" type="text" placeholder="Email" className="bg-beige text-center border-none outline-none typography-body-large" readOnly value={forgetEmail}></input>
+                                    <input id="forgetEmail" type="text" placeholder={t("E-pasts")} className="bg-beige text-center border-none outline-none typography-body-large" readOnly value={forgetEmail}></input>
                                     <div className="w-full h-px relative border border-black"></div>
                                 </div>
                                 <div className="w-full justify-center items-center flex flex-col text-lg mb-4">
-                                    <input id="forgetCode" type="text" placeholder="Kods" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setConfirmationCode(e.target.value)} value={confirmationCode} ></input>
+                                    <input id="forgetCode" type="text" placeholder={t("Kods")} className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setConfirmationCode(e.target.value)} value={confirmationCode} ></input>
                                     <div className="w-full h-px relative border border-black"></div>
                                 </div>
                                 <div className="w-full justify-center items-center flex flex-col text-lg mb-4">
-                                    <input id="password" type="password" placeholder="Parole" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setPassword(e.target.value)}></input>
+                                    <input id="password" type="password" placeholder={t("Parole")} className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setPassword(e.target.value)}></input>
                                     <div className="w-full h-px relative border border-black"></div>
                                 </div>
                                 <div className="w-full justify-center items-center flex flex-col text-lg mb-4">
-                                    <input id="checkPassword" type="password" placeholder="Parole atkārtoti" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setCheckPassword(e.target.value)}></input>
+                                    <input id="checkPassword" type="password" placeholder={t("Parole atkārtoti")} className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setCheckPassword(e.target.value)}></input>
                                     <div className="w-full h-px relative border border-black"></div>
                                 </div>
-                                <div type="submit" className="flex !text-center !items-center !justify-center button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => handleNewPassword()}>Nomainīt</div>
+                                <div type="submit" className="flex !text-center !items-center !justify-center button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => handleNewPassword()}>{t("Nomainīt")}</div>
 
                             </div>
                             : 
@@ -396,12 +398,12 @@ async function handleForgetPassword() {
                                 <div className="flex-col justify-center items-center flex">
                                     <div className="flex-col justify-start items-start flex">
                                         <div className="w-full flex-col justify-center items-center flex">
-                                            <div className="w-full text-center typography-body-large">Aizmirsi paroli?</div>
+                                            <div className="w-full text-center typography-body-large">{t("Aizmirsi paroli?")}</div>
                                         </div>
                                     </div>
                                     <div className="flex-col justify-center items-center gap-2.5 flex">
                                         <div className="w-full text-center typography-body">
-                                            Ievadi zemāk e-pastu ar kuru reģistrējies. <br/>Uz to nosūtīsim kodu, lai atjaunotu paroli.
+                                            {t("Ievadi zemāk e-pastu")}
                                         </div>
                                     </div>
                                 </div>
@@ -411,7 +413,7 @@ async function handleForgetPassword() {
                                     <input id="email" type="email" placeholder="E-pasts" className="bg-beige text-center border-none outline-none typography-body-large" onChange={e => setForgetEmail(e.target.value)} ></input>
                                     <div className="w-full relative border border-black"></div>
                                 </div>
-                                <div type="submit" className="flex !text-center !items-center !justify-center button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => handleForgetPassword()}>Sūtīt</div>
+                                <div type="submit" className="flex !text-center !items-center !justify-center button-default button-white mt-25 !font-normal cursor-pointer" onClick={() => handleForgetPassword()}>{t("Sūtīt")}</div>
 
                             </div>
                         }
@@ -426,7 +428,7 @@ async function handleForgetPassword() {
                                         <path d="M5.36661e-08 4.99965L7 0.500069L7 9.50007L5.36661e-08 4.99965Z" fill="black"/>
                                     </svg>
                                 )}
-                                <div className="m-1 h-fit text-center typography-body-small">{page !== 'login' ? 'Pieslēgties' : 'Reģistrēties'}</div>
+                                <div className="m-1 h-fit text-center typography-body-small">{page !== 'login' ? t('Pieslēgties') : t('Reģistrēties')}</div>
                                 {page === 'login' && (
                                     <svg xmlns="http://www.w3.org/2000/svg" width="8" height="10" viewBox="0 0 8 10" fill="none">
                                         <path d="M7.5 5.00035L0.5 9.49993L0.5 0.499931L7.5 5.00035Z" fill="black"/>
@@ -439,12 +441,12 @@ async function handleForgetPassword() {
                 {showTOS && (
                     <div className="fixed inset-0 flex items-center justify-center bg-black/75 z-10 overscroll-auto">
                         <div className="modal-size px-5 pt-5 bg-beige border border-black flex-col justify-start inline-flex overflow-y-auto items-center text-start">
-                            <h2 className="typography-h2 my-25 pl-6 text-start w-full">LIETOŠANAS NOTEIKUMI</h2>
+                            <h2 className="typography-h2 my-25 pl-6 text-start w-full">{t("Lietošanas noteikumi")}</h2>
                             <TermsOfService />
                             <Agreement />
                             <Privacy />
                             <div className="button-default relative flex items-center justify-center py-5 border border-black mb-5 cursor-pointer" onClick={() => { setShowTOS(false); setTosRead(true); }}>
-                                Aizvērt
+                                {t("Aizvērt")}
                             </div>
                         </div>
                     </div>
@@ -453,12 +455,11 @@ async function handleForgetPassword() {
                     <div className="fixed inset-0 flex items-center justify-center bg-black/75 z-10 overscroll-auto -mt-[270px]">
                         <div className="modal-size !h-fit p-20 bg-beige border border-black flex-col justify-start inline-flex overflow-y-auto items-center text-start">
                             <div className="w-full flex flex-row items-left justify-between mb-10">
-                                <h2 className="typography-body-large text-center w-full">Kādēļ man vajadzīgs profils?</h2>
+                                <h2 className="typography-body-large text-center w-full">{t("Kādēļ man vajadzīgs profils?")}</h2>
                                 <X className="cursor-pointer" onClick={() => {setShowInfo(false)}}/>
                             </div>
                             <div className="w-full border-b border-black"/>
-                            <p className="typography-body text-center my-25">Ar Baltic Shorts profilu tu vari skatīties filmas (abonējot platformu), pievienot darbus skatīšanai vēlāk, veidot darbu sarakstus.</p>
-                            <p className="typography-body text-center">Ja piedalies īsfilmu veidošanā – vari savu darbu komandās pieminēto vārdu sasaistīt ar savu profilu, tādejādi veidojot savu automātiski atjaunoto Baltic Shorts personas profilu. Kā arī iesūtīt darbus pievienošanai platformai.</p>
+                            <p className="typography-body text-center my-25">{t("Kadel_apr_1")}</p>
                         </div>
                     </div>
                 )}

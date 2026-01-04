@@ -11,14 +11,17 @@ import { ReactComponent as SearchB } from "../../assets/images/search.svg";
 import { ReactComponent as Menu } from "../../assets/images/menu.svg";
 import Search from "../../pages/Search";
 import { useDropdown } from "../../context/DropdownContext";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export const Navbar = () => {
   const context = useContext(GlobalContext);
   const { showDropdown, setShowDropdown } = useDropdown();
   const [isHovered, setIsHovered] = useState(false);
-  const [showSearchModal, setShowSearchModal] = useState(false); // State to control search modal visibility
+  const [showSearchModal, setShowSearchModal] = useState(false);
   const location = useLocation();
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
 
   function toggleDropdown(){
     setShowDropdown(!showDropdown);
@@ -35,7 +38,7 @@ export const Navbar = () => {
   }
 
   function closeSearchModal() {
-    setShowSearchModal(false); // Close the search modal
+    setShowSearchModal(false);
   }
   useEffect(() => {
     setShowSearchModal(false);
@@ -61,18 +64,18 @@ export const Navbar = () => {
               {showSearchModal ? (
                 <div onClick={closeSearchModal} className="cursor-pointer flex flex-row items-center">
                   <X className="w-15 h-15 mr-2" />
-                  <div className="typography-body-small">Aizvērt</div>
+                  <div className="typography-body-small">{t("Aizvērt")}</div>
                 </div>
               ) : (
                 <div onClick={openSearchModal} className="cursor-pointer typography-body-small flex flex-row items-center">
                   <SearchB className="w-15 h-15 mr-2" />
-                  <div className="typography-body-small">Meklēt</div> 
+                  <div className="typography-body-small">{t("Meklēt")}</div> 
                 </div>
               )}
             </div>
             {!showSearchModal && (
               <div className="typography-body-small text-center items-center flex cursor-pointer">
-              <a href="/catalogue">Katalogs</a>
+              <a href={`/${i18n.language}/catalogue`}>{t("Katalogs")}</a>
             </div>
             )}
           </div>
@@ -82,14 +85,13 @@ export const Navbar = () => {
             onMouseLeave={() => setIsHovered(false)}>
             
             {!isHovered ? (
-            <Logo onClick={() => window.location.href = '/'} className="h-20 mx-auto !w-[210px] cursor-pointer"/>
+            <Logo onClick={() => navigate(`/${i18n.language}/`)} className="h-20 mx-auto !w-[210px] cursor-pointer"/>
             ):(
             <img
               src= {gifAnimation}
               alt="Baltic Shorts"
               className="!w-[210px] h-20 cursor-pointer mx-auto"
-              onClick={() => window.location.href = '/'}
-            />
+              onClick={() => navigate(`/${i18n.language}/`)} />
             )}
           </div>
 
@@ -98,14 +100,14 @@ export const Navbar = () => {
             <div className="relative flex flex-row cursor-pointer">
               {context.loggedIn ? (
                 <div className="m-auto relative">
-                  <User onClick={() => window.location.href = "/user/" + context.currentUser?.id}/>
+                  <User onClick={() => navigate(`/${i18n.language}/user/${context.currentUser?.id}`)}/>
                 </div>
               ) : (
                 <div
                   className="cursor-pointer typography-body-small text-center items-center flex"
                   onClick={() => openModal()}
                 >
-                  Ienākt
+                  {t("Ienākt")}
                 </div>
               )}
               <div className="inline-flex justify-end items-center relative ml-0 sm:ml-20">

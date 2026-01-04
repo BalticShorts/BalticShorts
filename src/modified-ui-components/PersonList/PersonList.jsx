@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ReactComponent as Triangle } from "../../assets/images/triangle.svg";
+import { useTranslation } from "react-i18next";
 
 export const PersonList = ({ data, onPersonClick }) => {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ export const PersonList = ({ data, onPersonClick }) => {
     "Austria": "AT",
     "Germany": "DE",
   };
+  const { t, i18n } = useTranslation();
 
   return (
     <div className="flex flex-col gap-4 w-full items-center bg-inherit">
@@ -53,7 +55,7 @@ export const PersonList = ({ data, onPersonClick }) => {
           if (typeof onPersonClick === 'function') {
             onPersonClick(person.id);
           } else {
-            navigate('/profile/' + person.id);
+            navigate(`/${i18n.language}/profile/${person.id}`);
           }
         };
 
@@ -86,11 +88,11 @@ export const PersonList = ({ data, onPersonClick }) => {
                   </div>
                 </div>
                 <div className="flex flex-col items-end min-w-[180px] justify-between h-full">
-                  <div className="text-right typography-technical !align-bottom">
-                    {uniqueMovieCount} {uniqueMovieCount === 1 ? "DARBS" : "DARBI"}
+                  <div className="text-right typography-technical !align-bottom uppercase">
+                    {uniqueMovieCount} {uniqueMovieCount === 1 ? t("Darbs") : t("Darbi")}
                   </div>
                   <div className="text-right typography-technical flex flex-row items-center">
-                    <div className="mr-1">VAIRĀK</div>
+                    <div className="mr-1 uppercase">{t("Vairāk")}</div>
                     <Triangle />
                   </div>
                 </div>

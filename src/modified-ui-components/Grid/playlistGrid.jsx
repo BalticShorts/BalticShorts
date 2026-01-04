@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AWS from "aws-sdk";
+import { useTranslation } from "react-i18next";
 
 const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
 
@@ -41,6 +42,7 @@ export function MyGridPlaylists({ data, maxRows, maxColumns }) {
     if ((idx + 1) / maxColumns > rows) return false;
     return true;
   };
+  const { t, i18n } = useTranslation();
 
   return (
     <div className="w-full h-auto flex flex-col items-center bg-inherit">
@@ -55,7 +57,7 @@ export function MyGridPlaylists({ data, maxRows, maxColumns }) {
                   <div
                     key={item.id}
                     className="relative flex flex-col bg-inherit border border-black max-h-[200px] overflow-hidden cursor-pointer"
-                    onClick={() => navigate(`/playlist/${item.id}`)}
+                    onClick={() => navigate(`/${i18n.language}/playlist/${item.id}`)}
                   >
                     <div className="relative w-full h-full max-h-[100px] overflow-hidden bg-inherit">
                       <img
@@ -71,8 +73,8 @@ export function MyGridPlaylists({ data, maxRows, maxColumns }) {
                       <div className="typography-body-small mb-10">
                         {item.creator}
                       </div>
-                      <div className="typography-technical">
-                        FILMAS {item.size} | SEKOTĀJI 10
+                      <div className="typography-technical uppercase">
+                        {t("Filmas")} {item.size} | {t("Sekotāji")} 10
                       </div>
                     </div>
                   </div>
