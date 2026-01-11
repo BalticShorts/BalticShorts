@@ -281,6 +281,7 @@ export const onCreatePersonMovieTeam = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -379,6 +380,7 @@ export const onUpdatePersonMovieTeam = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -477,6 +479,7 @@ export const onDeletePersonMovieTeam = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -1102,6 +1105,7 @@ export const onCreateMovieTeam = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1180,6 +1184,7 @@ export const onUpdateMovieTeam = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1258,6 +1263,7 @@ export const onDeleteMovieTeam = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1325,6 +1331,7 @@ export const onCreateAward = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1391,6 +1398,7 @@ export const onUpdateAward = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1457,6 +1465,7 @@ export const onDeleteAward = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1516,6 +1525,7 @@ export const onCreateMovie = /* GraphQL */ `
       genre
       description
       description_eng
+      description_language
       screen_language
       captions_language
       origin_country
@@ -1537,6 +1547,7 @@ export const onCreateMovie = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -1622,6 +1633,7 @@ export const onUpdateMovie = /* GraphQL */ `
       genre
       description
       description_eng
+      description_language
       screen_language
       captions_language
       origin_country
@@ -1643,6 +1655,7 @@ export const onUpdateMovie = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -1728,6 +1741,7 @@ export const onDeleteMovie = /* GraphQL */ `
       genre
       description
       description_eng
+      description_language
       screen_language
       captions_language
       origin_country
@@ -1749,6 +1763,7 @@ export const onDeleteMovie = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -2071,6 +2086,7 @@ export const onCreateMovieMoviePlaylist = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -2154,6 +2170,7 @@ export const onUpdateMovieMoviePlaylist = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -2237,6 +2254,7 @@ export const onDeleteMovieMoviePlaylist = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country

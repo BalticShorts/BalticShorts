@@ -15,6 +15,7 @@ import {
   Grid,
   Icon,
   ScrollView,
+  SwitchField,
   Text,
   TextField,
   useTheme,
@@ -28,6 +29,7 @@ import {
 } from "./utils";
 import { API } from "aws-amplify";
 import {
+  listAwards,
   listMoviePlaylists,
   listMovieTeams,
   listMovieTypes,
@@ -35,6 +37,7 @@ import {
 import {
   createMovie,
   createMovieMoviePlaylist,
+  updateAward,
   updateMovie,
   updateMovieTeam,
 } from "../src/graphql/mutations";
@@ -219,6 +222,7 @@ export default function MovieCreateForm(props) {
     created_year: "",
     MovieTeam: undefined,
     MovieInPlaylists: [],
+    description_language: "",
     MovieType: undefined,
     Field0: undefined,
     Field1: undefined,
@@ -227,7 +231,9 @@ export default function MovieCreateForm(props) {
     age_rating: "",
     subtitles_location: "",
     creators_comment: "",
+    is_highlighted: false,
     trailer_location: "",
+    awards: [],
   };
   const [name, setName] = React.useState(initialValues.name);
   const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
@@ -263,6 +269,9 @@ export default function MovieCreateForm(props) {
   const [movieInPlaylistsRecords, setMovieInPlaylistsRecords] = React.useState(
     []
   );
+  const [description_language, setDescription_language] = React.useState(
+    initialValues.description_language
+  );
   const [MovieType, setMovieType] = React.useState(initialValues.MovieType);
   const [MovieTypeLoading, setMovieTypeLoading] = React.useState(false);
   const [movieTypeRecords, setMovieTypeRecords] = React.useState([]);
@@ -281,9 +290,15 @@ export default function MovieCreateForm(props) {
   const [creators_comment, setCreators_comment] = React.useState(
     initialValues.creators_comment
   );
-  const [trailer_location, settrailer_location] = React.useState(
+  const [is_highlighted, setIs_highlighted] = React.useState(
+    initialValues.is_highlighted
+  );
+  const [trailer_location, setTrailer_location] = React.useState(
     initialValues.trailer_location
   );
+  const [awards, setAwards] = React.useState(initialValues.awards);
+  const [awardsLoading, setAwardsLoading] = React.useState(false);
+  const [awardsRecords, setAwardsRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -304,6 +319,7 @@ export default function MovieCreateForm(props) {
     setMovieInPlaylists(initialValues.MovieInPlaylists);
     setCurrentMovieInPlaylistsValue(undefined);
     setCurrentMovieInPlaylistsDisplayValue("");
+    setDescription_language(initialValues.description_language);
     setMovieType(initialValues.MovieType);
     setCurrentMovieTypeValue(undefined);
     setCurrentMovieTypeDisplayValue("");
@@ -314,7 +330,11 @@ export default function MovieCreateForm(props) {
     setAge_rating(initialValues.age_rating);
     setSubtitles_location(initialValues.subtitles_location);
     setCreators_comment(initialValues.creators_comment);
-    settrailer_location(initialValues.trailer_location);
+    setIs_highlighted(initialValues.is_highlighted);
+    setTrailer_location(initialValues.trailer_location);
+    setAwards(initialValues.awards);
+    setCurrentAwardsValue(undefined);
+    setCurrentAwardsDisplayValue("");
     setErrors({});
   };
   const [currentMovieTeamDisplayValue, setCurrentMovieTeamDisplayValue] =
@@ -334,10 +354,15 @@ export default function MovieCreateForm(props) {
   const [currentMovieTypeValue, setCurrentMovieTypeValue] =
     React.useState(undefined);
   const MovieTypeRef = React.createRef();
+  const [currentAwardsDisplayValue, setCurrentAwardsDisplayValue] =
+    React.useState("");
+  const [currentAwardsValue, setCurrentAwardsValue] = React.useState(undefined);
+  const awardsRef = React.createRef();
   const getIDValue = {
     MovieTeam: (r) => JSON.stringify({ id: r?.id }),
     MovieInPlaylists: (r) => JSON.stringify({ id: r?.id }),
     MovieType: (r) => JSON.stringify({ id: r?.id }),
+    awards: (r) => JSON.stringify({ id: r?.id }),
   };
   const MovieTeamIdSet = new Set(
     Array.isArray(MovieTeam)
@@ -354,10 +379,16 @@ export default function MovieCreateForm(props) {
       ? MovieType.map((r) => getIDValue.MovieType?.(r))
       : getIDValue.MovieType?.(MovieType)
   );
+  const awardsIdSet = new Set(
+    Array.isArray(awards)
+      ? awards.map((r) => getIDValue.awards?.(r))
+      : getIDValue.awards?.(awards)
+  );
   const getDisplayValue = {
     MovieTeam: (r) => `${r?.director}`,
     MovieInPlaylists: (r) => `${r?.Title}${" by: "}${r?.Creator}`,
     MovieType: (r) => `${r?.type}`,
+    awards: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
   };
   const validations = {
     name: [{ type: "Required" }],
@@ -373,6 +404,7 @@ export default function MovieCreateForm(props) {
     created_year: [],
     MovieTeam: [],
     MovieInPlaylists: [],
+    description_language: [],
     MovieType: [],
     Field0: [{ type: "Required" }],
     Field1: [{ type: "Required" }],
@@ -381,7 +413,9 @@ export default function MovieCreateForm(props) {
     age_rating: [],
     subtitles_location: [],
     creators_comment: [],
+    is_highlighted: [],
     trailer_location: [],
+    awards: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -487,10 +521,40 @@ export default function MovieCreateForm(props) {
     setMovieTypeRecords(newOptions.slice(0, autocompleteLength));
     setMovieTypeLoading(false);
   };
+  const fetchAwardsRecords = async (value) => {
+    setAwardsLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: {
+          or: [{ name: { contains: value } }, { id: { contains: value } }],
+        },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await API.graphql({
+          query: listAwards.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listAwards?.items;
+      var loaded = result.filter(
+        (item) => !awardsIdSet.has(getIDValue.awards?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setAwardsRecords(newOptions.slice(0, autocompleteLength));
+    setAwardsLoading(false);
+  };
   React.useEffect(() => {
     fetchMovieTeamRecords("");
     fetchMovieInPlaylistsRecords("");
     fetchMovieTypeRecords("");
+    fetchAwardsRecords("");
   }, []);
   return (
     <Grid
@@ -514,6 +578,7 @@ export default function MovieCreateForm(props) {
           created_year,
           MovieTeam,
           MovieInPlaylists,
+          description_language,
           MovieType,
           Field0,
           Field1,
@@ -522,7 +587,9 @@ export default function MovieCreateForm(props) {
           age_rating,
           subtitles_location,
           creators_comment,
+          is_highlighted,
           trailer_location,
+          awards,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -572,12 +639,14 @@ export default function MovieCreateForm(props) {
             length: modelFields.length,
             created_year: modelFields.created_year,
             movieMovieTeamId: modelFields?.MovieTeam?.id,
+            description_language: modelFields.description_language,
             movieMovieTypeId: modelFields?.MovieType?.id,
             photo_location: modelFields.photo_location,
             thumbnail_location: modelFields.thumbnail_location,
             age_rating: modelFields.age_rating,
             subtitles_location: modelFields.subtitles_location,
             creators_comment: modelFields.creators_comment,
+            is_highlighted: modelFields.is_highlighted,
             trailer_location: modelFields.trailer_location,
           };
           const movie = (
@@ -635,6 +704,21 @@ export default function MovieCreateForm(props) {
               return promises;
             }, [])
           );
+          promises.push(
+            ...awards.reduce((promises, original) => {
+              promises.push(
+                API.graphql({
+                  query: updateAward.replaceAll("__typename", ""),
+                  variables: {
+                    input: {
+                      id: original.id,
+                    },
+                  },
+                })
+              );
+              return promises;
+            }, [])
+          );
           await Promise.all(promises);
           if (onSuccess) {
             onSuccess(modelFields);
@@ -674,6 +758,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -682,7 +767,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -719,6 +806,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -727,7 +815,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.name_eng ?? value;
@@ -763,6 +853,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -771,7 +862,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.type ?? value;
@@ -808,6 +901,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -816,7 +910,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.genre ?? value;
@@ -853,6 +949,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -861,7 +958,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -898,6 +997,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -906,7 +1006,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.description_eng ?? value;
@@ -943,6 +1045,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -951,7 +1054,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.screen_language ?? value;
@@ -988,6 +1093,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -996,7 +1102,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.captions_language ?? value;
@@ -1035,6 +1143,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -1043,7 +1152,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.origin_country ?? value;
@@ -1084,6 +1195,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -1092,7 +1204,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.length ?? value;
@@ -1133,6 +1247,7 @@ export default function MovieCreateForm(props) {
               created_year: value,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -1141,7 +1256,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.created_year ?? value;
@@ -1175,6 +1292,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam: value,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -1183,7 +1301,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.MovieTeam ?? value;
@@ -1274,6 +1394,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists: values,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -1282,7 +1403,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             values = result?.MovieInPlaylists ?? values;
@@ -1359,6 +1482,56 @@ export default function MovieCreateForm(props) {
           {...getOverrideProps(overrides, "MovieInPlaylists")}
         ></Autocomplete>
       </ArrayField>
+      <TextField
+        label="Description language"
+        isRequired={false}
+        isReadOnly={false}
+        value={description_language}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              type,
+              genre,
+              description,
+              description_eng,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieTeam,
+              MovieInPlaylists,
+              description_language: value,
+              MovieType,
+              Field0,
+              Field1,
+              photo_location,
+              thumbnail_location,
+              age_rating,
+              subtitles_location,
+              creators_comment,
+              is_highlighted,
+              trailer_location,
+              awards,
+            };
+            const result = onChange(modelFields);
+            value = result?.description_language ?? value;
+          }
+          if (errors.description_language?.hasError) {
+            runValidationTasks("description_language", value);
+          }
+          setDescription_language(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("description_language", description_language)
+        }
+        errorMessage={errors.description_language?.errorMessage}
+        hasError={errors.description_language?.hasError}
+        {...getOverrideProps(overrides, "description_language")}
+      ></TextField>
       <ArrayField
         lengthLimit={1}
         onChange={async (items) => {
@@ -1378,6 +1551,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType: value,
               Field0,
               Field1,
@@ -1386,7 +1560,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.MovieType ?? value;
@@ -1484,6 +1660,7 @@ export default function MovieCreateForm(props) {
                   created_year,
                   MovieTeam,
                   MovieInPlaylists,
+                  description_language,
                   MovieType,
                   Field0: value,
                   Field1,
@@ -1492,7 +1669,9 @@ export default function MovieCreateForm(props) {
                   age_rating,
                   subtitles_location,
                   creators_comment,
+                  is_highlighted,
                   trailer_location,
+                  awards,
                 };
                 const result = onChange(modelFields);
                 value = result?.Field0 ?? value;
@@ -1518,6 +1697,7 @@ export default function MovieCreateForm(props) {
                   created_year,
                   MovieTeam,
                   MovieInPlaylists,
+                  description_language,
                   MovieType,
                   Field0: value,
                   Field1,
@@ -1526,7 +1706,9 @@ export default function MovieCreateForm(props) {
                   age_rating,
                   subtitles_location,
                   creators_comment,
+                  is_highlighted,
                   trailer_location,
+                  awards,
                 };
                 const result = onChange(modelFields);
                 value = result?.Field0 ?? value;
@@ -1568,6 +1750,7 @@ export default function MovieCreateForm(props) {
                   created_year,
                   MovieTeam,
                   MovieInPlaylists,
+                  description_language,
                   MovieType,
                   Field0,
                   Field1: value,
@@ -1576,7 +1759,9 @@ export default function MovieCreateForm(props) {
                   age_rating,
                   subtitles_location,
                   creators_comment,
+                  is_highlighted,
                   trailer_location,
+                  awards,
                 };
                 const result = onChange(modelFields);
                 value = result?.Field1 ?? value;
@@ -1602,6 +1787,7 @@ export default function MovieCreateForm(props) {
                   created_year,
                   MovieTeam,
                   MovieInPlaylists,
+                  description_language,
                   MovieType,
                   Field0,
                   Field1: value,
@@ -1610,7 +1796,9 @@ export default function MovieCreateForm(props) {
                   age_rating,
                   subtitles_location,
                   creators_comment,
+                  is_highlighted,
                   trailer_location,
+                  awards,
                 };
                 const result = onChange(modelFields);
                 value = result?.Field1 ?? value;
@@ -1649,6 +1837,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -1657,7 +1846,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.photo_location ?? value;
@@ -1694,6 +1885,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -1702,7 +1894,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.thumbnail_location ?? value;
@@ -1745,6 +1939,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -1753,7 +1948,9 @@ export default function MovieCreateForm(props) {
               age_rating: value,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.age_rating ?? value;
@@ -1790,6 +1987,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -1798,7 +1996,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location: value,
               creators_comment,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.subtitles_location ?? value;
@@ -1837,6 +2037,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -1845,7 +2046,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment: value,
+              is_highlighted,
               trailer_location,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.creators_comment ?? value;
@@ -1860,8 +2063,56 @@ export default function MovieCreateForm(props) {
         hasError={errors.creators_comment?.hasError}
         {...getOverrideProps(overrides, "creators_comment")}
       ></TextField>
+      <SwitchField
+        label="Is highlighted"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={is_highlighted}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              type,
+              genre,
+              description,
+              description_eng,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieTeam,
+              MovieInPlaylists,
+              description_language,
+              MovieType,
+              Field0,
+              Field1,
+              photo_location,
+              thumbnail_location,
+              age_rating,
+              subtitles_location,
+              creators_comment,
+              is_highlighted: value,
+              trailer_location,
+              awards,
+            };
+            const result = onChange(modelFields);
+            value = result?.is_highlighted ?? value;
+          }
+          if (errors.is_highlighted?.hasError) {
+            runValidationTasks("is_highlighted", value);
+          }
+          setIs_highlighted(value);
+        }}
+        onBlur={() => runValidationTasks("is_highlighted", is_highlighted)}
+        errorMessage={errors.is_highlighted?.errorMessage}
+        hasError={errors.is_highlighted?.hasError}
+        {...getOverrideProps(overrides, "is_highlighted")}
+      ></SwitchField>
       <TextField
-        label="Trailer guid"
+        label="Trailer location"
         isRequired={false}
         isReadOnly={false}
         value={trailer_location}
@@ -1882,6 +2133,7 @@ export default function MovieCreateForm(props) {
               created_year,
               MovieTeam,
               MovieInPlaylists,
+              description_language,
               MovieType,
               Field0,
               Field1,
@@ -1890,7 +2142,9 @@ export default function MovieCreateForm(props) {
               age_rating,
               subtitles_location,
               creators_comment,
+              is_highlighted,
               trailer_location: value,
+              awards,
             };
             const result = onChange(modelFields);
             value = result?.trailer_location ?? value;
@@ -1898,13 +2152,111 @@ export default function MovieCreateForm(props) {
           if (errors.trailer_location?.hasError) {
             runValidationTasks("trailer_location", value);
           }
-          settrailer_location(value);
+          setTrailer_location(value);
         }}
         onBlur={() => runValidationTasks("trailer_location", trailer_location)}
         errorMessage={errors.trailer_location?.errorMessage}
         hasError={errors.trailer_location?.hasError}
         {...getOverrideProps(overrides, "trailer_location")}
       ></TextField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              type,
+              genre,
+              description,
+              description_eng,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieTeam,
+              MovieInPlaylists,
+              description_language,
+              MovieType,
+              Field0,
+              Field1,
+              photo_location,
+              thumbnail_location,
+              age_rating,
+              subtitles_location,
+              creators_comment,
+              is_highlighted,
+              trailer_location,
+              awards: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.awards ?? values;
+          }
+          setAwards(values);
+          setCurrentAwardsValue(undefined);
+          setCurrentAwardsDisplayValue("");
+        }}
+        currentFieldValue={currentAwardsValue}
+        label={"Awards"}
+        items={awards}
+        hasError={errors?.awards?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("awards", currentAwardsValue)
+        }
+        errorMessage={errors?.awards?.errorMessage}
+        getBadgeText={getDisplayValue.awards}
+        setFieldValue={(model) => {
+          setCurrentAwardsDisplayValue(
+            model ? getDisplayValue.awards(model) : ""
+          );
+          setCurrentAwardsValue(model);
+        }}
+        inputFieldRef={awardsRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Awards"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search Award"
+          value={currentAwardsDisplayValue}
+          options={awardsRecords.map((r) => ({
+            id: getIDValue.awards?.(r),
+            label: getDisplayValue.awards?.(r),
+          }))}
+          isLoading={awardsLoading}
+          onSelect={({ id, label }) => {
+            setCurrentAwardsValue(
+              awardsRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentAwardsDisplayValue(label);
+            runValidationTasks("awards", label);
+          }}
+          onClear={() => {
+            setCurrentAwardsDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchAwardsRecords(value);
+            if (errors.awards?.hasError) {
+              runValidationTasks("awards", value);
+            }
+            setCurrentAwardsDisplayValue(value);
+            setCurrentAwardsValue(undefined);
+          }}
+          onBlur={() => runValidationTasks("awards", currentAwardsDisplayValue)}
+          errorMessage={errors.awards?.errorMessage}
+          hasError={errors.awards?.hasError}
+          ref={awardsRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "awards")}
+        ></Autocomplete>
+      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

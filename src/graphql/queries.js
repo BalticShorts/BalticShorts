@@ -162,6 +162,7 @@ export const getPersonMovieTeam = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -977,6 +978,7 @@ export const getMovieTeam = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1049,6 +1051,7 @@ export const listMovieTeams = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -1096,6 +1099,7 @@ export const getAward = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1167,6 +1171,7 @@ export const listAwards = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -1226,6 +1231,7 @@ export const awardsByMovieID = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -1265,6 +1271,7 @@ export const getMovie = /* GraphQL */ `
       genre
       description
       description_eng
+      description_language
       screen_language
       captions_language
       origin_country
@@ -1286,6 +1293,7 @@ export const getMovie = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -1376,6 +1384,7 @@ export const listMovies = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1756,6 +1765,7 @@ export const getMovieMoviePlaylist = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1842,6 +1852,7 @@ export const listMovieMoviePlaylists = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -1912,6 +1923,7 @@ export const movieMoviePlaylistsByMoviePlaylistId = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -1982,6 +1994,7 @@ export const movieMoviePlaylistsByMovieId = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country

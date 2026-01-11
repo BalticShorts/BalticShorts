@@ -22,8 +22,12 @@ import {
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { listPersonMovieTeams } from "../src/graphql/queries";
-import { createPerson, updatePersonMovieTeam } from "../src/graphql/mutations";
+import { listPersonMovieTeams, listPersonRoles } from "../src/graphql/queries";
+import {
+  createPerson,
+  updatePersonMovieTeam,
+  updatePersonRole,
+} from "../src/graphql/mutations";
 function ArrayField({
   items = [],
   onChange,
@@ -193,7 +197,6 @@ export default function PersonCreateForm(props) {
   const initialValues = {
     name: "",
     surname: "",
-    role: "",
     description: "",
     Instagram: "",
     Facebook: "",
@@ -203,15 +206,13 @@ export default function PersonCreateForm(props) {
     user_id: "",
     is_public: false,
     completed_setup: false,
-    photo_location: "",
     description_confirmed: false,
-    photo_confirmed: false,
     is_entity: false,
     nationality: "",
+    PersonRoles: [],
   };
   const [name, setName] = React.useState(initialValues.name);
   const [surname, setSurname] = React.useState(initialValues.surname);
-  const [role, setRole] = React.useState(initialValues.role);
   const [description, setDescription] = React.useState(
     initialValues.description
   );
@@ -232,25 +233,23 @@ export default function PersonCreateForm(props) {
   const [completed_setup, setCompleted_setup] = React.useState(
     initialValues.completed_setup
   );
-  const [photo_location, setPhoto_location] = React.useState(
-    initialValues.photo_location
-  );
   const [description_confirmed, setDescription_confirmed] = React.useState(
     initialValues.description_confirmed
-  );
-  const [photo_confirmed, setPhoto_confirmed] = React.useState(
-    initialValues.photo_confirmed
   );
   const [is_entity, setIs_entity] = React.useState(initialValues.is_entity);
   const [nationality, setNationality] = React.useState(
     initialValues.nationality
   );
+  const [PersonRoles, setPersonRoles] = React.useState(
+    initialValues.PersonRoles
+  );
+  const [PersonRolesLoading, setPersonRolesLoading] = React.useState(false);
+  const [personRolesRecords, setPersonRolesRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setName(initialValues.name);
     setSurname(initialValues.surname);
-    setRole(initialValues.role);
     setDescription(initialValues.description);
     setInstagram(initialValues.Instagram);
     setFacebook(initialValues.Facebook);
@@ -262,11 +261,12 @@ export default function PersonCreateForm(props) {
     setUser_id(initialValues.user_id);
     setIs_public(initialValues.is_public);
     setCompleted_setup(initialValues.completed_setup);
-    setPhoto_location(initialValues.photo_location);
     setDescription_confirmed(initialValues.description_confirmed);
-    setPhoto_confirmed(initialValues.photo_confirmed);
     setIs_entity(initialValues.is_entity);
     setNationality(initialValues.nationality);
+    setPersonRoles(initialValues.PersonRoles);
+    setCurrentPersonRolesValue(undefined);
+    setCurrentPersonRolesDisplayValue("");
     setErrors({});
   };
   const [
@@ -276,21 +276,32 @@ export default function PersonCreateForm(props) {
   const [currentPersonMovieTeamsValue, setCurrentPersonMovieTeamsValue] =
     React.useState(undefined);
   const PersonMovieTeamsRef = React.createRef();
+  const [currentPersonRolesDisplayValue, setCurrentPersonRolesDisplayValue] =
+    React.useState("");
+  const [currentPersonRolesValue, setCurrentPersonRolesValue] =
+    React.useState(undefined);
+  const PersonRolesRef = React.createRef();
   const getIDValue = {
     PersonMovieTeams: (r) => JSON.stringify({ id: r?.id }),
+    PersonRoles: (r) => JSON.stringify({ id: r?.id }),
   };
   const PersonMovieTeamsIdSet = new Set(
     Array.isArray(PersonMovieTeams)
       ? PersonMovieTeams.map((r) => getIDValue.PersonMovieTeams?.(r))
       : getIDValue.PersonMovieTeams?.(PersonMovieTeams)
   );
+  const PersonRolesIdSet = new Set(
+    Array.isArray(PersonRoles)
+      ? PersonRoles.map((r) => getIDValue.PersonRoles?.(r))
+      : getIDValue.PersonRoles?.(PersonRoles)
+  );
   const getDisplayValue = {
     PersonMovieTeams: (r) => r?.id,
+    PersonRoles: (r) => r?.id,
   };
   const validations = {
     name: [{ type: "Required" }],
     surname: [],
-    role: [],
     description: [],
     Instagram: [{ type: "URL" }],
     Facebook: [{ type: "URL" }],
@@ -300,11 +311,10 @@ export default function PersonCreateForm(props) {
     user_id: [],
     is_public: [],
     completed_setup: [],
-    photo_location: [],
     description_confirmed: [],
-    photo_confirmed: [],
     is_entity: [],
     nationality: [],
+    PersonRoles: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -351,8 +361,36 @@ export default function PersonCreateForm(props) {
     setPersonMovieTeamsRecords(newOptions.slice(0, autocompleteLength));
     setPersonMovieTeamsLoading(false);
   };
+  const fetchPersonRolesRecords = async (value) => {
+    setPersonRolesLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: { or: [{ id: { contains: value } }] },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await API.graphql({
+          query: listPersonRoles.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listPersonRoles?.items;
+      var loaded = result.filter(
+        (item) => !PersonRolesIdSet.has(getIDValue.PersonRoles?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setPersonRolesRecords(newOptions.slice(0, autocompleteLength));
+    setPersonRolesLoading(false);
+  };
   React.useEffect(() => {
     fetchPersonMovieTeamsRecords("");
+    fetchPersonRolesRecords("");
   }, []);
   return (
     <Grid
@@ -365,7 +403,6 @@ export default function PersonCreateForm(props) {
         let modelFields = {
           name,
           surname,
-          role,
           description,
           Instagram,
           Facebook,
@@ -375,11 +412,10 @@ export default function PersonCreateForm(props) {
           user_id,
           is_public,
           completed_setup,
-          photo_location,
           description_confirmed,
-          photo_confirmed,
           is_entity,
           nationality,
+          PersonRoles,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -420,7 +456,6 @@ export default function PersonCreateForm(props) {
           const modelFieldsToSave = {
             name: modelFields.name,
             surname: modelFields.surname,
-            role: modelFields.role,
             description: modelFields.description,
             Instagram: modelFields.Instagram,
             Facebook: modelFields.Facebook,
@@ -429,9 +464,7 @@ export default function PersonCreateForm(props) {
             user_id: modelFields.user_id,
             is_public: modelFields.is_public,
             completed_setup: modelFields.completed_setup,
-            photo_location: modelFields.photo_location,
             description_confirmed: modelFields.description_confirmed,
-            photo_confirmed: modelFields.photo_confirmed,
             is_entity: modelFields.is_entity,
             nationality: modelFields.nationality,
           };
@@ -451,6 +484,21 @@ export default function PersonCreateForm(props) {
               promises.push(
                 API.graphql({
                   query: updatePersonMovieTeam.replaceAll("__typename", ""),
+                  variables: {
+                    input: {
+                      id: original.id,
+                    },
+                  },
+                })
+              );
+              return promises;
+            }, [])
+          );
+          promises.push(
+            ...PersonRoles.reduce((promises, original) => {
+              promises.push(
+                API.graphql({
+                  query: updatePersonRole.replaceAll("__typename", ""),
                   variables: {
                     input: {
                       id: original.id,
@@ -489,7 +537,6 @@ export default function PersonCreateForm(props) {
             const modelFields = {
               name: value,
               surname,
-              role,
               description,
               Instagram,
               Facebook,
@@ -499,11 +546,10 @@ export default function PersonCreateForm(props) {
               user_id,
               is_public,
               completed_setup,
-              photo_location,
               description_confirmed,
-              photo_confirmed,
               is_entity,
               nationality,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -529,7 +575,6 @@ export default function PersonCreateForm(props) {
             const modelFields = {
               name,
               surname: value,
-              role,
               description,
               Instagram,
               Facebook,
@@ -539,11 +584,10 @@ export default function PersonCreateForm(props) {
               user_id,
               is_public,
               completed_setup,
-              photo_location,
               description_confirmed,
-              photo_confirmed,
               is_entity,
               nationality,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             value = result?.surname ?? value;
@@ -559,46 +603,6 @@ export default function PersonCreateForm(props) {
         {...getOverrideProps(overrides, "surname")}
       ></TextField>
       <TextField
-        label="Role"
-        isRequired={false}
-        isReadOnly={false}
-        value={role}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              surname,
-              role: value,
-              description,
-              Instagram,
-              Facebook,
-              IMBD,
-              email,
-              PersonMovieTeams,
-              user_id,
-              is_public,
-              completed_setup,
-              photo_location,
-              description_confirmed,
-              photo_confirmed,
-              is_entity,
-              nationality,
-            };
-            const result = onChange(modelFields);
-            value = result?.role ?? value;
-          }
-          if (errors.role?.hasError) {
-            runValidationTasks("role", value);
-          }
-          setRole(value);
-        }}
-        onBlur={() => runValidationTasks("role", role)}
-        errorMessage={errors.role?.errorMessage}
-        hasError={errors.role?.hasError}
-        {...getOverrideProps(overrides, "role")}
-      ></TextField>
-      <TextField
         label="Description"
         isRequired={false}
         isReadOnly={false}
@@ -609,7 +613,6 @@ export default function PersonCreateForm(props) {
             const modelFields = {
               name,
               surname,
-              role,
               description: value,
               Instagram,
               Facebook,
@@ -619,11 +622,10 @@ export default function PersonCreateForm(props) {
               user_id,
               is_public,
               completed_setup,
-              photo_location,
               description_confirmed,
-              photo_confirmed,
               is_entity,
               nationality,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -649,7 +651,6 @@ export default function PersonCreateForm(props) {
             const modelFields = {
               name,
               surname,
-              role,
               description,
               Instagram: value,
               Facebook,
@@ -659,11 +660,10 @@ export default function PersonCreateForm(props) {
               user_id,
               is_public,
               completed_setup,
-              photo_location,
               description_confirmed,
-              photo_confirmed,
               is_entity,
               nationality,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             value = result?.Instagram ?? value;
@@ -689,7 +689,6 @@ export default function PersonCreateForm(props) {
             const modelFields = {
               name,
               surname,
-              role,
               description,
               Instagram,
               Facebook: value,
@@ -699,11 +698,10 @@ export default function PersonCreateForm(props) {
               user_id,
               is_public,
               completed_setup,
-              photo_location,
               description_confirmed,
-              photo_confirmed,
               is_entity,
               nationality,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             value = result?.Facebook ?? value;
@@ -729,7 +727,6 @@ export default function PersonCreateForm(props) {
             const modelFields = {
               name,
               surname,
-              role,
               description,
               Instagram,
               Facebook,
@@ -739,11 +736,10 @@ export default function PersonCreateForm(props) {
               user_id,
               is_public,
               completed_setup,
-              photo_location,
               description_confirmed,
-              photo_confirmed,
               is_entity,
               nationality,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             value = result?.IMBD ?? value;
@@ -769,7 +765,6 @@ export default function PersonCreateForm(props) {
             const modelFields = {
               name,
               surname,
-              role,
               description,
               Instagram,
               Facebook,
@@ -779,11 +774,10 @@ export default function PersonCreateForm(props) {
               user_id,
               is_public,
               completed_setup,
-              photo_location,
               description_confirmed,
-              photo_confirmed,
               is_entity,
               nationality,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -805,7 +799,6 @@ export default function PersonCreateForm(props) {
             const modelFields = {
               name,
               surname,
-              role,
               description,
               Instagram,
               Facebook,
@@ -815,11 +808,10 @@ export default function PersonCreateForm(props) {
               user_id,
               is_public,
               completed_setup,
-              photo_location,
               description_confirmed,
-              photo_confirmed,
               is_entity,
               nationality,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             values = result?.PersonMovieTeams ?? values;
@@ -907,7 +899,6 @@ export default function PersonCreateForm(props) {
             const modelFields = {
               name,
               surname,
-              role,
               description,
               Instagram,
               Facebook,
@@ -917,11 +908,10 @@ export default function PersonCreateForm(props) {
               user_id: value,
               is_public,
               completed_setup,
-              photo_location,
               description_confirmed,
-              photo_confirmed,
               is_entity,
               nationality,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             value = result?.user_id ?? value;
@@ -947,7 +937,6 @@ export default function PersonCreateForm(props) {
             const modelFields = {
               name,
               surname,
-              role,
               description,
               Instagram,
               Facebook,
@@ -957,11 +946,10 @@ export default function PersonCreateForm(props) {
               user_id,
               is_public: value,
               completed_setup,
-              photo_location,
               description_confirmed,
-              photo_confirmed,
               is_entity,
               nationality,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             value = result?.is_public ?? value;
@@ -987,7 +975,6 @@ export default function PersonCreateForm(props) {
             const modelFields = {
               name,
               surname,
-              role,
               description,
               Instagram,
               Facebook,
@@ -997,11 +984,10 @@ export default function PersonCreateForm(props) {
               user_id,
               is_public,
               completed_setup: value,
-              photo_location,
               description_confirmed,
-              photo_confirmed,
               is_entity,
               nationality,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             value = result?.completed_setup ?? value;
@@ -1016,46 +1002,6 @@ export default function PersonCreateForm(props) {
         hasError={errors.completed_setup?.hasError}
         {...getOverrideProps(overrides, "completed_setup")}
       ></SwitchField>
-      <TextField
-        label="Photo location"
-        isRequired={false}
-        isReadOnly={false}
-        value={photo_location}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              surname,
-              role,
-              description,
-              Instagram,
-              Facebook,
-              IMBD,
-              email,
-              PersonMovieTeams,
-              user_id,
-              is_public,
-              completed_setup,
-              photo_location: value,
-              description_confirmed,
-              photo_confirmed,
-              is_entity,
-              nationality,
-            };
-            const result = onChange(modelFields);
-            value = result?.photo_location ?? value;
-          }
-          if (errors.photo_location?.hasError) {
-            runValidationTasks("photo_location", value);
-          }
-          setPhoto_location(value);
-        }}
-        onBlur={() => runValidationTasks("photo_location", photo_location)}
-        errorMessage={errors.photo_location?.errorMessage}
-        hasError={errors.photo_location?.hasError}
-        {...getOverrideProps(overrides, "photo_location")}
-      ></TextField>
       <SwitchField
         label="Description confirmed"
         defaultChecked={false}
@@ -1067,7 +1013,6 @@ export default function PersonCreateForm(props) {
             const modelFields = {
               name,
               surname,
-              role,
               description,
               Instagram,
               Facebook,
@@ -1077,11 +1022,10 @@ export default function PersonCreateForm(props) {
               user_id,
               is_public,
               completed_setup,
-              photo_location,
               description_confirmed: value,
-              photo_confirmed,
               is_entity,
               nationality,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             value = result?.description_confirmed ?? value;
@@ -1099,46 +1043,6 @@ export default function PersonCreateForm(props) {
         {...getOverrideProps(overrides, "description_confirmed")}
       ></SwitchField>
       <SwitchField
-        label="Photo confirmed"
-        defaultChecked={false}
-        isDisabled={false}
-        isChecked={photo_confirmed}
-        onChange={(e) => {
-          let value = e.target.checked;
-          if (onChange) {
-            const modelFields = {
-              name,
-              surname,
-              role,
-              description,
-              Instagram,
-              Facebook,
-              IMBD,
-              email,
-              PersonMovieTeams,
-              user_id,
-              is_public,
-              completed_setup,
-              photo_location,
-              description_confirmed,
-              photo_confirmed: value,
-              is_entity,
-              nationality,
-            };
-            const result = onChange(modelFields);
-            value = result?.photo_confirmed ?? value;
-          }
-          if (errors.photo_confirmed?.hasError) {
-            runValidationTasks("photo_confirmed", value);
-          }
-          setPhoto_confirmed(value);
-        }}
-        onBlur={() => runValidationTasks("photo_confirmed", photo_confirmed)}
-        errorMessage={errors.photo_confirmed?.errorMessage}
-        hasError={errors.photo_confirmed?.hasError}
-        {...getOverrideProps(overrides, "photo_confirmed")}
-      ></SwitchField>
-      <SwitchField
         label="Is entity"
         defaultChecked={false}
         isDisabled={false}
@@ -1149,7 +1053,6 @@ export default function PersonCreateForm(props) {
             const modelFields = {
               name,
               surname,
-              role,
               description,
               Instagram,
               Facebook,
@@ -1159,11 +1062,10 @@ export default function PersonCreateForm(props) {
               user_id,
               is_public,
               completed_setup,
-              photo_location,
               description_confirmed,
-              photo_confirmed,
               is_entity: value,
               nationality,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             value = result?.is_entity ?? value;
@@ -1189,7 +1091,6 @@ export default function PersonCreateForm(props) {
             const modelFields = {
               name,
               surname,
-              role,
               description,
               Instagram,
               Facebook,
@@ -1199,11 +1100,10 @@ export default function PersonCreateForm(props) {
               user_id,
               is_public,
               completed_setup,
-              photo_location,
               description_confirmed,
-              photo_confirmed,
               is_entity,
               nationality: value,
+              PersonRoles,
             };
             const result = onChange(modelFields);
             value = result?.nationality ?? value;
@@ -1218,6 +1118,96 @@ export default function PersonCreateForm(props) {
         hasError={errors.nationality?.hasError}
         {...getOverrideProps(overrides, "nationality")}
       ></TextField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              description,
+              Instagram,
+              Facebook,
+              IMBD,
+              email,
+              PersonMovieTeams,
+              user_id,
+              is_public,
+              completed_setup,
+              description_confirmed,
+              is_entity,
+              nationality,
+              PersonRoles: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.PersonRoles ?? values;
+          }
+          setPersonRoles(values);
+          setCurrentPersonRolesValue(undefined);
+          setCurrentPersonRolesDisplayValue("");
+        }}
+        currentFieldValue={currentPersonRolesValue}
+        label={"Person roles"}
+        items={PersonRoles}
+        hasError={errors?.PersonRoles?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("PersonRoles", currentPersonRolesValue)
+        }
+        errorMessage={errors?.PersonRoles?.errorMessage}
+        getBadgeText={getDisplayValue.PersonRoles}
+        setFieldValue={(model) => {
+          setCurrentPersonRolesDisplayValue(
+            model ? getDisplayValue.PersonRoles(model) : ""
+          );
+          setCurrentPersonRolesValue(model);
+        }}
+        inputFieldRef={PersonRolesRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Person roles"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search PersonRole"
+          value={currentPersonRolesDisplayValue}
+          options={personRolesRecords.map((r) => ({
+            id: getIDValue.PersonRoles?.(r),
+            label: getDisplayValue.PersonRoles?.(r),
+          }))}
+          isLoading={PersonRolesLoading}
+          onSelect={({ id, label }) => {
+            setCurrentPersonRolesValue(
+              personRolesRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentPersonRolesDisplayValue(label);
+            runValidationTasks("PersonRoles", label);
+          }}
+          onClear={() => {
+            setCurrentPersonRolesDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchPersonRolesRecords(value);
+            if (errors.PersonRoles?.hasError) {
+              runValidationTasks("PersonRoles", value);
+            }
+            setCurrentPersonRolesDisplayValue(value);
+            setCurrentPersonRolesValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks("PersonRoles", currentPersonRolesDisplayValue)
+          }
+          errorMessage={errors.PersonRoles?.errorMessage}
+          hasError={errors.PersonRoles?.hasError}
+          ref={PersonRolesRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "PersonRoles")}
+        ></Autocomplete>
+      </ArrayField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

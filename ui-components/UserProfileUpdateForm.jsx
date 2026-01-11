@@ -22,9 +22,16 @@ import {
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { getUserProfile, listMoviePlaylists } from "../src/graphql/queries";
 import {
+  getUserProfile,
+  listEmails,
+  listMoviePlaylists,
+  listPayments,
+} from "../src/graphql/queries";
+import {
+  updateEmail,
   updateMoviePlaylist,
+  updatePayment,
   updateUserProfile,
 } from "../src/graphql/mutations";
 function ArrayField({
@@ -198,18 +205,28 @@ export default function UserProfileUpdateForm(props) {
     name: "",
     surname: "",
     is_member: false,
-    member_untill: "",
+    continues_payment: false,
+    member_until: "",
+    monthsSubscribed: "",
     is_admin: false,
     email: "",
     user_id: "",
     photo_location: "",
     MoviePlaylists: [],
+    Payments: [],
+    Emails: [],
   };
   const [name, setName] = React.useState(initialValues.name);
   const [surname, setSurname] = React.useState(initialValues.surname);
   const [is_member, setIs_member] = React.useState(initialValues.is_member);
-  const [member_untill, setMember_untill] = React.useState(
-    initialValues.member_untill
+  const [continues_payment, setContinues_payment] = React.useState(
+    initialValues.continues_payment
+  );
+  const [member_until, setMember_until] = React.useState(
+    initialValues.member_until
+  );
+  const [monthsSubscribed, setMonthsSubscribed] = React.useState(
+    initialValues.monthsSubscribed
   );
   const [is_admin, setIs_admin] = React.useState(initialValues.is_admin);
   const [email, setEmail] = React.useState(initialValues.email);
@@ -223,6 +240,12 @@ export default function UserProfileUpdateForm(props) {
   const [MoviePlaylistsLoading, setMoviePlaylistsLoading] =
     React.useState(false);
   const [moviePlaylistsRecords, setMoviePlaylistsRecords] = React.useState([]);
+  const [Payments, setPayments] = React.useState(initialValues.Payments);
+  const [PaymentsLoading, setPaymentsLoading] = React.useState(false);
+  const [paymentsRecords, setPaymentsRecords] = React.useState([]);
+  const [Emails, setEmails] = React.useState(initialValues.Emails);
+  const [EmailsLoading, setEmailsLoading] = React.useState(false);
+  const [emailsRecords, setEmailsRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -231,12 +254,16 @@ export default function UserProfileUpdateForm(props) {
           ...initialValues,
           ...userProfileRecord,
           MoviePlaylists: linkedMoviePlaylists,
+          Payments: linkedPayments,
+          Emails: linkedEmails,
         }
       : initialValues;
     setName(cleanValues.name);
     setSurname(cleanValues.surname);
     setIs_member(cleanValues.is_member);
-    setMember_untill(cleanValues.member_untill);
+    setContinues_payment(cleanValues.continues_payment);
+    setMember_until(cleanValues.member_until);
+    setMonthsSubscribed(cleanValues.monthsSubscribed);
     setIs_admin(cleanValues.is_admin);
     setEmail(cleanValues.email);
     setUser_id(cleanValues.user_id);
@@ -244,12 +271,22 @@ export default function UserProfileUpdateForm(props) {
     setMoviePlaylists(cleanValues.MoviePlaylists ?? []);
     setCurrentMoviePlaylistsValue(undefined);
     setCurrentMoviePlaylistsDisplayValue("");
+    setPayments(cleanValues.Payments ?? []);
+    setCurrentPaymentsValue(undefined);
+    setCurrentPaymentsDisplayValue("");
+    setEmails(cleanValues.Emails ?? []);
+    setCurrentEmailsValue(undefined);
+    setCurrentEmailsDisplayValue("");
     setErrors({});
   };
   const [userProfileRecord, setUserProfileRecord] =
     React.useState(userProfileModelProp);
   const [linkedMoviePlaylists, setLinkedMoviePlaylists] = React.useState([]);
   const canUnlinkMoviePlaylists = true;
+  const [linkedPayments, setLinkedPayments] = React.useState([]);
+  const canUnlinkPayments = false;
+  const [linkedEmails, setLinkedEmails] = React.useState([]);
+  const canUnlinkEmails = false;
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
@@ -262,11 +299,20 @@ export default function UserProfileUpdateForm(props) {
         : userProfileModelProp;
       const linkedMoviePlaylists = record?.MoviePlaylists?.items ?? [];
       setLinkedMoviePlaylists(linkedMoviePlaylists);
+      const linkedPayments = record?.Payments?.items ?? [];
+      setLinkedPayments(linkedPayments);
+      const linkedEmails = record?.Emails?.items ?? [];
+      setLinkedEmails(linkedEmails);
       setUserProfileRecord(record);
     };
     queryData();
   }, [idProp, userProfileModelProp]);
-  React.useEffect(resetStateValues, [userProfileRecord, linkedMoviePlaylists]);
+  React.useEffect(resetStateValues, [
+    userProfileRecord,
+    linkedMoviePlaylists,
+    linkedPayments,
+    linkedEmails,
+  ]);
   const [
     currentMoviePlaylistsDisplayValue,
     setCurrentMoviePlaylistsDisplayValue,
@@ -274,27 +320,54 @@ export default function UserProfileUpdateForm(props) {
   const [currentMoviePlaylistsValue, setCurrentMoviePlaylistsValue] =
     React.useState(undefined);
   const MoviePlaylistsRef = React.createRef();
+  const [currentPaymentsDisplayValue, setCurrentPaymentsDisplayValue] =
+    React.useState("");
+  const [currentPaymentsValue, setCurrentPaymentsValue] =
+    React.useState(undefined);
+  const PaymentsRef = React.createRef();
+  const [currentEmailsDisplayValue, setCurrentEmailsDisplayValue] =
+    React.useState("");
+  const [currentEmailsValue, setCurrentEmailsValue] = React.useState(undefined);
+  const EmailsRef = React.createRef();
   const getIDValue = {
     MoviePlaylists: (r) => JSON.stringify({ id: r?.id }),
+    Payments: (r) => JSON.stringify({ id: r?.id }),
+    Emails: (r) => JSON.stringify({ id: r?.id }),
   };
   const MoviePlaylistsIdSet = new Set(
     Array.isArray(MoviePlaylists)
       ? MoviePlaylists.map((r) => getIDValue.MoviePlaylists?.(r))
       : getIDValue.MoviePlaylists?.(MoviePlaylists)
   );
+  const PaymentsIdSet = new Set(
+    Array.isArray(Payments)
+      ? Payments.map((r) => getIDValue.Payments?.(r))
+      : getIDValue.Payments?.(Payments)
+  );
+  const EmailsIdSet = new Set(
+    Array.isArray(Emails)
+      ? Emails.map((r) => getIDValue.Emails?.(r))
+      : getIDValue.Emails?.(Emails)
+  );
   const getDisplayValue = {
     MoviePlaylists: (r) => `${r?.creator ? r?.creator + " - " : ""}${r?.id}`,
+    Payments: (r) => `${r?.reference ? r?.reference + " - " : ""}${r?.id}`,
+    Emails: (r) => `${r?.email ? r?.email + " - " : ""}${r?.id}`,
   };
   const validations = {
     name: [],
     surname: [],
     is_member: [],
-    member_untill: [],
+    continues_payment: [],
+    member_until: [],
+    monthsSubscribed: [],
     is_admin: [],
     email: [{ type: "Email" }],
     user_id: [],
     photo_location: [],
     MoviePlaylists: [],
+    Payments: [],
+    Emails: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -359,8 +432,68 @@ export default function UserProfileUpdateForm(props) {
     setMoviePlaylistsRecords(newOptions.slice(0, autocompleteLength));
     setMoviePlaylistsLoading(false);
   };
+  const fetchPaymentsRecords = async (value) => {
+    setPaymentsLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: {
+          or: [{ reference: { contains: value } }, { id: { contains: value } }],
+        },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await API.graphql({
+          query: listPayments.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listPayments?.items;
+      var loaded = result.filter(
+        (item) => !PaymentsIdSet.has(getIDValue.Payments?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setPaymentsRecords(newOptions.slice(0, autocompleteLength));
+    setPaymentsLoading(false);
+  };
+  const fetchEmailsRecords = async (value) => {
+    setEmailsLoading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: {
+          or: [{ email: { contains: value } }, { id: { contains: value } }],
+        },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await API.graphql({
+          query: listEmails.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listEmails?.items;
+      var loaded = result.filter(
+        (item) => !EmailsIdSet.has(getIDValue.Emails?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setEmailsRecords(newOptions.slice(0, autocompleteLength));
+    setEmailsLoading(false);
+  };
   React.useEffect(() => {
     fetchMoviePlaylistsRecords("");
+    fetchPaymentsRecords("");
+    fetchEmailsRecords("");
   }, []);
   return (
     <Grid
@@ -374,12 +507,16 @@ export default function UserProfileUpdateForm(props) {
           name: name ?? null,
           surname: surname ?? null,
           is_member: is_member ?? null,
-          member_untill: member_untill ?? null,
+          continues_payment: continues_payment ?? null,
+          member_until: member_until ?? null,
+          monthsSubscribed: monthsSubscribed ?? null,
           is_admin: is_admin ?? null,
           email: email ?? null,
           user_id: user_id ?? null,
           photo_location: photo_location ?? null,
           MoviePlaylists: MoviePlaylists ?? null,
+          Payments: Payments ?? null,
+          Emails: Emails ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -469,11 +606,111 @@ export default function UserProfileUpdateForm(props) {
               })
             );
           });
+          const paymentsToLink = [];
+          const paymentsToUnLink = [];
+          const paymentsSet = new Set();
+          const linkedPaymentsSet = new Set();
+          Payments.forEach((r) => paymentsSet.add(getIDValue.Payments?.(r)));
+          linkedPayments.forEach((r) =>
+            linkedPaymentsSet.add(getIDValue.Payments?.(r))
+          );
+          linkedPayments.forEach((r) => {
+            if (!paymentsSet.has(getIDValue.Payments?.(r))) {
+              paymentsToUnLink.push(r);
+            }
+          });
+          Payments.forEach((r) => {
+            if (!linkedPaymentsSet.has(getIDValue.Payments?.(r))) {
+              paymentsToLink.push(r);
+            }
+          });
+          paymentsToUnLink.forEach((original) => {
+            if (!canUnlinkPayments) {
+              throw Error(
+                `Payment ${original.id} cannot be unlinked from UserProfile because userprofileID is a required field.`
+              );
+            }
+            promises.push(
+              API.graphql({
+                query: updatePayment.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: original.id,
+                    userprofileID: null,
+                  },
+                },
+              })
+            );
+          });
+          paymentsToLink.forEach((original) => {
+            promises.push(
+              API.graphql({
+                query: updatePayment.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: original.id,
+                    userprofileID: userProfileRecord.id,
+                  },
+                },
+              })
+            );
+          });
+          const emailsToLink = [];
+          const emailsToUnLink = [];
+          const emailsSet = new Set();
+          const linkedEmailsSet = new Set();
+          Emails.forEach((r) => emailsSet.add(getIDValue.Emails?.(r)));
+          linkedEmails.forEach((r) =>
+            linkedEmailsSet.add(getIDValue.Emails?.(r))
+          );
+          linkedEmails.forEach((r) => {
+            if (!emailsSet.has(getIDValue.Emails?.(r))) {
+              emailsToUnLink.push(r);
+            }
+          });
+          Emails.forEach((r) => {
+            if (!linkedEmailsSet.has(getIDValue.Emails?.(r))) {
+              emailsToLink.push(r);
+            }
+          });
+          emailsToUnLink.forEach((original) => {
+            if (!canUnlinkEmails) {
+              throw Error(
+                `Email ${original.id} cannot be unlinked from UserProfile because userprofileID is a required field.`
+              );
+            }
+            promises.push(
+              API.graphql({
+                query: updateEmail.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: original.id,
+                    userprofileID: null,
+                  },
+                },
+              })
+            );
+          });
+          emailsToLink.forEach((original) => {
+            promises.push(
+              API.graphql({
+                query: updateEmail.replaceAll("__typename", ""),
+                variables: {
+                  input: {
+                    id: original.id,
+                    userprofileID: userProfileRecord.id,
+                  },
+                },
+              })
+            );
+          });
           const modelFieldsToSave = {
             name: modelFields.name ?? null,
             surname: modelFields.surname ?? null,
             is_member: modelFields.is_member ?? null,
-            member_untill: modelFields.member_untill ?? null,
+            continues_payment: modelFields.continues_payment ?? null,
+            member_until: modelFields.member_until ?? null,
+            monthsSubscribed: modelFields.monthsSubscribed ?? null,
             is_admin: modelFields.is_admin ?? null,
             email: modelFields.email ?? null,
             user_id: modelFields.user_id ?? null,
@@ -516,12 +753,16 @@ export default function UserProfileUpdateForm(props) {
               name: value,
               surname,
               is_member,
-              member_untill,
+              continues_payment,
+              member_until,
+              monthsSubscribed,
               is_admin,
               email,
               user_id,
               photo_location,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -548,12 +789,16 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname: value,
               is_member,
-              member_untill,
+              continues_payment,
+              member_until,
+              monthsSubscribed,
               is_admin,
               email,
               user_id,
               photo_location,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.surname ?? value;
@@ -580,12 +825,16 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member: value,
-              member_untill,
+              continues_payment,
+              member_until,
+              monthsSubscribed,
               is_admin,
               email,
               user_id,
               photo_location,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.is_member ?? value;
@@ -600,12 +849,50 @@ export default function UserProfileUpdateForm(props) {
         hasError={errors.is_member?.hasError}
         {...getOverrideProps(overrides, "is_member")}
       ></SwitchField>
+      <SwitchField
+        label="Continues payment"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={continues_payment}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              is_member,
+              continues_payment: value,
+              member_until,
+              monthsSubscribed,
+              is_admin,
+              email,
+              user_id,
+              photo_location,
+              MoviePlaylists,
+              Payments,
+              Emails,
+            };
+            const result = onChange(modelFields);
+            value = result?.continues_payment ?? value;
+          }
+          if (errors.continues_payment?.hasError) {
+            runValidationTasks("continues_payment", value);
+          }
+          setContinues_payment(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("continues_payment", continues_payment)
+        }
+        errorMessage={errors.continues_payment?.errorMessage}
+        hasError={errors.continues_payment?.hasError}
+        {...getOverrideProps(overrides, "continues_payment")}
+      ></SwitchField>
       <TextField
-        label="Member untill"
+        label="Member until"
         isRequired={false}
         isReadOnly={false}
         type="datetime-local"
-        value={member_untill && convertToLocal(new Date(member_untill))}
+        value={member_until && convertToLocal(new Date(member_until))}
         onChange={(e) => {
           let value =
             e.target.value === "" ? "" : new Date(e.target.value).toISOString();
@@ -614,25 +901,69 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member,
-              member_untill: value,
+              continues_payment,
+              member_until: value,
+              monthsSubscribed,
               is_admin,
               email,
               user_id,
               photo_location,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
-            value = result?.member_untill ?? value;
+            value = result?.member_until ?? value;
           }
-          if (errors.member_untill?.hasError) {
-            runValidationTasks("member_untill", value);
+          if (errors.member_until?.hasError) {
+            runValidationTasks("member_until", value);
           }
-          setMember_untill(value);
+          setMember_until(value);
         }}
-        onBlur={() => runValidationTasks("member_untill", member_untill)}
-        errorMessage={errors.member_untill?.errorMessage}
-        hasError={errors.member_untill?.hasError}
-        {...getOverrideProps(overrides, "member_untill")}
+        onBlur={() => runValidationTasks("member_until", member_until)}
+        errorMessage={errors.member_until?.errorMessage}
+        hasError={errors.member_until?.hasError}
+        {...getOverrideProps(overrides, "member_until")}
+      ></TextField>
+      <TextField
+        label="Months subscribed"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={monthsSubscribed}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              is_member,
+              continues_payment,
+              member_until,
+              monthsSubscribed: value,
+              is_admin,
+              email,
+              user_id,
+              photo_location,
+              MoviePlaylists,
+              Payments,
+              Emails,
+            };
+            const result = onChange(modelFields);
+            value = result?.monthsSubscribed ?? value;
+          }
+          if (errors.monthsSubscribed?.hasError) {
+            runValidationTasks("monthsSubscribed", value);
+          }
+          setMonthsSubscribed(value);
+        }}
+        onBlur={() => runValidationTasks("monthsSubscribed", monthsSubscribed)}
+        errorMessage={errors.monthsSubscribed?.errorMessage}
+        hasError={errors.monthsSubscribed?.hasError}
+        {...getOverrideProps(overrides, "monthsSubscribed")}
       ></TextField>
       <SwitchField
         label="Is admin"
@@ -646,12 +977,16 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member,
-              member_untill,
+              continues_payment,
+              member_until,
+              monthsSubscribed,
               is_admin: value,
               email,
               user_id,
               photo_location,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.is_admin ?? value;
@@ -678,12 +1013,16 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member,
-              member_untill,
+              continues_payment,
+              member_until,
+              monthsSubscribed,
               is_admin,
               email: value,
               user_id,
               photo_location,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -710,12 +1049,16 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member,
-              member_untill,
+              continues_payment,
+              member_until,
+              monthsSubscribed,
               is_admin,
               email,
               user_id: value,
               photo_location,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.user_id ?? value;
@@ -742,12 +1085,16 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member,
-              member_untill,
+              continues_payment,
+              member_until,
+              monthsSubscribed,
               is_admin,
               email,
               user_id,
               photo_location: value,
               MoviePlaylists,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             value = result?.photo_location ?? value;
@@ -770,12 +1117,16 @@ export default function UserProfileUpdateForm(props) {
               name,
               surname,
               is_member,
-              member_untill,
+              continues_payment,
+              member_until,
+              monthsSubscribed,
               is_admin,
               email,
               user_id,
               photo_location,
               MoviePlaylists: values,
+              Payments,
+              Emails,
             };
             const result = onChange(modelFields);
             values = result?.MoviePlaylists ?? values;
@@ -851,6 +1202,184 @@ export default function UserProfileUpdateForm(props) {
           ref={MoviePlaylistsRef}
           labelHidden={true}
           {...getOverrideProps(overrides, "MoviePlaylists")}
+        ></Autocomplete>
+      </ArrayField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              is_member,
+              continues_payment,
+              member_until,
+              monthsSubscribed,
+              is_admin,
+              email,
+              user_id,
+              photo_location,
+              MoviePlaylists,
+              Payments: values,
+              Emails,
+            };
+            const result = onChange(modelFields);
+            values = result?.Payments ?? values;
+          }
+          setPayments(values);
+          setCurrentPaymentsValue(undefined);
+          setCurrentPaymentsDisplayValue("");
+        }}
+        currentFieldValue={currentPaymentsValue}
+        label={"Payments"}
+        items={Payments}
+        hasError={errors?.Payments?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("Payments", currentPaymentsValue)
+        }
+        errorMessage={errors?.Payments?.errorMessage}
+        getBadgeText={getDisplayValue.Payments}
+        setFieldValue={(model) => {
+          setCurrentPaymentsDisplayValue(
+            model ? getDisplayValue.Payments(model) : ""
+          );
+          setCurrentPaymentsValue(model);
+        }}
+        inputFieldRef={PaymentsRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Payments"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search Payment"
+          value={currentPaymentsDisplayValue}
+          options={paymentsRecords
+            .filter((r) => !PaymentsIdSet.has(getIDValue.Payments?.(r)))
+            .map((r) => ({
+              id: getIDValue.Payments?.(r),
+              label: getDisplayValue.Payments?.(r),
+            }))}
+          isLoading={PaymentsLoading}
+          onSelect={({ id, label }) => {
+            setCurrentPaymentsValue(
+              paymentsRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentPaymentsDisplayValue(label);
+            runValidationTasks("Payments", label);
+          }}
+          onClear={() => {
+            setCurrentPaymentsDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchPaymentsRecords(value);
+            if (errors.Payments?.hasError) {
+              runValidationTasks("Payments", value);
+            }
+            setCurrentPaymentsDisplayValue(value);
+            setCurrentPaymentsValue(undefined);
+          }}
+          onBlur={() =>
+            runValidationTasks("Payments", currentPaymentsDisplayValue)
+          }
+          errorMessage={errors.Payments?.errorMessage}
+          hasError={errors.Payments?.hasError}
+          ref={PaymentsRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "Payments")}
+        ></Autocomplete>
+      </ArrayField>
+      <ArrayField
+        onChange={async (items) => {
+          let values = items;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              is_member,
+              continues_payment,
+              member_until,
+              monthsSubscribed,
+              is_admin,
+              email,
+              user_id,
+              photo_location,
+              MoviePlaylists,
+              Payments,
+              Emails: values,
+            };
+            const result = onChange(modelFields);
+            values = result?.Emails ?? values;
+          }
+          setEmails(values);
+          setCurrentEmailsValue(undefined);
+          setCurrentEmailsDisplayValue("");
+        }}
+        currentFieldValue={currentEmailsValue}
+        label={"Emails"}
+        items={Emails}
+        hasError={errors?.Emails?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("Emails", currentEmailsValue)
+        }
+        errorMessage={errors?.Emails?.errorMessage}
+        getBadgeText={getDisplayValue.Emails}
+        setFieldValue={(model) => {
+          setCurrentEmailsDisplayValue(
+            model ? getDisplayValue.Emails(model) : ""
+          );
+          setCurrentEmailsValue(model);
+        }}
+        inputFieldRef={EmailsRef}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Emails"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search Email"
+          value={currentEmailsDisplayValue}
+          options={emailsRecords
+            .filter((r) => !EmailsIdSet.has(getIDValue.Emails?.(r)))
+            .map((r) => ({
+              id: getIDValue.Emails?.(r),
+              label: getDisplayValue.Emails?.(r),
+            }))}
+          isLoading={EmailsLoading}
+          onSelect={({ id, label }) => {
+            setCurrentEmailsValue(
+              emailsRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentEmailsDisplayValue(label);
+            runValidationTasks("Emails", label);
+          }}
+          onClear={() => {
+            setCurrentEmailsDisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchEmailsRecords(value);
+            if (errors.Emails?.hasError) {
+              runValidationTasks("Emails", value);
+            }
+            setCurrentEmailsDisplayValue(value);
+            setCurrentEmailsValue(undefined);
+          }}
+          onBlur={() => runValidationTasks("Emails", currentEmailsDisplayValue)}
+          errorMessage={errors.Emails?.errorMessage}
+          hasError={errors.Emails?.hasError}
+          ref={EmailsRef}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "Emails")}
         ></Autocomplete>
       </ArrayField>
       <Flex

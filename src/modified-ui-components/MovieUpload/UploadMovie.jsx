@@ -204,12 +204,16 @@ export default function UploadMovie(props) {
     created_year: "",
     MovieType: undefined,
     creators_comment: "",
+    desc_language: "",
   };
   const [name, setName] = React.useState(initialValues.name);
   const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
   const [genre, setGenre] = React.useState(initialValues.genre);
   const [description, setDescription] = React.useState(
     initialValues.description
+  );
+  const [desc_language, setDesc_language] = React.useState(
+    initialValues.desc_language
   );
   const [description_eng, setDescription_eng] = React.useState(
     initialValues.description_eng
@@ -263,7 +267,9 @@ export default function UploadMovie(props) {
     React.useState("");
   const [currentCaptionsLanguageDisplayValue, setCurrentCaptionsLanguageDisplayValue] =
     React.useState("");
-    const [currentScreenLanguageDisplayValue, setCurrentScreenLanguageDisplayValue] =
+  const [currentDescriptionLanguageDisplayValue, setCurrentDescriptionLanguageDisplayValue] =
+    React.useState("");
+  const [currentScreenLanguageDisplayValue, setCurrentScreenLanguageDisplayValue] =
     React.useState("");
   const [currentMovieTypeValue, setCurrentMovieTypeValue] =
     React.useState(undefined);
@@ -312,6 +318,7 @@ export default function UploadMovie(props) {
       { type: "Required", validationMessage: "MovieType is required." },
     ],
     creators_comment: [],
+    desc_language: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -404,6 +411,7 @@ export default function UploadMovie(props) {
           name_eng,
           genre,
           description,
+          desc_language,
           description_eng,
           age_rating,
           screen_language,
@@ -455,6 +463,7 @@ export default function UploadMovie(props) {
             name_eng: modelFields.name_eng,
             genre: modelFields.genre,
             description: modelFields.description,
+            description_language: modelFields.desc_language,
             description_eng: modelFields.description_eng,
             age_rating: modelFields.age_rating,
             screen_language: modelFields.screen_language,
@@ -506,6 +515,7 @@ export default function UploadMovie(props) {
               name_eng,
               genre,
               description,
+              desc_language,
               description_eng,
               age_rating,
               screen_language,
@@ -542,6 +552,7 @@ export default function UploadMovie(props) {
               name_eng: value,
               genre,
               description,
+              desc_language,
               description_eng,
               age_rating,
               screen_language,
@@ -578,6 +589,7 @@ export default function UploadMovie(props) {
               name_eng,
               genre: value,
               description,
+              desc_language,
               description_eng,
               age_rating,
               screen_language,
@@ -636,6 +648,54 @@ export default function UploadMovie(props) {
         hasError={errors.description?.hasError}
         {...getOverrideProps(overrides, "description")}
       ></TextAreaField>
+      <Autocomplete
+        label="Description language"
+        isRequired={true}
+        isReadOnly={false}
+        value={currentDescriptionLanguageDisplayValue}
+        options={countryCodeRecords
+          .filter((r) => !CountryCodeIdSet.has(getCountryIDValue.CountryCode?.(r)))
+          .map((r) => ({
+            id: getCountryIDValue.CountryCode?.(r),
+            label: getCountryDisplayValue.CountryCode?.(r),
+        }))}
+        onSelect={({ id, label }) => {
+          const object = (countryCodeRecords.find((r) =>
+            Object.entries(JSON.parse(id)).every(
+              ([key, value]) => r[key] === value
+            )
+          ))
+          setCurrentDescriptionLanguageDisplayValue(
+            countryCodeRecords.find((r) =>
+              Object.entries(JSON.parse(id)).every(
+                ([key, value]) => r[key] === value
+              )
+            )
+          );
+          setDesc_language(object.Code);
+          setCurrentDescriptionLanguageDisplayValue(object.Code);
+          runValidationTasks("desc_language", id);
+        }}
+        onClear={() => {
+          setCurrentDescriptionLanguageDisplayValue("");
+          setDesc_language("");
+        }}
+        onChange={(e) => {
+          let { value } = e.target;
+          fetchCountryCodeRecords(value);
+          if (errors.CountryCode?.hasError) {
+            runValidationTasks("desc_language", value);
+          }
+          setCurrentDescriptionLanguageDisplayValue(value);
+          // setCurrentScreenLanguageValue(undefined);
+          setDesc_language(undefined);
+        }}
+        onBlur={() => runValidationTasks("desc_language", desc_language)}
+        errorMessage={errors.desc_language?.errorMessage}
+        hasError={errors.desc_language?.hasError}
+        labelHidden={false}
+        {...getOverrideProps(overrides, "desc_language")}
+      ></Autocomplete>
       <TextAreaField
         label="Description in English"
         isRequired={true}
@@ -648,6 +708,7 @@ export default function UploadMovie(props) {
               name_eng,
               genre,
               description,
+              desc_language,
               description_eng: value,
               age_rating,
               screen_language,
@@ -684,6 +745,7 @@ export default function UploadMovie(props) {
               name_eng,
               genre,
               description,
+              desc_language,
               description_eng: value,
               age_rating,
               screen_language,
@@ -724,6 +786,7 @@ export default function UploadMovie(props) {
               name_eng,
               genre,
               description,
+              desc_language,
               description_eng,
               age_rating: value,
               screen_language,
@@ -910,6 +973,7 @@ export default function UploadMovie(props) {
               name_eng,
               genre,
               description,
+              desc_language,
               description_eng,
               age_rating,
               screen_language,
@@ -950,6 +1014,7 @@ export default function UploadMovie(props) {
               name_eng,
               genre,
               description,
+              desc_language,
               description_eng,
               age_rating,
               screen_language,
@@ -983,6 +1048,7 @@ export default function UploadMovie(props) {
               name_eng,
               genre,
               description,
+              desc_language,
               description_eng,
               age_rating,
               screen_language,

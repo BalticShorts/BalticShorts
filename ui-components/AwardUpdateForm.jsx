@@ -21,12 +21,8 @@ import {
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { listPersonMovieTeams, listPersonRoles } from "../src/graphql/queries";
-import {
-  createRole,
-  updatePersonMovieTeam,
-  updatePersonRole,
-} from "../src/graphql/mutations";
+import { getAward, listMovies } from "../src/graphql/queries";
+import { updateAward } from "../src/graphql/mutations";
 function ArrayField({
   items = [],
   onChange,
@@ -182,9 +178,10 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function RoleCreateForm(props) {
+export default function AwardUpdateForm(props) {
   const {
-    clearOnSuccess = true,
+    id: idProp,
+    award: awardModelProp,
     onSuccess,
     onError,
     onSubmit,
@@ -195,73 +192,72 @@ export default function RoleCreateForm(props) {
   } = props;
   const initialValues = {
     name: "",
-    PersonMovieTeam: [],
-    name_eng: "",
-    PersonRoles: [],
+    year: "",
+    category: "",
+    comment: "",
+    movie: undefined,
   };
   const [name, setName] = React.useState(initialValues.name);
-  const [PersonMovieTeam, setPersonMovieTeam] = React.useState(
-    initialValues.PersonMovieTeam
-  );
-  const [PersonMovieTeamLoading, setPersonMovieTeamLoading] =
-    React.useState(false);
-  const [personMovieTeamRecords, setPersonMovieTeamRecords] = React.useState(
-    []
-  );
-  const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
-  const [PersonRoles, setPersonRoles] = React.useState(
-    initialValues.PersonRoles
-  );
-  const [PersonRolesLoading, setPersonRolesLoading] = React.useState(false);
-  const [personRolesRecords, setPersonRolesRecords] = React.useState([]);
+  const [year, setYear] = React.useState(initialValues.year);
+  const [category, setCategory] = React.useState(initialValues.category);
+  const [comment, setComment] = React.useState(initialValues.comment);
+  const [movie, setMovie] = React.useState(initialValues.movie);
+  const [movieLoading, setMovieLoading] = React.useState(false);
+  const [movieRecords, setMovieRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setName(initialValues.name);
-    setPersonMovieTeam(initialValues.PersonMovieTeam);
-    setCurrentPersonMovieTeamValue(undefined);
-    setCurrentPersonMovieTeamDisplayValue("");
-    setName_eng(initialValues.name_eng);
-    setPersonRoles(initialValues.PersonRoles);
-    setCurrentPersonRolesValue(undefined);
-    setCurrentPersonRolesDisplayValue("");
+    const cleanValues = awardRecord
+      ? { ...initialValues, ...awardRecord, movie }
+      : initialValues;
+    setName(cleanValues.name);
+    setYear(cleanValues.year);
+    setCategory(cleanValues.category);
+    setComment(cleanValues.comment);
+    setMovie(cleanValues.movie);
+    setCurrentMovieValue(undefined);
+    setCurrentMovieDisplayValue("");
     setErrors({});
   };
-  const [
-    currentPersonMovieTeamDisplayValue,
-    setCurrentPersonMovieTeamDisplayValue,
-  ] = React.useState("");
-  const [currentPersonMovieTeamValue, setCurrentPersonMovieTeamValue] =
-    React.useState(undefined);
-  const PersonMovieTeamRef = React.createRef();
-  const [currentPersonRolesDisplayValue, setCurrentPersonRolesDisplayValue] =
+  const [awardRecord, setAwardRecord] = React.useState(awardModelProp);
+  React.useEffect(() => {
+    const queryData = async () => {
+      const record = idProp
+        ? (
+            await API.graphql({
+              query: getAward.replaceAll("__typename", ""),
+              variables: { id: idProp },
+            })
+          )?.data?.getAward
+        : awardModelProp;
+      const movieRecord = record ? await record.movie : undefined;
+      setMovie(movieRecord);
+      setAwardRecord(record);
+    };
+    queryData();
+  }, [idProp, awardModelProp]);
+  React.useEffect(resetStateValues, [awardRecord, movie]);
+  const [currentMovieDisplayValue, setCurrentMovieDisplayValue] =
     React.useState("");
-  const [currentPersonRolesValue, setCurrentPersonRolesValue] =
-    React.useState(undefined);
-  const PersonRolesRef = React.createRef();
+  const [currentMovieValue, setCurrentMovieValue] = React.useState(undefined);
+  const movieRef = React.createRef();
   const getIDValue = {
-    PersonMovieTeam: (r) => JSON.stringify({ id: r?.id }),
-    PersonRoles: (r) => JSON.stringify({ id: r?.id }),
+    movie: (r) => JSON.stringify({ id: r?.id }),
   };
-  const PersonMovieTeamIdSet = new Set(
-    Array.isArray(PersonMovieTeam)
-      ? PersonMovieTeam.map((r) => getIDValue.PersonMovieTeam?.(r))
-      : getIDValue.PersonMovieTeam?.(PersonMovieTeam)
-  );
-  const PersonRolesIdSet = new Set(
-    Array.isArray(PersonRoles)
-      ? PersonRoles.map((r) => getIDValue.PersonRoles?.(r))
-      : getIDValue.PersonRoles?.(PersonRoles)
+  const movieIdSet = new Set(
+    Array.isArray(movie)
+      ? movie.map((r) => getIDValue.movie?.(r))
+      : getIDValue.movie?.(movie)
   );
   const getDisplayValue = {
-    PersonMovieTeam: (r) => r?.id,
-    PersonRoles: (r) => r?.id,
+    movie: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
   };
   const validations = {
     name: [{ type: "Required" }],
-    PersonMovieTeam: [],
-    name_eng: [],
-    PersonRoles: [],
+    year: [{ type: "Required" }],
+    category: [{ type: "Required" }],
+    comment: [],
+    movie: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -280,63 +276,37 @@ export default function RoleCreateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const fetchPersonMovieTeamRecords = async (value) => {
-    setPersonMovieTeamLoading(true);
+  const fetchMovieRecords = async (value) => {
+    setMovieLoading(true);
     const newOptions = [];
     let newNext = "";
     while (newOptions.length < autocompleteLength && newNext != null) {
       const variables = {
         limit: autocompleteLength * 5,
-        filter: { or: [{ id: { contains: value } }] },
+        filter: {
+          or: [{ name: { contains: value } }, { id: { contains: value } }],
+        },
       };
       if (newNext) {
         variables["nextToken"] = newNext;
       }
       const result = (
         await API.graphql({
-          query: listPersonMovieTeams.replaceAll("__typename", ""),
+          query: listMovies.replaceAll("__typename", ""),
           variables,
         })
-      )?.data?.listPersonMovieTeams?.items;
+      )?.data?.listMovies?.items;
       var loaded = result.filter(
-        (item) => !PersonMovieTeamIdSet.has(getIDValue.PersonMovieTeam?.(item))
+        (item) => !movieIdSet.has(getIDValue.movie?.(item))
       );
       newOptions.push(...loaded);
       newNext = result.nextToken;
     }
-    setPersonMovieTeamRecords(newOptions.slice(0, autocompleteLength));
-    setPersonMovieTeamLoading(false);
-  };
-  const fetchPersonRolesRecords = async (value) => {
-    setPersonRolesLoading(true);
-    const newOptions = [];
-    let newNext = "";
-    while (newOptions.length < autocompleteLength && newNext != null) {
-      const variables = {
-        limit: autocompleteLength * 5,
-        filter: { or: [{ id: { contains: value } }] },
-      };
-      if (newNext) {
-        variables["nextToken"] = newNext;
-      }
-      const result = (
-        await API.graphql({
-          query: listPersonRoles.replaceAll("__typename", ""),
-          variables,
-        })
-      )?.data?.listPersonRoles?.items;
-      var loaded = result.filter(
-        (item) => !PersonRolesIdSet.has(getIDValue.PersonRoles?.(item))
-      );
-      newOptions.push(...loaded);
-      newNext = result.nextToken;
-    }
-    setPersonRolesRecords(newOptions.slice(0, autocompleteLength));
-    setPersonRolesLoading(false);
+    setMovieRecords(newOptions.slice(0, autocompleteLength));
+    setMovieLoading(false);
   };
   React.useEffect(() => {
-    fetchPersonMovieTeamRecords("");
-    fetchPersonRolesRecords("");
+    fetchMovieRecords("");
   }, []);
   return (
     <Grid
@@ -348,9 +318,10 @@ export default function RoleCreateForm(props) {
         event.preventDefault();
         let modelFields = {
           name,
-          PersonMovieTeam,
-          name_eng,
-          PersonRoles,
+          year,
+          category,
+          comment: comment ?? null,
+          movie: movie ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -390,55 +361,22 @@ export default function RoleCreateForm(props) {
           });
           const modelFieldsToSave = {
             name: modelFields.name,
-            name_eng: modelFields.name_eng,
+            year: modelFields.year,
+            category: modelFields.category,
+            comment: modelFields.comment ?? null,
+            movieID: modelFields?.movie?.id ?? null,
           };
-          const role = (
-            await API.graphql({
-              query: createRole.replaceAll("__typename", ""),
-              variables: {
-                input: {
-                  ...modelFieldsToSave,
-                },
+          await API.graphql({
+            query: updateAward.replaceAll("__typename", ""),
+            variables: {
+              input: {
+                id: awardRecord.id,
+                ...modelFieldsToSave,
               },
-            })
-          )?.data?.createRole;
-          const promises = [];
-          promises.push(
-            ...PersonMovieTeam.reduce((promises, original) => {
-              promises.push(
-                API.graphql({
-                  query: updatePersonMovieTeam.replaceAll("__typename", ""),
-                  variables: {
-                    input: {
-                      id: original.id,
-                    },
-                  },
-                })
-              );
-              return promises;
-            }, [])
-          );
-          promises.push(
-            ...PersonRoles.reduce((promises, original) => {
-              promises.push(
-                API.graphql({
-                  query: updatePersonRole.replaceAll("__typename", ""),
-                  variables: {
-                    input: {
-                      id: original.id,
-                    },
-                  },
-                })
-              );
-              return promises;
-            }, [])
-          );
-          await Promise.all(promises);
+            },
+          });
           if (onSuccess) {
             onSuccess(modelFields);
-          }
-          if (clearOnSuccess) {
-            resetStateValues();
           }
         } catch (err) {
           if (onError) {
@@ -447,7 +385,7 @@ export default function RoleCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "RoleCreateForm")}
+      {...getOverrideProps(overrides, "AwardUpdateForm")}
       {...rest}
     >
       <TextField
@@ -460,9 +398,10 @@ export default function RoleCreateForm(props) {
           if (onChange) {
             const modelFields = {
               name: value,
-              PersonMovieTeam,
-              name_eng,
-              PersonRoles,
+              year,
+              category,
+              comment,
+              movie,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -477,195 +416,174 @@ export default function RoleCreateForm(props) {
         hasError={errors.name?.hasError}
         {...getOverrideProps(overrides, "name")}
       ></TextField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
+      <TextField
+        label="Year"
+        isRequired={true}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={year}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
               name,
-              PersonMovieTeam: values,
-              name_eng,
-              PersonRoles,
+              year: value,
+              category,
+              comment,
+              movie,
             };
             const result = onChange(modelFields);
-            values = result?.PersonMovieTeam ?? values;
+            value = result?.year ?? value;
           }
-          setPersonMovieTeam(values);
-          setCurrentPersonMovieTeamValue(undefined);
-          setCurrentPersonMovieTeamDisplayValue("");
-        }}
-        currentFieldValue={currentPersonMovieTeamValue}
-        label={"Person movie team"}
-        items={PersonMovieTeam}
-        hasError={errors?.PersonMovieTeam?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks(
-            "PersonMovieTeam",
-            currentPersonMovieTeamValue
-          )
-        }
-        errorMessage={errors?.PersonMovieTeam?.errorMessage}
-        getBadgeText={getDisplayValue.PersonMovieTeam}
-        setFieldValue={(model) => {
-          setCurrentPersonMovieTeamDisplayValue(
-            model ? getDisplayValue.PersonMovieTeam(model) : ""
-          );
-          setCurrentPersonMovieTeamValue(model);
-        }}
-        inputFieldRef={PersonMovieTeamRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Person movie team"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search PersonMovieTeam"
-          value={currentPersonMovieTeamDisplayValue}
-          options={personMovieTeamRecords.map((r) => ({
-            id: getIDValue.PersonMovieTeam?.(r),
-            label: getDisplayValue.PersonMovieTeam?.(r),
-          }))}
-          isLoading={PersonMovieTeamLoading}
-          onSelect={({ id, label }) => {
-            setCurrentPersonMovieTeamValue(
-              personMovieTeamRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentPersonMovieTeamDisplayValue(label);
-            runValidationTasks("PersonMovieTeam", label);
-          }}
-          onClear={() => {
-            setCurrentPersonMovieTeamDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchPersonMovieTeamRecords(value);
-            if (errors.PersonMovieTeam?.hasError) {
-              runValidationTasks("PersonMovieTeam", value);
-            }
-            setCurrentPersonMovieTeamDisplayValue(value);
-            setCurrentPersonMovieTeamValue(undefined);
-          }}
-          onBlur={() =>
-            runValidationTasks(
-              "PersonMovieTeam",
-              currentPersonMovieTeamDisplayValue
-            )
+          if (errors.year?.hasError) {
+            runValidationTasks("year", value);
           }
-          errorMessage={errors.PersonMovieTeam?.errorMessage}
-          hasError={errors.PersonMovieTeam?.hasError}
-          ref={PersonMovieTeamRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "PersonMovieTeam")}
-        ></Autocomplete>
-      </ArrayField>
+          setYear(value);
+        }}
+        onBlur={() => runValidationTasks("year", year)}
+        errorMessage={errors.year?.errorMessage}
+        hasError={errors.year?.hasError}
+        {...getOverrideProps(overrides, "year")}
+      ></TextField>
       <TextField
-        label="Name eng"
-        isRequired={false}
+        label="Category"
+        isRequired={true}
         isReadOnly={false}
-        value={name_eng}
+        value={category}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
               name,
-              PersonMovieTeam,
-              name_eng: value,
-              PersonRoles,
+              year,
+              category: value,
+              comment,
+              movie,
             };
             const result = onChange(modelFields);
-            value = result?.name_eng ?? value;
+            value = result?.category ?? value;
           }
-          if (errors.name_eng?.hasError) {
-            runValidationTasks("name_eng", value);
+          if (errors.category?.hasError) {
+            runValidationTasks("category", value);
           }
-          setName_eng(value);
+          setCategory(value);
         }}
-        onBlur={() => runValidationTasks("name_eng", name_eng)}
-        errorMessage={errors.name_eng?.errorMessage}
-        hasError={errors.name_eng?.hasError}
-        {...getOverrideProps(overrides, "name_eng")}
+        onBlur={() => runValidationTasks("category", category)}
+        errorMessage={errors.category?.errorMessage}
+        hasError={errors.category?.hasError}
+        {...getOverrideProps(overrides, "category")}
       ></TextField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
+      <TextField
+        label="Comment"
+        isRequired={false}
+        isReadOnly={false}
+        value={comment}
+        onChange={(e) => {
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
               name,
-              PersonMovieTeam,
-              name_eng,
-              PersonRoles: values,
+              year,
+              category,
+              comment: value,
+              movie,
             };
             const result = onChange(modelFields);
-            values = result?.PersonRoles ?? values;
+            value = result?.comment ?? value;
           }
-          setPersonRoles(values);
-          setCurrentPersonRolesValue(undefined);
-          setCurrentPersonRolesDisplayValue("");
+          if (errors.comment?.hasError) {
+            runValidationTasks("comment", value);
+          }
+          setComment(value);
         }}
-        currentFieldValue={currentPersonRolesValue}
-        label={"Person roles"}
-        items={PersonRoles}
-        hasError={errors?.PersonRoles?.hasError}
+        onBlur={() => runValidationTasks("comment", comment)}
+        errorMessage={errors.comment?.errorMessage}
+        hasError={errors.comment?.hasError}
+        {...getOverrideProps(overrides, "comment")}
+      ></TextField>
+      <ArrayField
+        lengthLimit={1}
+        onChange={async (items) => {
+          let value = items[0];
+          if (onChange) {
+            const modelFields = {
+              name,
+              year,
+              category,
+              comment,
+              movie: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.movie ?? value;
+          }
+          setMovie(value);
+          setCurrentMovieValue(undefined);
+          setCurrentMovieDisplayValue("");
+        }}
+        currentFieldValue={currentMovieValue}
+        label={"Movie"}
+        items={movie ? [movie] : []}
+        hasError={errors?.movie?.hasError}
         runValidationTasks={async () =>
-          await runValidationTasks("PersonRoles", currentPersonRolesValue)
+          await runValidationTasks("movie", currentMovieValue)
         }
-        errorMessage={errors?.PersonRoles?.errorMessage}
-        getBadgeText={getDisplayValue.PersonRoles}
+        errorMessage={errors?.movie?.errorMessage}
+        getBadgeText={getDisplayValue.movie}
         setFieldValue={(model) => {
-          setCurrentPersonRolesDisplayValue(
-            model ? getDisplayValue.PersonRoles(model) : ""
+          setCurrentMovieDisplayValue(
+            model ? getDisplayValue.movie(model) : ""
           );
-          setCurrentPersonRolesValue(model);
+          setCurrentMovieValue(model);
         }}
-        inputFieldRef={PersonRolesRef}
+        inputFieldRef={movieRef}
         defaultFieldValue={""}
       >
         <Autocomplete
-          label="Person roles"
+          label="Movie"
           isRequired={false}
           isReadOnly={false}
-          placeholder="Search PersonRole"
-          value={currentPersonRolesDisplayValue}
-          options={personRolesRecords.map((r) => ({
-            id: getIDValue.PersonRoles?.(r),
-            label: getDisplayValue.PersonRoles?.(r),
-          }))}
-          isLoading={PersonRolesLoading}
+          placeholder="Search Movie"
+          value={currentMovieDisplayValue}
+          options={movieRecords
+            .filter((r) => !movieIdSet.has(getIDValue.movie?.(r)))
+            .map((r) => ({
+              id: getIDValue.movie?.(r),
+              label: getDisplayValue.movie?.(r),
+            }))}
+          isLoading={movieLoading}
           onSelect={({ id, label }) => {
-            setCurrentPersonRolesValue(
-              personRolesRecords.find((r) =>
+            setCurrentMovieValue(
+              movieRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )
               )
             );
-            setCurrentPersonRolesDisplayValue(label);
-            runValidationTasks("PersonRoles", label);
+            setCurrentMovieDisplayValue(label);
+            runValidationTasks("movie", label);
           }}
           onClear={() => {
-            setCurrentPersonRolesDisplayValue("");
+            setCurrentMovieDisplayValue("");
           }}
+          defaultValue={movie}
           onChange={(e) => {
             let { value } = e.target;
-            fetchPersonRolesRecords(value);
-            if (errors.PersonRoles?.hasError) {
-              runValidationTasks("PersonRoles", value);
+            fetchMovieRecords(value);
+            if (errors.movie?.hasError) {
+              runValidationTasks("movie", value);
             }
-            setCurrentPersonRolesDisplayValue(value);
-            setCurrentPersonRolesValue(undefined);
+            setCurrentMovieDisplayValue(value);
+            setCurrentMovieValue(undefined);
           }}
-          onBlur={() =>
-            runValidationTasks("PersonRoles", currentPersonRolesDisplayValue)
-          }
-          errorMessage={errors.PersonRoles?.errorMessage}
-          hasError={errors.PersonRoles?.hasError}
-          ref={PersonRolesRef}
+          onBlur={() => runValidationTasks("movie", currentMovieDisplayValue)}
+          errorMessage={errors.movie?.errorMessage}
+          hasError={errors.movie?.hasError}
+          ref={movieRef}
           labelHidden={true}
-          {...getOverrideProps(overrides, "PersonRoles")}
+          {...getOverrideProps(overrides, "movie")}
         ></Autocomplete>
       </ArrayField>
       <Flex
@@ -673,13 +591,14 @@ export default function RoleCreateForm(props) {
         {...getOverrideProps(overrides, "CTAFlex")}
       >
         <Button
-          children="Clear"
+          children="Reset"
           type="reset"
           onClick={(event) => {
             event.preventDefault();
             resetStateValues();
           }}
-          {...getOverrideProps(overrides, "ClearButton")}
+          isDisabled={!(idProp || awardModelProp)}
+          {...getOverrideProps(overrides, "ResetButton")}
         ></Button>
         <Flex
           gap="15px"
@@ -689,7 +608,10 @@ export default function RoleCreateForm(props) {
             children="Submit"
             type="submit"
             variation="primary"
-            isDisabled={Object.values(errors).some((e) => e?.hasError)}
+            isDisabled={
+              !(idProp || awardModelProp) ||
+              Object.values(errors).some((e) => e?.hasError)
+            }
             {...getOverrideProps(overrides, "SubmitButton")}
           ></Button>
         </Flex>

@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { StorageManagerProps } from "@aws-amplify/ui-react-storage";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
@@ -36,6 +36,7 @@ export declare type MovieCreateFormInputValues = {
     created_year?: number;
     MovieTeam?: any;
     MovieInPlaylists?: any[];
+    description_language?: string;
     MovieType?: any;
     Field0?: string;
     Field1?: string;
@@ -44,7 +45,9 @@ export declare type MovieCreateFormInputValues = {
     age_rating?: number;
     subtitles_location?: string;
     creators_comment?: string;
+    is_highlighted?: boolean;
     trailer_location?: string;
+    awards?: any[];
 };
 export declare type MovieCreateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -60,6 +63,7 @@ export declare type MovieCreateFormValidationValues = {
     created_year?: ValidationFunction<number>;
     MovieTeam?: ValidationFunction<any>;
     MovieInPlaylists?: ValidationFunction<any>;
+    description_language?: ValidationFunction<string>;
     MovieType?: ValidationFunction<any>;
     Field0?: ValidationFunction<string>;
     Field1?: ValidationFunction<string>;
@@ -68,7 +72,9 @@ export declare type MovieCreateFormValidationValues = {
     age_rating?: ValidationFunction<number>;
     subtitles_location?: ValidationFunction<string>;
     creators_comment?: ValidationFunction<string>;
+    is_highlighted?: ValidationFunction<boolean>;
     trailer_location?: ValidationFunction<string>;
+    awards?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MovieCreateFormOverridesProps = {
@@ -86,6 +92,7 @@ export declare type MovieCreateFormOverridesProps = {
     created_year?: PrimitiveOverrideProps<TextFieldProps>;
     MovieTeam?: PrimitiveOverrideProps<AutocompleteProps>;
     MovieInPlaylists?: PrimitiveOverrideProps<AutocompleteProps>;
+    description_language?: PrimitiveOverrideProps<TextFieldProps>;
     MovieType?: PrimitiveOverrideProps<AutocompleteProps>;
     Field0?: PrimitiveOverrideProps<StorageManagerProps>;
     Field1?: PrimitiveOverrideProps<StorageManagerProps>;
@@ -94,7 +101,9 @@ export declare type MovieCreateFormOverridesProps = {
     age_rating?: PrimitiveOverrideProps<TextFieldProps>;
     subtitles_location?: PrimitiveOverrideProps<TextFieldProps>;
     creators_comment?: PrimitiveOverrideProps<TextFieldProps>;
+    is_highlighted?: PrimitiveOverrideProps<SwitchFieldProps>;
     trailer_location?: PrimitiveOverrideProps<TextFieldProps>;
+    awards?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type MovieCreateFormProps = React.PropsWithChildren<{
     overrides?: MovieCreateFormOverridesProps | undefined | null;

@@ -80,6 +80,7 @@ export const getProfile = `
       captions_language
       created_year
       description
+      description_language
       description_eng
       id
       length

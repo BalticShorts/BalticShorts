@@ -16,17 +16,12 @@ import {
   Icon,
   ScrollView,
   Text,
-  TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { listPersonMovieTeams, listPersonRoles } from "../src/graphql/queries";
-import {
-  createRole,
-  updatePersonMovieTeam,
-  updatePersonRole,
-} from "../src/graphql/mutations";
+import { listPeople, listRoles } from "../src/graphql/queries";
+import { createPersonRole } from "../src/graphql/mutations";
 function ArrayField({
   items = [],
   onChange,
@@ -182,7 +177,7 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function RoleCreateForm(props) {
+export default function PersonRoleCreateForm(props) {
   const {
     clearOnSuccess = true,
     onSuccess,
@@ -194,74 +189,55 @@ export default function RoleCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    name: "",
-    PersonMovieTeam: [],
-    name_eng: "",
-    PersonRoles: [],
+    Person: undefined,
+    Role: undefined,
   };
-  const [name, setName] = React.useState(initialValues.name);
-  const [PersonMovieTeam, setPersonMovieTeam] = React.useState(
-    initialValues.PersonMovieTeam
-  );
-  const [PersonMovieTeamLoading, setPersonMovieTeamLoading] =
-    React.useState(false);
-  const [personMovieTeamRecords, setPersonMovieTeamRecords] = React.useState(
-    []
-  );
-  const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
-  const [PersonRoles, setPersonRoles] = React.useState(
-    initialValues.PersonRoles
-  );
-  const [PersonRolesLoading, setPersonRolesLoading] = React.useState(false);
-  const [personRolesRecords, setPersonRolesRecords] = React.useState([]);
+  const [Person, setPerson] = React.useState(initialValues.Person);
+  const [PersonLoading, setPersonLoading] = React.useState(false);
+  const [personRecords, setPersonRecords] = React.useState([]);
+  const [Role, setRole] = React.useState(initialValues.Role);
+  const [RoleLoading, setRoleLoading] = React.useState(false);
+  const [roleRecords, setRoleRecords] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setName(initialValues.name);
-    setPersonMovieTeam(initialValues.PersonMovieTeam);
-    setCurrentPersonMovieTeamValue(undefined);
-    setCurrentPersonMovieTeamDisplayValue("");
-    setName_eng(initialValues.name_eng);
-    setPersonRoles(initialValues.PersonRoles);
-    setCurrentPersonRolesValue(undefined);
-    setCurrentPersonRolesDisplayValue("");
+    setPerson(initialValues.Person);
+    setCurrentPersonValue(undefined);
+    setCurrentPersonDisplayValue("");
+    setRole(initialValues.Role);
+    setCurrentRoleValue(undefined);
+    setCurrentRoleDisplayValue("");
     setErrors({});
   };
-  const [
-    currentPersonMovieTeamDisplayValue,
-    setCurrentPersonMovieTeamDisplayValue,
-  ] = React.useState("");
-  const [currentPersonMovieTeamValue, setCurrentPersonMovieTeamValue] =
-    React.useState(undefined);
-  const PersonMovieTeamRef = React.createRef();
-  const [currentPersonRolesDisplayValue, setCurrentPersonRolesDisplayValue] =
+  const [currentPersonDisplayValue, setCurrentPersonDisplayValue] =
     React.useState("");
-  const [currentPersonRolesValue, setCurrentPersonRolesValue] =
-    React.useState(undefined);
-  const PersonRolesRef = React.createRef();
+  const [currentPersonValue, setCurrentPersonValue] = React.useState(undefined);
+  const PersonRef = React.createRef();
+  const [currentRoleDisplayValue, setCurrentRoleDisplayValue] =
+    React.useState("");
+  const [currentRoleValue, setCurrentRoleValue] = React.useState(undefined);
+  const RoleRef = React.createRef();
   const getIDValue = {
-    PersonMovieTeam: (r) => JSON.stringify({ id: r?.id }),
-    PersonRoles: (r) => JSON.stringify({ id: r?.id }),
+    Person: (r) => JSON.stringify({ id: r?.id }),
+    Role: (r) => JSON.stringify({ id: r?.id }),
   };
-  const PersonMovieTeamIdSet = new Set(
-    Array.isArray(PersonMovieTeam)
-      ? PersonMovieTeam.map((r) => getIDValue.PersonMovieTeam?.(r))
-      : getIDValue.PersonMovieTeam?.(PersonMovieTeam)
+  const PersonIdSet = new Set(
+    Array.isArray(Person)
+      ? Person.map((r) => getIDValue.Person?.(r))
+      : getIDValue.Person?.(Person)
   );
-  const PersonRolesIdSet = new Set(
-    Array.isArray(PersonRoles)
-      ? PersonRoles.map((r) => getIDValue.PersonRoles?.(r))
-      : getIDValue.PersonRoles?.(PersonRoles)
+  const RoleIdSet = new Set(
+    Array.isArray(Role)
+      ? Role.map((r) => getIDValue.Role?.(r))
+      : getIDValue.Role?.(Role)
   );
   const getDisplayValue = {
-    PersonMovieTeam: (r) => r?.id,
-    PersonRoles: (r) => r?.id,
+    Person: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
+    Role: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
   };
   const validations = {
-    name: [{ type: "Required" }],
-    PersonMovieTeam: [],
-    name_eng: [],
-    PersonRoles: [],
+    Person: [],
+    Role: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -280,63 +256,67 @@ export default function RoleCreateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const fetchPersonMovieTeamRecords = async (value) => {
-    setPersonMovieTeamLoading(true);
+  const fetchPersonRecords = async (value) => {
+    setPersonLoading(true);
     const newOptions = [];
     let newNext = "";
     while (newOptions.length < autocompleteLength && newNext != null) {
       const variables = {
         limit: autocompleteLength * 5,
-        filter: { or: [{ id: { contains: value } }] },
+        filter: {
+          or: [{ name: { contains: value } }, { id: { contains: value } }],
+        },
       };
       if (newNext) {
         variables["nextToken"] = newNext;
       }
       const result = (
         await API.graphql({
-          query: listPersonMovieTeams.replaceAll("__typename", ""),
+          query: listPeople.replaceAll("__typename", ""),
           variables,
         })
-      )?.data?.listPersonMovieTeams?.items;
+      )?.data?.listPeople?.items;
       var loaded = result.filter(
-        (item) => !PersonMovieTeamIdSet.has(getIDValue.PersonMovieTeam?.(item))
+        (item) => !PersonIdSet.has(getIDValue.Person?.(item))
       );
       newOptions.push(...loaded);
       newNext = result.nextToken;
     }
-    setPersonMovieTeamRecords(newOptions.slice(0, autocompleteLength));
-    setPersonMovieTeamLoading(false);
+    setPersonRecords(newOptions.slice(0, autocompleteLength));
+    setPersonLoading(false);
   };
-  const fetchPersonRolesRecords = async (value) => {
-    setPersonRolesLoading(true);
+  const fetchRoleRecords = async (value) => {
+    setRoleLoading(true);
     const newOptions = [];
     let newNext = "";
     while (newOptions.length < autocompleteLength && newNext != null) {
       const variables = {
         limit: autocompleteLength * 5,
-        filter: { or: [{ id: { contains: value } }] },
+        filter: {
+          or: [{ name: { contains: value } }, { id: { contains: value } }],
+        },
       };
       if (newNext) {
         variables["nextToken"] = newNext;
       }
       const result = (
         await API.graphql({
-          query: listPersonRoles.replaceAll("__typename", ""),
+          query: listRoles.replaceAll("__typename", ""),
           variables,
         })
-      )?.data?.listPersonRoles?.items;
+      )?.data?.listRoles?.items;
       var loaded = result.filter(
-        (item) => !PersonRolesIdSet.has(getIDValue.PersonRoles?.(item))
+        (item) => !RoleIdSet.has(getIDValue.Role?.(item))
       );
       newOptions.push(...loaded);
       newNext = result.nextToken;
     }
-    setPersonRolesRecords(newOptions.slice(0, autocompleteLength));
-    setPersonRolesLoading(false);
+    setRoleRecords(newOptions.slice(0, autocompleteLength));
+    setRoleLoading(false);
   };
   React.useEffect(() => {
-    fetchPersonMovieTeamRecords("");
-    fetchPersonRolesRecords("");
+    fetchPersonRecords("");
+    fetchRoleRecords("");
   }, []);
   return (
     <Grid
@@ -347,10 +327,8 @@ export default function RoleCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          name,
-          PersonMovieTeam,
-          name_eng,
-          PersonRoles,
+          Person,
+          Role,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -389,51 +367,17 @@ export default function RoleCreateForm(props) {
             }
           });
           const modelFieldsToSave = {
-            name: modelFields.name,
-            name_eng: modelFields.name_eng,
+            personID: modelFields?.Person?.id,
+            roleID: modelFields?.Role?.id,
           };
-          const role = (
-            await API.graphql({
-              query: createRole.replaceAll("__typename", ""),
-              variables: {
-                input: {
-                  ...modelFieldsToSave,
-                },
+          await API.graphql({
+            query: createPersonRole.replaceAll("__typename", ""),
+            variables: {
+              input: {
+                ...modelFieldsToSave,
               },
-            })
-          )?.data?.createRole;
-          const promises = [];
-          promises.push(
-            ...PersonMovieTeam.reduce((promises, original) => {
-              promises.push(
-                API.graphql({
-                  query: updatePersonMovieTeam.replaceAll("__typename", ""),
-                  variables: {
-                    input: {
-                      id: original.id,
-                    },
-                  },
-                })
-              );
-              return promises;
-            }, [])
-          );
-          promises.push(
-            ...PersonRoles.reduce((promises, original) => {
-              promises.push(
-                API.graphql({
-                  query: updatePersonRole.replaceAll("__typename", ""),
-                  variables: {
-                    input: {
-                      id: original.id,
-                    },
-                  },
-                })
-              );
-              return promises;
-            }, [])
-          );
-          await Promise.all(promises);
+            },
+          });
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -447,225 +391,161 @@ export default function RoleCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "RoleCreateForm")}
+      {...getOverrideProps(overrides, "PersonRoleCreateForm")}
       {...rest}
     >
-      <TextField
-        label="Name"
-        isRequired={true}
-        isReadOnly={false}
-        value={name}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name: value,
-              PersonMovieTeam,
-              name_eng,
-              PersonRoles,
-            };
-            const result = onChange(modelFields);
-            value = result?.name ?? value;
-          }
-          if (errors.name?.hasError) {
-            runValidationTasks("name", value);
-          }
-          setName(value);
-        }}
-        onBlur={() => runValidationTasks("name", name)}
-        errorMessage={errors.name?.errorMessage}
-        hasError={errors.name?.hasError}
-        {...getOverrideProps(overrides, "name")}
-      ></TextField>
       <ArrayField
+        lengthLimit={1}
         onChange={async (items) => {
-          let values = items;
+          let value = items[0];
           if (onChange) {
             const modelFields = {
-              name,
-              PersonMovieTeam: values,
-              name_eng,
-              PersonRoles,
+              Person: value,
+              Role,
             };
             const result = onChange(modelFields);
-            values = result?.PersonMovieTeam ?? values;
+            value = result?.Person ?? value;
           }
-          setPersonMovieTeam(values);
-          setCurrentPersonMovieTeamValue(undefined);
-          setCurrentPersonMovieTeamDisplayValue("");
+          setPerson(value);
+          setCurrentPersonValue(undefined);
+          setCurrentPersonDisplayValue("");
         }}
-        currentFieldValue={currentPersonMovieTeamValue}
-        label={"Person movie team"}
-        items={PersonMovieTeam}
-        hasError={errors?.PersonMovieTeam?.hasError}
+        currentFieldValue={currentPersonValue}
+        label={"Person"}
+        items={Person ? [Person] : []}
+        hasError={errors?.Person?.hasError}
         runValidationTasks={async () =>
-          await runValidationTasks(
-            "PersonMovieTeam",
-            currentPersonMovieTeamValue
-          )
+          await runValidationTasks("Person", currentPersonValue)
         }
-        errorMessage={errors?.PersonMovieTeam?.errorMessage}
-        getBadgeText={getDisplayValue.PersonMovieTeam}
+        errorMessage={errors?.Person?.errorMessage}
+        getBadgeText={getDisplayValue.Person}
         setFieldValue={(model) => {
-          setCurrentPersonMovieTeamDisplayValue(
-            model ? getDisplayValue.PersonMovieTeam(model) : ""
+          setCurrentPersonDisplayValue(
+            model ? getDisplayValue.Person(model) : ""
           );
-          setCurrentPersonMovieTeamValue(model);
+          setCurrentPersonValue(model);
         }}
-        inputFieldRef={PersonMovieTeamRef}
+        inputFieldRef={PersonRef}
         defaultFieldValue={""}
       >
         <Autocomplete
-          label="Person movie team"
+          label="Person"
           isRequired={false}
           isReadOnly={false}
-          placeholder="Search PersonMovieTeam"
-          value={currentPersonMovieTeamDisplayValue}
-          options={personMovieTeamRecords.map((r) => ({
-            id: getIDValue.PersonMovieTeam?.(r),
-            label: getDisplayValue.PersonMovieTeam?.(r),
-          }))}
-          isLoading={PersonMovieTeamLoading}
+          placeholder="Search Person"
+          value={currentPersonDisplayValue}
+          options={personRecords
+            .filter((r) => !PersonIdSet.has(getIDValue.Person?.(r)))
+            .map((r) => ({
+              id: getIDValue.Person?.(r),
+              label: getDisplayValue.Person?.(r),
+            }))}
+          isLoading={PersonLoading}
           onSelect={({ id, label }) => {
-            setCurrentPersonMovieTeamValue(
-              personMovieTeamRecords.find((r) =>
+            setCurrentPersonValue(
+              personRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )
               )
             );
-            setCurrentPersonMovieTeamDisplayValue(label);
-            runValidationTasks("PersonMovieTeam", label);
+            setCurrentPersonDisplayValue(label);
+            runValidationTasks("Person", label);
           }}
           onClear={() => {
-            setCurrentPersonMovieTeamDisplayValue("");
+            setCurrentPersonDisplayValue("");
           }}
           onChange={(e) => {
             let { value } = e.target;
-            fetchPersonMovieTeamRecords(value);
-            if (errors.PersonMovieTeam?.hasError) {
-              runValidationTasks("PersonMovieTeam", value);
+            fetchPersonRecords(value);
+            if (errors.Person?.hasError) {
+              runValidationTasks("Person", value);
             }
-            setCurrentPersonMovieTeamDisplayValue(value);
-            setCurrentPersonMovieTeamValue(undefined);
+            setCurrentPersonDisplayValue(value);
+            setCurrentPersonValue(undefined);
           }}
-          onBlur={() =>
-            runValidationTasks(
-              "PersonMovieTeam",
-              currentPersonMovieTeamDisplayValue
-            )
-          }
-          errorMessage={errors.PersonMovieTeam?.errorMessage}
-          hasError={errors.PersonMovieTeam?.hasError}
-          ref={PersonMovieTeamRef}
+          onBlur={() => runValidationTasks("Person", currentPersonDisplayValue)}
+          errorMessage={errors.Person?.errorMessage}
+          hasError={errors.Person?.hasError}
+          ref={PersonRef}
           labelHidden={true}
-          {...getOverrideProps(overrides, "PersonMovieTeam")}
+          {...getOverrideProps(overrides, "Person")}
         ></Autocomplete>
       </ArrayField>
-      <TextField
-        label="Name eng"
-        isRequired={false}
-        isReadOnly={false}
-        value={name_eng}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              name,
-              PersonMovieTeam,
-              name_eng: value,
-              PersonRoles,
-            };
-            const result = onChange(modelFields);
-            value = result?.name_eng ?? value;
-          }
-          if (errors.name_eng?.hasError) {
-            runValidationTasks("name_eng", value);
-          }
-          setName_eng(value);
-        }}
-        onBlur={() => runValidationTasks("name_eng", name_eng)}
-        errorMessage={errors.name_eng?.errorMessage}
-        hasError={errors.name_eng?.hasError}
-        {...getOverrideProps(overrides, "name_eng")}
-      ></TextField>
       <ArrayField
+        lengthLimit={1}
         onChange={async (items) => {
-          let values = items;
+          let value = items[0];
           if (onChange) {
             const modelFields = {
-              name,
-              PersonMovieTeam,
-              name_eng,
-              PersonRoles: values,
+              Person,
+              Role: value,
             };
             const result = onChange(modelFields);
-            values = result?.PersonRoles ?? values;
+            value = result?.Role ?? value;
           }
-          setPersonRoles(values);
-          setCurrentPersonRolesValue(undefined);
-          setCurrentPersonRolesDisplayValue("");
+          setRole(value);
+          setCurrentRoleValue(undefined);
+          setCurrentRoleDisplayValue("");
         }}
-        currentFieldValue={currentPersonRolesValue}
-        label={"Person roles"}
-        items={PersonRoles}
-        hasError={errors?.PersonRoles?.hasError}
+        currentFieldValue={currentRoleValue}
+        label={"Role"}
+        items={Role ? [Role] : []}
+        hasError={errors?.Role?.hasError}
         runValidationTasks={async () =>
-          await runValidationTasks("PersonRoles", currentPersonRolesValue)
+          await runValidationTasks("Role", currentRoleValue)
         }
-        errorMessage={errors?.PersonRoles?.errorMessage}
-        getBadgeText={getDisplayValue.PersonRoles}
+        errorMessage={errors?.Role?.errorMessage}
+        getBadgeText={getDisplayValue.Role}
         setFieldValue={(model) => {
-          setCurrentPersonRolesDisplayValue(
-            model ? getDisplayValue.PersonRoles(model) : ""
-          );
-          setCurrentPersonRolesValue(model);
+          setCurrentRoleDisplayValue(model ? getDisplayValue.Role(model) : "");
+          setCurrentRoleValue(model);
         }}
-        inputFieldRef={PersonRolesRef}
+        inputFieldRef={RoleRef}
         defaultFieldValue={""}
       >
         <Autocomplete
-          label="Person roles"
+          label="Role"
           isRequired={false}
           isReadOnly={false}
-          placeholder="Search PersonRole"
-          value={currentPersonRolesDisplayValue}
-          options={personRolesRecords.map((r) => ({
-            id: getIDValue.PersonRoles?.(r),
-            label: getDisplayValue.PersonRoles?.(r),
-          }))}
-          isLoading={PersonRolesLoading}
+          placeholder="Search Role"
+          value={currentRoleDisplayValue}
+          options={roleRecords
+            .filter((r) => !RoleIdSet.has(getIDValue.Role?.(r)))
+            .map((r) => ({
+              id: getIDValue.Role?.(r),
+              label: getDisplayValue.Role?.(r),
+            }))}
+          isLoading={RoleLoading}
           onSelect={({ id, label }) => {
-            setCurrentPersonRolesValue(
-              personRolesRecords.find((r) =>
+            setCurrentRoleValue(
+              roleRecords.find((r) =>
                 Object.entries(JSON.parse(id)).every(
                   ([key, value]) => r[key] === value
                 )
               )
             );
-            setCurrentPersonRolesDisplayValue(label);
-            runValidationTasks("PersonRoles", label);
+            setCurrentRoleDisplayValue(label);
+            runValidationTasks("Role", label);
           }}
           onClear={() => {
-            setCurrentPersonRolesDisplayValue("");
+            setCurrentRoleDisplayValue("");
           }}
           onChange={(e) => {
             let { value } = e.target;
-            fetchPersonRolesRecords(value);
-            if (errors.PersonRoles?.hasError) {
-              runValidationTasks("PersonRoles", value);
+            fetchRoleRecords(value);
+            if (errors.Role?.hasError) {
+              runValidationTasks("Role", value);
             }
-            setCurrentPersonRolesDisplayValue(value);
-            setCurrentPersonRolesValue(undefined);
+            setCurrentRoleDisplayValue(value);
+            setCurrentRoleValue(undefined);
           }}
-          onBlur={() =>
-            runValidationTasks("PersonRoles", currentPersonRolesDisplayValue)
-          }
-          errorMessage={errors.PersonRoles?.errorMessage}
-          hasError={errors.PersonRoles?.hasError}
-          ref={PersonRolesRef}
+          onBlur={() => runValidationTasks("Role", currentRoleDisplayValue)}
+          errorMessage={errors.Role?.errorMessage}
+          hasError={errors.Role?.hasError}
+          ref={RoleRef}
           labelHidden={true}
-          {...getOverrideProps(overrides, "PersonRoles")}
+          {...getOverrideProps(overrides, "Role")}
         ></Autocomplete>
       </ArrayField>
       <Flex

@@ -23,14 +23,13 @@ const About = () => {
             
             <div className="ParProjektu items-center flex flex-col justify-center mb-100">
                 <div className="w-full relative typography-h2 mb-50 text-center">{t("Par Projektu")}</div>
-                <div className="w-3/5 relative text-justify typography-body-large">
-                    <p>Baltic Shorts ir digitāla straumēšanas platforma, kas fokusējas uz Baltijas valstīs (Latvija, Lietuva, Igaunija) radītu īsfilmu izrādīšanu.
-                    Projekta mērķis ir radīt un uzturēt ērti lietojamu plaša satura mājaslapu, kas attīsta īsfilmu formas pieejamību un to autoru atpazīstamību plašākā tirgū.</p>
-                    <br/>
-                    <p>Daļa darbu tiek augšupielādēti no pašas platformas uzturētāju puses, sadarbībā Baltijas filmu producēšanas studijām un filmu augstskolām.
-                        Savukārt platformas dalībniekiem tiek piedāvāta iespēja pašiem augšupielādēt savus darbus, tādējādi radot plašu īsfilmu katalogu.
-                        Platformas darbību veicina tās kurators, regulāri izceļot un veidojot filmu izlases ar jauniem un senāk radītiem darbiem.</p>
-                    </div>
+                <div className="w-3/5 relative text-justify typography-body-large gap-25 flex flex-col">
+                    <p>{t("about_apraksts_1")}</p>
+                    <p>{t("about_apraksts_2")}</p>
+                    <p>{t("about_apraksts_3")}</p>
+                    <p>{t("about_apraksts_4")}</p>
+                    <p>{t("about_apraksts_5")}</p>
+                </div>
             </div>
 
             <div className="items-center flex flex-col mb-100 w-full">

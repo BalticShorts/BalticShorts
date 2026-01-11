@@ -132,6 +132,7 @@ type Movie @model @auth(rules: [
   genre: String
   description: String
   description_eng: String
+  description_language: String
   screen_language: String
   captions_language: String
   origin_country: String

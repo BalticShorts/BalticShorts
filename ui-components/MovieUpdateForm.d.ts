@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -27,6 +27,7 @@ export declare type MovieUpdateFormInputValues = {
     genre?: string;
     description?: string;
     description_eng?: string;
+    description_language?: string;
     screen_language?: string;
     captions_language?: string;
     origin_country?: string;
@@ -43,7 +44,9 @@ export declare type MovieUpdateFormInputValues = {
     age_rating?: number;
     subtitles_location?: string;
     creators_comment?: string;
+    is_highlighted?: boolean;
     trailer_location?: string;
+    awards?: any[];
 };
 export declare type MovieUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -51,6 +54,7 @@ export declare type MovieUpdateFormValidationValues = {
     genre?: ValidationFunction<string>;
     description?: ValidationFunction<string>;
     description_eng?: ValidationFunction<string>;
+    description_language?: ValidationFunction<string>;
     screen_language?: ValidationFunction<string>;
     captions_language?: ValidationFunction<string>;
     origin_country?: ValidationFunction<string>;
@@ -67,7 +71,9 @@ export declare type MovieUpdateFormValidationValues = {
     age_rating?: ValidationFunction<number>;
     subtitles_location?: ValidationFunction<string>;
     creators_comment?: ValidationFunction<string>;
+    is_highlighted?: ValidationFunction<boolean>;
     trailer_location?: ValidationFunction<string>;
+    awards?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MovieUpdateFormOverridesProps = {
@@ -77,6 +83,7 @@ export declare type MovieUpdateFormOverridesProps = {
     genre?: PrimitiveOverrideProps<TextFieldProps>;
     description?: PrimitiveOverrideProps<TextFieldProps>;
     description_eng?: PrimitiveOverrideProps<TextFieldProps>;
+    description_language?: PrimitiveOverrideProps<TextFieldProps>;
     screen_language?: PrimitiveOverrideProps<TextFieldProps>;
     captions_language?: PrimitiveOverrideProps<TextFieldProps>;
     origin_country?: PrimitiveOverrideProps<TextFieldProps>;
@@ -93,7 +100,9 @@ export declare type MovieUpdateFormOverridesProps = {
     age_rating?: PrimitiveOverrideProps<TextFieldProps>;
     subtitles_location?: PrimitiveOverrideProps<TextFieldProps>;
     creators_comment?: PrimitiveOverrideProps<TextFieldProps>;
+    is_highlighted?: PrimitiveOverrideProps<SwitchFieldProps>;
     trailer_location?: PrimitiveOverrideProps<TextFieldProps>;
+    awards?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type MovieUpdateFormProps = React.PropsWithChildren<{
     overrides?: MovieUpdateFormOverridesProps | undefined | null;

@@ -288,6 +288,7 @@ export const createPersonMovieTeam = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -387,6 +388,7 @@ export const updatePersonMovieTeam = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -486,6 +488,7 @@ export const deletePersonMovieTeam = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -1136,6 +1139,7 @@ export const createMovieTeam = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1215,6 +1219,7 @@ export const updateMovieTeam = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1294,6 +1299,7 @@ export const deleteMovieTeam = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1364,6 +1370,7 @@ export const createAward = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1433,6 +1440,7 @@ export const updateAward = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1502,6 +1510,7 @@ export const deleteAward = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -1564,6 +1573,7 @@ export const createMovie = /* GraphQL */ `
       genre
       description
       description_eng
+      description_language
       screen_language
       captions_language
       origin_country
@@ -1585,6 +1595,7 @@ export const createMovie = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -1673,6 +1684,7 @@ export const updateMovie = /* GraphQL */ `
       genre
       description
       description_eng
+      description_language
       screen_language
       captions_language
       origin_country
@@ -1694,6 +1706,7 @@ export const updateMovie = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -1782,6 +1795,7 @@ export const deleteMovie = /* GraphQL */ `
       genre
       description
       description_eng
+      description_language
       screen_language
       captions_language
       origin_country
@@ -1803,6 +1817,7 @@ export const deleteMovie = /* GraphQL */ `
           genre
           description
           description_eng
+          description_language
           screen_language
           captions_language
           origin_country
@@ -2150,6 +2165,7 @@ export const createMovieMoviePlaylist = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -2234,6 +2250,7 @@ export const updateMovieMoviePlaylist = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country
@@ -2318,6 +2335,7 @@ export const deleteMovieMoviePlaylist = /* GraphQL */ `
         genre
         description
         description_eng
+        description_language
         screen_language
         captions_language
         origin_country

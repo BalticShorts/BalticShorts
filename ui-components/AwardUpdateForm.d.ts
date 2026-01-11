@@ -21,35 +21,38 @@ export declare type ValidationResponse = {
     errorMessage?: string;
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
-export declare type RoleUpdateFormInputValues = {
+export declare type AwardUpdateFormInputValues = {
     name?: string;
-    PersonMovieTeam?: any[];
-    name_eng?: string;
-    PersonRoles?: any[];
+    year?: number;
+    category?: string;
+    comment?: string;
+    movie?: any;
 };
-export declare type RoleUpdateFormValidationValues = {
+export declare type AwardUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
-    PersonMovieTeam?: ValidationFunction<any>;
-    name_eng?: ValidationFunction<string>;
-    PersonRoles?: ValidationFunction<any>;
+    year?: ValidationFunction<number>;
+    category?: ValidationFunction<string>;
+    comment?: ValidationFunction<string>;
+    movie?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
-export declare type RoleUpdateFormOverridesProps = {
-    RoleUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
+export declare type AwardUpdateFormOverridesProps = {
+    AwardUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     name?: PrimitiveOverrideProps<TextFieldProps>;
-    PersonMovieTeam?: PrimitiveOverrideProps<AutocompleteProps>;
-    name_eng?: PrimitiveOverrideProps<TextFieldProps>;
-    PersonRoles?: PrimitiveOverrideProps<AutocompleteProps>;
+    year?: PrimitiveOverrideProps<TextFieldProps>;
+    category?: PrimitiveOverrideProps<TextFieldProps>;
+    comment?: PrimitiveOverrideProps<TextFieldProps>;
+    movie?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
-export declare type RoleUpdateFormProps = React.PropsWithChildren<{
-    overrides?: RoleUpdateFormOverridesProps | undefined | null;
+export declare type AwardUpdateFormProps = React.PropsWithChildren<{
+    overrides?: AwardUpdateFormOverridesProps | undefined | null;
 } & {
     id?: string;
-    role?: any;
-    onSubmit?: (fields: RoleUpdateFormInputValues) => RoleUpdateFormInputValues;
-    onSuccess?: (fields: RoleUpdateFormInputValues) => void;
-    onError?: (fields: RoleUpdateFormInputValues, errorMessage: string) => void;
-    onChange?: (fields: RoleUpdateFormInputValues) => RoleUpdateFormInputValues;
-    onValidate?: RoleUpdateFormValidationValues;
+    award?: any;
+    onSubmit?: (fields: AwardUpdateFormInputValues) => AwardUpdateFormInputValues;
+    onSuccess?: (fields: AwardUpdateFormInputValues) => void;
+    onError?: (fields: AwardUpdateFormInputValues, errorMessage: string) => void;
+    onChange?: (fields: AwardUpdateFormInputValues) => AwardUpdateFormInputValues;
+    onValidate?: AwardUpdateFormValidationValues;
 } & React.CSSProperties>;
-export default function RoleUpdateForm(props: RoleUpdateFormProps): React.ReactElement;
+export default function AwardUpdateForm(props: AwardUpdateFormProps): React.ReactElement;

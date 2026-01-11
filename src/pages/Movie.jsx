@@ -431,7 +431,7 @@ function Movie() {
     <div className='!max-w-[1100px] items-center justify-center m-auto flex flex-col z-0'>
       <div className='w-full flex flex-col items-center mt-50'>
         <div className="w-full relative text-center typography-h2 mb-25">{t("Anotācija")}</div>
-        <div className="w-full relative text-justify typography-body-large max-w-3xl mb-100">{movieData.description}</div>
+        <div className="w-full relative text-justify typography-body-large max-w-3xl mb-100">{i18n.language === movieData.description_language?.toLowerCase() ? movieData.description : movieData.description_eng}</div>
         {/* <div className="w-full h-45 mt-5 py-2 relative text-justify text-black text-xl font-normal font-['SchoolBook'] max-w-3xl">Description in english: {movieData.description_eng}  </div> */}
       </div>
       <div className='Description w-full flex flex-col items-center'>
@@ -451,12 +451,12 @@ function Movie() {
                       const roleGroup = movieTeamData[key];
                       return (
                         <div key={idx} className="flex flex-col gap-1 w-full">
-                          <span className="typography-body-small uppercase">{roleGroup[0].roleName}</span>
+                          <span className="typography-body-small uppercase">{t(roleGroup[0].roleName)}</span>
                           <div className="flex flex-col">
                             {roleGroup.map((person) => (
                               <div key={person.id} className="flex flex-col mb-1">
                                 <span className="typography-body-bold cursor-pointer">
-                                  <a href={`/profile/${person.id}`}>{person.name}</a>
+                                  <a href={`/${i18n.language}/profile/${person.id}`}>{person.name}</a>
                                 </span>
                               </div>
                             ))}

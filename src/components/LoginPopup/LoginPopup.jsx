@@ -306,11 +306,11 @@ async function handleForgetPassword() {
                     <div className="my-auto self-stretch flex flex-col justify-between items-center inline-flex">
                         <div className="w-full justify-center items-center flex flex-col typography-technical mb-2 !text-red-700">{error.message}</div>
                         <div className="w-full justify-center items-center flex flex-col text-lg my-10">
-                            <input id="email" type="email" placeholder="E-pasts" className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setEmail(e.target.value)} ></input>
+                            <input id="email" type="email" placeholder={t("E-pasts")} className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setEmail(e.target.value)} ></input>
                             <div className="w-full h-px relative border-b border-black"></div>
                         </div>
                         <div className="w-full justify-center items-center flex flex-col text-lg">
-                            <input id="password" type="password" placeholder="Parole" className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setPassword(e.target.value)}></input>
+                            <input id="password" type="password" placeholder={t("Parole")} className="bg-beige text-center border-none outline-none typography-body-large w-full" onChange={e => setPassword(e.target.value)}></input>
                             <div className="w-full h-px relative border-b border-black"></div>
                         </div>
                         <div className="w-full justify-between items-center inline-flex mt-10 cursor-pointer">

@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, SwitchFieldProps, TextAreaFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -28,6 +28,7 @@ export declare type UploadMovieInputValues = {
     description?: string;
     description_eng?: string;
     age_rating?: number;
+    description_language?: string;
     thumbnail_location?: string;
     screen_language?: string;
     captions_language?: string;
@@ -37,7 +38,9 @@ export declare type UploadMovieInputValues = {
     MovieType?: any;
     subtitles_location?: string;
     creators_comment?: string;
+    is_highlighted?: boolean;
     trailer_location?: string;
+    awards?: any[];
 };
 export declare type UploadMovieValidationValues = {
     name?: ValidationFunction<string>;
@@ -46,6 +49,7 @@ export declare type UploadMovieValidationValues = {
     description?: ValidationFunction<string>;
     description_eng?: ValidationFunction<string>;
     age_rating?: ValidationFunction<number>;
+    description_language?: ValidationFunction<string>;
     thumbnail_location?: ValidationFunction<string>;
     screen_language?: ValidationFunction<string>;
     captions_language?: ValidationFunction<string>;
@@ -55,7 +59,9 @@ export declare type UploadMovieValidationValues = {
     MovieType?: ValidationFunction<any>;
     subtitles_location?: ValidationFunction<string>;
     creators_comment?: ValidationFunction<string>;
+    is_highlighted?: ValidationFunction<boolean>;
     trailer_location?: ValidationFunction<string>;
+    awards?: ValidationFunction<any>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type UploadMovieOverridesProps = {
@@ -66,6 +72,7 @@ export declare type UploadMovieOverridesProps = {
     description?: PrimitiveOverrideProps<TextAreaFieldProps>;
     description_eng?: PrimitiveOverrideProps<TextAreaFieldProps>;
     age_rating?: PrimitiveOverrideProps<TextFieldProps>;
+    description_language?: PrimitiveOverrideProps<TextFieldProps>;
     thumbnail_location?: PrimitiveOverrideProps<TextFieldProps>;
     screen_language?: PrimitiveOverrideProps<AutocompleteProps>;
     captions_language?: PrimitiveOverrideProps<AutocompleteProps>;
@@ -75,7 +82,9 @@ export declare type UploadMovieOverridesProps = {
     MovieType?: PrimitiveOverrideProps<AutocompleteProps>;
     subtitles_location?: PrimitiveOverrideProps<TextFieldProps>;
     creators_comment?: PrimitiveOverrideProps<TextFieldProps>;
+    is_highlighted?: PrimitiveOverrideProps<SwitchFieldProps>;
     trailer_location?: PrimitiveOverrideProps<TextFieldProps>;
+    awards?: PrimitiveOverrideProps<AutocompleteProps>;
 } & EscapeHatchProps;
 export declare type UploadMovieProps = React.PropsWithChildren<{
     overrides?: UploadMovieOverridesProps | undefined | null;

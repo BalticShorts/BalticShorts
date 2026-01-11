@@ -57,12 +57,11 @@ const MainMovie = ({ movie, isLoggedIn }) => {
       }
     };
 
-    const description = i18n.language === movie.origin_country.toLowerCase() && movie.description.length > 320
+    const description = i18n.language === movie.description_language.toLowerCase() && movie.description.length > 320
       ? movie.description.slice(0, 320) + "..."
-      : i18n.language !== movie.origin_country.toLowerCase() && movie.description_eng.length > 320
+      : i18n.language !== movie.description_language.toLowerCase() && movie.description_eng.length > 320
       ? movie.description_eng.slice(0, 320) + "..."
-      : i18n.language === movie.origin_country.toLowerCase() ? movie.description : movie.description_eng;
-
+      : i18n.language === movie.description_language.toLowerCase() ? movie.description : movie.description_eng;
   return (
     <section className="relative w-full h-[60vh] sm:h-[65vh] bg-black z-0"
       onMouseEnter={handleMouseEnter}

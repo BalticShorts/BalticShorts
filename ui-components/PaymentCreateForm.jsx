@@ -15,18 +15,14 @@ import {
   Grid,
   Icon,
   ScrollView,
-  SwitchField,
   Text,
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
-import { listMovies, listUserProfiles } from "../src/graphql/queries";
-import {
-  createMovieMoviePlaylist,
-  createMoviePlaylist,
-} from "../src/graphql/mutations";
+import { listEmails, listUserProfiles } from "../src/graphql/queries";
+import { createPayment } from "../src/graphql/mutations";
 function ArrayField({
   items = [],
   onChange,
@@ -182,7 +178,7 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function MoviePlaylistCreateForm(props) {
+export default function PaymentCreateForm(props) {
   const {
     clearOnSuccess = true,
     onSuccess,
@@ -194,32 +190,25 @@ export default function MoviePlaylistCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    creator: "",
-    movies: [],
-    title: "",
-    description: "",
-    is_public: false,
-    is_recommended: false,
-    photo_location: "",
-    size: "",
+    reference: "",
+    email: "",
+    amount: "",
+    status: "",
+    createdAt: "",
+    klixId: "",
+    paymentType: "",
     userprofileID: undefined,
+    Email: undefined,
   };
-  const [creator, setCreator] = React.useState(initialValues.creator);
-  const [movies, setMovies] = React.useState(initialValues.movies);
-  const [moviesLoading, setMoviesLoading] = React.useState(false);
-  const [moviesRecords, setMoviesRecords] = React.useState([]);
-  const [title, setTitle] = React.useState(initialValues.title);
-  const [description, setDescription] = React.useState(
-    initialValues.description
+  const [reference, setReference] = React.useState(initialValues.reference);
+  const [email, setEmail] = React.useState(initialValues.email);
+  const [amount, setAmount] = React.useState(initialValues.amount);
+  const [status, setStatus] = React.useState(initialValues.status);
+  const [createdAt, setCreatedAt] = React.useState(initialValues.createdAt);
+  const [klixId, setKlixId] = React.useState(initialValues.klixId);
+  const [paymentType, setPaymentType] = React.useState(
+    initialValues.paymentType
   );
-  const [is_public, setIs_public] = React.useState(initialValues.is_public);
-  const [is_recommended, setIs_recommended] = React.useState(
-    initialValues.is_recommended
-  );
-  const [photo_location, setPhoto_location] = React.useState(
-    initialValues.photo_location
-  );
-  const [size, setSize] = React.useState(initialValues.size);
   const [userprofileID, setUserprofileID] = React.useState(
     initialValues.userprofileID
   );
@@ -227,28 +216,27 @@ export default function MoviePlaylistCreateForm(props) {
   const [userprofileIDRecords, setUserprofileIDRecords] = React.useState([]);
   const [selectedUserprofileIDRecords, setSelectedUserprofileIDRecords] =
     React.useState([]);
+  const [Email1, setEmail1] = React.useState(initialValues.Email);
+  const [Email1Loading, setEmail1Loading] = React.useState(false);
+  const [email1Records, setEmail1Records] = React.useState([]);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setCreator(initialValues.creator);
-    setMovies(initialValues.movies);
-    setCurrentMoviesValue(undefined);
-    setCurrentMoviesDisplayValue("");
-    setTitle(initialValues.title);
-    setDescription(initialValues.description);
-    setIs_public(initialValues.is_public);
-    setIs_recommended(initialValues.is_recommended);
-    setPhoto_location(initialValues.photo_location);
-    setSize(initialValues.size);
+    setReference(initialValues.reference);
+    setEmail(initialValues.email);
+    setAmount(initialValues.amount);
+    setStatus(initialValues.status);
+    setCreatedAt(initialValues.createdAt);
+    setKlixId(initialValues.klixId);
+    setPaymentType(initialValues.paymentType);
     setUserprofileID(initialValues.userprofileID);
     setCurrentUserprofileIDValue(undefined);
     setCurrentUserprofileIDDisplayValue("");
+    setEmail1(initialValues.Email);
+    setCurrentEmail1Value(undefined);
+    setCurrentEmail1DisplayValue("");
     setErrors({});
   };
-  const [currentMoviesDisplayValue, setCurrentMoviesDisplayValue] =
-    React.useState("");
-  const [currentMoviesValue, setCurrentMoviesValue] = React.useState(undefined);
-  const moviesRef = React.createRef();
   const [
     currentUserprofileIDDisplayValue,
     setCurrentUserprofileIDDisplayValue,
@@ -256,28 +244,32 @@ export default function MoviePlaylistCreateForm(props) {
   const [currentUserprofileIDValue, setCurrentUserprofileIDValue] =
     React.useState(undefined);
   const userprofileIDRef = React.createRef();
+  const [currentEmail1DisplayValue, setCurrentEmail1DisplayValue] =
+    React.useState("");
+  const [currentEmail1Value, setCurrentEmail1Value] = React.useState(undefined);
+  const Email1Ref = React.createRef();
   const getIDValue = {
-    movies: (r) => JSON.stringify({ id: r?.id }),
+    Email: (r) => JSON.stringify({ id: r?.id }),
   };
-  const moviesIdSet = new Set(
-    Array.isArray(movies)
-      ? movies.map((r) => getIDValue.movies?.(r))
-      : getIDValue.movies?.(movies)
+  const Email1IdSet = new Set(
+    Array.isArray(Email1)
+      ? Email1.map((r) => getIDValue.Email1?.(r))
+      : getIDValue.Email1?.(Email1)
   );
   const getDisplayValue = {
-    movies: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
     userprofileID: (r) => `${r?.name ? r?.name + " - " : ""}${r?.id}`,
+    Email: (r) => `${r?.email ? r?.email + " - " : ""}${r?.id}`,
   };
   const validations = {
-    creator: [{ type: "Required" }],
-    movies: [],
-    title: [{ type: "Required" }],
-    description: [{ type: "Required" }],
-    is_public: [{ type: "Required" }],
-    is_recommended: [],
-    photo_location: [],
-    size: [],
-    userprofileID: [],
+    reference: [{ type: "Required" }],
+    email: [{ type: "Required" }, { type: "Email" }],
+    amount: [{ type: "Required" }],
+    status: [{ type: "Required" }],
+    createdAt: [{ type: "Required" }],
+    klixId: [],
+    paymentType: [],
+    userprofileID: [{ type: "Required" }],
+    Email: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -296,34 +288,22 @@ export default function MoviePlaylistCreateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
-  const fetchMoviesRecords = async (value) => {
-    setMoviesLoading(true);
-    const newOptions = [];
-    let newNext = "";
-    while (newOptions.length < autocompleteLength && newNext != null) {
-      const variables = {
-        limit: autocompleteLength * 5,
-        filter: {
-          or: [{ name: { contains: value } }, { id: { contains: value } }],
-        },
-      };
-      if (newNext) {
-        variables["nextToken"] = newNext;
-      }
-      const result = (
-        await API.graphql({
-          query: listMovies.replaceAll("__typename", ""),
-          variables,
-        })
-      )?.data?.listMovies?.items;
-      var loaded = result.filter(
-        (item) => !moviesIdSet.has(getIDValue.movies?.(item))
-      );
-      newOptions.push(...loaded);
-      newNext = result.nextToken;
-    }
-    setMoviesRecords(newOptions.slice(0, autocompleteLength));
-    setMoviesLoading(false);
+  const convertToLocal = (date) => {
+    const df = new Intl.DateTimeFormat("default", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      calendar: "iso8601",
+      numberingSystem: "latn",
+      hourCycle: "h23",
+    });
+    const parts = df.formatToParts(date).reduce((acc, part) => {
+      acc[part.type] = part.value;
+      return acc;
+    }, {});
+    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
   };
   const fetchUserprofileIDRecords = async (value) => {
     setUserprofileIDLoading(true);
@@ -352,9 +332,38 @@ export default function MoviePlaylistCreateForm(props) {
     setUserprofileIDRecords(newOptions.slice(0, autocompleteLength));
     setUserprofileIDLoading(false);
   };
+  const fetchEmail1Records = async (value) => {
+    setEmail1Loading(true);
+    const newOptions = [];
+    let newNext = "";
+    while (newOptions.length < autocompleteLength && newNext != null) {
+      const variables = {
+        limit: autocompleteLength * 5,
+        filter: {
+          or: [{ email: { contains: value } }, { id: { contains: value } }],
+        },
+      };
+      if (newNext) {
+        variables["nextToken"] = newNext;
+      }
+      const result = (
+        await API.graphql({
+          query: listEmails.replaceAll("__typename", ""),
+          variables,
+        })
+      )?.data?.listEmails?.items;
+      var loaded = result.filter(
+        (item) => !EmailIdSet.has(getIDValue.Email?.(item))
+      );
+      newOptions.push(...loaded);
+      newNext = result.nextToken;
+    }
+    setEmail1Records(newOptions.slice(0, autocompleteLength));
+    setEmail1Loading(false);
+  };
   React.useEffect(() => {
-    fetchMoviesRecords("");
     fetchUserprofileIDRecords("");
+    fetchEmail1Records("");
   }, []);
   return (
     <Grid
@@ -365,15 +374,15 @@ export default function MoviePlaylistCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          creator,
-          movies,
-          title,
-          description,
-          is_public,
-          is_recommended,
-          photo_location,
-          size,
+          reference,
+          email,
+          amount,
+          status,
+          createdAt,
+          klixId,
+          paymentType,
           userprofileID,
+          Email: Email1,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -412,43 +421,24 @@ export default function MoviePlaylistCreateForm(props) {
             }
           });
           const modelFieldsToSave = {
-            creator: modelFields.creator,
-            title: modelFields.title,
-            description: modelFields.description,
-            is_public: modelFields.is_public,
-            is_recommended: modelFields.is_recommended,
-            photo_location: modelFields.photo_location,
-            size: modelFields.size,
+            reference: modelFields.reference,
+            email: modelFields.email,
+            amount: modelFields.amount,
+            status: modelFields.status,
+            createdAt: modelFields.createdAt,
+            klixId: modelFields.klixId,
+            paymentType: modelFields.paymentType,
             userprofileID: modelFields.userprofileID,
+            paymentEmailId: modelFields?.Email1?.id,
           };
-          const moviePlaylist = (
-            await API.graphql({
-              query: createMoviePlaylist.replaceAll("__typename", ""),
-              variables: {
-                input: {
-                  ...modelFieldsToSave,
-                },
+          await API.graphql({
+            query: createPayment.replaceAll("__typename", ""),
+            variables: {
+              input: {
+                ...modelFieldsToSave,
               },
-            })
-          )?.data?.createMoviePlaylist;
-          const promises = [];
-          promises.push(
-            ...movies.reduce((promises, movie) => {
-              promises.push(
-                API.graphql({
-                  query: createMovieMoviePlaylist.replaceAll("__typename", ""),
-                  variables: {
-                    input: {
-                      moviePlaylistId: moviePlaylist.id,
-                      movieId: movie.id,
-                    },
-                  },
-                })
-              );
-              return promises;
-            }, [])
-          );
-          await Promise.all(promises);
+            },
+          });
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -462,318 +452,238 @@ export default function MoviePlaylistCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "MoviePlaylistCreateForm")}
+      {...getOverrideProps(overrides, "PaymentCreateForm")}
       {...rest}
     >
       <TextField
-        label="Creator"
+        label="Reference"
         isRequired={true}
         isReadOnly={false}
-        value={creator}
+        value={reference}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              creator: value,
-              movies,
-              title,
-              description,
-              is_public,
-              is_recommended,
-              photo_location,
-              size,
+              reference: value,
+              email,
+              amount,
+              status,
+              createdAt,
+              klixId,
+              paymentType,
               userprofileID,
+              Email: Email1,
             };
             const result = onChange(modelFields);
-            value = result?.creator ?? value;
+            value = result?.reference ?? value;
           }
-          if (errors.creator?.hasError) {
-            runValidationTasks("creator", value);
+          if (errors.reference?.hasError) {
+            runValidationTasks("reference", value);
           }
-          setCreator(value);
+          setReference(value);
         }}
-        onBlur={() => runValidationTasks("creator", creator)}
-        errorMessage={errors.creator?.errorMessage}
-        hasError={errors.creator?.hasError}
-        {...getOverrideProps(overrides, "creator")}
+        onBlur={() => runValidationTasks("reference", reference)}
+        errorMessage={errors.reference?.errorMessage}
+        hasError={errors.reference?.hasError}
+        {...getOverrideProps(overrides, "reference")}
       ></TextField>
-      <ArrayField
-        onChange={async (items) => {
-          let values = items;
-          if (onChange) {
-            const modelFields = {
-              creator,
-              movies: values,
-              title,
-              description,
-              is_public,
-              is_recommended,
-              photo_location,
-              size,
-              userprofileID,
-            };
-            const result = onChange(modelFields);
-            values = result?.movies ?? values;
-          }
-          setMovies(values);
-          setCurrentMoviesValue(undefined);
-          setCurrentMoviesDisplayValue("");
-        }}
-        currentFieldValue={currentMoviesValue}
-        label={"Movies"}
-        items={movies}
-        hasError={errors?.movies?.hasError}
-        runValidationTasks={async () =>
-          await runValidationTasks("movies", currentMoviesValue)
-        }
-        errorMessage={errors?.movies?.errorMessage}
-        getBadgeText={getDisplayValue.movies}
-        setFieldValue={(model) => {
-          setCurrentMoviesDisplayValue(
-            model ? getDisplayValue.movies(model) : ""
-          );
-          setCurrentMoviesValue(model);
-        }}
-        inputFieldRef={moviesRef}
-        defaultFieldValue={""}
-      >
-        <Autocomplete
-          label="Movies"
-          isRequired={false}
-          isReadOnly={false}
-          placeholder="Search Movie"
-          value={currentMoviesDisplayValue}
-          options={moviesRecords.map((r) => ({
-            id: getIDValue.movies?.(r),
-            label: getDisplayValue.movies?.(r),
-          }))}
-          isLoading={moviesLoading}
-          onSelect={({ id, label }) => {
-            setCurrentMoviesValue(
-              moviesRecords.find((r) =>
-                Object.entries(JSON.parse(id)).every(
-                  ([key, value]) => r[key] === value
-                )
-              )
-            );
-            setCurrentMoviesDisplayValue(label);
-            runValidationTasks("movies", label);
-          }}
-          onClear={() => {
-            setCurrentMoviesDisplayValue("");
-          }}
-          onChange={(e) => {
-            let { value } = e.target;
-            fetchMoviesRecords(value);
-            if (errors.movies?.hasError) {
-              runValidationTasks("movies", value);
-            }
-            setCurrentMoviesDisplayValue(value);
-            setCurrentMoviesValue(undefined);
-          }}
-          onBlur={() => runValidationTasks("movies", currentMoviesDisplayValue)}
-          errorMessage={errors.movies?.errorMessage}
-          hasError={errors.movies?.hasError}
-          ref={moviesRef}
-          labelHidden={true}
-          {...getOverrideProps(overrides, "movies")}
-        ></Autocomplete>
-      </ArrayField>
       <TextField
-        label="Title"
+        label="Email"
         isRequired={true}
         isReadOnly={false}
-        value={title}
+        value={email}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              creator,
-              movies,
-              title: value,
-              description,
-              is_public,
-              is_recommended,
-              photo_location,
-              size,
+              reference,
+              email: value,
+              amount,
+              status,
+              createdAt,
+              klixId,
+              paymentType,
               userprofileID,
+              Email: Email1,
             };
             const result = onChange(modelFields);
-            value = result?.title ?? value;
+            value = result?.email ?? value;
           }
-          if (errors.title?.hasError) {
-            runValidationTasks("title", value);
+          if (errors.email?.hasError) {
+            runValidationTasks("email", value);
           }
-          setTitle(value);
+          setEmail(value);
         }}
-        onBlur={() => runValidationTasks("title", title)}
-        errorMessage={errors.title?.errorMessage}
-        hasError={errors.title?.hasError}
-        {...getOverrideProps(overrides, "title")}
+        onBlur={() => runValidationTasks("email", email)}
+        errorMessage={errors.email?.errorMessage}
+        hasError={errors.email?.hasError}
+        {...getOverrideProps(overrides, "email")}
       ></TextField>
       <TextField
-        label="Description"
+        label="Amount"
         isRequired={true}
-        isReadOnly={false}
-        value={description}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              creator,
-              movies,
-              title,
-              description: value,
-              is_public,
-              is_recommended,
-              photo_location,
-              size,
-              userprofileID,
-            };
-            const result = onChange(modelFields);
-            value = result?.description ?? value;
-          }
-          if (errors.description?.hasError) {
-            runValidationTasks("description", value);
-          }
-          setDescription(value);
-        }}
-        onBlur={() => runValidationTasks("description", description)}
-        errorMessage={errors.description?.errorMessage}
-        hasError={errors.description?.hasError}
-        {...getOverrideProps(overrides, "description")}
-      ></TextField>
-      <SwitchField
-        label="Is public"
-        defaultChecked={false}
-        isDisabled={false}
-        isChecked={is_public}
-        onChange={(e) => {
-          let value = e.target.checked;
-          if (onChange) {
-            const modelFields = {
-              creator,
-              movies,
-              title,
-              description,
-              is_public: value,
-              is_recommended,
-              photo_location,
-              size,
-              userprofileID,
-            };
-            const result = onChange(modelFields);
-            value = result?.is_public ?? value;
-          }
-          if (errors.is_public?.hasError) {
-            runValidationTasks("is_public", value);
-          }
-          setIs_public(value);
-        }}
-        onBlur={() => runValidationTasks("is_public", is_public)}
-        errorMessage={errors.is_public?.errorMessage}
-        hasError={errors.is_public?.hasError}
-        {...getOverrideProps(overrides, "is_public")}
-      ></SwitchField>
-      <SwitchField
-        label="Is recommended"
-        defaultChecked={false}
-        isDisabled={false}
-        isChecked={is_recommended}
-        onChange={(e) => {
-          let value = e.target.checked;
-          if (onChange) {
-            const modelFields = {
-              creator,
-              movies,
-              title,
-              description,
-              is_public,
-              is_recommended: value,
-              photo_location,
-              size,
-              userprofileID,
-            };
-            const result = onChange(modelFields);
-            value = result?.is_recommended ?? value;
-          }
-          if (errors.is_recommended?.hasError) {
-            runValidationTasks("is_recommended", value);
-          }
-          setIs_recommended(value);
-        }}
-        onBlur={() => runValidationTasks("is_recommended", is_recommended)}
-        errorMessage={errors.is_recommended?.errorMessage}
-        hasError={errors.is_recommended?.hasError}
-        {...getOverrideProps(overrides, "is_recommended")}
-      ></SwitchField>
-      <TextField
-        label="Photo location"
-        isRequired={false}
-        isReadOnly={false}
-        value={photo_location}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              creator,
-              movies,
-              title,
-              description,
-              is_public,
-              is_recommended,
-              photo_location: value,
-              size,
-              userprofileID,
-            };
-            const result = onChange(modelFields);
-            value = result?.photo_location ?? value;
-          }
-          if (errors.photo_location?.hasError) {
-            runValidationTasks("photo_location", value);
-          }
-          setPhoto_location(value);
-        }}
-        onBlur={() => runValidationTasks("photo_location", photo_location)}
-        errorMessage={errors.photo_location?.errorMessage}
-        hasError={errors.photo_location?.hasError}
-        {...getOverrideProps(overrides, "photo_location")}
-      ></TextField>
-      <TextField
-        label="Size"
-        isRequired={false}
         isReadOnly={false}
         type="number"
         step="any"
-        value={size}
+        value={amount}
         onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
+          let value = isNaN(parseFloat(e.target.value))
             ? e.target.value
-            : parseInt(e.target.value);
+            : parseFloat(e.target.value);
           if (onChange) {
             const modelFields = {
-              creator,
-              movies,
-              title,
-              description,
-              is_public,
-              is_recommended,
-              photo_location,
-              size: value,
+              reference,
+              email,
+              amount: value,
+              status,
+              createdAt,
+              klixId,
+              paymentType,
               userprofileID,
+              Email: Email1,
             };
             const result = onChange(modelFields);
-            value = result?.size ?? value;
+            value = result?.amount ?? value;
           }
-          if (errors.size?.hasError) {
-            runValidationTasks("size", value);
+          if (errors.amount?.hasError) {
+            runValidationTasks("amount", value);
           }
-          setSize(value);
+          setAmount(value);
         }}
-        onBlur={() => runValidationTasks("size", size)}
-        errorMessage={errors.size?.errorMessage}
-        hasError={errors.size?.hasError}
-        {...getOverrideProps(overrides, "size")}
+        onBlur={() => runValidationTasks("amount", amount)}
+        errorMessage={errors.amount?.errorMessage}
+        hasError={errors.amount?.hasError}
+        {...getOverrideProps(overrides, "amount")}
+      ></TextField>
+      <TextField
+        label="Status"
+        isRequired={true}
+        isReadOnly={false}
+        value={status}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              reference,
+              email,
+              amount,
+              status: value,
+              createdAt,
+              klixId,
+              paymentType,
+              userprofileID,
+              Email: Email1,
+            };
+            const result = onChange(modelFields);
+            value = result?.status ?? value;
+          }
+          if (errors.status?.hasError) {
+            runValidationTasks("status", value);
+          }
+          setStatus(value);
+        }}
+        onBlur={() => runValidationTasks("status", status)}
+        errorMessage={errors.status?.errorMessage}
+        hasError={errors.status?.hasError}
+        {...getOverrideProps(overrides, "status")}
+      ></TextField>
+      <TextField
+        label="Created at"
+        isRequired={true}
+        isReadOnly={false}
+        type="datetime-local"
+        value={createdAt && convertToLocal(new Date(createdAt))}
+        onChange={(e) => {
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
+          if (onChange) {
+            const modelFields = {
+              reference,
+              email,
+              amount,
+              status,
+              createdAt: value,
+              klixId,
+              paymentType,
+              userprofileID,
+              Email: Email1,
+            };
+            const result = onChange(modelFields);
+            value = result?.createdAt ?? value;
+          }
+          if (errors.createdAt?.hasError) {
+            runValidationTasks("createdAt", value);
+          }
+          setCreatedAt(value);
+        }}
+        onBlur={() => runValidationTasks("createdAt", createdAt)}
+        errorMessage={errors.createdAt?.errorMessage}
+        hasError={errors.createdAt?.hasError}
+        {...getOverrideProps(overrides, "createdAt")}
+      ></TextField>
+      <TextField
+        label="Klix id"
+        isRequired={false}
+        isReadOnly={false}
+        value={klixId}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              reference,
+              email,
+              amount,
+              status,
+              createdAt,
+              klixId: value,
+              paymentType,
+              userprofileID,
+              Email: Email1,
+            };
+            const result = onChange(modelFields);
+            value = result?.klixId ?? value;
+          }
+          if (errors.klixId?.hasError) {
+            runValidationTasks("klixId", value);
+          }
+          setKlixId(value);
+        }}
+        onBlur={() => runValidationTasks("klixId", klixId)}
+        errorMessage={errors.klixId?.errorMessage}
+        hasError={errors.klixId?.hasError}
+        {...getOverrideProps(overrides, "klixId")}
+      ></TextField>
+      <TextField
+        label="Payment type"
+        isRequired={false}
+        isReadOnly={false}
+        value={paymentType}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              reference,
+              email,
+              amount,
+              status,
+              createdAt,
+              klixId,
+              paymentType: value,
+              userprofileID,
+              Email: Email1,
+            };
+            const result = onChange(modelFields);
+            value = result?.paymentType ?? value;
+          }
+          if (errors.paymentType?.hasError) {
+            runValidationTasks("paymentType", value);
+          }
+          setPaymentType(value);
+        }}
+        onBlur={() => runValidationTasks("paymentType", paymentType)}
+        errorMessage={errors.paymentType?.errorMessage}
+        hasError={errors.paymentType?.hasError}
+        {...getOverrideProps(overrides, "paymentType")}
       ></TextField>
       <ArrayField
         lengthLimit={1}
@@ -781,15 +691,15 @@ export default function MoviePlaylistCreateForm(props) {
           let value = items[0];
           if (onChange) {
             const modelFields = {
-              creator,
-              movies,
-              title,
-              description,
-              is_public,
-              is_recommended,
-              photo_location,
-              size,
+              reference,
+              email,
+              amount,
+              status,
+              createdAt,
+              klixId,
+              paymentType,
               userprofileID: value,
+              Email: Email1,
             };
             const result = onChange(modelFields);
             value = result?.userprofileID ?? value;
@@ -835,7 +745,7 @@ export default function MoviePlaylistCreateForm(props) {
       >
         <Autocomplete
           label="Userprofile id"
-          isRequired={false}
+          isRequired={true}
           isReadOnly={false}
           placeholder="Search UserProfile"
           value={currentUserprofileIDDisplayValue}
@@ -874,6 +784,91 @@ export default function MoviePlaylistCreateForm(props) {
           ref={userprofileIDRef}
           labelHidden={true}
           {...getOverrideProps(overrides, "userprofileID")}
+        ></Autocomplete>
+      </ArrayField>
+      <ArrayField
+        lengthLimit={1}
+        onChange={async (items) => {
+          let value = items[0];
+          if (onChange) {
+            const modelFields = {
+              reference,
+              email,
+              amount,
+              status,
+              createdAt,
+              klixId,
+              paymentType,
+              userprofileID,
+              Email: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.Email ?? value;
+          }
+          setEmail1(value);
+          setCurrentEmail1Value(undefined);
+          setCurrentEmail1DisplayValue("");
+        }}
+        currentFieldValue={currentEmail1Value}
+        label={"Email"}
+        items={Email1 ? [Email1] : []}
+        hasError={errors?.Email?.hasError}
+        runValidationTasks={async () =>
+          await runValidationTasks("Email", currentEmail1Value)
+        }
+        errorMessage={errors?.Email?.errorMessage}
+        getBadgeText={getDisplayValue.Email}
+        setFieldValue={(model) => {
+          setCurrentEmail1DisplayValue(
+            model ? getDisplayValue.Email(model) : ""
+          );
+          setCurrentEmail1Value(model);
+        }}
+        inputFieldRef={Email1Ref}
+        defaultFieldValue={""}
+      >
+        <Autocomplete
+          label="Email"
+          isRequired={false}
+          isReadOnly={false}
+          placeholder="Search Email"
+          value={currentEmail1DisplayValue}
+          options={email1Records
+            .filter((r) => !Email1IdSet.has(getIDValue.Email1?.(r)))
+            .map((r) => ({
+              id: getIDValue.Email1?.(r),
+              label: getDisplayValue.Email1?.(r),
+            }))}
+          isLoading={Email1Loading}
+          onSelect={({ id, label }) => {
+            setCurrentEmail1Value(
+              emailRecords.find((r) =>
+                Object.entries(JSON.parse(id)).every(
+                  ([key, value]) => r[key] === value
+                )
+              )
+            );
+            setCurrentEmail1DisplayValue(label);
+            runValidationTasks("Email", label);
+          }}
+          onClear={() => {
+            setCurrentEmail1DisplayValue("");
+          }}
+          onChange={(e) => {
+            let { value } = e.target;
+            fetchEmailRecords(value);
+            if (errors.Email?.hasError) {
+              runValidationTasks("Email", value);
+            }
+            setCurrentEmail1DisplayValue(value);
+            setCurrentEmail1Value(undefined);
+          }}
+          onBlur={() => runValidationTasks("Email", currentEmail1DisplayValue)}
+          errorMessage={errors.Email?.errorMessage}
+          hasError={errors.Email?.hasError}
+          ref={Email1Ref}
+          labelHidden={true}
+          {...getOverrideProps(overrides, "Email")}
         ></Autocomplete>
       </ArrayField>
       <Flex

@@ -95,7 +95,7 @@ const Home = () => {
               <div className="w-4/5 text-center typography-h2 my-auto">
                 {t("Darbi")}
               </div>
-              <div className="h-2.5 text-center typography-body-small mb-20">
+              <div className="h-2.5 text-center typography-body-small mb-25">
                 {t("Darbi_Apr")}
               </div>
             </div>
@@ -104,7 +104,7 @@ const Home = () => {
               <div className="w-4/5 text-center typography-h2 my-auto">
                 {t("Personas")}
               </div>
-              <div className="h-2.5 text-center typography-body-small mb-20">
+              <div className="h-2.5 text-center typography-body-small mb-25">
                 {t("Personas_Apr")}
               </div>
             </div>
@@ -113,7 +113,7 @@ const Home = () => {
               <div className="w-4/5 text-center typography-h2 my-auto">
                 {t("Saraksti")}
               </div>
-              <div className="h-2.5 text-center typography-body-small mb-20">
+              <div className="h-2.5 text-center typography-body-small mb-25">
                 {t("Saraksti_Apr")}
               </div>
             </div>

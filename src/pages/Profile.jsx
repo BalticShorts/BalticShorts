@@ -384,7 +384,7 @@ function Profile({ personId }) {
         {groupedMovies && Object.keys(groupedMovies).map((roleName, index) => (
           <section key={index} className="w-full mx-auto mb-100">
             <div className="flex flex-row mb-25">
-              <div className="typography-h2 font-bold mr-1">{roleName}</div>
+              <div className="typography-h2 font-bold mr-1">{t(roleName)}</div>
               <div className="typography-technical">{groupedMovies[roleName].length}</div>
             </div>
             <MyGridMovies data={groupedMovies[roleName]} maxRows={1} maxColumns={3} isLoggedIn={context.currentUser && Object.keys(context.currentUser).length > 0}/>
