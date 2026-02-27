@@ -19,6 +19,8 @@ import { ReactComponent as Plus } from "../assets/images/plus.svg";
 import { ReactComponent as List } from "../assets/images/list.svg";
 import { ReactComponent as PlayBig } from "../assets/images/play_big.svg";
 import { ReactComponent as Play } from "../assets/images/triangle.svg";
+import { ReactComponent as Audio } from "../assets/images/audio.svg";
+import { ReactComponent as Subtitles } from "../assets/images/subtitles.svg";
 import { useTranslation } from "react-i18next";
 
 Amplify.configure(awsExports);
@@ -114,6 +116,8 @@ function Movie() {
   const [showSubscribeModal, setShowSubscribeModal] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const { t, i18n } = useTranslation();
+  const isDesktop = window.matchMedia("(min-width: 1100px)").matches;
+  const cols = isDesktop ? 3 : 2;
 
   const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -346,9 +350,7 @@ function Movie() {
     <div className="FilmasSkats w-full relative bg-beige rounded-3xl">
     <div className='absolute top-0 left-0 w-full z-10 text-beige hover:text-black hover:bg-beige fill-beige hover:fill-black !h-50 transition-colors duration-1000 ease-in-out'><Navbar/></div>
 
-    <section
-      className="MovieContainer w-full max-h-[65vh] h-[65vh] relative min-w-2/5"
-    >
+    <section className="MovieContainer w-full max-h-[65vh] h-[65vh] relative min-w-2/5">
       <div className="VideoWrapper w-full max-h-[65vh] h-[65vh] relative min-w-2/5">
         <VideoPlayer
           movieURL={movieURL}
@@ -357,58 +359,77 @@ function Movie() {
           thumbnail={thumbnailURL}
           shouldAutoplay={shouldAutoplay}
         />
-        {!isMobile && (
-          <div
-            id="textOnMovie"
-            className="TextOverlay absolute w-full h-full flex flex-col justify-between pointer-events-auto inset-0 z-0"
-            style={{ "background-color" : 'rgba(0, 0, 0, 1)' }}
-          >        
-            <div className="w-full h-[20%] flex flex-col items-center justify-center bg-gradient-to-b from-stone-950 to-transparent">
+        <div
+          id="textOnMovie"
+          className="TextOverlay absolute w-full h-full flex flex-col justify-between pointer-events-auto inset-0 z-0"
+          style={{ "background-color" : 'rgba(0, 0, 0, 1)' }}
+        >        
+          <div className="w-full h-[20%] flex flex-col desktop:items-center desktop:justify-center mobile:items-start mobile:justify-start bg-gradient-to-b from-stone-950 to-transparent">
 
-              <div className="text-center mix-blend-normal mt-100 mx-auto max-w-[1100px]">
-                <h1 className="text-beige typography-h1 text-opacity-90">
-                  {movieData.name}
-                </h1>
-                <p className="text-beige typography-body uppercase text-opacity-90 mt-10">
-                  {movieData.name_eng}
-                </p>
-              </div>
+            <div className="desktop:text-center mobile:text-left mix-blend-normal mt-100 desktop:mx-auto mobile:mx-20 max-w-[1100px]">
+              <h1 className="text-beige typography-h1 text-opacity-90">
+                {movieData.name}
+              </h1>
+              <p className="text-beige typography-body uppercase text-opacity-90 mt-10">
+                {movieData.name_eng}
+              </p>
             </div>
+          </div>
 
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-[60px] h-[60px] flex items-center justify-center bg-transparent text-beige hover:bg-beige hover:text-black cursor-pointer" onClick={() => removeText()}>
-                <PlayBig/>
-              </div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-[60px] h-[60px] flex items-center justify-center bg-transparent text-beige hover:bg-beige hover:text-black cursor-pointer" onClick={() => removeText()}>
+              <PlayBig/>
             </div>
+          </div>
 
-            <div className="w-full h-[20%] flex items-center justify-between bg-gradient-to-t from-stone-950 to-transparent">
-              <div className="!max-w-[1100px] flex flex-row items-end justify-between m-auto w-full mb-50">
-                
-                <div className="flex flex-col items-start gap-20 text-beige w-1/3 !text-opacity-70 !opacity-70">
+          <div className="w-full desktop:h-[20%] mobile:h-[25%] flex desktop:items-center mobile:items-start desktop:justify-between mobile:justify-start bg-gradient-to-t from-stone-950 to-transparent">
+            <div className="desktop:max-w-[1100px] mobile:w-full flex desktop:flex-row mobile:flex-col desktop:items-end mobile:items-start justify-between desktop:m-auto mobile:mx-25 w-full desktop:mb-50 mobile:mb-25">
+              
+              <div className="flex flex-col items-start gap-20 text-beige w-1/3 !text-opacity-70 !opacity-70 mobile:hidden">
+                {movieTrailer && (
+                  <button className="flex items-center button-default button-transparent z-10" onClick={() => setIsVideoModalOpen(true)}>
+                    <Play/> <span className="ml-[6px]"> {t("Treileris")} </span>
+                  </button>
+                )}
+                <div className="flex items-center gap-2 typography-body lowercase">
+                  <Audio/> {movieData.screen_language}
+                  <span> | </span>
+                  <Subtitles/> {movieData.captions_language}
+                </div>
+              </div>
+
+              <div className="flex flex-col desktop:text-center text-beige typography-body-small gap-1 desktop:w-1/3">
+                <div><span className='uppercase'>{t("Režisors")} </span> {movieTeamData.Director?.map((person) => person.name).join(", ")}</div>
+                <div>{movieData.origin_country} <span>&nbsp;|&nbsp;</span> {movieData.created_year} <span>&nbsp;|&nbsp;</span> {movieData.length}’ <span>&nbsp;|&nbsp;</span> {movieData.age_rating} + </div>
+                <div className="!text-opacity-70 !opacity-70">{movieData.genre}</div>
+              </div>
+
+              <div className="flex flex-row desktop:items-end desktop:justify-end gap-4 w-1/3 relative pt-20 mobile:hidden">
+                <div className="flex button-transparent add z-10 items-center justify-center cursor-pointer" onClick={() => {
+                  if(context.currentUser && Object.keys(context.currentUser).length > 0) setIsPlaylistModalOpen(true)
+                }}>
+                  <List/>
+                </div>
+                <div className="flex button-transparent add z-10 items-center justify-center cursor-pointer" onClick={() => {
+                  if(context.currentUser && Object.keys(context.currentUser).length > 0) setIsPlaylistModalOpen(true)
+                }}>
+                  <div className="flex items-center justify-center !w-[14px] !h-[14px]">            
+                    <Plus />
+                  </div> 
+                </div>
+              </div>
+              <div className='desktop:hidden mobile:flex flex-col items-start justify-start w-full relative pt-10 gap-10'>
+                <div className="flex items-center gap-2 typography-body lowercase text-beige">
+                  <Audio/> {movieData.screen_language}
+                  <span> | </span>
+                  <Subtitles/> {movieData.captions_language}
+                </div>
+                <div className="flex flex-row gap-4">
                   {movieTrailer && (
                     <button className="flex items-center button-default button-transparent z-10" onClick={() => setIsVideoModalOpen(true)}>
                       <Play/> <span className="ml-[6px]"> {t("Treileris")} </span>
                     </button>
                   )}
-                  <div className="flex items-center gap-2 typography-body lowercase">
-                    <svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M0 3.94755V8.05245H2.7366L6.15735 11.4732V0.526796L2.7366 3.94755H0ZM9.23603 6C9.23589 5.42677 9.0757 4.86496 8.77352 4.37784C8.47134 3.89072 8.03916 3.49764 7.52565 3.24287V8.75029C8.5382 8.25086 9.23603 7.21095 9.23603 6ZM7.52565 0V1.40935C9.50285 1.99772 10.9464 3.83124 10.9464 6C10.9464 8.16876 9.50285 10.0023 7.52565 10.5906V12C10.2691 11.3774 12.3147 8.92816 12.3147 6C12.3147 3.07184 10.2691 0.622577 7.52565 0Z" fill="#FDFCF5" fill-opacity="0.7"/>
-                    </svg>
-                    {movieData.screen_language} <span> | </span>
-                    <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M15.3147 0H0.314697V12H15.3147V0ZM1.8147 6H4.8147V7.5H1.8147V6ZM9.3147 10.5H1.8147V9H9.3147V10.5ZM13.8147 10.5H10.8147V9H13.8147V10.5ZM13.8147 7.5H6.3147V6H13.8147V7.5Z" fill="#FDFCF5" fill-opacity="0.7"/>
-                    </svg>
-                    {movieData.captions_language}
-                  </div>
-                </div>
-
-                <div className="flex flex-col text-center text-beige typography-body-small gap-1 w-1/3">
-                  <div><span className='uppercase'>{t("Režisors")}</span> {movieTeamData.Director?.map((person) => person.name).join(", ")}</div>
-                  <div>{movieData.origin_country} <span>&nbsp;|&nbsp;</span> {movieData.created_year} <span>&nbsp;|&nbsp;</span> {movieData.length}’ <span>&nbsp;|&nbsp;</span> {movieData.age_rating} + </div>
-                  <div className="!text-opacity-70 !opacity-70">{movieData.genre}</div>
-                </div>
-
-                <div className="flex flex-row items-end justify-end gap-4 w-1/3 relative pt-20">
                   <div className="flex button-transparent add z-10 items-center justify-center cursor-pointer" onClick={() => {
                     if(context.currentUser && Object.keys(context.currentUser).length > 0) setIsPlaylistModalOpen(true)
                   }}>
@@ -425,28 +446,27 @@ function Movie() {
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </section>
-    <div className='!max-w-[1100px] items-center justify-center m-auto flex flex-col z-0'>
-      <div className='w-full flex flex-col items-center mt-50'>
-        <div className="w-full relative text-center typography-h2 mb-25">{t("Anotācija")}</div>
-        <div className="w-full relative text-justify typography-body-large max-w-3xl mb-100">{i18n.language === movieData.description_language?.toLowerCase() ? movieData.description : movieData.description_eng}</div>
-        {/* <div className="w-full h-45 mt-5 py-2 relative text-justify text-black text-xl font-normal font-['SchoolBook'] max-w-3xl">Description in english: {movieData.description_eng}  </div> */}
+    <div className='!max-w-[1100px] items-center justify-center m-auto flex flex-col z-0 '>
+      <div className='w-full flex flex-col desktop:items-center mobile:items-start mt-50 mobile:!px-25'>
+        <div className="w-full relative desktop:text-center mobile:text-left typography-h2 mb-25">{t("Anotācija")}</div>
+        <div className="w-full relative text-justify typography-body-large desktop:max-w-3xl mb-100">{i18n.language === movieData.description_language?.toLowerCase() ? movieData.description : movieData.description_eng}</div>
       </div>
-      <div className='Description w-full flex flex-col items-center'>
-        <div className="w-full relative text-center typography-h2 mb-25">{t("Autoru Komentārs")}</div>
-        <div className="w-full relative text-justify typography-body-large max-w-3xl mb-100">{movieData.creators_comment}</div>
+      <div className='Description w-full flex flex-col desktop:items-center mobile:items-start mobile:!px-25'>
+        <div className="w-full relative desktop:text-center mobile:text-left typography-h2 mb-25">{t("Autoru Komentārs")}</div>
+        <div className="w-full relative text-justify typography-body-large desktop:max-w-3xl mb-100">{movieData.creators_comment}</div>
       </div>
-      <div className='flex flex-col mb-100'>
+      <div className='flex flex-col mb-100 mobile:!px-25 mobile:w-full'>
         <div className="w-full relative typography-h2 mb-25">{t("Komanda")}</div>
         <div className="relative justify-center gap-6 inline-flex flex-row items-start max-w-full min-w-fit">
           <div className="m-auto w-full">
-            <div className="grid grid-cols-3 gap-25 mb-20">
+            <div className="grid desktop:grid-cols-3 mobile:grid-cols-2 gap-25 mb-20">
               {[0, 1, 2].map((colIdx) => (
                 <div key={colIdx} className="flex flex-col gap-4">
                   {movieTeamKeyOrder
-                    .filter((key, idx) => idx % 3 === colIdx && key in movieTeamData)
+                    .filter((key, idx) => idx % cols === colIdx && key in movieTeamData)
                     .map((key, idx) => {
                       const roleGroup = movieTeamData[key];
                       return (
@@ -471,11 +491,11 @@ function Movie() {
         </div>
       </div>
         <div className='flex flex-col mb-100'>
-          <div className="w-full relative typography-h2 mb-25">{t("Kadri")}</div>
+          <div className="w-full relative typography-h2 mb-25 mobile:!px-25">{t("Kadri")}</div>
           <div className="relative justify-center inline-flex flex-row items-center max-w-full min-w-fit">
             <div className="carousel-container w-full relative m-auto">
               {photoURLs.length > 0 ? (
-                <Carousel showIndicators = {false} showStatus = {false} infiniteLoop>
+                <Carousel showIndicators = {false} showStatus = {false} infiniteLoop showThumbs = {isDesktop} >
                   {photoURLs.map((url, index) => (
                     <div key={index}>
                       <img src={url} alt={`photo-${index}`} />
@@ -489,7 +509,7 @@ function Movie() {
           </div>
         </div>
         {(movieData?.awards && Array.isArray(movieData.awards.items) && movieData.awards.items.length > 0) && (
-          <div className="flex flex-col mb-100 w-full">
+          <div className="flex flex-col mb-100 w-full mobile:!px-25">
             <div className="w-full relative typography-h2 mb-25">
               {t("Panākumi & Festivāli")}
             </div>
@@ -516,7 +536,7 @@ function Movie() {
             </div>
           </div>
         )}
-        <div className='h-fit flex flex-col relative justify-center m-auto items-center mb-100'>
+        <div className='h-fit flex flex-col relative justify-center m-auto items-center mb-100 mobile:!px-25'>
           <div className="w-full relative typography-h2 mb-25">{t("Saraksti, kuros filma ir iekļauta")}</div>
           <div className='w-full h-fit gap-6 flex flex-col items-center relative justify-center '>
             <MyGridPlaylists data={playlists.flat()} maxRows={3} maxColumns={3} />

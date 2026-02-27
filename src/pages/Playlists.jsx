@@ -90,7 +90,7 @@ const Playlist = () => {
       <div className='absolute top-0 left-0 w-full z-10 text-beige hover:text-black hover:bg-beige fill-beige hover:fill-black !h-50 transition-colors duration-1000 ease-in-out'><Navbar/></div>
       
       <div
-        className="relative w-full h-64 flex flex-col items-center justify-between"
+        className="relative w-full desktop:h-64 mobile:h-[75vh] flex flex-col desktop:items-center justify-between mobile:px-25"
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: "cover",
@@ -98,17 +98,18 @@ const Playlist = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div className="absolute inset-x-0 top-0 h-64 bg-gradient-to-t from-slate-600 to-transparent z-0" />
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-slate-600 to-transparent z-0" />
-
-        <h1 className="typography-h1 !text-beige mt-150 w-full max-w-[1100px] text-left mb-10 z-10">
-          {playlist.title}
-        </h1>
-        <p className="typography-body w-full max-w-[1100px] text-left text-beige mb-50 z-10">
-          {playlist.creator}
-        </p>
+        <div className="absolute inset-x-0 top-0 desktop:h-64 mobile:h-[75vh] bg-gradient-to-t from-slate-600 to-transparent z-0 mobile:opacity-50" />
+        <div className="absolute inset-x-0 top-0 desktop:h-32 mobile:h-[35vh] bg-gradient-to-b from-slate-600 to-transparent z-0 mobile:opacity-70" />
+        <div className="flex flex-col text-left gap-10 !items-start justify-left mx-10 w-full max-w-[1100px]">
+          <h1 className="typography-h1 !text-beige mt-150 w-full max-w-[1100px] text-left desktop:mb-10 z-10">
+            {playlist.title}
+          </h1>
+          <p className="typography-body w-full max-w-[1100px] text-left text-beige desktop:mb-50 mobile:mt-auto z-10">
+            {playlist.creator}
+          </p>
+        </div>
       </div>
-      <div className="mx-auto py-8 max-w-[1100px]">
+      <div className="mx-auto py-8 max-w-[1100px] mobile:px-25">
         <div className="flex justify-between items-center mb-6">
           <h2 className="typography-h2">{movies.length} {t("Filmas")}</h2>
           <div className="flex items-center">

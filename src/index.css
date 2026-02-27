@@ -108,6 +108,10 @@ code {
   @apply text-h1-small font-schoolbookbold leading-[31px] tracking-normal align-bottom;
 }
 
+.typography-h1-mobile {
+  @apply text-h1 font-schoolbookbold leading-[38px] tracking-normal align-bottom uppercase;
+}
+
 .typography-h2 {
   @apply text-h2 font-arial leading-[23px] tracking-wide align-bottom uppercase font-bold;
 }

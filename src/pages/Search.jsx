@@ -85,10 +85,10 @@ const Search = () => {
 
     return(
         <>
-          <div className="absolute top-0 left-0 right-0 bottom-0 bg-beige overflow-auto max-w-[1100px] m-auto flex flex-col items-center justify-center no-scrollbar !mb-50">
+          <div className="absolute top-0 left-0 right-0 bottom-0 bg-beige overflow-auto max-w-[1100px] m-auto flex flex-col items-center justify-center no-scrollbar !mb-50 mobile:mx-25">
             <div className="bg-beige h-full w-full">
               <div id="searchResult" className="w-full h-full ">
-                <div className="w-full h-fit mt-50 relative flex flex-col items-center justify-center">
+                <div className="w-full h-fit my-50 relative flex flex-col items-center justify-center ">
                     <div className="w-3/5 h-px top-[30px] absolute border border-black"></div>
                     <div className="w-80 h-6 top-0 absolute text-center text-black text-opacity-70 text-xl font-normal font-['SchoolBook'] tracking-tight">
                         <input placeholder={t("Meklēt")} className="bg-beige text-center border-none outline-none" onChange={handleChange} value={inputText}></input>

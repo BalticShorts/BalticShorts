@@ -63,14 +63,13 @@ const MainMovie = ({ movie, isLoggedIn }) => {
       ? movie.description_eng.slice(0, 320) + "..."
       : i18n.language === movie.description_language.toLowerCase() ? movie.description : movie.description_eng;
   return (
-    <section className="relative w-full h-[60vh] sm:h-[65vh] bg-black z-0"
+    <section className="relative w-full desktop:h-[60vh] h-[100vh] bg-black z-0"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}>
       <div className="absolute inset-0">
         
-        <video ref={videoRef} className={`videoTag overflow-hidden object-cover w-full h-full -z-10 transition-opacity duration-300${
-          isHovered ? "opacity-100" : "opacity-0"
-        }`} loop muted onLoadedData={handleVideoLoaded}>
+        <video ref={videoRef} className={`videoTag overflow-hidden object-cover w-full h-full -z-10 transition-opacity duration-300
+        ${ isHovered  ? "opacity-100" : "opacity-0"}`} loop muted onLoadedData={handleVideoLoaded}>
           <source src={mov} type="video/mp4" alt={movie.name}/>
         </video>
         <img
@@ -85,7 +84,7 @@ const MainMovie = ({ movie, isLoggedIn }) => {
 
       <div className="relative z-0 flex flex-col h-full text-beige m-auto">
       <div className='w-full z-10 hover:bg-beige text-beige hover:text-black fill-beige hover:fill-black hover:border-b-2 hover:border-black border-none !h-50 transition-colors duration-1000 ease-in-out'><Navbar/></div>
-        <div className="relative z-0 flex flex-col justify-between h-full text-beige max-w-[1100px] m-auto">
+        <div className="relative z-0 flex flex-col justify-between h-full text-beige desktop:max-w-[1100px] desktop:mx-auto desktop:px-0 mx-20">
 
           <div className="mt-35">
             <p className="typography-technical uppercase !font-bold">
@@ -93,7 +92,7 @@ const MainMovie = ({ movie, isLoggedIn }) => {
             </p>
 
             <h1
-              className="typography-h1 my-10 cursor-pointer"
+              className="desktop:typography-h1 typography-h1-mobile my-10 cursor-pointer"
               onClick={() => navigate(`/${i18n.language}/movie/${encodeURIComponent(movie.name)}/${encodeURIComponent(movie.id)}`, { state: { movie } })}
             >
               {movie.name.toUpperCase()}
@@ -107,7 +106,7 @@ const MainMovie = ({ movie, isLoggedIn }) => {
             </p>
           </div>
 
-          <div className="mb-12 sm:mb-50 flex items-center justify-center sm:justify-between gap-6">
+          <div className="desktop:mb-12 mb-25 flex items-center justify-between gap-6">
             <div className="flex flex-col sm:ml-10">
               <p className="typography-body-bold mb-[3px]">
                 <span>{director?.Person.name + ' ' + director?.Person.surname}</span>
@@ -136,7 +135,7 @@ const MainMovie = ({ movie, isLoggedIn }) => {
               </div>
             </div>
 
-            <p className="typography-body-small text-beige w-2/3 pl-10 self-end -mb-1">
+            <p className="hidden desktop:block typography-body-small text-beige w-2/3 pl-10 self-end -mb-1">
               {description}
             </p>
           </div>

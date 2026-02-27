@@ -58,8 +58,8 @@ const Buj = () => {
   return (
     <div className="flex flex-col max-w-[1100px] m-auto bg-beige overflow-auto">
       <div className="flex flex-1 h-screen">
-        <aside className="w-64 h-screen"/>
-        <aside className="hidden md:block w-64 h-screen fixed left-1/2 -translate-x-[550px] overflow-y-auto">
+        <aside className="w-64 h-screen mobile:hidden"/>
+        <aside className="mobile:hidden desktop:block w-64 h-screen fixed left-1/2 -translate-x-[550px] overflow-y-auto">
           <nav>
             <ul className="space-y-2 pl-2">
               <li className="typography-h2 my-50 uppercase">{t("Palīdzība")}</li>

@@ -67,9 +67,9 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
   };
 
   return (
-    <div className="w-full h-auto flex flex-col items-center bg-inherit">
+    <div className="w-full h-auto flex flex-col items-center bg-inherit mobile:px-20">
       <div
-        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-25 items-center w-full bg-inherit`}
+        className={`grid grid-cols-1 desktop:grid-cols-3 gap-25 items-center w-full bg-inherit`}
       >
         {data.map((item, idx) => (
           <>
@@ -81,7 +81,7 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
                     className="relative flex flex-col bg-inherit border border-black max-h-[285px] overflow-hidden cursor-pointer"
                     onClick={() => navigate(`/${i18n.language}/movie/${encodeURIComponent(item.name)}/${encodeURIComponent(item.id)}`, { state: { movie: {item} } })}
                   >
-                    <div className="relative w-full h-full h-20 sm:h-36 lg:h-48 lg:min-h-[195px] overflow-hidden bg-inherit">
+                    <div className="relative w-full h-full h-[256px] desktop:h-48 desktop:min-h-[195px] overflow-hidden bg-inherit">
                       <img
                         className="w-full h-full object-cover"
                         src={photoSrc[item.id]}
@@ -107,7 +107,7 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
                         </div>
                       </div>
                     </div>
-                    <div className="mt-10 lg:mt-15 flex flex-col bg-inherit mx-15 justify-between">
+                    <div className="mt-10 desktop:mt-15 flex flex-col bg-inherit mx-15 justify-between">
                       <div className="typography-body-bold uppercase !font-bold">
                         {item.name}
                       </div>

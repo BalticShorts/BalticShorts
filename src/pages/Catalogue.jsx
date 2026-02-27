@@ -342,7 +342,7 @@ const Catalogue = () => {
           {loading ? (
             <div className="text-center mt-4 typography-body-large">Loading...</div>
           ) : (
-            <>
+            <div className=' mobile:px-25'>
               {tab[0] === 'Movies' && (
                 <>
                   <div className="w-full flex justify-center items-center mt-15">
@@ -559,7 +559,7 @@ const Catalogue = () => {
                   </div>
                 </>
               )}
-            </>
+            </div>
           )}
         </div>
       </div>

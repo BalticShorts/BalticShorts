@@ -47,7 +47,7 @@ export function MyGridPlaylists({ data, maxRows, maxColumns }) {
   return (
     <div className="w-full h-auto flex flex-col items-center bg-inherit">
       <div
-        className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-25 items-center w-full bg-inherit`}
+        className={`grid mobile:grid-cols-1 desktop:grid-cols-3 gap-25 items-center w-full bg-inherit`}
       >
         {data.map((item, idx) => (
           <>

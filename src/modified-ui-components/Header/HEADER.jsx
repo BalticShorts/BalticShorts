@@ -45,7 +45,7 @@ export const Navbar = () => {
   }, [location.pathname]);
 
   useEffect(() => {
-    if (showSearchModal) {
+    if (showSearchModal || showDropdown) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
@@ -53,11 +53,73 @@ export const Navbar = () => {
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [showSearchModal]);
+  }, [showSearchModal, showDropdown]);
 
   return (
     <>
-      <div className="w-full h-full !h-full min-h-full bg-inherit flex flex-row justify-center items-center relative">
+    {/* MOBILE HEADER */}
+      <div className="mobile:flex desktop:hidden w-full h-[50px] bg-inherit items-center px-20 relative">
+        <button
+          type="button"
+          onClick={toggleDropdown}
+          className="p-2 -ml-2"
+          aria-label="Open menu"
+        >
+          <Menu />
+        </button>
+
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <Logo
+            onClick={() => navigate(`/${i18n.language}/`)}
+            className="h-20 !w-[160px] cursor-pointer"
+          />
+        </div>
+        {showDropdown && (
+          <div className="mobile:block desktop:hidden fixed inset-0 z-[100]">
+            <button
+              type="button"
+              className="absolute inset-0 bg-black/20"
+              onClick={() => setShowDropdown(false)}
+              aria-label="Close menu backdrop"
+            />
+
+            <div className="absolute top-0 left-0 right-0">
+              <Dropdown
+                variant="mobile"
+                onClose={() => setShowDropdown(false)}
+                onSearch={() => {
+                  setShowDropdown(false);
+                  openSearchModal();
+                }}
+              />
+            </div>
+          </div>
+        )}
+
+        <div className="ml-auto">
+          {showSearchModal ? (
+            <button
+              type="button"
+              onClick={closeSearchModal}
+              className="p-2 -mr-2"
+              aria-label="Close search"
+            >
+              <X className="w-20 h-20" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={openSearchModal}
+              className="p-2 -mr-2"
+              aria-label="Open search"
+            >
+              <SearchB className="w-20 h-20" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="hidden desktop:flex w-full h-full !h-full min-h-full bg-inherit flex flex-row justify-center items-center relative">
         <div className="w-full flex flex-row justify-between items-center m-auto !max-w-[1100px] my-15 relative">
           <div className="flex flex-row gap-25 absolute left-0 top-1/2 -translate-y-1/2">
             <div className="typography-body-small text-center items-center flex">
@@ -114,7 +176,7 @@ export const Navbar = () => {
                 <div className="flex flex-col relative gap-4 sm:gap-20">
                   <Menu onClick={() => toggleDropdown()} />
                   {showDropdown && (
-                    <div className="absolute top-full right-0 mt-3 z-10 flex items-end flex-col">
+                    <div className="mobile:hidden desktop:absolute top-full right-0 mt-3 z-10 flex items-end flex-col">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="9"

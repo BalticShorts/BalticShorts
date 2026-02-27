@@ -201,7 +201,7 @@ function Profile({ personId }) {
     };
 
     return (
-      <div className="min-h-screen bg-inherit text-black max-w-[1100px] m-auto">
+      <div className="min-h-screen bg-inherit text-black max-w-[1100px] desktop:m-auto mobile:mx-25">
         <section className="mt-25 mb-50 flex flex-row justify-between">
           <div className="flex flex-col">
             <div className="flex gap-2">

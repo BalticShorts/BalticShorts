@@ -89,39 +89,39 @@ const Home = () => {
     <>
       <div className="w-full" id="container">
         <MainMovie movie={highlightedMovie} isLoggedIn = {context.currentUser && Object.keys(context.currentUser).length > 0} />
-        <div className="max-w-[1100px] flex flex-col justify-center items-center m-auto">
-          <div className="flex flex-row mt-50 gap-25 w-full h-fit justify-center items-center">
-            <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4 hover-opacity" onClick={() => navigate('/catalogue/Movies')}>
-              <div className="w-4/5 text-center typography-h2 my-auto">
+        <div className="desktop:max-w-[1100px] flex flex-col justify-center items-center m-auto">
+          <div className="flex desktop:flex-row flex-col mobile:px-20 mt-50 gap-25 w-full h-fit justify-center items-stretch desktop:items-center">
+            <div className="w-full desktop:w-1/3 desktop:h-48 h-150 border border-black flex flex-col items-center justify-between cursor-pointer p-4 hover-opacity" onClick={() => navigate('/catalogue/Movies')}>
+              <div className="w-4/5 text-center typography-h2 desktop:my-auto my-10">
                 {t("Darbi")}
               </div>
-              <div className="h-2.5 text-center typography-body-small mb-25">
+              <div className="desktop:h-2.5 text-center typography-body-small desktop:mb-25 ">
                 {t("Darbi_Apr")}
               </div>
             </div>
 
-            <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4 hover-opacity" onClick={() => navigate('/catalogue/Persons')}>
-              <div className="w-4/5 text-center typography-h2 my-auto">
+            <div className="w-full desktop:w-1/3 desktop:h-48 h-150 border border-black flex flex-col items-center justify-between cursor-pointer p-4 hover-opacity" onClick={() => navigate('/catalogue/Persons')}>
+              <div className="w-4/5 text-center typography-h2 desktop:my-auto my-10">
                 {t("Personas")}
               </div>
-              <div className="h-2.5 text-center typography-body-small mb-25">
+              <div className="desktop:h-2.5 text-center typography-body-small desktop:mb-25">
                 {t("Personas_Apr")}
               </div>
             </div>
 
-            <div className="w-1/3 h-48 border border-black flex flex-col items-center justify-between cursor-pointer p-4 hover-opacity" onClick={() => navigate('/catalogue/Playlists')}>
-              <div className="w-4/5 text-center typography-h2 my-auto">
+            <div className="w-full desktop:w-1/3 desktop:h-48 h-150 border border-black flex flex-col items-center justify-between cursor-pointer p-4 hover-opacity" onClick={() => navigate('/catalogue/Playlists')}>
+              <div className="w-4/5 text-center typography-h2 desktop:my-auto my-10">
                 {t("Saraksti")}
               </div>
-              <div className="h-2.5 text-center typography-body-small mb-25">
+              <div className="desktop:h-2.5 text-center typography-body-small desktop:mb-25">
                 {t("Saraksti_Apr")}
               </div>
             </div>
 
           </div>
 
-          <div className='w-full h-fit gap-6 mt-100 mb-25 flex flex-col items-center relative justify-center'>
-            <div className="w-full typography-h2">
+          <div className='w-full h-fit gap-6 desktop:mt-100 mt-25 mb-25 flex flex-col desktop:items-center relative justify-center'>
+            <div className="w-full typography-h2 mobile:px-20">
               {t("BS_Iesaka")}
             </div>
             <DisplayedPlaylistGroup elementsShown={recomendedPlaylists.length} playlists={recomendedPlaylists} />

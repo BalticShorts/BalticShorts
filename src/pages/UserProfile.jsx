@@ -63,7 +63,7 @@ const UserProfilePage = () => {
   if (loading) return <div className="text-center mt-4 typography-body-large">Loading...</div>;
 
   return (
-    <div className="bg-beige min-h-screen felx flex-col max-w-[1100px] m-auto">
+    <div className="bg-beige min-h-screen flex-col max-w-[1100px] m-auto mobile:mx-25">
       <header className="py-50 m-auto mx-auto">
         <h1 className="text-4xl font-bold tracking-wide">{profile.name} {profile.surname}</h1>
         <nav className="mt-2 text-sm font-semibold">

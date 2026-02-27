@@ -4,6 +4,10 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
+    screens: {
+      mobile: {max: "1099px" },
+      desktop: "1100px",
+    },
     extend: {
       colors: {
         beige: "var(--beige)",
@@ -49,6 +53,8 @@ module.exports = {
         20: "20px",
         30: "30px",
         50: "50px",
+        100: "100px",
+        150: "150px",
       },
       width: {
         30: "30px",
@@ -63,6 +69,9 @@ module.exports = {
         20: "20px",
         25: "25px",
         50: "50px",
+      },
+      minHeight: {
+        100: "100px",
       },
     },
   },
