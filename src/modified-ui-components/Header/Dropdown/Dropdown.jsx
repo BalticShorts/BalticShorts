@@ -86,7 +86,7 @@ export const Dropdown = ({ variant = "desktop", onClose, onSearch }) => {
       <div className="px-20 py-20 typography-body-small uppercase flex flex-col gap-10">
         <a href={`/${i18n.language}/about`}>{t("Par mums")}</a>
         <a href={`/${i18n.language}/faq`}>{t("Palīdzība")}</a>
-        {/* {context.loggedIn && <div className="cursor-pointer" onClick={signOut}>{t("Iziet")}</div>} */}
+        {context.loggedIn && <div className="cursor-pointer" onClick={signOut}>{t("Iziet")}</div>}
         {/* {!context.loggedIn && <div className="cursor-pointer" onClick={() => context.setLoggedInModal(true)}>{t("Ienākt")}</div>} */}
       </div>
 
