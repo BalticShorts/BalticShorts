@@ -6,7 +6,13 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import {
+  Button,
+  Flex,
+  Grid,
+  SwitchField,
+  TextField,
+} from "@aws-amplify/ui-react";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
 import { createAward } from "../src/graphql/mutations";
@@ -26,17 +32,20 @@ export default function AwardCreateForm(props) {
     year: "",
     category: "",
     comment: "",
+    approved: false,
   };
   const [name, setName] = React.useState(initialValues.name);
   const [year, setYear] = React.useState(initialValues.year);
   const [category, setCategory] = React.useState(initialValues.category);
   const [comment, setComment] = React.useState(initialValues.comment);
+  const [approved, setApproved] = React.useState(initialValues.approved);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setName(initialValues.name);
     setYear(initialValues.year);
     setCategory(initialValues.category);
     setComment(initialValues.comment);
+    setApproved(initialValues.approved);
     setErrors({});
   };
   const validations = {
@@ -44,6 +53,7 @@ export default function AwardCreateForm(props) {
     year: [{ type: "Required" }],
     category: [{ type: "Required" }],
     comment: [],
+    approved: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -75,6 +85,7 @@ export default function AwardCreateForm(props) {
           year,
           category,
           comment,
+          approved,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -141,6 +152,7 @@ export default function AwardCreateForm(props) {
               year,
               category,
               comment,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -172,6 +184,7 @@ export default function AwardCreateForm(props) {
               year: value,
               category,
               comment,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.year ?? value;
@@ -199,6 +212,7 @@ export default function AwardCreateForm(props) {
               year,
               category: value,
               comment,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.category ?? value;
@@ -226,6 +240,7 @@ export default function AwardCreateForm(props) {
               year,
               category,
               comment: value,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.comment ?? value;
@@ -240,6 +255,34 @@ export default function AwardCreateForm(props) {
         hasError={errors.comment?.hasError}
         {...getOverrideProps(overrides, "comment")}
       ></TextField>
+      <SwitchField
+        label="Approved"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={approved}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              year,
+              category,
+              comment,
+              approved: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.approved ?? value;
+          }
+          if (errors.approved?.hasError) {
+            runValidationTasks("approved", value);
+          }
+          setApproved(value);
+        }}
+        onBlur={() => runValidationTasks("approved", approved)}
+        errorMessage={errors.approved?.errorMessage}
+        hasError={errors.approved?.hasError}
+        {...getOverrideProps(overrides, "approved")}
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

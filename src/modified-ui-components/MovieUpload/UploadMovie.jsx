@@ -23,7 +23,7 @@ import {
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
 import { API } from "aws-amplify";
 import { listCountryCodes, listMovieTypes } from "../../graphql/queries";
-import { createMovie } from "../../graphql/mutations";
+import { createMovieMinimal } from "../../custom-queries/queries";
 function ArrayField({
   items = [],
   onChange,
@@ -476,7 +476,7 @@ export default function UploadMovie(props) {
           };
           const movie = (
             await API.graphql({
-              query: createMovie.replaceAll("__typename", ""),
+              query: createMovieMinimal,
               variables: {
                 input: {
                   ...modelFieldsToSave,
@@ -493,6 +493,7 @@ export default function UploadMovie(props) {
           }
           props.changeState('awards', movie);
         } catch (err) {
+          console.error('createMovie failed:', err);
           if (onError) {
             const messages = err.errors.map((e) => e.message).join("\n");
             onError(modelFields, messages);

@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -26,12 +26,14 @@ export declare type AwardCreateFormInputValues = {
     year?: number;
     category?: string;
     comment?: string;
+    approved?: boolean;
 };
 export declare type AwardCreateFormValidationValues = {
     name?: ValidationFunction<string>;
     year?: ValidationFunction<number>;
     category?: ValidationFunction<string>;
     comment?: ValidationFunction<string>;
+    approved?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type AwardCreateFormOverridesProps = {
@@ -40,6 +42,7 @@ export declare type AwardCreateFormOverridesProps = {
     year?: PrimitiveOverrideProps<TextFieldProps>;
     category?: PrimitiveOverrideProps<TextFieldProps>;
     comment?: PrimitiveOverrideProps<TextFieldProps>;
+    approved?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type AwardCreateFormProps = React.PropsWithChildren<{
     overrides?: AwardCreateFormOverridesProps | undefined | null;

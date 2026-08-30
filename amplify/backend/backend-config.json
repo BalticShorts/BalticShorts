@@ -69,6 +69,11 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "generateUploadUrl": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
@@ -85,6 +90,22 @@
         {
           "category": "function",
           "resourceName": "VODSignedLinks"
+        }
+      ]
+    },
+    "AMPLIFY_function_generateUploadUrl_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "generateUploadUrl"
+        }
+      ]
+    },
+    "AMPLIFY_function_generateUploadUrl_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "generateUploadUrl"
         }
       ]
     },

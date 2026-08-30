@@ -217,6 +217,7 @@ export default function MoviePlaylistUpdateForm(props) {
     title: "",
     description: "",
     size: "",
+    approved: false,
   };
   const [Creator, setCreator] = React.useState(initialValues.Creator);
   const [Title, setTitle] = React.useState(initialValues.Title);
@@ -233,6 +234,7 @@ export default function MoviePlaylistUpdateForm(props) {
     initialValues.description
   );
   const [size, setSize] = React.useState(initialValues.size);
+  const [approved, setApproved] = React.useState(initialValues.approved);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -250,6 +252,7 @@ export default function MoviePlaylistUpdateForm(props) {
     setTitle1(cleanValues.title);
     setDescription(cleanValues.description);
     setSize(cleanValues.size);
+    setApproved(cleanValues.approved);
     setErrors({});
   };
   const [moviePlaylistRecord, setMoviePlaylistRecord] = React.useState(
@@ -311,6 +314,7 @@ export default function MoviePlaylistUpdateForm(props) {
     title: [{ type: "Required" }],
     description: [{ type: "Required" }],
     size: [],
+    approved: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -379,6 +383,7 @@ export default function MoviePlaylistUpdateForm(props) {
           title: title1,
           description,
           size: size ?? null,
+          approved: approved ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -507,6 +512,7 @@ export default function MoviePlaylistUpdateForm(props) {
             title: modelFields.title,
             description: modelFields.description,
             size: modelFields.size ?? null,
+            approved: modelFields.approved ?? null,
           };
           promises.push(
             API.graphql({
@@ -549,6 +555,7 @@ export default function MoviePlaylistUpdateForm(props) {
               title: title1,
               description,
               size,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.Creator ?? value;
@@ -579,6 +586,7 @@ export default function MoviePlaylistUpdateForm(props) {
               title: title1,
               description,
               size,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.Title ?? value;
@@ -607,6 +615,7 @@ export default function MoviePlaylistUpdateForm(props) {
               title: title1,
               description,
               size,
+              approved,
             };
             const result = onChange(modelFields);
             values = result?.movies ?? values;
@@ -693,6 +702,7 @@ export default function MoviePlaylistUpdateForm(props) {
               title: title1,
               description,
               size,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.is_recommended ?? value;
@@ -729,6 +739,7 @@ export default function MoviePlaylistUpdateForm(props) {
                     title: title1,
                     description,
                     size,
+                    approved,
                   };
                   const result = onChange(modelFields);
                   value = result?.Field0 ?? value;
@@ -750,6 +761,7 @@ export default function MoviePlaylistUpdateForm(props) {
                     title: title1,
                     description,
                     size,
+                    approved,
                   };
                   const result = onChange(modelFields);
                   value = result?.Field0 ?? value;
@@ -785,6 +797,7 @@ export default function MoviePlaylistUpdateForm(props) {
               title: title1,
               description,
               size,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.creator ?? value;
@@ -817,6 +830,7 @@ export default function MoviePlaylistUpdateForm(props) {
               title: value,
               description,
               size,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.title ?? value;
@@ -849,6 +863,7 @@ export default function MoviePlaylistUpdateForm(props) {
               title: title1,
               description: value,
               size,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -885,6 +900,7 @@ export default function MoviePlaylistUpdateForm(props) {
               title: title1,
               description,
               size: value,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.size ?? value;
@@ -899,6 +915,39 @@ export default function MoviePlaylistUpdateForm(props) {
         hasError={errors.size?.hasError}
         {...getOverrideProps(overrides, "size")}
       ></TextField>
+      <SwitchField
+        label="Approved"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={approved}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              Creator,
+              Title,
+              movies,
+              is_recommended,
+              Field0,
+              creator: creator1,
+              title: title1,
+              description,
+              size,
+              approved: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.approved ?? value;
+          }
+          if (errors.approved?.hasError) {
+            runValidationTasks("approved", value);
+          }
+          setApproved(value);
+        }}
+        onBlur={() => runValidationTasks("approved", approved)}
+        errorMessage={errors.approved?.errorMessage}
+        hasError={errors.approved?.hasError}
+        {...getOverrideProps(overrides, "approved")}
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

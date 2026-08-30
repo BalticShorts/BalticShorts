@@ -26,6 +26,7 @@ export const getUserProfile = /* GraphQL */ `
           photo_location
           size
           userprofileID
+          approved
           createdAt
           updatedAt
           __typename
@@ -178,6 +179,14 @@ export const getPersonMovieTeam = /* GraphQL */ `
           creators_comment
           is_highlighted
           trailer_location
+          raw_video_location
+          hls_url
+          dash_url
+          cmaf_hls_url
+          cmaf_dash_url
+          drm_key_id
+          drm_resource_id
+          approved
           createdAt
           updatedAt
           movieMovieTeamId
@@ -212,6 +221,7 @@ export const getPersonMovieTeam = /* GraphQL */ `
           nextToken
           __typename
         }
+        approved
         createdAt
         updatedAt
         __typename
@@ -277,6 +287,7 @@ export const listPersonMovieTeams = /* GraphQL */ `
           description_confirmed
           is_entity
           nationality
+          approved
           createdAt
           updatedAt
           __typename
@@ -341,6 +352,7 @@ export const personMovieTeamsByMovieteamID = /* GraphQL */ `
           description_confirmed
           is_entity
           nationality
+          approved
           createdAt
           updatedAt
           __typename
@@ -405,6 +417,7 @@ export const personMovieTeamsByPersonID = /* GraphQL */ `
           description_confirmed
           is_entity
           nationality
+          approved
           createdAt
           updatedAt
           __typename
@@ -469,6 +482,7 @@ export const personMovieTeamsByRoleID = /* GraphQL */ `
           description_confirmed
           is_entity
           nationality
+          approved
           createdAt
           updatedAt
           __typename
@@ -598,6 +612,7 @@ export const getPerson = /* GraphQL */ `
         nextToken
         __typename
       }
+      approved
       createdAt
       updatedAt
       __typename
@@ -634,6 +649,7 @@ export const listPeople = /* GraphQL */ `
           nextToken
           __typename
         }
+        approved
         createdAt
         updatedAt
         __typename
@@ -672,6 +688,7 @@ export const getPersonRole = /* GraphQL */ `
           nextToken
           __typename
         }
+        approved
         createdAt
         updatedAt
         __typename
@@ -724,6 +741,7 @@ export const listPersonRoles = /* GraphQL */ `
           description_confirmed
           is_entity
           nationality
+          approved
           createdAt
           updatedAt
           __typename
@@ -779,6 +797,7 @@ export const personRolesByPersonID = /* GraphQL */ `
           description_confirmed
           is_entity
           nationality
+          approved
           createdAt
           updatedAt
           __typename
@@ -834,6 +853,7 @@ export const personRolesByRoleID = /* GraphQL */ `
           description_confirmed
           is_entity
           nationality
+          approved
           createdAt
           updatedAt
           __typename
@@ -879,6 +899,7 @@ export const getMoviePlaylist = /* GraphQL */ `
       photo_location
       size
       userprofileID
+      approved
       createdAt
       updatedAt
       __typename
@@ -906,6 +927,7 @@ export const listMoviePlaylists = /* GraphQL */ `
         photo_location
         size
         userprofileID
+        approved
         createdAt
         updatedAt
         __typename
@@ -944,6 +966,7 @@ export const moviePlaylistsByUserprofileID = /* GraphQL */ `
         photo_location
         size
         userprofileID
+        approved
         createdAt
         updatedAt
         __typename
@@ -1017,6 +1040,14 @@ export const getMovieTeam = /* GraphQL */ `
           nextToken
           __typename
         }
+        raw_video_location
+        hls_url
+        dash_url
+        cmaf_hls_url
+        cmaf_dash_url
+        drm_key_id
+        drm_resource_id
+        approved
         createdAt
         updatedAt
         movieMovieTeamId
@@ -1067,6 +1098,14 @@ export const listMovieTeams = /* GraphQL */ `
           creators_comment
           is_highlighted
           trailer_location
+          raw_video_location
+          hls_url
+          dash_url
+          cmaf_hls_url
+          cmaf_dash_url
+          drm_key_id
+          drm_resource_id
+          approved
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1138,12 +1177,21 @@ export const getAward = /* GraphQL */ `
           nextToken
           __typename
         }
+        raw_video_location
+        hls_url
+        dash_url
+        cmaf_hls_url
+        cmaf_dash_url
+        drm_key_id
+        drm_resource_id
+        approved
         createdAt
         updatedAt
         movieMovieTeamId
         movieMovieTypeId
         __typename
       }
+      approved
       createdAt
       updatedAt
       __typename
@@ -1187,12 +1235,21 @@ export const listAwards = /* GraphQL */ `
           creators_comment
           is_highlighted
           trailer_location
+          raw_video_location
+          hls_url
+          dash_url
+          cmaf_hls_url
+          cmaf_dash_url
+          drm_key_id
+          drm_resource_id
+          approved
           createdAt
           updatedAt
           movieMovieTeamId
           movieMovieTypeId
           __typename
         }
+        approved
         createdAt
         updatedAt
         __typename
@@ -1247,12 +1304,21 @@ export const awardsByMovieID = /* GraphQL */ `
           creators_comment
           is_highlighted
           trailer_location
+          raw_video_location
+          hls_url
+          dash_url
+          cmaf_hls_url
+          cmaf_dash_url
+          drm_key_id
+          drm_resource_id
+          approved
           createdAt
           updatedAt
           movieMovieTeamId
           movieMovieTypeId
           __typename
         }
+        approved
         createdAt
         updatedAt
         __typename
@@ -1309,6 +1375,14 @@ export const getMovie = /* GraphQL */ `
           creators_comment
           is_highlighted
           trailer_location
+          raw_video_location
+          hls_url
+          dash_url
+          cmaf_hls_url
+          cmaf_dash_url
+          drm_key_id
+          drm_resource_id
+          approved
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1355,6 +1429,7 @@ export const getMovie = /* GraphQL */ `
           category
           comment
           movieID
+          approved
           createdAt
           updatedAt
           __typename
@@ -1362,6 +1437,14 @@ export const getMovie = /* GraphQL */ `
         nextToken
         __typename
       }
+      raw_video_location
+      hls_url
+      dash_url
+      cmaf_hls_url
+      cmaf_dash_url
+      drm_key_id
+      drm_resource_id
+      approved
       createdAt
       updatedAt
       movieMovieTeamId
@@ -1423,6 +1506,14 @@ export const listMovies = /* GraphQL */ `
           nextToken
           __typename
         }
+        raw_video_location
+        hls_url
+        dash_url
+        cmaf_hls_url
+        cmaf_dash_url
+        drm_key_id
+        drm_resource_id
+        approved
         createdAt
         updatedAt
         movieMovieTeamId
@@ -1754,6 +1845,7 @@ export const getMovieMoviePlaylist = /* GraphQL */ `
         photo_location
         size
         userprofileID
+        approved
         createdAt
         updatedAt
         __typename
@@ -1804,6 +1896,14 @@ export const getMovieMoviePlaylist = /* GraphQL */ `
           nextToken
           __typename
         }
+        raw_video_location
+        hls_url
+        dash_url
+        cmaf_hls_url
+        cmaf_dash_url
+        drm_key_id
+        drm_resource_id
+        approved
         createdAt
         updatedAt
         movieMovieTeamId
@@ -1841,6 +1941,7 @@ export const listMovieMoviePlaylists = /* GraphQL */ `
           photo_location
           size
           userprofileID
+          approved
           createdAt
           updatedAt
           __typename
@@ -1868,6 +1969,14 @@ export const listMovieMoviePlaylists = /* GraphQL */ `
           creators_comment
           is_highlighted
           trailer_location
+          raw_video_location
+          hls_url
+          dash_url
+          cmaf_hls_url
+          cmaf_dash_url
+          drm_key_id
+          drm_resource_id
+          approved
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1912,6 +2021,7 @@ export const movieMoviePlaylistsByMoviePlaylistId = /* GraphQL */ `
           photo_location
           size
           userprofileID
+          approved
           createdAt
           updatedAt
           __typename
@@ -1939,6 +2049,14 @@ export const movieMoviePlaylistsByMoviePlaylistId = /* GraphQL */ `
           creators_comment
           is_highlighted
           trailer_location
+          raw_video_location
+          hls_url
+          dash_url
+          cmaf_hls_url
+          cmaf_dash_url
+          drm_key_id
+          drm_resource_id
+          approved
           createdAt
           updatedAt
           movieMovieTeamId
@@ -1983,6 +2101,7 @@ export const movieMoviePlaylistsByMovieId = /* GraphQL */ `
           photo_location
           size
           userprofileID
+          approved
           createdAt
           updatedAt
           __typename
@@ -2010,6 +2129,14 @@ export const movieMoviePlaylistsByMovieId = /* GraphQL */ `
           creators_comment
           is_highlighted
           trailer_location
+          raw_video_location
+          hls_url
+          dash_url
+          cmaf_hls_url
+          cmaf_dash_url
+          drm_key_id
+          drm_resource_id
+          approved
           createdAt
           updatedAt
           movieMovieTeamId
@@ -2023,5 +2150,15 @@ export const movieMoviePlaylistsByMovieId = /* GraphQL */ `
       nextToken
       __typename
     }
+  }
+`;
+export const getDownloadUrl = /* GraphQL */ `
+  query GetDownloadUrl($key: String!) {
+    getDownloadUrl(key: $key)
+  }
+`;
+export const listFolder = /* GraphQL */ `
+  query ListFolder($prefix: String!) {
+    listFolder(prefix: $prefix)
   }
 `;

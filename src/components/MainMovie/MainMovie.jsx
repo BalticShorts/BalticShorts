@@ -6,6 +6,7 @@ import { Navbar } from "../../modified-ui-components/Header";
 import { useNavigate } from "react-router-dom";
 import { GlobalContext } from "../../App";
 import { useTranslation } from "react-i18next";
+import config from "../../config";
 
 const MainMovie = ({ movie, isLoggedIn }) => {
     const context = useContext(GlobalContext)
@@ -32,8 +33,8 @@ const MainMovie = ({ movie, isLoggedIn }) => {
     };
 
     const director = movie.MovieTeam?.PersonMovieTeams.items.find(person => person.Role.name === "Režisors");
-    const mov = 'https://balticshortsphotos.s3.eu-north-1.amazonaws.com/' + movie?.trailer_location.replace("balticshortsphotos/", "")
-    const img = 'https://balticshortsphotos.s3.eu-north-1.amazonaws.com/' + movie?.thumbnail_location.replace("balticshortsphotos/", "")
+    const mov = `${config.photos_bucket_url}/` + movie?.trailer_location.replace("balticshortsphotos/", "")
+    const img = `${config.photos_bucket_url}/` + movie?.thumbnail_location.replace("balticshortsphotos/", "")
 
     const handleMouseEnter = () => {
       setIsHovered(true);

@@ -65,6 +65,7 @@ function Profile({ personId }) {
     const [editProfile, setEditProfile] = useState({});
     const [saving, setSaving] = useState(false);
     const [roles, setRoles] = useState([]);
+    const [notFound, setNotFound] = useState(false);
     var { id, mode } = useParams();
     if (personId !== undefined && personId !== null) {
         id = personId;
@@ -76,9 +77,15 @@ function Profile({ personId }) {
           if (id === undefined || id === null)
             return;
           const { profile: profileData, roles: rolesList } = await fetchProfile(id);
-          const filteredMovies = profileData.PersonMovieTeams?.items.filter(team => team.MovieTeam.Movie !== null);
+          if (profileData && profileData.approved !== true) {
+            setNotFound(true);
+            return;
+          }
+          const filteredMovies = profileData.PersonMovieTeams?.items.filter(
+            team => team.MovieTeam.Movie !== null && team.MovieTeam.Movie.approved === true
+          );
           profileData.PersonMovieTeams.items = filteredMovies;
-          try {     
+          try {
             setProfile(profileData);
             setEditProfile({
               ...profileData,
@@ -94,7 +101,7 @@ function Profile({ personId }) {
           }
         }
         get();
-      }, [id]);
+      }, [id, context.admin]);
 
     const groupedMovies = profile.PersonMovieTeams?.items.reduce((acc, team) => {
       const roleName = team.Role.name;
@@ -109,7 +116,7 @@ function Profile({ personId }) {
       document.title = `Baltic Shorts - ${t("Persona")}`;
     }, []);
 
-    const isAdmin = context.currentUser && context.currentUser.is_admin;
+    const isAdmin = context.admin;
 
     const handleChange = (e) => {
       const { name, value, type, multiple, options } = e.target;
@@ -199,6 +206,14 @@ function Profile({ personId }) {
       });
       setEditing(false);
     };
+
+    if (notFound) {
+      return (
+        <div className="min-h-screen bg-inherit text-black max-w-[1100px] desktop:m-auto mobile:mx-25 flex items-center justify-center">
+          {t("Šī persona vēl nav pieejama.")}
+        </div>
+      );
+    }
 
     return (
       <div className="min-h-screen bg-inherit text-black max-w-[1100px] desktop:m-auto mobile:mx-25">

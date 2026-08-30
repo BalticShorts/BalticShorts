@@ -203,6 +203,7 @@ export default function MoviePlaylistCreateForm(props) {
     photo_location: "",
     size: "",
     userprofileID: undefined,
+    approved: false,
   };
   const [creator, setCreator] = React.useState(initialValues.creator);
   const [movies, setMovies] = React.useState(initialValues.movies);
@@ -227,6 +228,7 @@ export default function MoviePlaylistCreateForm(props) {
   const [userprofileIDRecords, setUserprofileIDRecords] = React.useState([]);
   const [selectedUserprofileIDRecords, setSelectedUserprofileIDRecords] =
     React.useState([]);
+  const [approved, setApproved] = React.useState(initialValues.approved);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -243,6 +245,7 @@ export default function MoviePlaylistCreateForm(props) {
     setUserprofileID(initialValues.userprofileID);
     setCurrentUserprofileIDValue(undefined);
     setCurrentUserprofileIDDisplayValue("");
+    setApproved(initialValues.approved);
     setErrors({});
   };
   const [currentMoviesDisplayValue, setCurrentMoviesDisplayValue] =
@@ -278,6 +281,7 @@ export default function MoviePlaylistCreateForm(props) {
     photo_location: [],
     size: [],
     userprofileID: [],
+    approved: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -374,6 +378,7 @@ export default function MoviePlaylistCreateForm(props) {
           photo_location,
           size,
           userprofileID,
+          approved,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -420,6 +425,7 @@ export default function MoviePlaylistCreateForm(props) {
             photo_location: modelFields.photo_location,
             size: modelFields.size,
             userprofileID: modelFields.userprofileID,
+            approved: modelFields.approved,
           };
           const moviePlaylist = (
             await API.graphql({
@@ -483,6 +489,7 @@ export default function MoviePlaylistCreateForm(props) {
               photo_location,
               size,
               userprofileID,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.creator ?? value;
@@ -511,6 +518,7 @@ export default function MoviePlaylistCreateForm(props) {
               photo_location,
               size,
               userprofileID,
+              approved,
             };
             const result = onChange(modelFields);
             values = result?.movies ?? values;
@@ -597,6 +605,7 @@ export default function MoviePlaylistCreateForm(props) {
               photo_location,
               size,
               userprofileID,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.title ?? value;
@@ -629,6 +638,7 @@ export default function MoviePlaylistCreateForm(props) {
               photo_location,
               size,
               userprofileID,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -661,6 +671,7 @@ export default function MoviePlaylistCreateForm(props) {
               photo_location,
               size,
               userprofileID,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.is_public ?? value;
@@ -693,6 +704,7 @@ export default function MoviePlaylistCreateForm(props) {
               photo_location,
               size,
               userprofileID,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.is_recommended ?? value;
@@ -725,6 +737,7 @@ export default function MoviePlaylistCreateForm(props) {
               photo_location: value,
               size,
               userprofileID,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.photo_location ?? value;
@@ -761,6 +774,7 @@ export default function MoviePlaylistCreateForm(props) {
               photo_location,
               size: value,
               userprofileID,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.size ?? value;
@@ -790,6 +804,7 @@ export default function MoviePlaylistCreateForm(props) {
               photo_location,
               size,
               userprofileID: value,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.userprofileID ?? value;
@@ -876,6 +891,39 @@ export default function MoviePlaylistCreateForm(props) {
           {...getOverrideProps(overrides, "userprofileID")}
         ></Autocomplete>
       </ArrayField>
+      <SwitchField
+        label="Approved"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={approved}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              creator,
+              movies,
+              title,
+              description,
+              is_public,
+              is_recommended,
+              photo_location,
+              size,
+              userprofileID,
+              approved: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.approved ?? value;
+          }
+          if (errors.approved?.hasError) {
+            runValidationTasks("approved", value);
+          }
+          setApproved(value);
+        }}
+        onBlur={() => runValidationTasks("approved", approved)}
+        errorMessage={errors.approved?.errorMessage}
+        hasError={errors.approved?.hasError}
+        {...getOverrideProps(overrides, "approved")}
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

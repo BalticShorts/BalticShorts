@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import Search from "./pages/Search";
 import Catalogue from "./pages/Catalogue";
 import AdminPlaylist from "./pages/AdminPlaylists";
+import AdminReview from "./pages/AdminReview";
 import PlaylistUpload from "./pages/PlaylistUpload";
 import React, {useEffect, useState } from "react";
 import { API, Amplify, Auth } from "aws-amplify";
@@ -43,11 +44,14 @@ export default function App() {
 
       const user = await getUser(sess);
       if (user) {
-        setAdmin(user.is_admin);
         if (user !== currentUser) {
           setCurrentUser(user);
         }
       }
+
+      const currentSession = await Auth.currentSession();
+      const groups = currentSession.getIdToken().payload["cognito:groups"] || [];
+      setAdmin(groups.includes("Admins"));
     } catch (error) {
       console.log("not logged in");
       setLoggedIn(false);
@@ -77,6 +81,7 @@ export default function App() {
         setLoggedIn: setLoggedIn,
         currentUser: currentUser,
         setCurrentUser: setCurrentUser,
+        admin: admin,
         loggedInModal: loggedInModal,
         setLoggedInModal: setLoggedInModal,
         assessLoggedInState: assessLoggedInState,
@@ -106,6 +111,7 @@ export default function App() {
                       {admin ? (
                         <>
                           <Route path="admin/playlists" element={<AdminPlaylist />} />
+                          <Route path="admin/review" element={<AdminReview />} />
                           <Route path="addPlaylist/:id?" element={<PlaylistUpload />} />
                           <Route path="upload" element={<Upload />} />
                         </>

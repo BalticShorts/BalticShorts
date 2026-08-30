@@ -4,8 +4,9 @@ import awsExports from '../../aws-exports';
 import { Amplify, API } from 'aws-amplify';
 import { listCountryCodes, listPeople, listRoles } from '../../graphql/queries';
 import Select from 'react-select';
-import { createMovieTeam, createPerson, createPersonMovieTeam } from '../../graphql/mutations';
-import { PhotoUpload } from '../PhotoUpload';
+import { createPerson, createPersonMovieTeam } from '../../graphql/mutations';
+import { createMovieTeamMinimal } from '../../custom-queries/queries';
+import { S3FileUpload } from '../S3FileUpload';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 export function CreateMovieTeam(props) {
@@ -117,7 +118,7 @@ export function CreateMovieTeam(props) {
     };
 
     const res = await API.graphql({
-      query: createMovieTeam.replaceAll("__typename", ""),
+      query: createMovieTeamMinimal,
       authMode: 'AWS_IAM',
       variables: {
         input: {
@@ -333,7 +334,7 @@ export function CreateMovieTeam(props) {
                   <div className='justify-center flex items-center flex-col w-2/3'>
                   <span>{isNewEntityMode ? 'Entity photo' : 'Person photo'}</span>
 
-                  <PhotoUpload upload = {upload} photo_type = {'person'} setFieldUsed = {setPhotoFieldUsed} photoLoc = {loc}/>
+                  <S3FileUpload uploadType = {'person-photo'} accept = {{'image/*': []}} maxFiles = {1} upload = {upload} setFieldUsed = {setPhotoFieldUsed} photoLoc = {loc}/>
                   </div>
                   <div className='justify-center flex items-center flex-col'><span>{isNewEntityMode ? 'Entity Description' : 'Person Description'}</span>
                   <input

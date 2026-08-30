@@ -1,14 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { PhotoUpload } from "../components/PhotoUpload";
+import { S3FileUpload } from "../components/S3FileUpload";
 import { API } from "aws-amplify";
 import { listMovies } from "../graphql/queries";
 import { SearchableMovieDropdown } from "../components/SearchableMovieDropdown";
 import { getMoviePlaylistWithMovie } from "../custom-queries/queries";
 import { createMovieMoviePlaylist, createMoviePlaylist, deleteMovieMoviePlaylist, deleteMoviePlaylist, updateMoviePlaylist } from "../graphql/mutations";
 import { GlobalContext } from "../App";
-import AWS from "aws-sdk";
-
-const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
+import config from "../config";
 
 const PlaylistUpload = ({onClose, id, recommendedCount}) => {
     const context = useContext(GlobalContext)
@@ -165,26 +163,7 @@ const PlaylistUpload = ({onClose, id, recommendedCount}) => {
 
     async function fetchPhoto(thumbnail_location) {
         if (thumbnail_location) {
-            const config = {
-                region: "eu-north-1",
-                credentials: new AWS.CognitoIdentityCredentials({ IdentityPoolId }),
-                bucketName: "balticshortsphotos",
-            };
-            const myBucket = new AWS.S3(config);
-            const split = thumbnail_location.split("/");
-            const key = split.pop();
-            const bucketLoc = split.join("/");
-            const params = {
-                Bucket: bucketLoc,
-                Key: key,
-            };
-            try {
-                const data = await myBucket.getObject(params).promise();
-                setPhotoSrc(URL.createObjectURL(new Blob([data.Body], { type: "image/png" })));
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setPhotoSrc(require("../assets/images/no_image_1.jpg"));
-            }
+            setPhotoSrc(`${config.photos_bucket_url}/${thumbnail_location.replace("balticshortsphotos/", "")}`);
         } else {
             setPhotoSrc(require("../assets/images/no_image_1.jpg"));
         }
@@ -275,7 +254,7 @@ const PlaylistUpload = ({onClose, id, recommendedCount}) => {
                 <div className="mb-6">       
                     <div className="flex justify-center flex-col gap-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Thumbnail">THUMBNAIL</label>
-                        <PhotoUpload upload = {upload} photo_type = {'thumbnail'} photoLoc = {thumbnail}/>
+                        <S3FileUpload targetId = {id} uploadType = {'playlist-thumbnail'} accept = {{'image/*': []}} maxFiles = {1} upload = {upload} photoLoc = {thumbnail}/>
                         {thumbnail.length > 0 && (
                             photoSrc && <img className="w-full h-auto mt-4" src={photoSrc} alt="Thumbnail Preview" />
                         )}

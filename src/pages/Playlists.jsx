@@ -7,6 +7,7 @@ import image from "./static/H_B.jpg";
 import { GlobalContext } from "../App";
 import { Navbar } from "../modified-ui-components/Header";
 import { useTranslation } from "react-i18next";
+import config from "../config";
 
 const Playlist = () => {
   const context = useContext(GlobalContext);
@@ -15,6 +16,7 @@ const Playlist = () => {
   const [sortBy, setSortBy] = useState("date");
   const [sortOrder, setSortOrder] = useState("asc");
   const [backgroundImage, setBackgroundImage] = useState(image);
+  const [notFound, setNotFound] = useState(false);
   const { id } = useParams();
   const { t, i18n } = useTranslation();
 
@@ -26,9 +28,14 @@ const Playlist = () => {
           variables: { id: id },
           authMode: 'AWS_IAM'
         });
+        const fetchedPlaylist = playlistData.data.getMoviePlaylist;
+        if (fetchedPlaylist && fetchedPlaylist.approved !== true) {
+          setNotFound(true);
+          return;
+        }
         setPlaylist(playlistData.data.getMoviePlaylist);
         setMovies(playlistData.data.getMoviePlaylist.movies.items.map((item) => item.movie));
-        setBackgroundImage(playlistData.data.getMoviePlaylist.photo_location ?`https://balticshortsphotos.s3.eu-north-1.amazonaws.com/${ playlistData.data.getMoviePlaylist.photo_location.replace("balticshortsphotos/", "")}` : image);
+        setBackgroundImage(playlistData.data.getMoviePlaylist.photo_location ?`${config.photos_bucket_url}/${ playlistData.data.getMoviePlaylist.photo_location.replace("balticshortsphotos/", "")}` : image);
         console.log("Playlist:", playlistData.data.getMoviePlaylist);
 
       } catch (error) {
@@ -36,7 +43,7 @@ const Playlist = () => {
       }
     };
     fetchPlaylist();
-    
+
   }, [id]);
 
   useEffect(() => {
@@ -83,6 +90,7 @@ const Playlist = () => {
       document.title = 'Baltic Shorts - ' + playlist?.title;
     }, [playlist]);
 
+  if (notFound) return <div className="text-center mt-4 typography-body-large">{t("Šis saraksts vēl nav pieejams.")}</div>;
   if (!playlist) return <div className="text-center mt-4 typography-body-large">Loading...</div>;
 
   return (

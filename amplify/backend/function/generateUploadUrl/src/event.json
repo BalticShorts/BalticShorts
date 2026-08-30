@@ -1,0 +1,11 @@
+{
+  "fieldName": "getUploadUrl",
+  "arguments": {
+    "input": {
+      "uploadType": "photo",
+      "fileExtension": "jpg",
+      "targetId": "test-movie-id"
+    }
+  },
+  "identity": {}
+}

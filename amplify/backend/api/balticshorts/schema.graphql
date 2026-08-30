@@ -70,6 +70,7 @@ type Person @model @auth(rules: [
   is_entity: Boolean
   nationality: String
   PersonRoles: [PersonRole] @hasMany(indexName: "byPerson", fields: ["id"])
+  approved: Boolean
 }
 
 type PersonRole @model @auth(rules: [
@@ -97,6 +98,7 @@ type MoviePlaylist @model @auth(rules: [
   photo_location: String
   size: Int
   userprofileID: ID @index(name: "byUserProfile")
+  approved: Boolean
 }
 
 type MovieTeam @model @auth(rules: [
@@ -120,6 +122,7 @@ type Award @model @auth(rules: [
   comment: String
   movieID: ID! @index(name: "byMovie")
   movie: Movie @belongsTo(fields: ["movieID"])
+  approved: Boolean
 }
 
 type Movie @model @auth(rules: [
@@ -152,6 +155,14 @@ type Movie @model @auth(rules: [
   is_highlighted: Boolean
   trailer_location: String
   awards: [Award] @hasMany(indexName: "byMovie", fields: ["id"])
+  raw_video_location: String
+  hls_url: AWSURL
+  dash_url: AWSURL
+  cmaf_hls_url: AWSURL
+  cmaf_dash_url: AWSURL
+  drm_key_id: String
+  drm_resource_id: String
+  approved: Boolean
 }
 
 type CountryCode @model @auth(rules: [
@@ -198,4 +209,34 @@ type Email @model @auth(rules: [
   status: String!
   userprofileID: ID! @index(name: "byUserProfile", queryField: "emailsByUserProfile")
   paymentID: ID @index(name: "byPayment", queryField: "emailsByPayment")
+}
+
+input UploadUrlInput {
+  uploadType: String!
+  fileExtension: String!
+  targetId: ID
+}
+
+type UploadUrlResponse @aws_iam {
+  uploadUrl: String!
+  key: String!
+}
+
+type Mutation {
+  getUploadUrl(input: UploadUrlInput!): UploadUrlResponse
+    @function(name: "generateUploadUrl-${env}")
+    @auth(rules: [{ allow: private, provider: iam }])
+}
+
+type Query {
+  getDownloadUrl(key: String!): String
+    @function(name: "generateUploadUrl-${env}")
+    @auth(rules: [{ allow: groups, groups: ["Admins"] }])
+
+  listFolder(prefix: String!): [String]
+    @function(name: "generateUploadUrl-${env}")
+    @auth(rules: [
+      { allow: public, provider: iam },
+      { allow: private, provider: iam }
+    ])
 }

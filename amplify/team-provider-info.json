@@ -37,6 +37,10 @@
         "VODSignedLinks": {
           "deploymentBucketName": "amplify-balticshorts-dev-193002-deployment",
           "s3Key": "amplify-builds/VODSignedLinks-6f61374576736c2b5234-build.zip"
+        },
+        "generateUploadUrl": {
+          "deploymentBucketName": "amplify-balticshorts-dev-193002-deployment",
+          "s3Key": "amplify-builds/generateUploadUrl-34344945384643705369-build.zip"
         }
       }
     }

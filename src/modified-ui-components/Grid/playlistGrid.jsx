@@ -1,16 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import AWS from "aws-sdk";
 import { useTranslation } from "react-i18next";
-
-const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
+import config from "../../config";
 
 export function MyGridPlaylists({ data, maxRows, maxColumns }) {
   const [photoSrc, setPhotoSrc] = useState({});
   const [columns, setColumns] = useState(maxColumns);
-
-  AWS.config.region = "eu-north-1";
-  AWS.config.credentials = new AWS.CognitoIdentityCredentials({ IdentityPoolId });
 
   const navigate = useNavigate();
   const [rows, setRows] = useState(maxRows);
@@ -20,7 +15,7 @@ export function MyGridPlaylists({ data, maxRows, maxColumns }) {
       const newPhotoSrc = {};
       items.forEach((item) => {
         if (item.photo_location && item.photo_location !== null && item.photo_location !== undefined)
-          newPhotoSrc[item.id] = `https://balticshortsphotos.s3.eu-north-1.amazonaws.com/${item.photo_location.replace("balticshortsphotos/", "")}`;
+          newPhotoSrc[item.id] = `${config.photos_bucket_url}/${item.photo_location.replace("balticshortsphotos/", "")}`;
         else
           newPhotoSrc[item.id] = require("../../assets/images/no_image_1.jpg");
       });

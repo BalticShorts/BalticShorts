@@ -6,6 +6,7 @@ import { ReactComponent as PlayBig } from "../../assets/images/play_big.svg";
 import { ReactComponent as List } from "../../assets/images/list.svg";
 import { ReactComponent as Plus } from "../../assets/images/plus.svg";
 import { useTranslation } from "react-i18next";
+import config from "../../config";
 
 export function getDirectors(data) {
   const result = {};
@@ -41,7 +42,7 @@ export function MyGridMovies({ data, maxRows, maxColumns, isLoggedIn }) {
       const newPhotoSrc = {};
       items.forEach((item) => {
         if(item.thumbnail_location && item.thumbnail_location !== null && item.thumbnail_location !== undefined)
-          newPhotoSrc[item.id] = `https://balticshortsphotos.s3.eu-north-1.amazonaws.com/${item.thumbnail_location.replace("balticshortsphotos/", "")}`;
+          newPhotoSrc[item.id] = `${config.photos_bucket_url}/${item.thumbnail_location.replace("balticshortsphotos/", "")}`;
         else
           newPhotoSrc[item.id] = require("../../assets/images/no_image_1.jpg");
       });

@@ -47,6 +47,14 @@ export declare type MovieUpdateFormInputValues = {
     is_highlighted?: boolean;
     trailer_location?: string;
     awards?: any[];
+    raw_video_location?: string;
+    hls_url?: string;
+    dash_url?: string;
+    cmaf_hls_url?: string;
+    cmaf_dash_url?: string;
+    drm_key_id?: string;
+    drm_resource_id?: string;
+    approved?: boolean;
 };
 export declare type MovieUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -74,6 +82,14 @@ export declare type MovieUpdateFormValidationValues = {
     is_highlighted?: ValidationFunction<boolean>;
     trailer_location?: ValidationFunction<string>;
     awards?: ValidationFunction<any>;
+    raw_video_location?: ValidationFunction<string>;
+    hls_url?: ValidationFunction<string>;
+    dash_url?: ValidationFunction<string>;
+    cmaf_hls_url?: ValidationFunction<string>;
+    cmaf_dash_url?: ValidationFunction<string>;
+    drm_key_id?: ValidationFunction<string>;
+    drm_resource_id?: ValidationFunction<string>;
+    approved?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MovieUpdateFormOverridesProps = {
@@ -103,6 +119,14 @@ export declare type MovieUpdateFormOverridesProps = {
     is_highlighted?: PrimitiveOverrideProps<SwitchFieldProps>;
     trailer_location?: PrimitiveOverrideProps<TextFieldProps>;
     awards?: PrimitiveOverrideProps<AutocompleteProps>;
+    raw_video_location?: PrimitiveOverrideProps<TextFieldProps>;
+    hls_url?: PrimitiveOverrideProps<TextFieldProps>;
+    dash_url?: PrimitiveOverrideProps<TextFieldProps>;
+    cmaf_hls_url?: PrimitiveOverrideProps<TextFieldProps>;
+    cmaf_dash_url?: PrimitiveOverrideProps<TextFieldProps>;
+    drm_key_id?: PrimitiveOverrideProps<TextFieldProps>;
+    drm_resource_id?: PrimitiveOverrideProps<TextFieldProps>;
+    approved?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type MovieUpdateFormProps = React.PropsWithChildren<{
     overrides?: MovieUpdateFormOverridesProps | undefined | null;

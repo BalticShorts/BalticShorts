@@ -1,50 +1,49 @@
 import { useState } from "react";
-import moment from "moment";
-import { StorageManager } from '@aws-amplify/ui-react-storage';
+import { useDropzone } from "react-dropzone";
+import { uploadFileToS3 } from "../../utils/s3Upload";
 
 export const MovieUploadComponent = (props) => {
-  const [files, setFiles] = useState({});
+  const [fileName, setFileName] = useState("");
+  const [status, setStatus] = useState(null);
 
-  const processFile = async ({ file }) => {
-    const fileExtension = file.name.split('.').pop();
-    const hashArray = Array.from(new Uint8Array(file.name));
-    const currentDate = moment().valueOf();
-    const hashHex = hashArray
-      .map((a) => a.toString(16).padStart(2, '0'))
-      .join('');
-    const key = `${hashHex}${currentDate}.${fileExtension}`;
-    return { file, key: key };
+  const handleDrop = async (acceptedFiles) => {
+    const file = acceptedFiles[0];
+    if (!file) return;
+
+    setFileName(file.name);
+    setStatus("uploading");
+    try {
+      const key = await uploadFileToS3({
+        file,
+        uploadType: "raw-video",
+        targetId: props.movie?.id,
+      });
+      props.setMovieFile(key);
+      setStatus("success");
+    } catch (err) {
+      console.error(err);
+      setStatus("error");
+    }
   };
 
-  return (
-    <div>
-      <StorageManager
-        acceptedFileTypes={['video/*']}
-        accessLevel="public"
-        maxFileCount={1}
-        autoUpload={false}
-        isResumable
-        processFile={processFile}
-        onUploadSuccess={({ key }) => {
-          setFiles((prevFiles) => {
-            props.setMovieFile(key);
-            return {
-              ...prevFiles,
-              [key]: {
-                status: 'success',
-              },
-            };
-          });
-        }}
-    />
-      {Object.keys(files).map((key) => {
-        return files[key] ? (
-          <div key={key}>
-            {key}: {files[key].status}
-          </div>
-        ) : null;
-      })}
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: { "video/*": [] },
+    maxFiles: 1,
+    onDrop: handleDrop,
+  });
 
+  return (
+    <div className="w-full h-full flex flex-col items-center justify-center">
+      <div {...getRootProps()} className="bg-white border w-full h-36 text-center justify-center align-middle flex flex-col items-center text-black">
+        <input {...getInputProps()} />
+        <p>Drag and drop the movie file here or </p>
+        <div className="text-black font-bold py-2 px-4 border border-grey-900 rounded cursor-pointer">Browse files</div>
+      </div>
+      {fileName && (
+        <div>
+          {fileName}: {status}
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};

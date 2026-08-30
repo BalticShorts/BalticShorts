@@ -31,6 +31,7 @@ export declare type MoviePlaylistCreateFormInputValues = {
     photo_location?: string;
     size?: number;
     userprofileID?: string;
+    approved?: boolean;
 };
 export declare type MoviePlaylistCreateFormValidationValues = {
     creator?: ValidationFunction<string>;
@@ -42,6 +43,7 @@ export declare type MoviePlaylistCreateFormValidationValues = {
     photo_location?: ValidationFunction<string>;
     size?: ValidationFunction<number>;
     userprofileID?: ValidationFunction<string>;
+    approved?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MoviePlaylistCreateFormOverridesProps = {
@@ -55,6 +57,7 @@ export declare type MoviePlaylistCreateFormOverridesProps = {
     photo_location?: PrimitiveOverrideProps<TextFieldProps>;
     size?: PrimitiveOverrideProps<TextFieldProps>;
     userprofileID?: PrimitiveOverrideProps<AutocompleteProps>;
+    approved?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type MoviePlaylistCreateFormProps = React.PropsWithChildren<{
     overrides?: MoviePlaylistCreateFormOverridesProps | undefined | null;

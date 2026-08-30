@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import AWS from "aws-sdk";
 import { ReactComponent as Play } from "../../assets/images/triangle.svg";
 import { useTranslation } from "react-i18next";
-
-const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
+import config from "../../config";
 
 export const DisplayedPlaylist = ({ photoPosition, playlist }) => {
     const [position, setPosition] = useState(photoPosition);
@@ -11,33 +9,11 @@ export const DisplayedPlaylist = ({ photoPosition, playlist }) => {
     const { t, i18n } = useTranslation();
 
     useEffect(() => {
-        async function fetchPhoto() {
-            if (playlist.photo_location) {
-                const config = {
-                    region: "eu-north-1",
-                    credentials: new AWS.CognitoIdentityCredentials({ IdentityPoolId }),
-                    bucketName: "balticshortsphotos",
-                };
-                const myBucket = new AWS.S3(config);
-                const split = playlist.photo_location.split("/");
-                const key = split.pop();
-                const bucketLoc = split.join("/");
-                const params = {
-                    Bucket: bucketLoc,
-                    Key: key,
-                };
-                try {
-                    const data = await myBucket.getObject(params).promise();
-                    setPhotoSrc(URL.createObjectURL(new Blob([data.Body], { type: "image/png" })));
-                } catch (error) {
-                    console.error("Error fetching data:", error);
-                    setPhotoSrc(require("../../assets/images/no_image_1.jpg"));
-                }
-            } else {
-                setPhotoSrc(require("../../assets/images/no_image_1.jpg"));
-            }
+        if (playlist.photo_location) {
+            setPhotoSrc(`${config.photos_bucket_url}/${playlist.photo_location.replace("balticshortsphotos/", "")}`);
+        } else {
+            setPhotoSrc(require("../../assets/images/no_image_1.jpg"));
         }
-        fetchPhoto();
     }, [playlist]);
 
     return(

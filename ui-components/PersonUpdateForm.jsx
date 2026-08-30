@@ -215,6 +215,7 @@ export default function PersonUpdateForm(props) {
     is_entity: false,
     nationality: "",
     PersonRoles: [],
+    approved: false,
   };
   const [name, setName] = React.useState(initialValues.name);
   const [surname, setSurname] = React.useState(initialValues.surname);
@@ -250,6 +251,7 @@ export default function PersonUpdateForm(props) {
   );
   const [PersonRolesLoading, setPersonRolesLoading] = React.useState(false);
   const [personRolesRecords, setPersonRolesRecords] = React.useState([]);
+  const [approved, setApproved] = React.useState(initialValues.approved);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -280,6 +282,7 @@ export default function PersonUpdateForm(props) {
     setPersonRoles(cleanValues.PersonRoles ?? []);
     setCurrentPersonRolesValue(undefined);
     setCurrentPersonRolesDisplayValue("");
+    setApproved(cleanValues.approved);
     setErrors({});
   };
   const [personRecord, setPersonRecord] = React.useState(personModelProp);
@@ -358,6 +361,7 @@ export default function PersonUpdateForm(props) {
     is_entity: [],
     nationality: [],
     PersonRoles: [],
+    approved: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -459,6 +463,7 @@ export default function PersonUpdateForm(props) {
           is_entity: is_entity ?? null,
           nationality: nationality ?? null,
           PersonRoles: PersonRoles ?? null,
+          approved: approved ?? null,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -611,6 +616,7 @@ export default function PersonUpdateForm(props) {
             description_confirmed: modelFields.description_confirmed ?? null,
             is_entity: modelFields.is_entity ?? null,
             nationality: modelFields.nationality ?? null,
+            approved: modelFields.approved ?? null,
           };
           promises.push(
             API.graphql({
@@ -661,6 +667,7 @@ export default function PersonUpdateForm(props) {
               is_entity,
               nationality,
               PersonRoles,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -699,6 +706,7 @@ export default function PersonUpdateForm(props) {
               is_entity,
               nationality,
               PersonRoles,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.surname ?? value;
@@ -737,6 +745,7 @@ export default function PersonUpdateForm(props) {
               is_entity,
               nationality,
               PersonRoles,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -775,6 +784,7 @@ export default function PersonUpdateForm(props) {
               is_entity,
               nationality,
               PersonRoles,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.Instagram ?? value;
@@ -813,6 +823,7 @@ export default function PersonUpdateForm(props) {
               is_entity,
               nationality,
               PersonRoles,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.Facebook ?? value;
@@ -851,6 +862,7 @@ export default function PersonUpdateForm(props) {
               is_entity,
               nationality,
               PersonRoles,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.IMBD ?? value;
@@ -889,6 +901,7 @@ export default function PersonUpdateForm(props) {
               is_entity,
               nationality,
               PersonRoles,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -923,6 +936,7 @@ export default function PersonUpdateForm(props) {
               is_entity,
               nationality,
               PersonRoles,
+              approved,
             };
             const result = onChange(modelFields);
             values = result?.PersonMovieTeams ?? values;
@@ -1023,6 +1037,7 @@ export default function PersonUpdateForm(props) {
               is_entity,
               nationality,
               PersonRoles,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.user_id ?? value;
@@ -1061,6 +1076,7 @@ export default function PersonUpdateForm(props) {
               is_entity,
               nationality,
               PersonRoles,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.is_public ?? value;
@@ -1099,6 +1115,7 @@ export default function PersonUpdateForm(props) {
               is_entity,
               nationality,
               PersonRoles,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.completed_setup ?? value;
@@ -1137,6 +1154,7 @@ export default function PersonUpdateForm(props) {
               is_entity,
               nationality,
               PersonRoles,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.description_confirmed ?? value;
@@ -1177,6 +1195,7 @@ export default function PersonUpdateForm(props) {
               is_entity: value,
               nationality,
               PersonRoles,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.is_entity ?? value;
@@ -1215,6 +1234,7 @@ export default function PersonUpdateForm(props) {
               is_entity,
               nationality: value,
               PersonRoles,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.nationality ?? value;
@@ -1249,6 +1269,7 @@ export default function PersonUpdateForm(props) {
               is_entity,
               nationality,
               PersonRoles: values,
+              approved,
             };
             const result = onChange(modelFields);
             values = result?.PersonRoles ?? values;
@@ -1319,6 +1340,45 @@ export default function PersonUpdateForm(props) {
           {...getOverrideProps(overrides, "PersonRoles")}
         ></Autocomplete>
       </ArrayField>
+      <SwitchField
+        label="Approved"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={approved}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              surname,
+              description,
+              Instagram,
+              Facebook,
+              IMBD,
+              email,
+              PersonMovieTeams,
+              user_id,
+              is_public,
+              completed_setup,
+              description_confirmed,
+              is_entity,
+              nationality,
+              PersonRoles,
+              approved: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.approved ?? value;
+          }
+          if (errors.approved?.hasError) {
+            runValidationTasks("approved", value);
+          }
+          setApproved(value);
+        }}
+        onBlur={() => runValidationTasks("approved", approved)}
+        errorMessage={errors.approved?.errorMessage}
+        hasError={errors.approved?.hasError}
+        {...getOverrideProps(overrides, "approved")}
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

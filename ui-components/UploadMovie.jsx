@@ -211,6 +211,14 @@ export default function UploadMovie(props) {
     is_highlighted: false,
     trailer_location: "",
     awards: [],
+    raw_video_location: "",
+    hls_url: "",
+    dash_url: "",
+    cmaf_hls_url: "",
+    cmaf_dash_url: "",
+    drm_key_id: "",
+    drm_resource_id: "",
+    approved: false,
   };
   const [name, setName] = React.useState(initialValues.name);
   const [name_eng, setName_eng] = React.useState(initialValues.name_eng);
@@ -259,6 +267,22 @@ export default function UploadMovie(props) {
   const [awards, setAwards] = React.useState(initialValues.awards);
   const [awardsLoading, setAwardsLoading] = React.useState(false);
   const [awardsRecords, setAwardsRecords] = React.useState([]);
+  const [raw_video_location, setRaw_video_location] = React.useState(
+    initialValues.raw_video_location
+  );
+  const [hls_url, setHls_url] = React.useState(initialValues.hls_url);
+  const [dash_url, setDash_url] = React.useState(initialValues.dash_url);
+  const [cmaf_hls_url, setCmaf_hls_url] = React.useState(
+    initialValues.cmaf_hls_url
+  );
+  const [cmaf_dash_url, setCmaf_dash_url] = React.useState(
+    initialValues.cmaf_dash_url
+  );
+  const [drm_key_id, setDrm_key_id] = React.useState(initialValues.drm_key_id);
+  const [drm_resource_id, setDrm_resource_id] = React.useState(
+    initialValues.drm_resource_id
+  );
+  const [approved, setApproved] = React.useState(initialValues.approved);
   const autocompleteLength = 10;
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -285,6 +309,14 @@ export default function UploadMovie(props) {
     setAwards(initialValues.awards);
     setCurrentAwardsValue(undefined);
     setCurrentAwardsDisplayValue("");
+    setRaw_video_location(initialValues.raw_video_location);
+    setHls_url(initialValues.hls_url);
+    setDash_url(initialValues.dash_url);
+    setCmaf_hls_url(initialValues.cmaf_hls_url);
+    setCmaf_dash_url(initialValues.cmaf_dash_url);
+    setDrm_key_id(initialValues.drm_key_id);
+    setDrm_resource_id(initialValues.drm_resource_id);
+    setApproved(initialValues.approved);
     setErrors({});
   };
   const [currentMovieTypeDisplayValue, setCurrentMovieTypeDisplayValue] =
@@ -336,6 +368,14 @@ export default function UploadMovie(props) {
     is_highlighted: [],
     trailer_location: [],
     awards: [],
+    raw_video_location: [],
+    hls_url: [{ type: "URL" }],
+    dash_url: [{ type: "URL" }],
+    cmaf_hls_url: [{ type: "URL" }],
+    cmaf_dash_url: [{ type: "URL" }],
+    drm_key_id: [],
+    drm_resource_id: [],
+    approved: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -442,6 +482,14 @@ export default function UploadMovie(props) {
           is_highlighted,
           trailer_location,
           awards,
+          raw_video_location,
+          hls_url,
+          dash_url,
+          cmaf_hls_url,
+          cmaf_dash_url,
+          drm_key_id,
+          drm_resource_id,
+          approved,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -498,6 +546,14 @@ export default function UploadMovie(props) {
             creators_comment: modelFields.creators_comment,
             is_highlighted: modelFields.is_highlighted,
             trailer_location: modelFields.trailer_location,
+            raw_video_location: modelFields.raw_video_location,
+            hls_url: modelFields.hls_url,
+            dash_url: modelFields.dash_url,
+            cmaf_hls_url: modelFields.cmaf_hls_url,
+            cmaf_dash_url: modelFields.cmaf_dash_url,
+            drm_key_id: modelFields.drm_key_id,
+            drm_resource_id: modelFields.drm_resource_id,
+            approved: modelFields.approved,
           };
           const movie = (
             await API.graphql({
@@ -570,6 +626,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.name ?? value;
@@ -612,6 +676,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.name_eng ?? value;
@@ -654,6 +726,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.genre ?? value;
@@ -695,6 +775,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.description ?? value;
@@ -736,6 +824,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.description_eng ?? value;
@@ -782,6 +878,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.age_rating ?? value;
@@ -824,6 +928,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.description_language ?? value;
@@ -868,6 +980,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.thumbnail_location ?? value;
@@ -919,6 +1039,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.screen_language ?? value;
@@ -969,6 +1097,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.captions_language ?? value;
@@ -1021,6 +1157,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.origin_country ?? value;
@@ -1068,6 +1212,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.length ?? value;
@@ -1114,6 +1266,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.created_year ?? value;
@@ -1153,6 +1313,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.MovieType ?? value;
@@ -1253,6 +1421,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.subtitles_location ?? value;
@@ -1297,6 +1473,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.creators_comment ?? value;
@@ -1339,6 +1523,14 @@ export default function UploadMovie(props) {
               is_highlighted: value,
               trailer_location,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.is_highlighted ?? value;
@@ -1381,6 +1573,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location: value,
               awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             value = result?.trailer_location ?? value;
@@ -1419,6 +1619,14 @@ export default function UploadMovie(props) {
               is_highlighted,
               trailer_location,
               awards: values,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
             };
             const result = onChange(modelFields);
             values = result?.awards ?? values;
@@ -1487,6 +1695,408 @@ export default function UploadMovie(props) {
           {...getOverrideProps(overrides, "awards")}
         ></Autocomplete>
       </ArrayField>
+      <TextField
+        label="Raw video location"
+        isRequired={false}
+        isReadOnly={false}
+        value={raw_video_location}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              age_rating,
+              description_language,
+              thumbnail_location,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieType,
+              subtitles_location,
+              creators_comment,
+              is_highlighted,
+              trailer_location,
+              awards,
+              raw_video_location: value,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
+            };
+            const result = onChange(modelFields);
+            value = result?.raw_video_location ?? value;
+          }
+          if (errors.raw_video_location?.hasError) {
+            runValidationTasks("raw_video_location", value);
+          }
+          setRaw_video_location(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("raw_video_location", raw_video_location)
+        }
+        errorMessage={errors.raw_video_location?.errorMessage}
+        hasError={errors.raw_video_location?.hasError}
+        {...getOverrideProps(overrides, "raw_video_location")}
+      ></TextField>
+      <TextField
+        label="Hls url"
+        isRequired={false}
+        isReadOnly={false}
+        value={hls_url}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              age_rating,
+              description_language,
+              thumbnail_location,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieType,
+              subtitles_location,
+              creators_comment,
+              is_highlighted,
+              trailer_location,
+              awards,
+              raw_video_location,
+              hls_url: value,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
+            };
+            const result = onChange(modelFields);
+            value = result?.hls_url ?? value;
+          }
+          if (errors.hls_url?.hasError) {
+            runValidationTasks("hls_url", value);
+          }
+          setHls_url(value);
+        }}
+        onBlur={() => runValidationTasks("hls_url", hls_url)}
+        errorMessage={errors.hls_url?.errorMessage}
+        hasError={errors.hls_url?.hasError}
+        {...getOverrideProps(overrides, "hls_url")}
+      ></TextField>
+      <TextField
+        label="Dash url"
+        isRequired={false}
+        isReadOnly={false}
+        value={dash_url}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              age_rating,
+              description_language,
+              thumbnail_location,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieType,
+              subtitles_location,
+              creators_comment,
+              is_highlighted,
+              trailer_location,
+              awards,
+              raw_video_location,
+              hls_url,
+              dash_url: value,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
+            };
+            const result = onChange(modelFields);
+            value = result?.dash_url ?? value;
+          }
+          if (errors.dash_url?.hasError) {
+            runValidationTasks("dash_url", value);
+          }
+          setDash_url(value);
+        }}
+        onBlur={() => runValidationTasks("dash_url", dash_url)}
+        errorMessage={errors.dash_url?.errorMessage}
+        hasError={errors.dash_url?.hasError}
+        {...getOverrideProps(overrides, "dash_url")}
+      ></TextField>
+      <TextField
+        label="Cmaf hls url"
+        isRequired={false}
+        isReadOnly={false}
+        value={cmaf_hls_url}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              age_rating,
+              description_language,
+              thumbnail_location,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieType,
+              subtitles_location,
+              creators_comment,
+              is_highlighted,
+              trailer_location,
+              awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url: value,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved,
+            };
+            const result = onChange(modelFields);
+            value = result?.cmaf_hls_url ?? value;
+          }
+          if (errors.cmaf_hls_url?.hasError) {
+            runValidationTasks("cmaf_hls_url", value);
+          }
+          setCmaf_hls_url(value);
+        }}
+        onBlur={() => runValidationTasks("cmaf_hls_url", cmaf_hls_url)}
+        errorMessage={errors.cmaf_hls_url?.errorMessage}
+        hasError={errors.cmaf_hls_url?.hasError}
+        {...getOverrideProps(overrides, "cmaf_hls_url")}
+      ></TextField>
+      <TextField
+        label="Cmaf dash url"
+        isRequired={false}
+        isReadOnly={false}
+        value={cmaf_dash_url}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              age_rating,
+              description_language,
+              thumbnail_location,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieType,
+              subtitles_location,
+              creators_comment,
+              is_highlighted,
+              trailer_location,
+              awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url: value,
+              drm_key_id,
+              drm_resource_id,
+              approved,
+            };
+            const result = onChange(modelFields);
+            value = result?.cmaf_dash_url ?? value;
+          }
+          if (errors.cmaf_dash_url?.hasError) {
+            runValidationTasks("cmaf_dash_url", value);
+          }
+          setCmaf_dash_url(value);
+        }}
+        onBlur={() => runValidationTasks("cmaf_dash_url", cmaf_dash_url)}
+        errorMessage={errors.cmaf_dash_url?.errorMessage}
+        hasError={errors.cmaf_dash_url?.hasError}
+        {...getOverrideProps(overrides, "cmaf_dash_url")}
+      ></TextField>
+      <TextField
+        label="Drm key id"
+        isRequired={false}
+        isReadOnly={false}
+        value={drm_key_id}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              age_rating,
+              description_language,
+              thumbnail_location,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieType,
+              subtitles_location,
+              creators_comment,
+              is_highlighted,
+              trailer_location,
+              awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id: value,
+              drm_resource_id,
+              approved,
+            };
+            const result = onChange(modelFields);
+            value = result?.drm_key_id ?? value;
+          }
+          if (errors.drm_key_id?.hasError) {
+            runValidationTasks("drm_key_id", value);
+          }
+          setDrm_key_id(value);
+        }}
+        onBlur={() => runValidationTasks("drm_key_id", drm_key_id)}
+        errorMessage={errors.drm_key_id?.errorMessage}
+        hasError={errors.drm_key_id?.hasError}
+        {...getOverrideProps(overrides, "drm_key_id")}
+      ></TextField>
+      <TextField
+        label="Drm resource id"
+        isRequired={false}
+        isReadOnly={false}
+        value={drm_resource_id}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              age_rating,
+              description_language,
+              thumbnail_location,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieType,
+              subtitles_location,
+              creators_comment,
+              is_highlighted,
+              trailer_location,
+              awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id: value,
+              approved,
+            };
+            const result = onChange(modelFields);
+            value = result?.drm_resource_id ?? value;
+          }
+          if (errors.drm_resource_id?.hasError) {
+            runValidationTasks("drm_resource_id", value);
+          }
+          setDrm_resource_id(value);
+        }}
+        onBlur={() => runValidationTasks("drm_resource_id", drm_resource_id)}
+        errorMessage={errors.drm_resource_id?.errorMessage}
+        hasError={errors.drm_resource_id?.hasError}
+        {...getOverrideProps(overrides, "drm_resource_id")}
+      ></TextField>
+      <SwitchField
+        label="Approved"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={approved}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              name,
+              name_eng,
+              genre,
+              description,
+              description_eng,
+              age_rating,
+              description_language,
+              thumbnail_location,
+              screen_language,
+              captions_language,
+              origin_country,
+              length,
+              created_year,
+              MovieType,
+              subtitles_location,
+              creators_comment,
+              is_highlighted,
+              trailer_location,
+              awards,
+              raw_video_location,
+              hls_url,
+              dash_url,
+              cmaf_hls_url,
+              cmaf_dash_url,
+              drm_key_id,
+              drm_resource_id,
+              approved: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.approved ?? value;
+          }
+          if (errors.approved?.hasError) {
+            runValidationTasks("approved", value);
+          }
+          setApproved(value);
+        }}
+        onBlur={() => runValidationTasks("approved", approved)}
+        errorMessage={errors.approved?.errorMessage}
+        hasError={errors.approved?.hasError}
+        {...getOverrideProps(overrides, "approved")}
+      ></SwitchField>
       <Flex
         justifyContent="space-between"
         {...getOverrideProps(overrides, "CTAFlex")}

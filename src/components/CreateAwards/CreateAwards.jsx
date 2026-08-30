@@ -3,7 +3,7 @@ import { Button } from "@material-tailwind/react";
 import Select from "react-select";
 import awsExports from '../../aws-exports';
 import { Amplify, API } from 'aws-amplify';
-import { createAward } from "../../graphql/mutations";
+import { createAwardMinimal } from "../../custom-queries/queries";
 
 export function CreateAwards(props) {
   Amplify.configure(awsExports);
@@ -47,7 +47,7 @@ export function CreateAwards(props) {
         };
 
         await API.graphql({
-          query: createAward.replaceAll("__typename", ""),
+          query: createAwardMinimal,
           variables: { input: {...awardInput} },
           authMode: "AWS_IAM",
         });

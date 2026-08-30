@@ -1,55 +1,24 @@
 import { useState, useEffect } from "react";
-import AWS from "aws-sdk";
-
-const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
+import config from "../../config";
 
 export function PlaylistEditGrid({ data, maxRows, maxColumns, modalOpen }) {
     const [rows, setRows] = useState(maxRows);
     const [columns, setColumns] = useState(maxColumns);
     const [photoSrc, setPhotoSrc] = useState({});
 
-    async function getSrc(items) {
-        const config = {
-            region: "eu-north-1",
-            credentials: new AWS.CognitoIdentityCredentials({
-                IdentityPoolId: IdentityPoolId,
-            }),
-            bucketName: "balticshortsphotos",
-        };
-        const myBucket = new AWS.S3(config);
-        await Promise.all(
-
-            items.map(async (item) => {
-                if (item === null) return;
-                if (item.photo_location) {
-                    const split = item.photo_location.split("/");
-                    const key = split.pop();
-                    const bucketLoc = split.join("/");
-                    const params = {
-                        Bucket: bucketLoc,
-                        Key: key,
-                    };
-                    try {
-                        const data = await myBucket.getObject(params).promise();
-                        photoSrc[item.id] = URL.createObjectURL(
-                            new Blob([data.Body], { type: "image/png" })
-                        );
-                    } catch (error) {
-                        console.error("Error fetching data:", error);
-                    }
-                } else {
-                    photoSrc[item.id] = require("../../assets/images/no_image_1.jpg");
-                }
-            })
-        );
-        setPhotoSrc({ ...photoSrc });
+    function getSrc(items) {
+        const src = {};
+        items.forEach((item) => {
+            if (item === null) return;
+            src[item.id] = item.photo_location
+                ? `${config.photos_bucket_url}/${item.photo_location.replace("balticshortsphotos/", "")}`
+                : require("../../assets/images/no_image_1.jpg");
+        });
+        setPhotoSrc(src);
     }
 
     useEffect(() => {
-        async function fetchData() {
-            await getSrc(data);
-        }
-        fetchData();
+        getSrc(data);
     }, [data]);
 
     const checkRow = (idx) => {

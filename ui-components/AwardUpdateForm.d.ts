@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { AutocompleteProps, GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { AutocompleteProps, GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -27,6 +27,7 @@ export declare type AwardUpdateFormInputValues = {
     category?: string;
     comment?: string;
     movie?: any;
+    approved?: boolean;
 };
 export declare type AwardUpdateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -34,6 +35,7 @@ export declare type AwardUpdateFormValidationValues = {
     category?: ValidationFunction<string>;
     comment?: ValidationFunction<string>;
     movie?: ValidationFunction<any>;
+    approved?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type AwardUpdateFormOverridesProps = {
@@ -43,6 +45,7 @@ export declare type AwardUpdateFormOverridesProps = {
     category?: PrimitiveOverrideProps<TextFieldProps>;
     comment?: PrimitiveOverrideProps<TextFieldProps>;
     movie?: PrimitiveOverrideProps<AutocompleteProps>;
+    approved?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type AwardUpdateFormProps = React.PropsWithChildren<{
     overrides?: AwardUpdateFormOverridesProps | undefined | null;

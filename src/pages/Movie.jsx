@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import VideoPlayer from '../components/VideoPlayer';
-import { movieMoviePlaylistsByMovieId } from '../graphql/queries.js';
+import { movieMoviePlaylistsByMovieId, listFolder } from '../graphql/queries.js';
 import { Amplify, API } from 'aws-amplify';
 import awsExports from '../aws-exports';
 import { getMovieQuery } from '../custom-queries/queries';
@@ -24,8 +24,6 @@ import { ReactComponent as Subtitles } from "../assets/images/subtitles.svg";
 import { useTranslation } from "react-i18next";
 
 Amplify.configure(awsExports);
-const IdentityPoolId = "eu-north-1:1383e4fb-6f2d-462e-bc3d-7b9adc03e8d1";
-var AWS = require('aws-sdk');
 
 const movieTeamKeyOrder = ['Director', 'Actor', 'Executive producer', 'Operator', 'Costume artist', 'Producer', 'Author of the scenario', 'Makeup artist', 'Production company', 'Editing director', 'Film artist', 'Sound director', 'Composer'];
 const fetchMovie = async id => {
@@ -38,9 +36,22 @@ const fetchMovie = async id => {
   return movie;
 };
 
-const fetchVideo = async guid => {
+const fetchVideo = async movie => {
+  // Movies published through the admin publish flow carry their stream info directly.
+  if (movie.hls_url || movie.dash_url) {
+    return {
+      "hls": movie.hls_url,
+      "dash": movie.dash_url,
+      "cmafDash": movie.cmaf_dash_url,
+      "cmafHls": movie.cmaf_hls_url,
+      "keyId": movie.drm_key_id,
+      "resourceId": movie.drm_resource_id,
+    };
+  }
+
+  // Fallback for movies published before the direct-field pipeline existed.
   const requestOptions = { method: 'POST' };
-  const data = await fetch(config.aws_api_gateway + 'movies/' + guid, requestOptions).then((response) => response.json());
+  const data = await fetch(config.aws_api_gateway + 'movies/' + movie.guid, requestOptions).then((response) => response.json());
   const resp = {
     "hls": data.Item.hlsUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'),
     "dash": data.Item.dashUrl?.S.replace('d3tou2oin9ei82.cloudfront.net', 'vod.balticshorts.com'),
@@ -93,8 +104,6 @@ function Movie() {
   const context = useContext(GlobalContext);
   const navigate = useNavigate();
   const location = useLocation();
-  AWS.config.region = "eu-north-1";
-  AWS.config.credentials = new AWS.CognitoIdentityCredentials(IdentityPoolId);
 
   const { id } = useParams();
   const initialMovie = location.state && location.state.movie ? (location.state.movie.item || location.state.movie) : {};
@@ -115,6 +124,7 @@ function Movie() {
   const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
   const [showSubscribeModal, setShowSubscribeModal] = useState(false);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [notFound, setNotFound] = useState(false);
   const { t, i18n } = useTranslation();
   const isDesktop = window.matchMedia("(min-width: 1100px)").matches;
   const cols = isDesktop ? 3 : 2;
@@ -141,6 +151,10 @@ function Movie() {
     async function get() {
       try {
         const movie = await fetchMovie(id);
+        if (movie && movie.approved !== true) {
+          if (isMounted) setNotFound(true);
+          return;
+        }
         if (isMounted) setMovieData(movie);
         await getPhotoSrc(movie.thumbnail_location);
 
@@ -155,7 +169,7 @@ function Movie() {
         if (isMounted) setPhotoURLs(photos);
 
         if (context.currentUser.is_member) {
-          const url = await fetchVideo(movie.guid);
+          const url = await fetchVideo(movie);
           const signedUrlAddon = await signVideo(url.keyId, url.resourceId);
           if (isMounted) {
             setUrlAddon(signedUrlAddon);
@@ -173,7 +187,7 @@ function Movie() {
 
   useEffect(() => {
     if (movieData !== undefined && movieData.trailer_location !== undefined && movieData.trailer_location !== '' && movieData.trailer_location !== null) {
-      setMovieTrailer('https://balticshortsphotos.s3.eu-north-1.amazonaws.com/' + movieData.trailer_location.replace("balticshortsphotos/", ""));
+      setMovieTrailer(`${config.photos_bucket_url}/` + movieData.trailer_location.replace("balticshortsphotos/", ""));
     }
   }, [movieData]);
 
@@ -198,55 +212,24 @@ function Movie() {
   }, [location.state]);
 
   async function getSrc(location) {
-    const config = {
-      region: "eu-north-1",
-      credentials: new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: IdentityPoolId,
-      }),
-      bucketName: "balticshortsphotos",
-    };
-    var myBucket = new AWS.S3(config);
-    if (location != null && location !== '') {
-      const split = location.split("/");
-      const key = split.pop();
-      const bucketLoc = split.join("/");
-      const extension = key.split(".").pop();
-      var params = {
-        Bucket: bucketLoc,
-        Key: key
-      };
-      try {
-        const data = await myBucket.getObject(params).promise();
-        const type = extension === 'vtt' ? 'text/vtt' : 'text/plain';
-        var dataBlob = new Blob([data.Body], { type: type });
-        if (extension !== 'vtt') {
-          var srtText = await readBlobAsSrtText(dataBlob);
-          const srtRegex = /(\d+)\n(\d{2}:\d{2}:\d{2}),(\d{3}) --> (\d{2}:\d{2}:\d{2}),(\d{3})/g;
-          const vttText = 'WEBVTT\n\n' + srtText.replace(srtRegex, '$1\n$2.$3 --> $4.$5');
-          dataBlob = new Blob([vttText], { type: 'text/vtt' });
-        }
-        var blobURL = URL.createObjectURL(dataBlob);
-        setSubtitles(blobURL);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+    if (location == null || location === '') {
+      return;
     }
-    return () => { };
+    const publicUrl = `${config.photos_bucket_url}/${location.replace("balticshortsphotos/", "")}`;
+    const extension = publicUrl.split(".").pop();
+    try {
+      const srtOrVttText = await fetch(publicUrl).then((response) => response.text());
+      let vttText = srtOrVttText;
+      if (extension !== 'vtt') {
+        const srtRegex = /(\d+)\n(\d{2}:\d{2}:\d{2}),(\d{3}) --> (\d{2}:\d{2}:\d{2}),(\d{3})/g;
+        vttText = 'WEBVTT\n\n' + srtOrVttText.replace(srtRegex, '$1\n$2.$3 --> $4.$5');
+      }
+      const blobURL = URL.createObjectURL(new Blob([vttText], { type: 'text/vtt' }));
+      setSubtitles(blobURL);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   }
-
-  const readBlobAsSrtText = async (blob) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const srtText = reader.result;
-        resolve(srtText);
-      };
-      reader.onerror = (error) => {
-        reject(error);
-      };
-      reader.readAsText(blob);
-    });
-  };
 
   function removeText() {
   if (!context.currentUser || Object.keys(context.currentUser).length === 0) {
@@ -283,7 +266,7 @@ function Movie() {
 
   async function getPhotoSrc(item) {
     const fallbackImage = require("../assets/images/no_image_1.jpg");
-    const objectURL = item && item !== null && item !== undefined ? `https://balticshortsphotos.s3.eu-north-1.amazonaws.com/${item.replace("balticshortsphotos/", "")}` : fallbackImage;
+    const objectURL = item && item !== null && item !== undefined ? `${config.photos_bucket_url}/${item.replace("balticshortsphotos/", "")}` : fallbackImage;
     setThumbnailURL(objectURL);
     const element = document.getElementById('textOnMovie');
     if (element) {
@@ -292,43 +275,18 @@ function Movie() {
   }
 
   async function getPhotosFromFolder(fullPath) {
-    console.log(`Fetching photos from folder: ${fullPath}`);
-
-    const config = {
-      region: "eu-north-1",
-      credentials: new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: IdentityPoolId,
-      }),
-      bucketName: "balticshortsphotos",
-    };
-    const myBucket = new AWS.S3(config);
-
     if (!fullPath) return [];
 
-    const folderPath = fullPath.replace(`${config.bucketName}/`, "");
-
-    const params = {
-      Bucket: config.bucketName,
-      Prefix: folderPath,
-      MaxKeys: 1000,
-    };
+    const folderPath = fullPath.replace("balticshortsphotos/", "");
 
     try {
-      const data = await myBucket.listObjectsV2(params).promise();
-
-      const photoKeys = data.Contents.map((item) => item.Key);
-      const photoURLs = await Promise.all(
-        photoKeys.map(async (key) => {
-          const photoParams = {
-            Bucket: config.bucketName,
-            Key: key,
-          };
-          const photoData = await myBucket.getObject(photoParams).promise();
-          return URL.createObjectURL(new Blob([photoData.Body], { type: "image/png" }));
-        })
-      );
-
-      return photoURLs;
+      const result = await API.graphql({
+        query: listFolder,
+        variables: { prefix: folderPath },
+        authMode: 'AWS_IAM',
+      });
+      const photoKeys = result.data.listFolder || [];
+      return photoKeys.map((key) => `${config.photos_bucket_url}/${key}`);
     } catch (error) {
       console.error("Error fetching photos:", error);
       return [];
@@ -344,6 +302,15 @@ function Movie() {
       elements.classList.add("hidden");
     }
   }, [shouldAutoplay]);
+
+  if (notFound) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-beige text-black text-2xl">
+        <Navbar/>
+        {t("Šī filma vēl nav pieejama.")}
+      </div>
+    );
+  }
 
   return (
     <>

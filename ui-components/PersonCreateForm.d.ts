@@ -37,6 +37,7 @@ export declare type PersonCreateFormInputValues = {
     is_entity?: boolean;
     nationality?: string;
     PersonRoles?: any[];
+    approved?: boolean;
 };
 export declare type PersonCreateFormValidationValues = {
     name?: ValidationFunction<string>;
@@ -54,6 +55,7 @@ export declare type PersonCreateFormValidationValues = {
     is_entity?: ValidationFunction<boolean>;
     nationality?: ValidationFunction<string>;
     PersonRoles?: ValidationFunction<any>;
+    approved?: ValidationFunction<boolean>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type PersonCreateFormOverridesProps = {
@@ -73,6 +75,7 @@ export declare type PersonCreateFormOverridesProps = {
     is_entity?: PrimitiveOverrideProps<SwitchFieldProps>;
     nationality?: PrimitiveOverrideProps<TextFieldProps>;
     PersonRoles?: PrimitiveOverrideProps<AutocompleteProps>;
+    approved?: PrimitiveOverrideProps<SwitchFieldProps>;
 } & EscapeHatchProps;
 export declare type PersonCreateFormProps = React.PropsWithChildren<{
     overrides?: PersonCreateFormOverridesProps | undefined | null;
